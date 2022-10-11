@@ -24,6 +24,7 @@ import at.srfg.iasset.connector.component.config.MarshallingFeature;
 import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationRepositoryController;
 import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationShellController;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 
 public class HttpComponent implements Component {
@@ -38,7 +39,7 @@ public class HttpComponent implements Component {
 	
 	private final Map<String, HttpHandler> httpHandler = new HashMap<String, HttpHandler>();
 	
-	private final JacksonJaxbJsonProvider provider = new JacksonJaxbJsonProvider();
+//	private final JacksonJaxbJsonProvider provider = new JacksonJaxbJsonProvider();
 	/**
 	 * Specify the service endpoint where the component's http interface will be exposed
 	 * @param port
@@ -52,7 +53,8 @@ public class HttpComponent implements Component {
 		this.port = port;
 		this.contextPath = contextPath;
 		this.environment = environment;
-		this.provider.setMapper(ClientFactory.getObjectMapper());
+		
+//		this.provider.setMapper(ClientFactory.getObjectMapper());
 		
 	}
 	public String getHostName() {
@@ -76,6 +78,7 @@ public class HttpComponent implements Component {
 		
 		// create root handler handler with resource config
 		ResourceConfig config = new ResourceConfig();
+		config.register(ClientFactory.getContextResolver());
 		config.register(MarshallingFeature.class);
 		config.register(new AbstractBinder() {
 			
@@ -135,7 +138,7 @@ public class HttpComponent implements Component {
 		Optional<AssetAdministrationShell> aas = environment.getAssetAdministrationShell(aasIdentifier);
 		if (aas.isPresent()) {
 			ResourceConfig config = new ResourceConfig();
-			
+			config.register(ClientFactory.getContextResolver());
 			config.register(MarshallingFeature.class);
 			config.register(new AbstractBinder() {
 				

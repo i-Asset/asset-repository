@@ -1,15 +1,26 @@
 package at.srfg.iasset.connector.environment;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
+import org.eclipse.aas4j.v3.model.EventElement;
 import org.eclipse.aas4j.v3.model.KeyTypes;
+import org.eclipse.aas4j.v3.model.Operation;
+import org.eclipse.aas4j.v3.model.Property;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.RelationshipElement;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
@@ -18,14 +29,16 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.model.custom.InstanceEnvironment;
 import at.srfg.iasset.repository.model.helper.SubmodelHelper;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
-import ch.qos.logback.core.db.dialect.MySQLDialect;
 
-public class LocalServiceEnvironment implements ServiceEnvironment {
-	InstanceEnvironment environment;
+public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnvironment {
+	private InstanceEnvironment environment;
+	
+	private Collection<ModelListener> listeners = new HashSet<ModelListener>();
+	
 	
 	public LocalServiceEnvironment() {
 		environment = new InstanceEnvironment();
-		// 
+		// TODO: REMOVE test data!
 		environment.addAssetAdministrationShell(AASFull.AAS_1.getId(), AASFull.AAS_1);
 		environment.addAssetAdministrationShell(AASFull.AAS_2.getId(), AASFull.AAS_2);
 		environment.addAssetAdministrationShell(AASFull.AAS_3.getId(), AASFull.AAS_3);
@@ -41,11 +54,68 @@ public class LocalServiceEnvironment implements ServiceEnvironment {
 		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_2);
 		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_3);
 		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_4);
+		listeners.add(new ModelListener() {
+			
+			@Override
+			public void propertyValueChanged(String path, String oldValue, String newValue) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void propertyRemoved(String path) {
+				System.out.println("Element removed: "+ path);
+				
+			}
+			
+			@Override
+			public void propertyCreated(String path, org.eclipse.aas4j.v3.model.Property property) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void operationRemoved(String path) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void operationCreated(String path, Operation operation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void eventElementRemoved(String path) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void eventElementCreated(String path, EventElement eventElement) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void submodelElementCreated(String path, SubmodelElement element) {
+				System.out.println("Element created: " + path + " - " + element.getIdShort());
+				
+			}
+		});
+	}
+	
+	public void addModelListener(ModelListener listener) {
+		listeners.add(listener);
+	}
+	public void removeModelListener(ModelListener listener) {
+		listeners.remove(listener);
 	}
 
 	@Override
 	public Optional<Submodel> getSubmodel(String identifier) {
-		return Optional.empty();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -66,8 +136,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment {
 
 	@Override
 	public Optional<ConceptDescription> getConceptDescription(String identifier) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		return environment.getConceptDescription(identifier);
 	}
 
 	@Override
@@ -97,7 +166,16 @@ public class LocalServiceEnvironment implements ServiceEnvironment {
 		Optional<Submodel> submodel = environment.getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( submodel.isPresent()) {
 			SubmodelHelper helper = new SubmodelHelper(submodel.get());
-			return helper.removeSubmodelElementAt(path);
+			Optional<SubmodelElement> deleted = helper.removeSubmodelElementAt(path);
+			deleted.ifPresent(new Consumer<SubmodelElement>() {
+
+				@Override
+				public void accept(SubmodelElement t) {
+					submodelElementRemoved(aasIdentifier, submodelIdentifier, path, t);
+					
+				}
+			});
+			return deleted.isPresent();
 		}
 		return false;
 	}
@@ -107,11 +185,31 @@ public class LocalServiceEnvironment implements ServiceEnvironment {
 			SubmodelElement body) {
 		Optional<Submodel> submodel = environment.getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( submodel.isPresent()) {
+			
 			SubmodelHelper helper = new SubmodelHelper(submodel.get());
-			Submodel changed = helper.setSubmodelElementAt(idShortPath, body);
-			if ( changed != null) {
-				return body;
+			Optional<SubmodelElement> oldElement = helper.removeSubmodelElementAt(idShortPath);
+			oldElement.ifPresent(new Consumer<SubmodelElement>() {
+
+				@Override
+				public void accept(SubmodelElement t) {
+					submodelElementRemoved(aasIdentifier, submodelIdentifier, idShortPath, t);
+					
+				}
+			});
+
+			Optional<SubmodelElement> added = helper.setSubmodelElementAt(idShortPath, body);
+			added.ifPresent(new Consumer<SubmodelElement>() {
+
+				@Override
+				public void accept(SubmodelElement t) {
+					submodelElementAdded(aasIdentifier, submodelIdentifier, idShortPath, t);
+					
+				}
+			});
+			if ( added.isPresent()) {
+				return added.get();
 			}
+			return null;
 		}
 		return null;
 	}
@@ -148,8 +246,12 @@ public class LocalServiceEnvironment implements ServiceEnvironment {
 
 	@Override
 	public Object getElementValue(String aasIdentifier, String submodelIdentifier, String path) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( sub.isPresent() ) {
+			return new SubmodelHelper(sub.get()).getValueAt(path);
+		}
+
+		return new HashMap<String, Object>();
 	}
 
 	@Override
@@ -177,9 +279,17 @@ public class LocalServiceEnvironment implements ServiceEnvironment {
 	}
 
 	@Override
-	public List<Reference> deleteSubmodelReference(String id, String submodelIdentifier) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier) {
+		Optional<AssetAdministrationShell> shell = environment.getAssetAdministrationShell(aasIdentifier);
+		if ( shell.isPresent()) {
+			AssetAdministrationShell theShell = shell.get();
+			Optional<Reference> ref = ReferenceUtils.getReference(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
+			if (ref.isPresent()) {
+				theShell.getSubmodels().remove(ref.get());
+				return theShell.getSubmodels();
+			}
+		}
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -194,5 +304,52 @@ public class LocalServiceEnvironment implements ServiceEnvironment {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	private void submodelElementRemoved(String aasIdentifier, String submodelIdentifier, String path, SubmodelElement element) {
+		if ( Property.class.isInstance(element) || RelationshipElement.class.isInstance(element)) {
+			listeners.forEach(new Consumer<ModelListener>() {
 
-}
+				@Override
+				public void accept(ModelListener t) {
+					t.propertyRemoved(path);
+					
+				}
+			});
+		}
+		
+	}
+	private void submodelElementAdded(String aasIdentifier, String submodelIdentifier, String path, SubmodelElement element) {
+		if ( Property.class.isInstance(element) || RelationshipElement.class.isInstance(element)) {
+			listeners.forEach(new Consumer<ModelListener>() {
+
+				@Override
+				public void accept(ModelListener t) {
+					t.submodelElementCreated(path, element);
+					
+				}
+			});
+		}
+	}
+
+	@Override
+	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path, Consumer<?> consumer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setValueSupplier(String aasIdentifier, String submodelIdentifier, String path, Supplier<?> consumer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setOperationFunction(String aasIdentifier, String submodelIdentifier, String path,
+			Function<?, ?> consumer) {
+		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( sub.isPresent()) {
+//			new SubmodelHelper(sub.get()).getSubmodelElementAt(path)
+		}
+		// TODO Auto-generated method stub
+		
+	}}

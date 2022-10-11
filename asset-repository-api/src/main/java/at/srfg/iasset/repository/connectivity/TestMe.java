@@ -9,14 +9,15 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
-import at.srfg.iasset.repository.api.IAssetConnection;
+import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 
 public class TestMe {
 
 	public static void main(String[] args) {
 		ConnectionProvider c = ConnectionProvider.getConnection("http://localhost:8080");
 		
-		IAssetConnection conn = c.getIAssetConnection();
+		IAssetAdministrationShellRepositoryInterface conn = c.getRepositoryInterface();
+		
 		
 		AssetAdministrationShell theShell = conn.getAssetAdministrationShell("https://acplt.org/Test_AssetAdministrationShell");
 		Submodel sub = conn.getSubmodel("https://acplt.org/Test_AssetAdministrationShell", "https://acplt.org/Test_Submodel");
@@ -24,7 +25,7 @@ public class TestMe {
 		if ( theShell != null ) {
 			for (Reference ref : theShell.getSubmodels()) {
 				System.out.println( ref.getKeys().get(0).getValue());
-				Referable submodel = conn.getSubmodelElement(theShell.getId(), ref);
+				Referable submodel = conn.getSubmodel(theShell.getId(), ref.getKeys().get(0).getValue());
 				if ( Submodel.class.isInstance(submodel)) {
 					Submodel.class.cast(submodel).getDescriptions().forEach(new Consumer<LangString>() {
 

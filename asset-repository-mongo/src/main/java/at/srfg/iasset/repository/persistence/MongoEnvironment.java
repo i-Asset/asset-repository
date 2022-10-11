@@ -156,9 +156,11 @@ public class MongoEnvironment implements ServiceEnvironment {
 		Optional<Submodel> theSubmodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( theSubmodel.isPresent()) {
 			//
-			Submodel model = new SubmodelHelper(theSubmodel.get()).setSubmodelElementAt(idShortPath, body);
-			submodelRepository.save(model);
-			return body;
+			Optional<SubmodelElement> elementAdded = new SubmodelHelper(theSubmodel.get()).setSubmodelElementAt(idShortPath, body);
+			if (elementAdded.isPresent()) {
+				submodelRepository.save(theSubmodel.get());
+				return elementAdded.get();
+			}
 		}
 		return null;
 		
@@ -172,7 +174,8 @@ public class MongoEnvironment implements ServiceEnvironment {
 	 */
 	private boolean deleteSubmodelElementByPath(Submodel submodel, String path) {
 		SubmodelHelper mySubmodel = new SubmodelHelper(submodel);
-		if (mySubmodel.removeSubmodelElementAt(path)) {
+		Optional<SubmodelElement> deleted = mySubmodel.removeSubmodelElementAt(path);
+		if (deleted.isPresent()) {
 			submodelRepository.save(mySubmodel.getSubmodel());
 			return true;
 		}

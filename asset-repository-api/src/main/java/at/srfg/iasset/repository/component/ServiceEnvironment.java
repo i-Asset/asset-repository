@@ -74,7 +74,7 @@ public interface ServiceEnvironment {
 	 * @param aasIdentifier
 	 * @param submodelIdentifier
 	 * @param path
-	 * @return
+	 * @return <code>true</code> when successful, <code>false</code> otherwise
 	 */
 	boolean deleteSubmodelElement(String aasIdentifier, String submodelIdentifier, String path);
 	/**

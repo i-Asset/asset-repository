@@ -1,6 +1,7 @@
 package at.srfg.iasset.repository.connectivity.rest;
 
 import javax.ws.rs.client.Client;
+import javax.ws.rs.ext.ContextResolver;
 
 import org.eclipse.aas4j.v3.model.Operation;
 import org.eclipse.aas4j.v3.model.Property;
@@ -39,7 +40,9 @@ public class ClientFactory {
 		return this.provider.getMapper();
 	}
 
-
+	public static ContextResolver<ObjectMapper> getContextResolver() {
+		return getInstance().provider;
+	}
 	public static <T> void useImplementation(Class<T> aasInterface, Class<? extends T> implementation) {
 		getInstance().provider.useImplementation(aasInterface, implementation);
 	}

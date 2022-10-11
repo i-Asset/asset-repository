@@ -125,6 +125,9 @@ public class InstanceEnvironment implements Environment {
 		// TODO Auto-generated method stub
 		
 	}
+	public Optional<ConceptDescription> getConceptDescription(String identifier) {
+		return Optional.ofNullable(conceptDescription.get(identifier));
+	}
 
 
 }

@@ -3,26 +3,14 @@ package at.srfg.iasset.connector;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.Descriptor;
-
 import at.srfg.iasset.connector.component.impl.HttpComponent;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
-import at.srfg.iasset.repository.api.IAssetConnection;
-import at.srfg.iasset.repository.api.IAssetDirectory;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 
 public class Connector {
 	
-	/**
-	 * Service Class connecting with the Asset Repository
-	 */
-	private final IAssetConnection repositoryConnection;
-	/**
-	 * Service class managing the {@link Descriptor}s.
-	 */
-	private final IAssetDirectory directoryConnection;
+
 	/**
 	 * The URL to the Server
 	 */
@@ -44,8 +32,6 @@ public class Connector {
 		
 		this.repositoryURL = repositoryURL;
 		this.connectionProvider = ConnectionProvider.getConnection(this.repositoryURL);
-		this.repositoryConnection = connectionProvider.getIAssetConnection();
-		this.directoryConnection = connectionProvider.getIAssetDirectory();
 	}
 	/**
 	 * Enable the communication endpoints
