@@ -416,7 +416,7 @@ public class AASModelHelper {
         return defaultImplementations;
     }
 
-    private static Set<Class<?>> scanAasInterfaces() {
+    private static Set scanAasInterfaces() {
         return DEFAULT_IMPLEMENTATIONS.stream().map(x -> x.interfaceType).collect(Collectors.toSet());
     }
 
