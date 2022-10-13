@@ -20,6 +20,7 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.aas4j.v3.model.SubmodelElementList;
 
+import at.srfg.iasset.repository.model.value.ValueType;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 
@@ -255,7 +256,8 @@ public class SubmodelHelper {
 		if ( ! children.isEmpty()) {
 			for (SubmodelElement sme : getChildren(referable)) {
 				if ( Property.class.isInstance(sme)) {
-					resultMap.put(sme.getIdShort(), Property.class.cast(sme).getValue());
+					Property p = Property.class.cast(sme);
+					resultMap.put(sme.getIdShort(), ValueType.getValue(p.getValueType(), p.getValue()).getValue());
 				}
 				else if ( SubmodelElementCollection.class.isInstance(sme)) {
 					resultMap.put(sme.getIdShort(), getValueOnly(sme));
@@ -271,7 +273,7 @@ public class SubmodelHelper {
 		else {
 			if ( Property.class.isInstance(referable)) {
 				Property p = Property.class.cast(referable);
-				resultMap.put(referable.getIdShort(), ValueHelper.getValue(p.getValueType(), p.getValue()));
+				resultMap.put(referable.getIdShort(), ValueType.getValue(p.getValueType(), p.getValue()).getValue());
 			}
 		}
 		

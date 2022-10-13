@@ -164,7 +164,6 @@ public class AssetAdministrationShellController implements IAssetAdministrationS
 	@Override
 	@GET
 	@Produces(value = MediaType.APPLICATION_JSON)
-	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH +"/value")
 	public Object getValue(@PathParam("submodelIdentifier") String submodelIdentifier, @PathParam("path") String path) {
 		return environment.getElementValue(				

@@ -650,6 +650,13 @@ public class AASFull {
                                 .type(ReferenceTypes.GLOBAL_REFERENCE)
                                 .build())
                         .value(new DefaultProperty.Builder()
+                        		.idShort("ExampleDecimalProperty")
+                        		.category("Constant")
+                        		.valueType(DataTypeDefXsd.DOUBLE)
+                        		.value(Double.valueOf(123.2).toString())
+                        		.description(new DefaultLangString.Builder().language("de").text("Numerischer Wert").build())
+                        		.build())
+                        .value(new DefaultProperty.Builder()
                                 .idShort("ExampleProperty")
                                 .category("Constant")
                                 .descriptions(Arrays.asList(

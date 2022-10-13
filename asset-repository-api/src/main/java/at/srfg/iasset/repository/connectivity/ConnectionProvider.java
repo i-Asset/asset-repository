@@ -1,5 +1,6 @@
 package at.srfg.iasset.repository.connectivity;
 
+import java.net.URI;
 import java.net.URL;
 
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
@@ -15,6 +16,9 @@ public interface ConnectionProvider {
 		}
 		return new Connection(host);
 	}
+	static Connection getConnection(URI uri) {
+		return new Connection(uri.toString());
+	}
 	static Connection getConnection(URL url) {
 		return new Connection(url.toString());
 	}
@@ -25,22 +29,27 @@ public interface ConnectionProvider {
 	IAssetDirectory getIAssetDirectory();
 
 	class Connection implements ConnectionProvider {
-		
+		private IAssetAdministrationShellRepositoryInterface repositoryInterface;
+		private IAssetDirectory directoryInterface;
 		final String host;
 		private Connection(String host) {
 			this.host = host;
 		}
 		@Override
 		public IAssetAdministrationShellRepositoryInterface getRepositoryInterface() {
-				return ConsumerFactory.createConsumer(
+			if ( repositoryInterface == null) {
+				repositoryInterface = ConsumerFactory.createConsumer(
 						// construct the URL
 						host + "repository",
 						// the Client Factory creates a client configured with the AAS Model (default implementations & mixins)
 						ClientFactory.getInstance().getClient(), 
 						// the interface class
 						IAssetAdministrationShellRepositoryInterface.class);	
+			}
+			return repositoryInterface;
 		}
 		@Override
+		@Deprecated
 		public IAssetConnection getIAssetConnection() {
 				return ConsumerFactory.createConsumer(
 						// construct the URL
@@ -52,13 +61,16 @@ public interface ConnectionProvider {
 		}
 		@Override
 		public IAssetDirectory getIAssetDirectory() {
-			return ConsumerFactory.createConsumer(
-					// construct the URL
-					host + "directory",
-					// the Client Factory creates a client configured with the AAS Model (default implementations & mixins)
-					ClientFactory.getInstance().getClient(), 
-					// the interface class
-					IAssetDirectory.class);	
+			if ( directoryInterface == null) {
+				directoryInterface = ConsumerFactory.createConsumer(
+						// construct the URL
+						host + "directory",
+						// the Client Factory creates a client configured with the AAS Model (default implementations & mixins)
+						ClientFactory.getInstance().getClient(), 
+						// the interface class
+						IAssetDirectory.class);	
+			}
+			return directoryInterface;
 		}
 		
 	}

@@ -1,6 +1,9 @@
 package at.srfg.iasset.connector;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import at.srfg.iasset.connector.component.impl.HttpComponent;
@@ -14,7 +17,7 @@ public class Connector {
 	/**
 	 * The URL to the Server
 	 */
-	private final URL repositoryURL; 
+	private final URI repositoryURL; 
 	/**
 	 * 
 	 */
@@ -28,7 +31,7 @@ public class Connector {
 	
 	private ServiceEnvironment serviceEnvironment = new LocalServiceEnvironment();
 	
-	public Connector(URL repositoryURL) {
+	public Connector(URI repositoryURL) {
 		
 		this.repositoryURL = repositoryURL;
 		this.connectionProvider = ConnectionProvider.getConnection(this.repositoryURL);
@@ -41,24 +44,35 @@ public class Connector {
 		return start(localServicePort);
 	}
 	public Connector start(int port) {
-		endpoint = new HttpComponent(port, serviceEnvironment);
-		endpoint.start();
+		if ( this.endpoint == null ) {
+			endpoint = new HttpComponent(repositoryURL, serviceEnvironment);
+		}
+		if ( ! endpoint.isStarted()) {
+			endpoint.start();
+		}
 		return this;
 		
 	}
 	
 	public void stop() {
-		endpoint.stop();
+		if ( endpoint.isStarted()) {
+			endpoint.stop();
+		}
 	}
 	
 	public static void main(String [] args) {
 		try {
 			
-			Connector connector = new Connector( new URL("http", "localhost", 8080, "/"));
+			Connector connector = new Connector( new URI("http://localhost:8080/"));
 			connector.start();
 			connector.aliasForShell("test", "https://acplt.org/Test_AssetAdministrationShell");
+			connector.register("https://acplt.org/Test_AssetAdministrationShell");
+			System.in.read();
 			connector.stop();
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -67,6 +81,12 @@ public class Connector {
 	public void aliasForShell(String alias, String aasIdentifier) {
 		
 		endpoint.addShellHandler(alias, aasIdentifier);
+	}
+	public void register(String aasIdentifier) {
+		endpoint.register(aasIdentifier);
+	}
+	public void unregister(String aasIdentifier) {
+		endpoint.unregister(aasIdentifier);
 	}
 
 }
