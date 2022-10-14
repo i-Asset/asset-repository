@@ -9,6 +9,28 @@ import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class InstanceProperty extends DefaultProperty implements Property {
+	public InstanceProperty() {
+		
+	}
+	public InstanceProperty(Property other) {
+		
+		setCategory(other.getCategory());
+		setChecksum(other.getChecksum());
+		setDataSpecifications(other.getDataSpecifications());
+		setDescriptions(other.getDescriptions());
+		setDisplayNames(other.getDisplayNames());
+		setEmbeddedDataSpecifications(other.getEmbeddedDataSpecifications());
+		setExtensions(other.getExtensions());
+		setIdShort(other.getIdShort());
+		setKind(other.getKind());
+		setQualifiers(other.getQualifiers());
+		setSemanticId(other.getSemanticId());
+		setSupplementalSemanticIds(other.getSupplementalSemanticIds());
+		setValue(other.getValue());
+		setValueId(other.getValueId());
+		setValueType(other.getValueType());
+
+	}
 	@JsonIgnore
 	private Consumer<String> consumer;
 	@JsonIgnore

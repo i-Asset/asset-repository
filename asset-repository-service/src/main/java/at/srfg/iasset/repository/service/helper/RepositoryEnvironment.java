@@ -1,4 +1,4 @@
-package at.srfg.iasset.repository.persistence;
+package at.srfg.iasset.repository.service.helper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +12,9 @@ import javax.validation.Valid;
 
 import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
+import org.eclipse.aas4j.v3.model.Endpoint;
 import org.eclipse.aas4j.v3.model.Key;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Property;
@@ -23,7 +25,10 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
+import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.model.helper.SubmodelHelper;
 import at.srfg.iasset.repository.persistence.service.AssetAdministrationShellRepository;
 import at.srfg.iasset.repository.persistence.service.ConceptDescriptionRepository;
@@ -31,26 +36,18 @@ import at.srfg.iasset.repository.persistence.service.SubmodelRepository;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 @Service
-public class MongoEnvironment implements ServiceEnvironment {
+public class RepositoryEnvironment implements ServiceEnvironment {
 	@Autowired
-	private ConceptDescriptionRepository conceptDescriptionRepository;
+	private Persistence storage;
 	
-	@Autowired
-	private SubmodelRepository submodelRepository;
 	
-	@Autowired
-	private AssetAdministrationShellRepository assetAdministrationShellRepository;
-	
-	@Override
-	public Optional<Submodel> getSubmodel(String identifier) {
-		return submodelRepository.findById(identifier);
-	}
+
 	@Override
 	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier) {
-		Optional<AssetAdministrationShell> theShell = assetAdministrationShellRepository.findById(aasIdentifier);
+		Optional<AssetAdministrationShell> theShell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( theShell.isPresent()) {
 			if ( hasSubmodelReference(theShell.get(), submodelIdentifier) ) {
-				return submodelRepository.findById(submodelIdentifier);
+				return storage.findSubmodelById(submodelIdentifier);
 			}
 		}
 		return Optional.empty();
@@ -77,26 +74,26 @@ public class MongoEnvironment implements ServiceEnvironment {
 	}
 	@Override
 	public Optional<AssetAdministrationShell> getAssetAdministrationShell(String identifier) {
-		return assetAdministrationShellRepository.findById(identifier);
+		return storage.findAssetAdministrationShellById(identifier);
 	}
 	@Override
 	public AssetAdministrationShell setAssetAdministrationShell(String aasIdentifier, AssetAdministrationShell theShell) {
 		// TODO: decide what to do with aasIdentifier
-		return assetAdministrationShellRepository.save(theShell);
+		return storage.persist(theShell);
 	}
 	@Override
 	public Optional<ConceptDescription> getConceptDescription(String identifier) {
-		return conceptDescriptionRepository.findById(identifier);
+		return storage.findConceptDescriptionById(identifier);
 	}
 	
 	@Override
 	public boolean deleteAssetAdministrationShellById(String identifier) {
-		assetAdministrationShellRepository.deleteById(identifier);
+		storage.deleteAssetAdministrationShellById(identifier);
 		return true;
 	}
 	@Override
 	public boolean deleteSubmodelReference(String aasIdentifier, Reference ref) {
-		Optional<AssetAdministrationShell> theShell = assetAdministrationShellRepository.findById(aasIdentifier);
+		Optional<AssetAdministrationShell> theShell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( theShell.isPresent() ) {
 			return deleteSubmodelReference(theShell.get(), ref);
 		}
@@ -104,7 +101,7 @@ public class MongoEnvironment implements ServiceEnvironment {
 	}
 	private boolean deleteSubmodelReference(AssetAdministrationShell theShell, Reference ref) {
 		if ( theShell.getSubmodels().remove(ref) ) {
-			assetAdministrationShellRepository.save(theShell);
+			storage.persist(theShell);
 			return true;
 		}
 		return false;
@@ -139,7 +136,7 @@ public class MongoEnvironment implements ServiceEnvironment {
 	}
 	@Override
 	public List<AssetAdministrationShell> getAllAssetAdministrationShells() {
-		return assetAdministrationShellRepository.findAll();
+		return storage.findAllAssetAdministrationShell();
 	}
 	@Override
 	public boolean deleteSubmodelElement(String aasIdentifier, String submodelIdentifier, String path) {
@@ -158,7 +155,7 @@ public class MongoEnvironment implements ServiceEnvironment {
 			//
 			Optional<SubmodelElement> elementAdded = new SubmodelHelper(theSubmodel.get()).setSubmodelElementAt(idShortPath, body);
 			if (elementAdded.isPresent()) {
-				submodelRepository.save(theSubmodel.get());
+				storage.persist(theSubmodel.get());
 				return elementAdded.get();
 			}
 		}
@@ -176,7 +173,7 @@ public class MongoEnvironment implements ServiceEnvironment {
 		SubmodelHelper mySubmodel = new SubmodelHelper(submodel);
 		Optional<SubmodelElement> deleted = mySubmodel.removeSubmodelElementAt(path);
 		if (deleted.isPresent()) {
-			submodelRepository.save(mySubmodel.getSubmodel());
+			storage.persist(mySubmodel.getSubmodel());
 			return true;
 		}
 		return false;
@@ -206,7 +203,7 @@ public class MongoEnvironment implements ServiceEnvironment {
 	 */
 	@Override
 	public Submodel setSubmodel(String aasIdentifier, String submodelIdentifier, @Valid Submodel submodel) {
-		Optional<AssetAdministrationShell> shell = assetAdministrationShellRepository.findById(aasIdentifier);
+		Optional<AssetAdministrationShell> shell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( shell.isPresent()) {
 			AssetAdministrationShell theShell = shell.get();
 			Optional<Reference> submodelReference =  theShell.getSubmodels().stream()
@@ -221,10 +218,10 @@ public class MongoEnvironment implements ServiceEnvironment {
 					.findAny();
 			if (submodelReference.isEmpty()) {
 				theShell.getSubmodels().add(AasUtils.toReference(submodel));
-				assetAdministrationShellRepository.save(theShell);
+				storage.persist(theShell);
 			}
 			submodel.setId(submodelIdentifier);
-			return submodelRepository.save(submodel);
+			return storage.persist(submodel);
 		}
 		return null;
 	}
@@ -235,13 +232,13 @@ public class MongoEnvironment implements ServiceEnvironment {
 		switch(ReferenceUtils.firstKeyType(element)) {
 		case CONCEPT_DESCRIPTION:
 			// return the concept description
-			Optional<ConceptDescription> cd = conceptDescriptionRepository.findById(ReferenceUtils.firstKeyValue(element));
+			Optional<ConceptDescription> cd = storage.findConceptDescriptionById(ReferenceUtils.firstKeyValue(element));
 			if ( cd.isPresent() ) {
 				return Optional.of(cd.get());
 			}
 			break;
 		case SUBMODEL:
-			Optional<Submodel> submodel = submodelRepository.findById(ReferenceUtils.firstKeyValue(element));
+			Optional<Submodel> submodel = storage.findSubmodelById(ReferenceUtils.firstKeyValue(element));
 			if ( submodel.isPresent()) {
 				return new SubmodelHelper(submodel.get()).resolveReference(element);
 			}
@@ -277,11 +274,11 @@ public class MongoEnvironment implements ServiceEnvironment {
 	@Override
 	public ConceptDescription setConceptDescription(String cdIdentifier, ConceptDescription conceptDescription) {
 		conceptDescription.setId(cdIdentifier);
-		return conceptDescriptionRepository.save(conceptDescription);
+		return storage.persist(conceptDescription);
 	}
 	@Override
 	public List<Reference> getSubmodelReferences(String aasIdentifier) {
-		Optional<AssetAdministrationShell> shell = assetAdministrationShellRepository.findById(aasIdentifier);
+		Optional<AssetAdministrationShell> shell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( shell.isPresent()) {
 			return shell.get().getSubmodels();
 		}
@@ -289,7 +286,7 @@ public class MongoEnvironment implements ServiceEnvironment {
 	}
 	@Override
 	public List<Reference> setSubmodelReferences(String aasIdentifier, List<Reference> submodels) {
-		Optional<AssetAdministrationShell> theShell = assetAdministrationShellRepository.findById(aasIdentifier);
+		Optional<AssetAdministrationShell> theShell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( theShell.isPresent()) {
 			theShell.get().setSubmodels(submodels);
 		}
@@ -297,7 +294,7 @@ public class MongoEnvironment implements ServiceEnvironment {
 	}
 	@Override
 	public List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier) {
-		Optional<AssetAdministrationShell> theShell = assetAdministrationShellRepository.findById(aasIdentifier);
+		Optional<AssetAdministrationShell> theShell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( theShell.isPresent()) {
 			AssetAdministrationShell shell = theShell.get();
 			List<Reference> remaining = shell.getSubmodels().stream().filter(new Predicate<Reference>() {
@@ -308,7 +305,7 @@ public class MongoEnvironment implements ServiceEnvironment {
 				}
 			}).collect(Collectors.toList());
 			shell.setSubmodels(remaining);
-			assetAdministrationShellRepository.save(shell);
+			storage.persist(shell);
 			return remaining;
 		}
 		return Collections.emptyList();
@@ -327,9 +324,17 @@ public class MongoEnvironment implements ServiceEnvironment {
 	@Override
 	public Map<String, Object> invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
 			Map<String, Object> parameterMap) {
-		// TODO Auto-generated method stub
-		Optional<SubmodelElement> operation = getSubmodelElement(aasIdentifier, submodelIdentifier, path);
-		// TODO: find the service endpoint and invoke the operation there
+		
+		Optional<AssetAdministrationShellDescriptor> descriptor = storage.findAssetAdministrationShellDescriptorById(aasIdentifier);
+		if ( descriptor.isPresent()) {
+			Optional<Endpoint> endpoint = descriptor.get().getEndpoints().stream().findFirst();
+			if (endpoint.isPresent()) {
+				
+				IAssetAdministrationShellInterface shellConnector = ConnectionProvider.getConnection(endpoint.get().getAddress()).getShellInterface();
+				return shellConnector.invokeOperation(submodelIdentifier, path, parameterMap);
+			}
+		}
+		// TODO: report the absence of the shell!
 		return null;
 	}
 

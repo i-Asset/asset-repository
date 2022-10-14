@@ -13,13 +13,6 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 
 public interface ServiceEnvironment {
 	/**
-	 * Obtain the {@link Submodel}
-	 * @param identifier
-	 * @return
-	 */
-	@Deprecated
-	Optional<Submodel> getSubmodel(String identifier);
-	/**
 	 * Obtain a {@link Submodel} 
 	 * @param aasIdentifier The {@link AssetAdministrationShell} containing/referencing the {@link Submodel}
 	 * @param submodelIdentifier The {@link Submodel}

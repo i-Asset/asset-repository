@@ -122,7 +122,7 @@ public class ShellsApiController implements ShellsApi {
 			// obtain the shell
 
 		}
-		Optional<Submodel> submodel = service.getSubmodel(submodelId);
+		Optional<Submodel> submodel = service.getSubmodel(theShell.getId(), submodelId);
 		// obtain the element
 		if (submodel.isPresent()) {
 			return submodel.get().getSubmodelElements();
@@ -225,7 +225,7 @@ public class ShellsApiController implements ShellsApi {
 			// obtain the shell
 
 		}
-		Optional<Submodel> submodel = service.getSubmodel(submodelId);
+		Optional<Submodel> submodel = service.getSubmodel(theShell.getId(), submodelId);
 		// obtain the element
 		if (submodel.isPresent()) {
 			return submodel.get();
@@ -289,7 +289,7 @@ public class ShellsApiController implements ShellsApi {
 			String aasIdentifier,
 			Reference body) throws RepositoryException {
 		AssetAdministrationShell theShell = getAssetAdministrationShell(aasIdentifier);
-		Optional<Submodel> submodel  = service.getSubmodel(body.getKeys().get(0).getValue());
+		Optional<Submodel> submodel  = service.getSubmodel(theShell.getId(), body.getKeys().get(0).getValue());
 		if ( submodel.isPresent()) {
 			theShell.getSubmodels().add(body);
 			// save

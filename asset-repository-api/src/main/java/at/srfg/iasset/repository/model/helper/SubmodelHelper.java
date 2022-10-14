@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.eclipse.aas4j.v3.model.BasicEventElement;
@@ -103,6 +104,13 @@ public class SubmodelHelper {
 			
 		}
 		return Optional.ofNullable(element);
+	}
+	public <T extends SubmodelElement> Optional<T> getSubmodelElementAt(String path, Class<T> clazz) {
+		Optional<SubmodelElement> elem = getSubmodelElementAt(path);
+		if (elem.isPresent() && clazz.isInstance(elem.get())) {
+			return Optional.of(clazz.cast(elem.get()));
+		}
+		return Optional.empty();
 	}
 	public Object getValueAt(String path) {
 		

@@ -3,6 +3,7 @@ package at.srfg.iasset.repository.connectivity;
 import java.net.URI;
 import java.net.URL;
 
+import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.api.IAssetConnection;
 import at.srfg.iasset.repository.api.IAssetDirectory;
@@ -23,8 +24,9 @@ public interface ConnectionProvider {
 		return new Connection(url.toString());
 	}
 	
-	IAssetConnection getIAssetConnection();
+//	IAssetConnection getIAssetConnection();
 	IAssetAdministrationShellRepositoryInterface getRepositoryInterface();
+	IAssetAdministrationShellInterface getShellInterface();
 	
 	IAssetDirectory getIAssetDirectory();
 
@@ -49,15 +51,14 @@ public interface ConnectionProvider {
 			return repositoryInterface;
 		}
 		@Override
-		@Deprecated
-		public IAssetConnection getIAssetConnection() {
+		public IAssetAdministrationShellInterface getShellInterface() {
 				return ConsumerFactory.createConsumer(
 						// construct the URL
 						host + "repository",
 						// the Client Factory creates a client configured with the AAS Model (default implementations & mixins)
 						ClientFactory.getInstance().getClient(), 
 						// the interface class
-						IAssetConnection.class);	
+						IAssetAdministrationShellInterface.class);	
 		}
 		@Override
 		public IAssetDirectory getIAssetDirectory() {

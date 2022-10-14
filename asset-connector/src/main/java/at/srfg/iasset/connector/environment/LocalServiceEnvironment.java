@@ -27,6 +27,8 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.model.custom.InstanceEnvironment;
+import at.srfg.iasset.repository.model.custom.InstanceOperation;
+import at.srfg.iasset.repository.model.custom.InstanceProperty;
 import at.srfg.iasset.repository.model.helper.SubmodelHelper;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
@@ -111,11 +113,6 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 	public void removeModelListener(ModelListener listener) {
 		listeners.remove(listener);
-	}
-
-	@Override
-	public Optional<Submodel> getSubmodel(String identifier) {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -332,24 +329,71 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 
 	@Override
-	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path, Consumer<?> consumer) {
-		// TODO Auto-generated method stub
-		
+	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path, Consumer<String> consumer) {
+		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( sub.isPresent()) {
+			SubmodelHelper helper = new SubmodelHelper(sub.get());
+			Optional<Property> property = helper.getSubmodelElementAt(path, Property.class);
+			if ( property.isPresent()) {
+				Property theProp = property.get();
+				if (! InstanceProperty.class.isInstance(theProp)) {
+					// need to exchange the default property
+					theProp = new InstanceProperty(theProp);
+					helper.setSubmodelElementAt(path, theProp);
+				}
+				if ( InstanceProperty.class.isInstance(theProp)) {
+					InstanceProperty iProp = InstanceProperty.class.cast(theProp);
+					iProp.consumer(consumer);
+				}
+				
+			}
+		}
 	}
 
 	@Override
-	public void setValueSupplier(String aasIdentifier, String submodelIdentifier, String path, Supplier<?> consumer) {
-		// TODO Auto-generated method stub
+	public void setValueSupplier(String aasIdentifier, String submodelIdentifier, String path, Supplier<String> supplier) {
+		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( sub.isPresent()) {
+			SubmodelHelper helper = new SubmodelHelper(sub.get());
+			Optional<Property> property = helper.getSubmodelElementAt(path, Property.class);
+			if ( property.isPresent()) {
+				Property theProp = property.get();
+				if (! InstanceProperty.class.isInstance(theProp)) {
+					// need to exchange the default property
+					theProp = new InstanceProperty(theProp);
+					helper.setSubmodelElementAt(path, theProp);
+				}
+				if ( InstanceProperty.class.isInstance(theProp)) {
+					InstanceProperty iProp = InstanceProperty.class.cast(theProp);
+					iProp.supplier(supplier);
+				}
+				
+			}
+		}
+		// 
 		
 	}
 
 	@Override
 	public void setOperationFunction(String aasIdentifier, String submodelIdentifier, String path,
-			Function<?, ?> consumer) {
+			Function<Map<String,Object>, Object> operation) {
 		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
-//			new SubmodelHelper(sub.get()).getSubmodelElementAt(path)
+			SubmodelHelper helper = new SubmodelHelper(sub.get());
+			Optional<Operation> property = helper.getSubmodelElementAt(path, Operation.class);
+			if ( property.isPresent()) {
+				Operation theProp = property.get();
+				if (! InstanceProperty.class.isInstance(theProp)) {
+					// need to exchange the default property
+					theProp = new InstanceOperation(theProp);
+					helper.setSubmodelElementAt(path, theProp);
+				}
+				if ( InstanceOperation.class.isInstance(theProp)) {
+					InstanceOperation iProp = InstanceOperation.class.cast(theProp);
+					iProp.function(operation);
+				}
+				
+			}
 		}
-		// TODO Auto-generated method stub
 		
 	}}

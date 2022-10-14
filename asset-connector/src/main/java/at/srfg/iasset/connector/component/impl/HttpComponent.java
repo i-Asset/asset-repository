@@ -5,18 +5,18 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.util.Base64;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import javax.ws.rs.ProcessingException;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.impl.DefaultEndpoint;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
@@ -52,6 +52,8 @@ public class HttpComponent implements ConnectorEndpoint {
 	 * List of the dedicated HttpHandlers 
 	 */
 	private final Map<String, HttpHandler> httpHandler = new HashMap<String, HttpHandler>();
+	
+	private final Set<String> registrations = new HashSet<String>();
 	/**
 	 * List of {@link AssetAdministrationShellDescriptor}s actively registered with the server
 	 */
@@ -127,6 +129,13 @@ public class HttpComponent implements ConnectorEndpoint {
 	public void stop() {
 		if (httpServer != null && httpServer.isStarted()) {
 			try {
+				registrations.forEach(new Consumer<String>() {
+
+					@Override
+					public void accept(String t) {
+						repoConnector.unregister(t);
+					}
+				});
 				httpServer.shutdown();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -266,10 +275,13 @@ public class HttpComponent implements ConnectorEndpoint {
 			String pathToShell = repositoryURI.getPath() + String.format("shells/%s", idEncoded);
 			URI shellUri = URI.create(String.format("%s://%s:%s%s", repositoryURI.getScheme(), getHostAddress(), currentPort, pathToShell));
 			repoConnector.register(shellToRegister.get(), shellUri);
+			// keep in the list of active registrations
+			registrations.add(aasIdentifier);
 		}
 		
 	}
 	public void unregister(String aasIdentifier) {
 		repoConnector.unregister(aasIdentifier);
+		registrations.remove(aasIdentifier);
 	}
 }

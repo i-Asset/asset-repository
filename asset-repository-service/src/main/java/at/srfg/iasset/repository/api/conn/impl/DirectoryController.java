@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetDirectory;
-import at.srfg.iasset.repository.persistence.DirectoryService;
+import at.srfg.iasset.repository.component.DirectoryService;
 
 @RestController
 @RequestMapping(path = "directory")
