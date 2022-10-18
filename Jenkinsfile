@@ -8,7 +8,8 @@ node('iasset-jenkins-slave') {
     if (env.BRANCH_NAME == 'staging') {
 
         stage('Clone and Update') {
-            git(url: 'https://github.com/i-Asset/asset-repository.git', branch: env.BRANCH_NAME)
+            // clone via ssh-key!
+            git(url: 'git@github.com:i-Asset/asset-repository.git', branch: env.BRANCH_NAME)
         }
 
         stage('Build Java') {
