@@ -8,7 +8,7 @@ node('iasset-jenkins-slave') {
     if (env.BRANCH_NAME == 'staging') {
 
         stage('Build Java Dependencies') {
-            git(url: 'https://github.com/i-Asset/aas4j.git', tag: 'v0.1.0-alpha-i-Twin')
+            git(url: 'https://github.com/i-Asset/aas4j.git', branch: 'refs/tags/v0.1.0-alpha-i-Twin')
             sh 'mvn clean install -DskipTests'
         }
 
