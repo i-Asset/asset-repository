@@ -21,7 +21,7 @@ node('iasset-jenkins-slave') {
         }
 
         stage('Build Service Container') {
-            sh 'docker build -f asset-repository-service/src/main/docker/Dockerfile \
+            sh 'docker build . -f asset-repository-service/src/main/docker/Dockerfile \
                 --build-arg JAR_FILE=asset-repository-service/target/*.jar \
                 -t iassetplatform/asset-repository:staging'
         }
@@ -75,7 +75,7 @@ node('iasset-jenkins-slave') {
         }
 
         stage('Build Service Container') {
-            sh 'docker build -f asset-repository-service/src/main/docker/Dockerfile \
+            sh 'docker build . -f asset-repository-service/src/main/docker/Dockerfile \
                 --build-arg JAR_FILE=asset-repository-service/target/*.jar \
                 -t iassetplatform/asset-repository:' + env.TAG_NAME
         }
