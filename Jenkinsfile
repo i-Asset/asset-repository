@@ -23,15 +23,15 @@ node('iasset-jenkins-slave') {
         stage('Build Service Container') {
             sh 'docker build . -f asset-repository-service/src/main/docker/Dockerfile \
                 --build-arg JAR_FILE=asset-repository-service/target/*.jar \
-                -t iassetplatform/asset-repository:staging'
+                -t iassetplatform/asset-repository-service:staging'
         }
 
         stage('Push Docker') {
-            sh 'docker push iassetplatform/asset-repository:staging'
+            sh 'docker push iassetplatform/asset-repository-service:staging'
         }
 
         stage('Deploy on staging server') {
-            sh 'ssh staging "cd /srv/docker-setup/staging/ && ./run-staging.sh restart-single asset-repository"'
+            sh 'ssh staging "cd /srv/docker-setup/staging/ && ./run-staging.sh restart-single asset-repository-service"'
         }
     }
 
@@ -77,16 +77,16 @@ node('iasset-jenkins-slave') {
         stage('Build Service Container') {
             sh 'docker build . -f asset-repository-service/src/main/docker/Dockerfile \
                 --build-arg JAR_FILE=asset-repository-service/target/*.jar \
-                -t iassetplatform/asset-repository:' + env.TAG_NAME
+                -t iassetplatform/asset-repository-service:' + env.TAG_NAME
         }
 
         stage('Push Docker Container') {
-            sh 'docker push iassetplatform/asset-repository:' + env.TAG_NAME
-            sh 'docker push iassetplatform/asset-repository:latest'
+            sh 'docker push iassetplatform/asset-repository-service:' + env.TAG_NAME
+            sh 'docker push iassetplatform/asset-repository-service:latest'
         }
 
         stage('Deploy on PROD server') {
-            sh 'ssh prod "cd /data/deployment_setup/prod/ && sudo ./run-prod.sh restart-single asset-repository"'
+            sh 'ssh prod "cd /data/deployment_setup/prod/ && sudo ./run-prod.sh restart-single asset-repository-service"'
         }
 
     }
