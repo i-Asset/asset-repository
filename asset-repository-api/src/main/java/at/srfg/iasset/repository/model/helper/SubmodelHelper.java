@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.eclipse.aas4j.v3.model.BasicEventElement;
@@ -20,6 +21,7 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.aas4j.v3.model.SubmodelElementList;
 
+import at.srfg.iasset.repository.model.value.ValueType;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 
@@ -102,6 +104,13 @@ public class SubmodelHelper {
 			
 		}
 		return Optional.ofNullable(element);
+	}
+	public <T extends SubmodelElement> Optional<T> getSubmodelElementAt(String path, Class<T> clazz) {
+		Optional<SubmodelElement> elem = getSubmodelElementAt(path);
+		if (elem.isPresent() && clazz.isInstance(elem.get())) {
+			return Optional.of(clazz.cast(elem.get()));
+		}
+		return Optional.empty();
 	}
 	public Object getValueAt(String path) {
 		
@@ -255,7 +264,8 @@ public class SubmodelHelper {
 		if ( ! children.isEmpty()) {
 			for (SubmodelElement sme : getChildren(referable)) {
 				if ( Property.class.isInstance(sme)) {
-					resultMap.put(sme.getIdShort(), Property.class.cast(sme).getValue());
+					Property p = Property.class.cast(sme);
+					resultMap.put(sme.getIdShort(), ValueType.getValue(p.getValueType(), p.getValue()).getValue());
 				}
 				else if ( SubmodelElementCollection.class.isInstance(sme)) {
 					resultMap.put(sme.getIdShort(), getValueOnly(sme));
@@ -271,7 +281,7 @@ public class SubmodelHelper {
 		else {
 			if ( Property.class.isInstance(referable)) {
 				Property p = Property.class.cast(referable);
-				resultMap.put(referable.getIdShort(), ValueHelper.getValue(p.getValueType(), p.getValue()));
+				resultMap.put(referable.getIdShort(), ValueType.getValue(p.getValueType(), p.getValue()).getValue());
 			}
 		}
 		
