@@ -13,6 +13,19 @@
 		<java.version>11</java.version>
 
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>2021.0.4</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
@@ -40,11 +53,25 @@
 			<version>1.6.9</version>
 		</dependency>
 
+		<!-- Spring Boot Web Framework -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!-- mongodb -->
+
+		<!-- Spring Cloud -->
+		<dependency>
+			<!-- support central config server configuration -->
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<dependency>
+			<!-- required for backwards compatibility with bootstrap.yml -->
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+
+		<!-- Spring mongodb -->
 		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
