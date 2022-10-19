@@ -1,7 +1,7 @@
 package at.srfg.iasset.repository.persistence.config;
 
 import org.bson.Document;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
@@ -14,28 +14,23 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "at.srfg.iasset.repository")
+@EnableMongoRepositories(basePackages = "at.srfg.iasset.repository.persistence")
 public class MongoConnector extends AbstractMongoClientConfiguration {
+	@Value("${spring.data.mongodb.uri}")
+	private String uri;
+	@Value("${spring.data.mongodb.database}")
+	private String database;
 
-    @Bean
-    @ConfigurationProperties(prefix = "iasset.persistence.mongodb")
-    MongoConfig getMongoConfig() {
-        return new MongoConfig();
-    }
 
-    @Bean
-    public MongoClient getClient() {
-        return MongoClients.create(getMongoConfig().getUrl());
-    }
 
     @Bean
     public MongoDatabase getDatabase() {
-        return getClient().getDatabase(getMongoConfig().getName());
+        return mongoClient().getDatabase(database);
     }
 
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
-    	return new MongoTemplate(getClient(), getMongoConfig().getName());
+    	return new MongoTemplate(mongoClient(), database);
     }
     
     public MongoCollection<Document> getCollection(String collectionName) {
@@ -45,12 +40,12 @@ public class MongoConnector extends AbstractMongoClientConfiguration {
     
 	@Override
 	public MongoClient mongoClient() {
-		return MongoClients.create(getMongoConfig().getUrl());
+		return MongoClients.create(uri);
 	}
 
 	@Override
 	protected String getDatabaseName() {
-		return getMongoConfig().getName();
+		return database;
 	}
 
 }
