@@ -7,8 +7,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>asset-repository-service</artifactId>
-	<name>asset-repository</name>
-	<description>iAsset Repository</description>
+	<name>Asset Repository Service</name>
+	<description>iAsset Repository Service</description>
 	<properties>
 		<java.version>11</java.version>
 
