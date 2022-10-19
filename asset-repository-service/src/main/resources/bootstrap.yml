@@ -8,10 +8,3 @@ spring:
   application:
     # the name of the application represents the global identifier of this microservice.
     name: repository-service
-    
-iasset:
-  repository:
-    persistence:
-      mongodb:
-        url: ${MONGODB_URL:mongodb://root:example@localhost:27017}
-        name: ${MONGODB_NAME:asset}

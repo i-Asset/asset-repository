@@ -1,5 +1,0 @@
-iasset:
-  persistence:
-    mongodb:
-      url: ${MONGODB_URL:mongodb://root:example@localhost:27017}
-      name: ${MONGODB_NAME:asset}
