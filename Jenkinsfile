@@ -7,13 +7,9 @@ node('iasset-jenkins-slave') {
     // -----------------------------------------------
     if (env.BRANCH_NAME == 'staging') {
 
-        stage('Build Java Dependencies') {
-            git(url: 'https://github.com/i-Asset/aas4j.git', tag: 'v0.1.0-alpha-i-Twin')
-            sh 'mvn clean install -DskipTests'
-        }
-
         stage('Clone and Update') {
-            git(url: 'https://github.com/i-Asset/asset-repository.git', branch: env.BRANCH_NAME)
+            // clone via ssh-key!
+            git(url: 'git@github.com:i-Asset/asset-repository.git', branch: env.BRANCH_NAME)
         }
 
         stage('Build Java') {
@@ -24,16 +20,18 @@ node('iasset-jenkins-slave') {
             sh 'mvn test'
         }
 
-        stage('Build Docker') {
-            sh 'docker build -t  -Ddocker.image.tag=staging'
+        stage('Build Service Container') {
+            sh 'docker build . -f asset-repository-service/src/main/docker/Dockerfile \
+                --build-arg JAR_FILE=asset-repository-service/target/*.jar \
+                -t iassetplatform/asset-repository-service:staging'
         }
 
         stage('Push Docker') {
-            sh 'docker push iassetplatform/asset-repository:staging'
+            sh 'docker push iassetplatform/asset-repository-service:staging'
         }
 
-        stage('Deploy') {
-            sh 'ssh staging "cd /srv/docker_setup/staging/ && ./run-staging.sh restart-single asset-repository"'
+        stage('Deploy on staging server') {
+            sh 'ssh staging "cd /srv/docker-setup/staging/ && ./run-staging.sh restart-single asset-repository-service"'
         }
     }
 
@@ -43,15 +41,15 @@ node('iasset-jenkins-slave') {
     if (env.BRANCH_NAME == 'main') {
 
         stage('Clone and Update') {
-            git(url: 'https://github.com/i-Asset/asset-repository.git', branch: env.BRANCH_NAME)
+            git(url: 'git@github.com:i-Asset/asset-repository.git', branch: env.BRANCH_NAME)
         }
 
         stage('Build Java') {
             sh 'mvn clean install -DskipTests'
         }
 
-        stage('Build Docker') {
-            sh 'mvn docker:build -Ddocker.image.tag=latest'
+        stage('Run Tests') {
+            sh 'mvn test'
         }
     }
 
@@ -61,7 +59,7 @@ node('iasset-jenkins-slave') {
     if( env.TAG_NAME ==~ /^v\d+.\d+.\d+.*$/) {
 
         stage('Clone and Update') {
-            git(url: 'https://github.com/i-Asset/asset-repository.git', branch: env.BRANCH_NAME)
+            git(url: 'git@github.com:i-Asset/asset-repository.git', branch: env.BRANCH_NAME)
         }
 
         stage('Set version') {
@@ -76,17 +74,19 @@ node('iasset-jenkins-slave') {
             sh 'mvn clean install -DskipTests'
         }
 
-        stage('Build Docker') {
-            sh 'mvn docker:build'
+        stage('Build Service Container') {
+            sh 'docker build . -f asset-repository-service/src/main/docker/Dockerfile \
+                --build-arg JAR_FILE=asset-repository-service/target/*.jar \
+                -t iassetplatform/asset-repository-service:' + env.TAG_NAME
         }
 
-        stage('Push Docker') {
-            sh 'docker push iassetplatform/asset-repository:' + env.TAG_NAME
-            sh 'docker push iassetplatform/asset-repository:latest'
+        stage('Push Docker Container') {
+            sh 'docker push iassetplatform/asset-repository-service:' + env.TAG_NAME
+            sh 'docker push iassetplatform/asset-repository-service:latest'
         }
 
-        stage('Deploy PROD') {
-            sh 'ssh prod "cd /data/deployment_setup/prod/ && sudo ./run-prod.sh restart-single asset-repository"'
+        stage('Deploy on PROD server') {
+            sh 'ssh prod "cd /data/deployment_setup/prod/ && sudo ./run-prod.sh restart-single asset-repository-service"'
         }
 
     }
