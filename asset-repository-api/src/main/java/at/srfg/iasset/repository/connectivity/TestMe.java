@@ -14,7 +14,7 @@ import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterfac
 public class TestMe {
 
 	public static void main(String[] args) {
-		ConnectionProvider c = ConnectionProvider.getConnection("http://localhost:8080");
+		ConnectionProvider c = ConnectionProvider.getConnection("https://iasset.salzburgresearch.at/repository-service/");
 		
 		IAssetAdministrationShellRepositoryInterface conn = c.getRepositoryInterface();
 		

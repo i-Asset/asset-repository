@@ -47,7 +47,7 @@ public class Connector implements LocalEnvironment {
 	public static void main(String [] args) {
 		try {
 			
-			Connector connector = new Connector( new URI("http://localhost:8080/"));
+			Connector connector = new Connector( new URI("http://localhost:8081/"));
 			// start the http endpoint for this Connector at port 5050
 			connector.startEndpoint(5050);
 			// create 

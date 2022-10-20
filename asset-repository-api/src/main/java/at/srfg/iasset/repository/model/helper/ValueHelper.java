@@ -1,41 +1,67 @@
 package at.srfg.iasset.repository.model.helper;
 
-import java.time.Duration;
-import java.time.LocalDate;
 
-import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.reflect.ConstructorUtils;
+import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.reflect.TypeToken;
+
+import at.srfg.iasset.repository.config.AASModelHelper;
+import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.value.mapper.ValueMapper;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
+/**
+ * Helper class, inspired from FAAST ...
+ * 
+ *
+ */
 public class ValueHelper {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ValueHelper.class);
 	
-	public static Object getValue(DataTypeDefXsd type, String value) {
-		switch(type) {
-		case ANY_URI:
-		case STRING:
-			return value;
-		case INT:
-		case NON_NEGATIVE_INTEGER:
-		case NON_POSITIVE_INTEGER:
-		case UNSIGNED_INT: 
-		case UNSIGNED_LONG:
-		case UNSIGNED_SHORT:
-		case INTEGER:
-		case SHORT:
-			return Integer.valueOf(value);
-		case DECIMAL:
-		case FLOAT:
-		case DOUBLE:
-			return Double.valueOf(value);
-		case BOOLEAN:
-			return Boolean.valueOf(value);
-		case BASE64BINARY: 
-			return value.getBytes();
-		case DURATION:
-			return Duration.parse(value);
-		case DATE:
-			return LocalDate.parse(value);
-		default:
-			return value;
+	private static Map<Class<? extends SubmodelElement>, ValueMapper> mapper;
+	
+	static {
+		
+		if ( mapper == null) {
+			mapper = new HashMap<Class<? extends SubmodelElement>, ValueMapper>();
+			ScanResult scanResult = new ClassGraph()
+					.enableAllInfo()
+					.acceptPackages(ValueMapper.class.getPackageName())
+					.scan();
+			List<Class<?>> mapperClasses = scanResult.getClassesImplementing(ValueMapper.class).loadClasses();
+			// build the mapper's
+			for ( Class<?> clazz : mapperClasses) {
+				Class<? extends ValueMapper> vmClass = (Class<? extends ValueMapper>) clazz;
+				TypeToken typeVariable = TypeToken.of(vmClass).resolveType(ValueMapper.class.getTypeParameters()[0]);
+				Class<? extends SubmodelElement> clazz2 = (Class<? extends SubmodelElement>) typeVariable.getRawType();
+				try {
+					ValueMapper valueMapper = ConstructorUtils.invokeConstructor(vmClass);
+					mapper.put(clazz2, valueMapper);
+				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+	}
+	@SuppressWarnings("unchecked")
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> V toValue(M submodelElement) {
+		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
+		if ( mapper.containsKey(propertyInterface)) {
+			return (V) ((ValueMapper<M,V>)mapper.get(propertyInterface)).getValueOnly(submodelElement);
+		}
+		return null;
+		
+	}
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, V value) {
+		return modelElement;
 	}
 
 }

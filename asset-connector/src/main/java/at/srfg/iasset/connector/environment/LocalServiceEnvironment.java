@@ -434,7 +434,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			return "localhost";
 		}
 	}
-	public void register(String aasIdentifier) {
+	public boolean register(String aasIdentifier) {
 
 		Optional<AssetAdministrationShell> shellToRegister = environment.getAssetAdministrationShell(aasIdentifier);
 		if ( shellToRegister.isPresent()) {
@@ -444,9 +444,10 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			if (repository.register(shellToRegister.get(), shellUri)) {
 				// keep in the list of active registrations
 				registrations.add(aasIdentifier);
+				return true;
 			}
 		}
-		
+		return false;
 	}
 	
 	public void unregister() {

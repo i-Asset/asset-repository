@@ -4,16 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.eclipse.aas4j.v3.model.Entity;
 import org.eclipse.aas4j.v3.model.Key;
 import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Property;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
@@ -21,7 +17,7 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.aas4j.v3.model.SubmodelElementList;
 
-import at.srfg.iasset.repository.model.value.ValueType;
+import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 
@@ -258,35 +254,8 @@ public class SubmodelHelper {
 		}
 		return Optional.empty();
 	}
-	public Map<String, Object> getValueOnly(Referable referable) {
-		Map<String, Object> resultMap = new HashMap<String,Object>();
-		List<SubmodelElement> children = getChildren(referable);
-		if ( ! children.isEmpty()) {
-			for (SubmodelElement sme : getChildren(referable)) {
-				if ( Property.class.isInstance(sme)) {
-					Property p = Property.class.cast(sme);
-					ValueType.getValue(p);
-					resultMap.put(sme.getIdShort(), ValueType.getValue(p.getValueType(), p.getValue()).getValue());
-				}
-				else if ( SubmodelElementCollection.class.isInstance(sme)) {
-					resultMap.put(sme.getIdShort(), getValueOnly(sme));
-				}
-				else if ( SubmodelElementList.class.isInstance(sme)) {
-					resultMap.put(sme.getIdShort(), getValueOnly(sme));
-				}
-				else if ( BasicEventElement.class.isInstance(sme)) {
-					
-				}
-			}
-		}
-		else {
-			if ( Property.class.isInstance(referable)) {
-				Property p = Property.class.cast(referable);
-				resultMap.put(referable.getIdShort(), ValueType.getValue(p.getValueType(), p.getValue()).getValue());
-			}
-		}
-		
-		return resultMap;
+	public SubmodelElementValue getValueOnly(SubmodelElement referable) {
+		return ValueHelper.toValue(referable);
 	}
 	
 }
