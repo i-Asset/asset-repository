@@ -24,6 +24,8 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
@@ -177,7 +179,7 @@ public class AssetAdministrationShellController implements IAssetAdministrationS
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH +"/value")
-	public void setValue(@PathParam("submodelIdentifier") String submodelIdentifier, @PathParam("path") String path, Object value) {
+	public void setValue(@PathParam("submodelIdentifier") String submodelIdentifier, @PathParam("path") String path, JsonNode value) {
 		environment.setElementValue(				
 				theShell.getId(), 
 				ApiUtils.base64Decode(submodelIdentifier), 

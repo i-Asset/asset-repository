@@ -58,9 +58,7 @@ public class InstanceProperty extends DefaultProperty implements Property {
 		if ( consumer != null) {
 			consumer.accept(newValue);
 		}
-		else {
-			super.setValue(newValue);
-		}
+		super.setValue(newValue);
 	}
 
 }

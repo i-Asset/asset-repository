@@ -24,6 +24,8 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
@@ -225,7 +227,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 			String submodelIdentifier, 
 			@PathParam("path")
 			String path, 
-			Object value) {
+			JsonNode value) {
 		environment.setElementValue(					
 					ApiUtils.base64Decode(aasIdentifier), 
 					ApiUtils.base64Decode(submodelIdentifier), 

@@ -31,6 +31,8 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.util.Base64Utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.srfg.iasset.connector.MessageListener;
 import at.srfg.iasset.connector.MessageProducer;
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
@@ -282,7 +284,12 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public void setElementValue(String aasIdentifier, String submodelIdentifier, String path, Object value) {
-		// TODO Auto-generated method stub
+		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( sub.isPresent() ) {
+			if ( value instanceof JsonNode) {
+				new SubmodelHelper(sub.get()).setValueAt(path, (JsonNode) value);
+			}
+		}
 		
 	}
 

@@ -17,6 +17,8 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.aas4j.v3.model.SubmodelElementList;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
@@ -117,6 +119,19 @@ public class SubmodelHelper {
 		}
 		return new HashMap<String, Object>();
 	}
+	public void setValueAt(String path, JsonNode value) {
+		Optional<SubmodelElement> elem = getSubmodelElementAt(path);
+		if ( elem.isPresent()) {
+			setValueOnly(elem.get(), value);
+			
+		}
+		
+	}
+	private void setValueOnly(SubmodelElement submodelElement, JsonNode value) {
+		ValueHelper.applyValue(submodelElement, value);
+		
+	}
+
 	private <T extends Referable> Optional<T> getChild(Referable parent, String idShort, Class<T> type) {
 		if ( SubmodelElementList.class.isInstance(parent)) {
 			List<SubmodelElement> children = getChildren(parent);

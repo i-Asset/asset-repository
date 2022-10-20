@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.api.IAssetConnection;
@@ -110,7 +112,7 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 	}
 
 	@Override
-	public void setValue(String aasIdentifier, String submodelIdentifier, String path, Object value) {
+	public void setValue(String aasIdentifier, String submodelIdentifier, String path, JsonNode value) {
 		server.setElementValue(
 				ApiUtils.base64Decode(aasIdentifier), 
 				ApiUtils.base64Decode(submodelIdentifier), 

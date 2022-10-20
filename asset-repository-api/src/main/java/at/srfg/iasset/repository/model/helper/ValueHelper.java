@@ -11,6 +11,7 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.reflect.TypeToken;
 
 import at.srfg.iasset.repository.config.AASModelHelper;
@@ -62,6 +63,13 @@ public class ValueHelper {
 	}
 	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, V value) {
 		return modelElement;
+	}
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, JsonNode node) {
+		Class<?> propertyInterface = AASModelHelper.getAasInterface(modelElement.getClass());
+		if ( mapper.containsKey(propertyInterface)) {
+			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).applyValue(modelElement, node);
+		}
+		return null;
 	}
 
 }

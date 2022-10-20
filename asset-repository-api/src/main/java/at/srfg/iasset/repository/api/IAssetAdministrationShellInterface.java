@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.srfg.iasset.repository.api.annotation.Base64Encoded;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -465,7 +467,7 @@ public interface IAssetAdministrationShellInterface {
 			@PathVariable("path") 
 			String path,
 			@RequestBody
-			Object value);
+			JsonNode value);
 	/**
 	 * Invoke the operation named with the path
 	 * @param path
