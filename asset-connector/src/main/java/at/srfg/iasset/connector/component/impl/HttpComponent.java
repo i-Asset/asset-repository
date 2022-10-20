@@ -1,22 +1,15 @@
 package at.srfg.iasset.connector.component.impl;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
 
 import javax.ws.rs.ProcessingException;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
@@ -25,7 +18,6 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.util.Base64Utils;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.config.MarshallingFeature;
@@ -38,42 +30,28 @@ import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
 public class HttpComponent implements ConnectorEndpoint {
 	private HttpServer httpServer;
 	private ServerConfiguration serverConfiguration;
-	private int defaultPort = 5050;
+	private static int defaultPort = 5050;
 	private int currentPort;
-//	private String contextPath;
-	private final URI repositoryURI;
 	
-	private RepositoryConnection repoConnector;
 	/**
 	 * The local service environment
 	 */
-	private final ServiceEnvironment environment;
+//	private final LocalServiceEnvironment environment;
 	/**
 	 * List of the dedicated HttpHandlers 
 	 */
 	private final Map<String, HttpHandler> httpHandler = new HashMap<String, HttpHandler>();
 	
-	private final Set<String> registrations = new HashSet<String>();
-	/**
-	 * List of {@link AssetAdministrationShellDescriptor}s actively registered with the server
-	 */
-	private List<AssetAdministrationShellDescriptor> registered;
-
-	public HttpComponent(URI repositoryURI, ServiceEnvironment environment) {
-		this.repositoryURI = repositoryURI;
-		this.environment = environment;
-		this.repoConnector = RepositoryConnection.getConnector(repositoryURI);
-
+	public HttpComponent() {
+		this(defaultPort);
+	}
+	public HttpComponent(int port) {
+		this.currentPort = port;
 	}
 	
 
-	public String getHostAddress() {
-		try {
-			InetAddress adr = InetAddress.getLocalHost();
-			return adr.getHostAddress();
-		} catch (UnknownHostException e) {
-			return "localhost";
-		}
+	public int getPort() {
+		return currentPort;
 	}
 
 	public URI getServerAddress(String host, int port, String context) {
@@ -81,29 +59,27 @@ public class HttpComponent implements ConnectorEndpoint {
 		return URI.create(String.format("http://%s:%s/%s", host, port, context));
 	}
 
-	public void start(int port) {
-		start(port, "");
-	}
-	public void start(int port, String contextPath) {
-		currentPort = port;
-		ResourceConfig rootConfig = new ResourceConfig();
-		rootConfig.register(new AbstractBinder() {
-			
-			@Override
-			protected void configure() {
-				bind(environment).to(ServiceEnvironment.class);
-				
-			}
-		});
-		rootConfig.register(AASJacksonMapperProvider.class);
-		rootConfig.register(MarshallingFeature.class);
-		rootConfig.register(AssetAdministrationRepositoryController.class);
+
+	@Override
+	public void start(String contextPath, ResourceConfig rootConfig) {
+//		ResourceConfig rootConfig = new ResourceConfig();
+//		rootConfig.register(new AbstractBinder() {
+//			
+//			@Override
+//			protected void configure() {
+//				bind(environment).to(ServiceEnvironment.class);
+//				
+//			}
+//		});
+//		rootConfig.register(AASJacksonMapperProvider.class);
+//		rootConfig.register(MarshallingFeature.class);
+//		rootConfig.register(AssetAdministrationRepositoryController.class);
 		
 		GrizzlyHttpContainer handler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, rootConfig);
 		
 		httpServer = GrizzlyHttpServerFactory.createHttpServer(
-				// create with localhost
-				URI.create(String.format("http://%s:%s/%s", "0.0.0.0", port, contextPath))
+				// always create with localhost
+				URI.create(String.format("http://%s:%s/%s", "0.0.0.0", currentPort, contextPath))
 			);
 		
 		serverConfiguration = httpServer.getServerConfiguration();
@@ -120,22 +96,12 @@ public class HttpComponent implements ConnectorEndpoint {
 		}
 		
 	}
-	@Override
-	public void start() {
-		start(defaultPort, "");
-	}
+
 
 	@Override
 	public void stop() {
 		if (httpServer != null && httpServer.isStarted()) {
 			try {
-				registrations.forEach(new Consumer<String>() {
-
-					@Override
-					public void accept(String t) {
-						repoConnector.unregister(t);
-					}
-				});
 				httpServer.shutdown();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -153,40 +119,38 @@ public class HttpComponent implements ConnectorEndpoint {
 	}
 
 	@Override
-	public void addShellHandler(String alias, String aasIdentifier) {
-		Optional<AssetAdministrationShell> aas = environment.getAssetAdministrationShell(aasIdentifier);
-		if (aas.isPresent()) {
-			ResourceConfig shellConfig = new ResourceConfig();
-			shellConfig.register(new AbstractBinder() {
-				
-				@Override
-				protected void configure() {
-					bind(environment).to(ServiceEnvironment.class);
-					
-				}
-			});
-			shellConfig.register(new AbstractBinder() {
-				
-				@Override
-				protected void configure() {
-					bind(aas.get()).to(AssetAdministrationShell.class);
-					
-				}
-			});
-			shellConfig.register(AASJacksonMapperProvider.class);
-			shellConfig.register(MarshallingFeature.class);
-			shellConfig.register(AssetAdministrationShellController.class);
+	public void addHttpHandler(String alias, ResourceConfig shellConfig) {
+//			ResourceConfig shellConfig = new ResourceConfig();
+//			shellConfig.register(new AbstractBinder() {
+//				
+//				@Override
+//				protected void configure() {
+//					bind(environment).to(ServiceEnvironment.class);
+//					
+//				}
+//			});
+//			shellConfig.register(new AbstractBinder() {
+//				
+//				@Override
+//				protected void configure() {
+//					bind(aas.get()).to(AssetAdministrationShell.class);
+//					
+//				}
+//			});
+//			shellConfig.register(AASJacksonMapperProvider.class);
+//			shellConfig.register(MarshallingFeature.class);
+//			shellConfig.register(AssetAdministrationShellController.class);
 
-			GrizzlyHttpContainer handler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, shellConfig);
-			httpServer.getServerConfiguration().addHttpHandler(handler, "/" + alias);
-			httpHandler.put(alias, handler);
 
-		}
+//		}
+		GrizzlyHttpContainer handler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, shellConfig);
+		httpServer.getServerConfiguration().addHttpHandler(handler, "/" + alias);
+		httpHandler.put(alias, handler);
 
 	}
 
 	@Override
-	public boolean removeShellHandler(String alias) {
+	public boolean removeHttpHandler(String alias) {
 		HttpHandler handler = httpHandler.get(alias);
 		if (handler != null) {
 			return serverConfiguration.removeHttpHandler(handler);
@@ -199,7 +163,7 @@ public class HttpComponent implements ConnectorEndpoint {
 			// create custom ObjectMapper
 //			ObjectMapper mapper = ClientFactory.getObjectMapper();
 
-			final LocalServiceEnvironment environment = new LocalServiceEnvironment();
+			final LocalServiceEnvironment environment = new LocalServiceEnvironment(URI.create("http://localhost:8080/"));
 			// create JsonProvider to provide custom ObjectMapper
 //			JacksonJaxbJsonProvider provider = new JacksonJaxbJsonProvider();
 //			provider.setMapper(mapper);
@@ -266,22 +230,5 @@ public class HttpComponent implements ConnectorEndpoint {
 	}
 
 
-	@Override
-	public void register(String aasIdentifier) {
 
-		Optional<AssetAdministrationShell> shellToRegister = environment.getAssetAdministrationShell(aasIdentifier);
-		if ( shellToRegister.isPresent()) {
-			String idEncoded = Base64Utils.encodeToString(aasIdentifier.getBytes());
-			String pathToShell = repositoryURI.getPath() + String.format("shells/%s", idEncoded);
-			URI shellUri = URI.create(String.format("%s://%s:%s%s", repositoryURI.getScheme(), getHostAddress(), currentPort, pathToShell));
-			repoConnector.register(shellToRegister.get(), shellUri);
-			// keep in the list of active registrations
-			registrations.add(aasIdentifier);
-		}
-		
-	}
-	public void unregister(String aasIdentifier) {
-		repoConnector.unregister(aasIdentifier);
-		registrations.remove(aasIdentifier);
-	}
 }

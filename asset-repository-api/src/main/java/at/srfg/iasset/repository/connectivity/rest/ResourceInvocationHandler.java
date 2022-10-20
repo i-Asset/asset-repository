@@ -133,7 +133,6 @@ public class ResourceInvocationHandler implements InvocationHandler {
 			}
 			return result;
 		} catch (ProcessingException e) {
-			e.printStackTrace();
 			// indicate the service is not available
 			throw new ServiceUnavailableException(e.getMessage());
 		}

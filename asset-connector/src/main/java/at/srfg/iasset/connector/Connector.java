@@ -4,67 +4,54 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import at.srfg.iasset.connector.component.impl.HttpComponent;
+import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.ConceptDescription;
+import org.eclipse.aas4j.v3.model.Referable;
+import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.aas4j.v3.model.SubmodelElement;
+
+import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
 import at.srfg.iasset.connector.environment.ModelListener;
+import at.srfg.iasset.repository.component.ServiceEnvironment;
 
 public class Connector implements LocalEnvironment {
 	
 
-	/**
-	 * The URL to the Server
-	 */
-	private final URI repositoryURL; 
-	/**
-	 * The local service port where the endpoint is created
-	 */
-	private int localServicePort = 5050;
-	
-	private HttpComponent endpoint;
-	
-	private LocalServiceEnvironment serviceEnvironment = new LocalServiceEnvironment();
+
+	private LocalServiceEnvironment serviceEnvironment;
 	
 	public Connector(URI repositoryURL) {
-		
-		this.repositoryURL = repositoryURL;
+		this.serviceEnvironment = new LocalServiceEnvironment(repositoryURL);
 	}
-	/**
-	 * Enable the communication endpoints
-	 * @return
-	 */
-	public Connector start() {
-		return start(localServicePort);
-	}
-	public Connector start(int port) {
-		if ( this.endpoint == null ) {
-			endpoint = new HttpComponent(repositoryURL, serviceEnvironment);
-		}
-		if ( ! endpoint.isStarted()) {
-			endpoint.start();
-		}
-		return this;
-		
-	}
+
 	
 	public void stop() {
-		if ( endpoint.isStarted()) {
-			endpoint.stop();
-		}
+		serviceEnvironment.shutdownEndpoint();
 	}
 	
+	public ServiceEnvironment getServiceEnvironment() {
+		return serviceEnvironment;
+		
+	}
+
 	public static void main(String [] args) {
 		try {
 			
 			Connector connector = new Connector( new URI("http://localhost:8080/"));
-			connector.start();
-			connector.aliasForShell("test", "https://acplt.org/Test_AssetAdministrationShell");
+			// start the http endpoint for this Connector at port 5050
+			connector.startEndpoint(5050);
+			// create 
+			connector.addHandler("https://acplt.org/Test_AssetAdministrationShell", "test");
 			connector.setValueConsumer(
 					"https://acplt.org/Test_AssetAdministrationShell", 
 					"https://acplt.org/Test_Submodel", 
@@ -73,7 +60,7 @@ public class Connector implements LocalEnvironment {
 
 						@Override
 						public void accept(String t) {
-							// TODO Auto-generated method stub
+							System.out.println("New Value provided: " + t);
 							
 						}
 					});
@@ -85,12 +72,13 @@ public class Connector implements LocalEnvironment {
 
 						@Override
 						public String get() {
-							return LocalDateTime.now().toString();
+							return "123.2";
 						}
 
 
 					});
 			connector.register("https://acplt.org/Test_AssetAdministrationShell");
+			
 			System.in.read();
 			connector.stop();
 		} catch (URISyntaxException e) {
@@ -102,37 +90,69 @@ public class Connector implements LocalEnvironment {
 		}
 	}
 	
-	public void aliasForShell(String alias, String aasIdentifier) {
-		
-		endpoint.addShellHandler(alias, aasIdentifier);
-	}
 	public void register(String aasIdentifier) {
-		endpoint.register(aasIdentifier);
+		serviceEnvironment.register(aasIdentifier);
 	}
 	public void unregister(String aasIdentifier) {
-		endpoint.unregister(aasIdentifier);
+		serviceEnvironment.unregister(aasIdentifier);
 	}
 	public void addModelListener(ModelListener listener) {
-		((LocalEnvironment)serviceEnvironment).addModelListener(listener);
+		serviceEnvironment.addModelListener(listener);
 	}
 	public void removeModelListener(ModelListener listener) {
-		((LocalEnvironment)serviceEnvironment).removeModelListener(listener);
+		serviceEnvironment.removeModelListener(listener);
 	}
 	@Override
 	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path, Consumer<String> consumer) {
-		((LocalEnvironment)serviceEnvironment).setValueConsumer(aasIdentifier, submodelIdentifier, path, consumer);
+		serviceEnvironment.setValueConsumer(aasIdentifier, submodelIdentifier, path, consumer);
 		
 	}
 	@Override
 	public void setValueSupplier(String aasIdentifier, String submodelIdentifier, String path, Supplier<String> consumer) {
-		((LocalEnvironment)serviceEnvironment).setValueSupplier(aasIdentifier, submodelIdentifier, path, consumer);
-
-		
+		serviceEnvironment.setValueSupplier(aasIdentifier, submodelIdentifier, path, consumer);
 	}
 	@Override
 	public void setOperationFunction(String aasIdentifier, String submodelIdentifier, String path,
 			Function<Map<String, Object>, Object> function) {
-		((LocalEnvironment)serviceEnvironment).setOperationFunction(aasIdentifier, submodelIdentifier, path, function);		
+		serviceEnvironment.setOperationFunction(aasIdentifier, submodelIdentifier, path, function);		
+	}
+	@Override
+	public ConnectorEndpoint startEndpoint(int port) {
+		return serviceEnvironment.startEndpoint(port);
+	}
+	@Override
+	public void shutdownEndpoint() {
+		serviceEnvironment.shutdownEndpoint();
+	}
+	@Override
+	public void addHandler(String aasIdentifier) {
+		serviceEnvironment.addHandler(aasIdentifier);
+		
+	}
+	@Override
+	public void addHandler(String aasIdentifier, String alias) {
+		serviceEnvironment.addHandler(aasIdentifier, alias);
+
+		
+	}
+	@Override
+	public void removeHandler(String alias) {
+		serviceEnvironment.removeHandler(alias);
+		
+	}
+
+
+	@Override
+	public <T> void addMesssageListener(Reference reference, MessageListener<T> listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public <T> MessageProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

@@ -14,5 +14,9 @@ public class BooleanValue extends Value<Boolean>{
 		setValue(Boolean.parseBoolean(stringValue));
 		return this;
 	}
+	@Override
+	public ValueType getValueType() {
+		return ValueType.BOOLEAN;
+	}
 
 }

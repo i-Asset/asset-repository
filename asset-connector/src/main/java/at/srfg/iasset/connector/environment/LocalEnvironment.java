@@ -5,14 +5,98 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.Operation;
+import org.eclipse.aas4j.v3.model.Reference;
+
+import at.srfg.iasset.connector.MessageListener;
+import at.srfg.iasset.connector.MessageProducer;
+import at.srfg.iasset.connector.component.ConnectorEndpoint;
+
 public interface LocalEnvironment {
+	/**
+	 * Create the HTTP(s) enpoint. The component starts an HTTP endpoint serving the 
+	 * local {@link AssetAdministrationShell}s. 
+	 * @param port The port where the service endpoint is to be provided
+	 * @return
+	 */
+	public ConnectorEndpoint startEndpoint(int port);
 	
+	/**
+	 * Stop the HTTP(s) endpoint
+	 */
+	public void shutdownEndpoint();
+	/**
+	 * Add a {@link ModelListener} to the local environment
+	 * @param listener
+	 */
 	public void addModelListener(ModelListener listener);
+	/**
+	 * Remove a {@link ModelListener} from the local environment
+	 * @param listener
+	 */
 	public void removeModelListener(ModelListener listener);
+	/**
+	 * Add a dedicated service handler for the identified {@link AssetAdministrationShell}.
+	 * The service handler is created with the {@link AssetAdministrationShell#getIdShort()}  
+	 * @param aasIdentifier
+	 */
+	public void addHandler(String aasIdentifier);
+	/**
+	/**
+	 * Add a dedicated service handler for the identified {@link AssetAdministrationShell}.
+	 * The service handler is created with the provided alias name  
+	 * @param aasIdentifier
+	 * @param alias
+	 */
+	public void addHandler(String aasIdentifier, String alias);
+	/**
+	 * Remove the decicated service handler
+	 * @param alias
+	 */
+	public void removeHandler(String alias);
+	/**
+	 * Add a message listener for the semantic Id
+	 * @param <T>
+	 * @param reference
+	 * @param listener
+	 */
+	public <T> void addMesssageListener(Reference reference, MessageListener<T> listener);
 	
+	/**
+	 * Obtain a message producer 
+	 * @param <T>
+	 * @param reference
+	 * @param clazz
+	 * @return
+	 */
+	public <T> MessageProducer<T> getMessageProducer(Reference reference, Class<T> clazz);
+	/**
+	 * Inject a {@link Consumer} function to the local environment. This function's {@link Consumer#accept(Object)} 
+	 * method is called whenever a new value for the identified element is provided
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @param path
+	 * @param consumer
+	 */
 	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path, Consumer<String> consumer);
+	/**
+	 * Inject a {@link Supplier} function to the local environment. This function's {@link Supplier#get()} method is
+	 * called whenever element is serialized.
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @param path
+	 * @param consumer
+	 */
 	public void setValueSupplier(String aasIdentifier, String submodelIdentifier, String path, Supplier<String> consumer);
-	
+	/**
+	 * Inject a {@link Function} to the {@link Operation} in the local environment. 
+	 * The {@link Function#apply(Object)} method is called whenever the {@link Operation} is invoked.
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @param path
+	 * @param function
+	 */
 	public void setOperationFunction(String aasIdentifier, String submodelIdentifier, String path, Function<Map<String,Object>,Object> function);
 
 }

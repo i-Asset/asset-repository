@@ -265,6 +265,7 @@ public class SubmodelHelper {
 			for (SubmodelElement sme : getChildren(referable)) {
 				if ( Property.class.isInstance(sme)) {
 					Property p = Property.class.cast(sme);
+					ValueType.getValue(p);
 					resultMap.put(sme.getIdShort(), ValueType.getValue(p.getValueType(), p.getValue()).getValue());
 				}
 				else if ( SubmodelElementCollection.class.isInstance(sme)) {

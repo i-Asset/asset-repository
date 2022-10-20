@@ -16,5 +16,9 @@ public class DateTimeValue extends Value<ZonedDateTime>{
 		setValue(ZonedDateTime.parse(stringValue));
 		return this;
 	}
+	@Override
+	public ValueType getValueType() {
+		return ValueType.DATE_TIME;
+	}
 
 }

@@ -14,4 +14,9 @@ public class DoubleValue extends Value<Double>{
 		return this;
 	}
 
+	@Override
+	public ValueType getValueType() {
+		return ValueType.DOUBLE;
+	}
+
 }

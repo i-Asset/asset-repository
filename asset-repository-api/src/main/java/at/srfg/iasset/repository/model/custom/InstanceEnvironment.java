@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.AssetKind;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.DataSpecification;
 import org.eclipse.aas4j.v3.model.Environment;
@@ -25,6 +27,19 @@ public class InstanceEnvironment implements Environment {
 	@Override
 	public List<AssetAdministrationShell> getAssetAdministrationShells() {
 		return assetAdministrationShell.values().stream().collect(Collectors.toList());
+	}
+	public List<AssetAdministrationShell> getAssetAdministrationShells(AssetKind kind) {
+		return getAssetAdministrationShells().stream().filter(new Predicate<AssetAdministrationShell>() {
+
+			@Override
+			public boolean test(AssetAdministrationShell t) {
+				if ( t.getAssetInformation()== null) {
+					return false;
+				}
+				return kind.equals(t.getAssetInformation().getAssetKind());
+			}
+		})
+		.collect(Collectors.toList());
 	}
 	public void addAssetAdministrationShell(String id, AssetAdministrationShell shell) {
 		shell.setId(id);

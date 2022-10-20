@@ -13,5 +13,9 @@ public class ShortValue extends Value<Short>{
 		setValue(Short.parseShort(stringValue));
 		return this;
 	}
+	@Override
+	public ValueType getValueType() {
+		return ValueType.SHORT;
+	}
 
 }

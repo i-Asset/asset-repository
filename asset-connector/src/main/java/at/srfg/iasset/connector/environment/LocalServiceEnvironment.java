@@ -1,5 +1,8 @@
 package at.srfg.iasset.connector.environment;
 
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -23,9 +27,21 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.RelationshipElement;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.springframework.util.Base64Utils;
 
+import at.srfg.iasset.connector.MessageListener;
+import at.srfg.iasset.connector.MessageProducer;
+import at.srfg.iasset.connector.component.ConnectorEndpoint;
+import at.srfg.iasset.connector.component.config.MarshallingFeature;
 import at.srfg.iasset.connector.component.impl.AASFull;
+import at.srfg.iasset.connector.component.impl.HttpComponent;
+import at.srfg.iasset.connector.component.impl.RepositoryConnection;
+import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationRepositoryController;
+import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationShellController;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
 import at.srfg.iasset.repository.model.custom.InstanceEnvironment;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
@@ -35,10 +51,18 @@ import at.srfg.iasset.repository.utils.ReferenceUtils;
 public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnvironment {
 	private InstanceEnvironment environment;
 	
-	private Collection<ModelListener> listeners = new HashSet<ModelListener>();
+	private final Collection<ModelListener> listeners = new HashSet<ModelListener>();
 	
+	private final Set<String> registrations = new HashSet<String>();
+	private final URI repositoryURI;
+	private final RepositoryConnection repository;
+	private ConnectorEndpoint httpEndpoint;
+
 	
-	public LocalServiceEnvironment() {
+	public LocalServiceEnvironment(URI repositoryURI) {
+		this.repositoryURI = repositoryURI;
+		this.repository = RepositoryConnection.getConnector(repositoryURI);
+		
 		environment = new InstanceEnvironment();
 		// TODO: REMOVE test data!
 		environment.addAssetAdministrationShell(AASFull.AAS_1.getId(), AASFull.AAS_1);
@@ -71,7 +95,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			}
 			
 			@Override
-			public void propertyCreated(String path, org.eclipse.aas4j.v3.model.Property property) {
+			public void propertyCreated(String path, Property property) {
 				// TODO Auto-generated method stub
 				
 			}
@@ -133,7 +157,14 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public Optional<ConceptDescription> getConceptDescription(String identifier) {
-		return environment.getConceptDescription(identifier);
+		Optional<ConceptDescription>  cDesc = environment.getConceptDescription(identifier);
+		return cDesc.or(new Supplier<Optional<ConceptDescription>>() {
+
+			@Override
+			public Optional<ConceptDescription> get() {
+				
+				return Optional.empty();
+			}});
 	}
 
 	@Override
@@ -143,14 +174,12 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public boolean deleteSubmodelReference(String aasIdentifier, Reference ref) {
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException("Not yet implemented!");
 	}
 
 	@Override
 	public <T extends Referable> Optional<T> resolve(Reference reference, Class<T> type) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		throw new UnsupportedOperationException("Not yet implemented!");
 	}
 
 	@Override
@@ -396,4 +425,149 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			}
 		}
 		
-	}}
+	}
+	public String getHostAddress() {
+		try {
+			InetAddress adr = InetAddress.getLocalHost();
+			return adr.getHostAddress();
+		} catch (UnknownHostException e) {
+			return "localhost";
+		}
+	}
+	public void register(String aasIdentifier) {
+
+		Optional<AssetAdministrationShell> shellToRegister = environment.getAssetAdministrationShell(aasIdentifier);
+		if ( shellToRegister.isPresent()) {
+			String idEncoded = Base64Utils.encodeToString(aasIdentifier.getBytes());
+			String pathToShell = repositoryURI.getPath() + String.format("shells/%s", idEncoded);
+			URI shellUri = URI.create(String.format("%s://%s:%s%s", repositoryURI.getScheme(), getHostAddress(), httpEndpoint.getPort(), pathToShell));
+			if (repository.register(shellToRegister.get(), shellUri)) {
+				// keep in the list of active registrations
+				registrations.add(aasIdentifier);
+			}
+		}
+		
+	}
+	
+	public void unregister() {
+		registrations.forEach(new Consumer<String>() {
+
+			@Override
+			public void accept(String aasIdentifier) {
+				repository.unregister(aasIdentifier);
+			}
+		});
+		registrations.clear();
+	}
+	public void unregister(String aasIdentifier) {
+		if ( registrations.contains(aasIdentifier)) {
+			if (repository.unregister(aasIdentifier)) {
+				registrations.remove(aasIdentifier);
+			}
+		}
+	}
+
+	@Override
+	public ConnectorEndpoint startEndpoint(int port) {
+		httpEndpoint = new HttpComponent(port);
+		
+		httpEndpoint.start("/", getRootConfig());
+		return httpEndpoint;
+	}
+	public void startEndpoint(int port, String contextPath) {
+		httpEndpoint = new HttpComponent(port);
+		
+		httpEndpoint.start(contextPath, getRootConfig());
+	}
+	
+	private ResourceConfig getRootConfig() {
+		ResourceConfig rootConfig = new ResourceConfig();
+		ServiceEnvironment injectEnvironment = this;
+		rootConfig.register(new AbstractBinder() {
+			
+			@Override
+			protected void configure() {
+				bind(injectEnvironment).to(ServiceEnvironment.class);
+				
+			}
+		});
+		rootConfig.register(AASJacksonMapperProvider.class);
+		rootConfig.register(MarshallingFeature.class);
+		rootConfig.register(AssetAdministrationRepositoryController.class);
+		return rootConfig;
+	}
+	private ResourceConfig getShellConfig(AssetAdministrationShell forShell) {
+		ResourceConfig shellConfig = new ResourceConfig();
+		final ServiceEnvironment injectedEnvironment = this;
+		shellConfig.register(new AbstractBinder() {
+			
+			@Override
+			protected void configure() {
+				bind(injectedEnvironment).to(ServiceEnvironment.class);
+				
+			}
+		});
+		shellConfig.register(new AbstractBinder() {
+			
+			@Override
+			protected void configure() {
+				bind(forShell).to(AssetAdministrationShell.class);
+				
+			}
+		});
+		shellConfig.register(AASJacksonMapperProvider.class);
+		shellConfig.register(MarshallingFeature.class);
+		shellConfig.register(AssetAdministrationShellController.class);
+		return shellConfig;
+	}
+	@Override
+	public void shutdownEndpoint() {
+		if ( httpEndpoint.isStarted() ) {
+			// unregister this environment
+			unregister();
+			httpEndpoint.stop();
+		}
+	}
+
+	@Override
+	public void addHandler(String aasIdentifier) {
+		Optional<AssetAdministrationShell> theShell = environment.getAssetAdministrationShell(aasIdentifier);
+		if ( theShell.isPresent()) {
+			httpEndpoint.addHttpHandler(theShell.get().getIdShort(), getShellConfig(theShell.get()));
+		}
+		
+	}
+
+	@Override
+	public void addHandler(String aasIdentifier, String alias) {
+		Optional<AssetAdministrationShell> theShell = environment.getAssetAdministrationShell(aasIdentifier);
+		if ( theShell.isPresent()) {
+			httpEndpoint.addHttpHandler(alias, getShellConfig(theShell.get()));
+		}
+		
+	}
+	@Override
+	public void removeHandler(String alias) {
+		Optional<AssetAdministrationShell> theShell = environment.getAssetAdministrationShell(alias);
+		if ( theShell.isPresent()) {
+			httpEndpoint.removeHttpHandler(theShell.get().getIdShort());
+		}
+		// 
+		httpEndpoint.removeHttpHandler(alias);
+		
+	}
+
+	@Override
+	public <T> void addMesssageListener(Reference reference, MessageListener<T> listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> MessageProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+}
