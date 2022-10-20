@@ -14,5 +14,9 @@ public class DecimalValue extends Value<BigDecimal>{
 		setValue(new BigDecimal(stringValue));
 		return this;
 	}
+	@Override
+	public ValueType getValueType() {
+		return ValueType.DECIMAL;
+	}
 
 }

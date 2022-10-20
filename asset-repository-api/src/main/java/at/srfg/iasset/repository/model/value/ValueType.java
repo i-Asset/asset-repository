@@ -2,11 +2,13 @@ package at.srfg.iasset.repository.model.value;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.aas4j.v3.model.SubmodelElement;
 
 public enum ValueType {
 	STRING(		StringValue.class, 		DataTypeDefXsd.STRING, DataTypeDefXsd.ANY_URI),
@@ -28,10 +30,23 @@ public enum ValueType {
 		this.valueClass = value;
 		this.xsdTypes = Arrays.asList(xsd);
 	}
-	
+	public static <T extends SubmodelElement> Value<?> getValue(T clazz) {
+		try {
+			Method valueMethod = clazz.getClass().getMethod("getValue");
+			Object value = valueMethod.invoke(clazz);
+			Method valueTypeMethod = clazz.getClass().getMethod("getValueType");
+			Object valueType = valueTypeMethod.invoke(clazz);
+			
+			return getValue((DataTypeDefXsd) valueType, value.toString());
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	public static Value<?> getValue(DataTypeDefXsd xsd, String value) {
-		ValueType type = fromXSD(xsd);
+		ValueType type = fromDataType(xsd);
 		try {
 			@SuppressWarnings("rawtypes")
 			Constructor<? extends Value> constructor = type.valueClass.getConstructor();
@@ -43,7 +58,7 @@ public enum ValueType {
 		}
 		return null;
 	}
-	private static ValueType fromXSD(DataTypeDefXsd xsd) {
+	public static ValueType fromDataType(DataTypeDefXsd xsd) {
 		return Stream.of(values())
 				.filter(x -> x.xsdTypes.contains(xsd))
 				.findAny()

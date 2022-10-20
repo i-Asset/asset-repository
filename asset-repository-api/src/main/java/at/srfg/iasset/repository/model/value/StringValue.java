@@ -14,5 +14,9 @@ public class StringValue extends Value<String>{
 		setValue(stringValue);
 		return this;
 	}
+	@Override
+	public ValueType getValueType() {
+		return ValueType.STRING;
+	}
 
 }

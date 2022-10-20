@@ -14,5 +14,10 @@ public class BinaryValue extends Value<byte[]>{
 		setValue(stringValue.getBytes());
 		return this;
 	}
+	@Override
+	public ValueType getValueType() {
+		return ValueType.BINARY;
+	}
+	
 
 }
