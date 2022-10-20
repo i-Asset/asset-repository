@@ -22,8 +22,8 @@ spring:
       enabled: ${discovery.enabled:${DISCOVERY_ENABLED:false}}
   data:
     mongodb:
-      uri: ${MONGODB_URL:mongodb://root:example@localhost:27017}
-      database: ${MONGODB_NAME:asset}
+      uri: ${REPOSITORY_SERVICE_MONGODB_URL:mongodb://root:example@localhost:27017}
+      database: ${REPOSITORY_SERVICE_MONGODB_NAME:asset}
 
 springdoc:
   api-docs:

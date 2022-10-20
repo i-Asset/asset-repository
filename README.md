@@ -29,8 +29,8 @@ $ mvn clean install -DskipTests
 ### Build and run the asset-repository service
 
 The service depends on a running MongoDB instance, which has two configuration values:
-* MONGODB_URL, e.g. `mongodb://root:example@localhost:27017`
-* MONGODB_NAME, e.g. `asset`
+* REPOSITORY_SERVICE_MONGODB_URL, e.g. `mongodb://root:example@localhost:27017`
+* REPOSITORY_SERVICE_MONGODB_NAME, e.g. `asset`
 
 
 ```bash
