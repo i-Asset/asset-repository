@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @OpenAPIDefinition(
         servers = {
-                @Server(url = "{protocol}://{servername}:{port}/{basePath}",
+                @Server(url = "{protocol}://{server}:{port}/{basePath}",
                         description = "Configurable Server URL",
                         variables = {
                                 @ServerVariable(name = "protocol",
                                         description = "http | https",
                                         defaultValue = "http"),
-                                @ServerVariable(name = "servername", description = "IP address or server name",
+                                @ServerVariable(name = "server", description = "IP address or server name",
                                         defaultValue = "localhost"),
                                 @ServerVariable(name = "port", description = "Server port",
                                         defaultValue = "8081"),
