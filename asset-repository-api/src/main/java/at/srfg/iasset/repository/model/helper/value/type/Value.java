@@ -1,8 +1,10 @@
-package at.srfg.iasset.repository.model.value;
+package at.srfg.iasset.repository.model.helper.value.type;
+
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public abstract class Value<T> {
 	
-	
+	@JsonValue
 	T value;
 	
 	public Value() {

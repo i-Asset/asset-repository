@@ -3,9 +3,10 @@ package at.srfg.iasset.repository.connectivity;
 import java.net.URI;
 import java.net.URL;
 
+import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
-import at.srfg.iasset.repository.api.IAssetConnection;
 import at.srfg.iasset.repository.api.IAssetDirectory;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.connectivity.rest.ConsumerFactory;
@@ -24,10 +25,34 @@ public interface ConnectionProvider {
 		return new Connection(url.toString());
 	}
 	
-//	IAssetConnection getIAssetConnection();
+	/**
+	 * Obtain a service interface connected to the Asset Administration Shell Repository Interface!
+	 * Each of the methods in the interface requires the {@link AssetAdministrationShell}'s identifier as a 
+	 * first parameter. 
+	 * <p>
+	 * The final service path is combine with the provided <code>host address</code> and the suffix <code>/repository</code>
+	 * </p>
+	 * 
+	 * @return A proxy-object connected with the r
+	 */
 	IAssetAdministrationShellRepositoryInterface getRepositoryInterface();
+	/**
+	 * Obtain a service interface connected to a Asset Administration Shell Interface. 
+	 * Opposite to the {@link ConnectionProvider#getRepositoryInterface()} service interface, the 
+	 * endpoint already identifies the {@link AssetAdministrationShell} to use!
+	 * Each of the methods in the interface requires the {@link AssetAdministrationShell}'s identifier as a 
+	 * first parameter. 
+	 * <p>
+	 * The final service path is combine with the provided <code>host address</code>!
+	 * </p>
+	 * 
+	 * @return A proxy-object connected with the r
+	 */
 	IAssetAdministrationShellInterface getShellInterface();
-	
+	/**
+	 * Obtain a service interface connected with the central repository service
+	 * @return
+	 */
 	IAssetDirectory getIAssetDirectory();
 
 	class Connection implements ConnectionProvider {
@@ -54,7 +79,7 @@ public interface ConnectionProvider {
 		public IAssetAdministrationShellInterface getShellInterface() {
 				return ConsumerFactory.createConsumer(
 						// construct the URL
-						host + "repository",
+						host,
 						// the Client Factory creates a client configured with the AAS Model (default implementations & mixins)
 						ClientFactory.getInstance().getClient(), 
 						// the interface class

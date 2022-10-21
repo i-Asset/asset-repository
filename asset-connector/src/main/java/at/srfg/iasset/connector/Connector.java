@@ -3,20 +3,12 @@ package at.srfg.iasset.connector;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
@@ -26,8 +18,7 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 
 public class Connector implements LocalEnvironment {
 	
-
-
+	private String currentStringValue = "123.5";
 	private LocalServiceEnvironment serviceEnvironment;
 	
 	public Connector(URI repositoryURL) {
@@ -46,8 +37,7 @@ public class Connector implements LocalEnvironment {
 
 	public static void main(String [] args) {
 		try {
-			
-			Connector connector = new Connector( new URI("http://localhost:8080/"));
+			Connector connector = new Connector( new URI("http://localhost:8081/"));
 			// start the http endpoint for this Connector at port 5050
 			connector.startEndpoint(5050);
 			// create 
@@ -59,8 +49,9 @@ public class Connector implements LocalEnvironment {
 					new Consumer<String>() {
 
 						@Override
-						public void accept(String t) {
+						public void accept(final String t) {
 							System.out.println("New Value provided: " + t);
+							connector.currentStringValue = t;
 							
 						}
 					});
@@ -72,7 +63,7 @@ public class Connector implements LocalEnvironment {
 
 						@Override
 						public String get() {
-							return "123.2";
+							return connector.currentStringValue;
 						}
 
 

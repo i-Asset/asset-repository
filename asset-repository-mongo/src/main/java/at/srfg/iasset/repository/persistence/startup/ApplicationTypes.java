@@ -90,6 +90,7 @@ public class ApplicationTypes {
     					.text("i-Asset Root Application beschreibt den Einstiegspunkt bzw. das Top-Level-Element für Anwendungen")
     					.build())
     			.submodel(ReferenceUtils.fromIdentifiable(createSubmodelForInfoModel()))
+    			.submodel(ReferenceUtils.fromIdentifiable(createSubmodelForRootEventConfiguration()))
     			.build();
 
     }
@@ -118,7 +119,7 @@ public class ApplicationTypes {
     public static Submodel createSubmodelForBeltInfo() {
     	return new DefaultSubmodel.Builder()
     			.idShort("beltInformation")
-    			.id("http://iasset.slazburgresearch.at/labor/belt#info")
+    			.id("http://iasset.salzburgresearch.at/labor/belt#info")
     			.displayName(new DefaultLangString.Builder()
     					.language(LANGUAGE)
     					.text("i-Asset Belt-Info Submodel").build()
@@ -150,7 +151,7 @@ public class ApplicationTypes {
     public static Submodel createSubmodelForBeltProperties() {
     	return new DefaultSubmodel.Builder()
     			.idShort("properties")
-    			.id("http://iasset.slazburgresearch.at/labor/belt#properties")
+    			.id("http://iasset.salzburgresearch.at/labor/belt#properties")
     			.displayName(new DefaultLangString.Builder()
     					.language(LANGUAGE)
     					.text("i-Asset Belt-Propeties Submodel").build()
@@ -329,7 +330,7 @@ public class ApplicationTypes {
     public static Submodel createSubmodelForInfoModel() {
     	return new DefaultSubmodel.Builder()
     			.idShort("rootInfoModel")
-    			.id("http://iasset.slazburgresearch.at/application#info")
+    			.id("http://iasset.salzburgresearch.at/application#info")
     			.displayName(new DefaultLangString.Builder()
     					.language(LANGUAGE)
     					.text("i-Asset Information Submodel").build()
@@ -417,7 +418,7 @@ public class ApplicationTypes {
     public static Submodel createSubmodelForRootEventConfiguration() {
     	return new DefaultSubmodel.Builder()
     			.idShort("rootInfoModel")
-    			.id("http://iasset.slazburgresearch.at/application#eventConfig")
+    			.id("http://iasset.salzburgresearch.at/application#eventConfig")
     			.displayName(new DefaultLangString.Builder()
     					.language(LANGUAGE)
     					.text("i-Asset Event Configuration Submodel")

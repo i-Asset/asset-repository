@@ -1,4 +1,4 @@
-package at.srfg.iasset.repository.model.value;
+package at.srfg.iasset.repository.model.helper.value.type;
 
 import java.time.LocalDate;
 

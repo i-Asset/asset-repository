@@ -74,10 +74,17 @@ public class RepositoryRestConnector implements RepositoryConnection {
 
 	@Override
 	public boolean register(AssetAdministrationShell theShell, URI uri) {
-
+		// @formatter:off
 		AssetAdministrationShellDescriptor descriptor = new DefaultAssetAdministrationShellDescriptor.Builder()
-				.id(theShell.getId()).displayNames(theShell.getDisplayNames()).descriptions(theShell.getDescriptions())
-				.endpoint(new DefaultEndpoint.Builder().address(uri.toString()).type("shell").build()).build();
+				.id(theShell.getId())
+				.displayNames(theShell.getDisplayNames())
+				.descriptions(theShell.getDescriptions())
+				.endpoint(new DefaultEndpoint.Builder()
+						.address(uri.toString())
+						.type("shell")
+						.build())
+				.build();
+		// @formatter:on
 		//
 		try {
 			getDirectoryService().register(theShell.getId(), descriptor);

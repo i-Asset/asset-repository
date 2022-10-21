@@ -31,6 +31,8 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.util.Base64Utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.srfg.iasset.connector.MessageListener;
 import at.srfg.iasset.connector.MessageProducer;
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
@@ -42,6 +44,8 @@ import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationReposit
 import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationShellController;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
+import at.srfg.iasset.repository.config.AASModelHelper;
+import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.model.custom.InstanceEnvironment;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
@@ -282,7 +286,12 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public void setElementValue(String aasIdentifier, String submodelIdentifier, String path, Object value) {
-		// TODO Auto-generated method stub
+		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( sub.isPresent() ) {
+			// make a json node out of it
+			JsonNode node = ClientFactory.getObjectMapper().valueToTree(value);
+			new SubmodelHelper(sub.get()).setValueAt(path, node);
+		}
 		
 	}
 
@@ -434,7 +443,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			return "localhost";
 		}
 	}
-	public void register(String aasIdentifier) {
+	public boolean register(String aasIdentifier) {
 
 		Optional<AssetAdministrationShell> shellToRegister = environment.getAssetAdministrationShell(aasIdentifier);
 		if ( shellToRegister.isPresent()) {
@@ -444,9 +453,10 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			if (repository.register(shellToRegister.get(), shellUri)) {
 				// keep in the list of active registrations
 				registrations.add(aasIdentifier);
+				return true;
 			}
 		}
-		
+		return false;
 	}
 	
 	public void unregister() {

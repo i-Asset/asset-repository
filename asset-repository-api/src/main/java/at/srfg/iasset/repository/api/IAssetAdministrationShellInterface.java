@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.srfg.iasset.repository.api.annotation.Base64Encoded;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -54,7 +56,7 @@ public interface IAssetAdministrationShellInterface {
 //	 * @return
 //	 */
 //	@Operation(summary =  "Get the AssetAdministrationShell",
-//			tags = "Asset Administration Shell Interface")
+//			tags = "Asset Administration Shell Interface (Connector Only)")
 //	@RequestMapping(
 //			method = RequestMethod.GET,
 //			path=PATH_SHELLS)
@@ -65,7 +67,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Get the AssetAdministrationShell",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path="")
@@ -86,7 +88,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Add a AssetAdministrationShell to the Repository",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
@@ -117,7 +119,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Add or update a Submodel to the Repository",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.PUT,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER)
@@ -158,7 +160,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Get the Submodel",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER)
@@ -185,7 +187,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Obtain the submodel references from the AAS",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path=PATH_AAS_SUBMODELS)
@@ -204,7 +206,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Update the submodel references of the identified AAS",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_AAS_SUBMODELS)
@@ -226,7 +228,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Update the submodel references of the identified AAS",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.DELETE,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER)
@@ -256,7 +258,7 @@ public interface IAssetAdministrationShellInterface {
 //	 * @return
 //	 */
 //	@Operation(summary =  "Obtain a referable element by it's reference",
-//			tags = "Asset Administration Shell Interface")
+//			tags = "Asset Administration Shell Interface (Connector Only)")
 //	@RequestMapping(
 //			method = RequestMethod.POST,
 //			path="/shells/{aasIdentifier}/reference")
@@ -279,7 +281,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Obtain a referable element by it's path",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH_WILDCARD)
@@ -315,7 +317,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Update a submodel's submodel element",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS)
@@ -345,7 +347,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Update a submodel element at the provided path",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH_WILDCARD)
@@ -379,7 +381,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return <code>true</code> when deletion successful, false otherwise
 	 */
 	@Operation(summary =  "Obtain the identifiable element",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.DELETE,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH_WILDCARD)
@@ -411,7 +413,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary = "Obtain the value of the (Data)Element",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE},
@@ -439,7 +441,7 @@ public interface IAssetAdministrationShellInterface {
 	
 	
 	@Operation(summary =  "Obtain the identifiable element",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -473,7 +475,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Invoke an Operation",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
@@ -505,7 +507,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Get a ConceptDescription",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path=PATH_CONCEPT_DESCRIPTION + CD_IDENTIFIER)
@@ -525,7 +527,7 @@ public interface IAssetAdministrationShellInterface {
 	 * @return
 	 */
 	@Operation(summary =  "Get a ConceptDescription",
-			tags = "Asset Administration Shell Interface")
+			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_CONCEPT_DESCRIPTION + CD_IDENTIFIER)

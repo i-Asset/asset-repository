@@ -16,6 +16,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Providers;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
@@ -23,6 +25,8 @@ import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
@@ -38,12 +42,21 @@ public class AssetAdministrationShellController implements IAssetAdministrationS
 	@Context
 	private SecurityContext securityContext;
 	
+	@Context
+	private Providers providers;
+	
 	@Inject
 	private ServiceEnvironment environment;
 
 	@Inject
 	private AssetAdministrationShell theShell;
+	
+	private ObjectMapper getObjectMapper() {
+		ContextResolver<ObjectMapper> resolver = 
+		        providers.getContextResolver(ObjectMapper.class, MediaType.WILDCARD_TYPE);
+		return resolver.getContext(ObjectMapper.class);
 
+	}
 	
 	@Override
 	@GET

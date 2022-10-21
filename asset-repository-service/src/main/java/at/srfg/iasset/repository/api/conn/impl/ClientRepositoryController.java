@@ -16,9 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
-import at.srfg.iasset.repository.api.IAssetConnection;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 
 @RestController
