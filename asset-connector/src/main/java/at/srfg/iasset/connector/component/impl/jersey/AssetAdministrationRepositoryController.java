@@ -227,7 +227,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 			String submodelIdentifier, 
 			@PathParam("path")
 			String path, 
-			JsonNode value) {
+			Object value) {
 		environment.setElementValue(					
 					ApiUtils.base64Decode(aasIdentifier), 
 					ApiUtils.base64Decode(submodelIdentifier), 

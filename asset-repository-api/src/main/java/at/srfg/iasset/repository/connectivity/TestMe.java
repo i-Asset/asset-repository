@@ -9,43 +9,27 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
+import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 
 public class TestMe {
 
 	public static void main(String[] args) {
-		ConnectionProvider c = ConnectionProvider.getConnection("https://iasset.salzburgresearch.at/repository-service/");
+		ConnectionProvider c = ConnectionProvider.getConnection("http://localhost:8081/");
+		ConnectionProvider local = ConnectionProvider.getConnection("http://localhost:5050/test");
+		
 		
 		IAssetAdministrationShellRepositoryInterface conn = c.getRepositoryInterface();
+		IAssetAdministrationShellInterface l = local.getShellInterface();
+		l.getAssetAdministrationShell();
 		
+		Object o = l.getValue("https://acplt.org/Test_Submodel", "ExampleSubmodelCollectionOrdered");
+		
+		Object broker = c.getRepositoryInterface().getValue("http://iasset.salzburgresearch.at/application", "http://iasset.salzburgresearch.at/application#eventConfig", "messageBroker");
 		
 		AssetAdministrationShell theShell = conn.getAssetAdministrationShell("https://acplt.org/Test_AssetAdministrationShell");
 		Submodel sub = conn.getSubmodel("https://acplt.org/Test_AssetAdministrationShell", "https://acplt.org/Test_Submodel");
 		
-		if ( theShell != null ) {
-			for (Reference ref : theShell.getSubmodels()) {
-				System.out.println( ref.getKeys().get(0).getValue());
-				Referable submodel = conn.getSubmodel(theShell.getId(), ref.getKeys().get(0).getValue());
-				if ( Submodel.class.isInstance(submodel)) {
-					Submodel.class.cast(submodel).getDescriptions().forEach(new Consumer<LangString>() {
-
-						@Override
-						public void accept(LangString t) {
-							System.out.println(t.getLanguage() + " " + t.getText());
-							
-						}
-					});
-				}
-			}
-		}
-		
-		if ( sub != null ) {
-			for (SubmodelElement elem : sub.getSubmodelElements()) {
-				System.out.println(elem.getIdShort());
-				System.out.println(conn.getValue(theShell.getId(), sub.getId(), elem.getIdShort()));
-			}
-			
-		}
 		
 	}
 

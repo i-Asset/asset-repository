@@ -44,6 +44,8 @@ import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationReposit
 import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationShellController;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
+import at.srfg.iasset.repository.config.AASModelHelper;
+import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.model.custom.InstanceEnvironment;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
@@ -286,9 +288,9 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	public void setElementValue(String aasIdentifier, String submodelIdentifier, String path, Object value) {
 		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent() ) {
-			if ( value instanceof JsonNode) {
-				new SubmodelHelper(sub.get()).setValueAt(path, (JsonNode) value);
-			}
+			// make a json node out of it
+			JsonNode node = ClientFactory.getObjectMapper().valueToTree(value);
+			new SubmodelHelper(sub.get()).setValueAt(path, node);
 		}
 		
 	}
