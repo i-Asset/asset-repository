@@ -52,7 +52,7 @@ public interface ShellsApi {
 	@Operation(
 			summary = "Deletes an Asset Administration Shell", 
 			description = "", 
-					tags = { "Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+					tags = { "Asset Administration Shell Repository Interface (SPEC)" })
 	@ApiResponses(value = {
 			@ApiResponse(
 					responseCode = "204", 
@@ -88,7 +88,7 @@ public interface ShellsApi {
 	@Operation(
 			summary = "Deletes a submodel element at a specified path within the submodel elements hierarchy", 
 			description = "", 
-			tags = { "Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+			tags = { "Asset Administration Shell Repository Interface (SPEC)" })
 	
 	@ApiResponses(value = { 
 			@ApiResponse(
@@ -140,7 +140,7 @@ public interface ShellsApi {
 	@Operation(
 			summary = "Deletes the submodel reference from the Asset Administration Shell", 
 			description = "", 
-			tags = { "Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+			tags = { "Asset Administration Shell Repository Interface (SPEC)" })
 	@ApiResponses(value = { 
 			@ApiResponse(
 					responseCode = "204", 
@@ -178,7 +178,7 @@ public interface ShellsApi {
 	@Operation(
 			summary = "Returns all Asset Administration Shells", 
 			description = "", 
-			tags = { "Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+			tags = { "Asset Administration Shell Repository Interface (SPEC)" })
 
 	@ApiResponses(value = {
 			@ApiResponse(
@@ -213,7 +213,7 @@ public interface ShellsApi {
 	@Operation(
 			summary = "Returns all submodel elements including their hierarchy", 
 			description = "", 
-			tags = {	"Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+			tags = {	"Asset Administration Shell Repository Interface (SPEC)" })
 	@ApiResponses(value = {
 			@ApiResponse(
 					responseCode = "200", 
@@ -281,7 +281,7 @@ public interface ShellsApi {
 	@Operation(
 			summary = "Returns all submodel references", 
 			description = "", 
-			tags = { "Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+			tags = { "Asset Administration Shell Repository Interface (SPEC)" })
 	@ApiResponses(value = {
 			@ApiResponse(
 					responseCode = "200", 
@@ -330,7 +330,7 @@ public interface ShellsApi {
     	@Operation(
 			summary = "Returns a specific Asset Administration Shell", 
 			description = "", 
-			tags = {  "Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+			tags = {  "Asset Administration Shell Repository Interface (SPEC)" })
 	
 	@ApiResponses(value = {
 			@ApiResponse(
@@ -370,7 +370,7 @@ public interface ShellsApi {
 	@Operation(
 			summary = "Returns the Asset Information", 
 			description = "", 
-			tags = {  "Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+			tags = {  "Asset Administration Shell Repository Interface (SPEC)" })
 	@ApiResponses(value = {
 			@ApiResponse(
 					responseCode = "200", 
@@ -400,7 +400,7 @@ public interface ShellsApi {
 	@Operation(
 			summary = "Downloads file content from a specific submodel element from the Submodel at a specified path", 
 			description = "", 
-			tags = { "Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+			tags = { "Asset Administration Shell Repository Interface (SPEC)" })
 	@ApiResponses(value = {
 			@ApiResponse(
 					responseCode = "200", 
@@ -448,7 +448,7 @@ public interface ShellsApi {
 	@Operation(
 			summary = "Returns the Operation result of an asynchronous invoked Operation", 
 			description = "", 
-			tags = { "Asset Administration Shell Repository Interface (SPEC) (SPEC)" })
+			tags = { "Asset Administration Shell Repository Interface (SPEC)" })
 	@ApiResponses(value = {
 			@ApiResponse(
 					responseCode = "200", 
