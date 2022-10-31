@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @OpenAPIDefinition(
         servers = {
-                @Server(url = "{protocol}://{server}:{port}/{basePath}",
+                @Server(url = "{protocol}://{server}:{port}/{path}",
                         description = "Configurable Server URL",
                         variables = {
                                 @ServerVariable(name = "protocol",
@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
                                         defaultValue = "localhost"),
                                 @ServerVariable(name = "port", description = "Server port",
                                         defaultValue = "8081"),
-                                @ServerVariable(name = "basePath", defaultValue = "")
+                                @ServerVariable(name = "path", description = "Server path",
+                                        defaultValue = "")
                         }),
                 @Server(url = "https://iasset.salzburgresearch.at/repository-service/",
                         description = "Asset Repository Service on the i-Asset Staging Server")
