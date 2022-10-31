@@ -38,6 +38,7 @@ import at.srfg.iasset.connector.MessageProducer;
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.config.MarshallingFeature;
 import at.srfg.iasset.connector.component.impl.AASFull;
+import at.srfg.iasset.connector.component.impl.AASPeak2Pi;
 import at.srfg.iasset.connector.component.impl.HttpComponent;
 import at.srfg.iasset.connector.component.impl.RepositoryConnection;
 import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationRepositoryController;
@@ -73,6 +74,11 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		environment.addAssetAdministrationShell(AASFull.AAS_2.getId(), AASFull.AAS_2);
 		environment.addAssetAdministrationShell(AASFull.AAS_3.getId(), AASFull.AAS_3);
 		environment.addAssetAdministrationShell(AASFull.AAS_4.getId(), AASFull.AAS_4);
+		environment.addAssetAdministrationShell(AASPeak2Pi.AAS_Peak.getId(), AASPeak2Pi.AAS_Peak);
+
+		
+		
+		
 		environment.addSubmodel(AASFull.SUBMODEL_1.getId(), AASFull.SUBMODEL_1);
 		environment.addSubmodel(AASFull.SUBMODEL_2.getId(), AASFull.SUBMODEL_2);
 		environment.addSubmodel(AASFull.SUBMODEL_3.getId(), AASFull.SUBMODEL_3);
@@ -80,10 +86,16 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		environment.addSubmodel(AASFull.SUBMODEL_5.getId(), AASFull.SUBMODEL_5);
 		environment.addSubmodel(AASFull.SUBMODEL_6.getId(), AASFull.SUBMODEL_6);
 		environment.addSubmodel(AASFull.SUBMODEL_7.getId(), AASFull.SUBMODEL_7);
+		
+		environment.addSubmodel(AASPeak2Pi.SUBMODEL_PEAK1.getId(), AASPeak2Pi.SUBMODEL_PEAK1);
+		environment.addSubmodel(AASPeak2Pi.SUBMODEL_PEAK2.getId(), AASPeak2Pi.SUBMODEL_PEAK2);
+		
 		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_1);
 		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_2);
 		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_3);
 		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_4);
+		
+		
 		listeners.add(new ModelListener() {
 			
 			@Override
