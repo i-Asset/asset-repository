@@ -1,6 +1,7 @@
 server:
   port: ${PORT:8081}
   use-forward-headers: true
+  forward-headers-strategy: framework
   error:
     include-message: always
 
