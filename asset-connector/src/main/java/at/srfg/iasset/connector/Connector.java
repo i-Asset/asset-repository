@@ -72,6 +72,40 @@ public class Connector implements LocalEnvironment {
 
 
 					});
+			// sample for belt data
+			// currently no write via AAS planned!
+			
+//			connector.setValueConsumer(
+//					"http://iasset.salzburgresearch.at/labor/beltInstance", 
+//					"http://iasset.salzburgresearch.at/labor/beltInstance/properties", 
+//					"beltData.state", 
+//					new Consumer<String>() {
+//
+//						@Override
+//						public void accept(final String t) {
+//							// replace with OPC-UA Write
+//							System.out.println("New Value provided: " + t);
+//							connector.currentStringValue = t;
+//							
+//						}
+//					});
+			
+			// used to read OPC-UA values
+			connector.setValueSupplier(
+					"http://iasset.salzburgresearch.at/labor/beltInstance", 
+					"http://iasset.salzburgresearch.at/labor/beltInstance/properties", 
+					// path
+					"beltData.state", 
+					new Supplier<String>() {
+
+						@Override
+						public String get() {
+							// replace with OPC-UA Read
+							return connector.currentStringValue;
+						}
+
+
+					});
 			connector.register("https://acplt.org/Test_AssetAdministrationShell");
 			// 
 			connector.register(AASFull.AAS_BELT_INSTANCE.getId());

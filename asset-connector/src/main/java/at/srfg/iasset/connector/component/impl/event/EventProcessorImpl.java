@@ -47,7 +47,7 @@ public class EventProcessorImpl implements EventProcessor {
 				return;
 			}
 			// obtain broker to identify the environment
-			Optional<SubmodelElement> theBroker = resolveMessageBroker(eventElement);
+//			Optional<SubmodelElement> theBroker = resolveMessageBroker(eventElement);
 			
 			Reference broker = eventElement.getMessageBroker();
 			if ( broker != null) {

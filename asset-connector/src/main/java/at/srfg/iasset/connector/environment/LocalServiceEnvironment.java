@@ -252,7 +252,11 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public <T extends Referable> Optional<T> resolve(Reference reference, Class<T> type) {
-		throw new UnsupportedOperationException("Not yet implemented!");
+		Optional<Referable> ref = resolve(reference);
+		if ( ref.isPresent() && type.isInstance(ref.get()) ) {
+			return Optional.of(type.cast(ref.get()));
+		}
+		return Optional.empty();
 	}
 
 	@Override
