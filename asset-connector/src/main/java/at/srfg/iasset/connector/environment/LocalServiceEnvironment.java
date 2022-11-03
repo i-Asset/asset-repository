@@ -17,7 +17,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
@@ -339,7 +338,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			AssetAdministrationShell theShell = shell.get();
 			Optional<Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
 			if (ref.isEmpty()) {
-				Reference newRef = AasUtils.toReference(submodel);
+				Reference newRef = ReferenceUtils.toReference(submodel);
 				theShell.getSubmodels().add(newRef);
 			}
 			Optional<Submodel> existing = storage.findSubmodelById(submodelIdentifier);
@@ -749,6 +748,8 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 					return Optional.of(aas.get());
 				}
 				break;
+			case GLOBAL_REFERENCE:
+				return Optional.empty();
 			default:
 				throw new IllegalArgumentException("Provided reference points to a non-identifiable element!");
 			}

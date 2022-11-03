@@ -1,12 +1,12 @@
 package at.srfg.iasset.repository.utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.aas4j.v3.model.Identifiable;
 import org.eclipse.aas4j.v3.model.Key;
 import org.eclipse.aas4j.v3.model.KeyTypes;
@@ -60,8 +60,40 @@ public class ReferenceUtils {
 			
 	}
 	public static Reference fromIdentifiable(Identifiable identifiable) {
-		return AasUtils.toReference(identifiable);
+		return toReference(identifiable);
 	}
+    /**
+     * Creates a reference for an Identifiable instance using provided
+     * implementation types for reference and key
+     *
+     * @param identifiable the identifiable to create the reference for
+     * @param referenceType implementation type of Reference interface
+     * @param keyType implementation type of Key interface
+     * @return a reference representing the identifiable
+     */
+    public static Reference toReference(Identifiable identifiable, Class<? extends Reference> referenceType, Class<? extends Key> keyType) {
+        try {
+            Reference reference = referenceType.getConstructor().newInstance();
+            Key key = keyType.getConstructor().newInstance();
+            key.setType(referableToKeyType(identifiable));
+            key.setValue(identifiable.getId());
+            reference.setKeys(List.of(key));
+            return reference;
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new IllegalArgumentException("error parsing reference - could not instantiate reference type", ex);
+        }
+    }
+
+    /**
+     * Creates a reference for an Identifiable instance
+     *
+     * @param identifiable the identifiable to create the reference for
+     * @return a reference representing the identifiable
+     */
+    public static Reference toReference(Identifiable identifiable) {
+        return toReference(identifiable, AASModelHelper.getDefaultImplementation(Reference.class), AASModelHelper.getDefaultImplementation(Key.class));
+    }
+
 	/**
 	 * Search for the 
 	 * @param references

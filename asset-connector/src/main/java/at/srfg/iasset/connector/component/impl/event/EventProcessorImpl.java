@@ -22,6 +22,8 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import at.srfg.iasset.connector.component.impl.event.kafka.EventElementConsumer;
+import at.srfg.iasset.connector.component.impl.event.kafka.EventElementProducer;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.event.EventHandler;
 import at.srfg.iasset.repository.event.EventProcessor;
@@ -30,69 +32,34 @@ import at.srfg.iasset.repository.utils.ReferenceUtils;
 public class EventProcessorImpl implements EventProcessor {
 	final ObjectMapper objectMapper;
 	final ServiceEnvironment environment;
-	// TODO: obtain mapper from environment
+	final Map<BasicEventElement, EventElementConsumer> eventConsumer;
+	final Map<BasicEventElement, EventElementProducer> eventProducer;
+	// 
 	public EventProcessorImpl(ObjectMapper objectMapper, ServiceEnvironment environment) {
 		this.objectMapper = objectMapper;
 		this.environment = environment;
+		this.eventConsumer = new HashMap<BasicEventElement, EventElementConsumer>();
+		this.eventProducer = new HashMap<BasicEventElement, EventElementProducer>();
 	}
 	public void registerEventElement(BasicEventElement eventElement) {
+		
 		// only instance elements may be registered to act!
-		if ( eventElement.getKind() == ModelingKind.INSTANCE) {
-			
-			// check for direction input / output -> create Consumer or Producer
-			Direction direction = eventElement.getDirection();
-			// topic where to listen / send
-			String topic = eventElement.getMessageTopic();
-			if ( StringUtils.isEmpty(topic)) {
-				return;
-			}
-			// obtain broker to identify the environment
-//			Optional<SubmodelElement> theBroker = resolveMessageBroker(eventElement);
-			
-			Reference broker = eventElement.getMessageBroker();
-			if ( broker != null) {
-				Optional<Referable> brokerElement = environment.resolve(broker);
-				if ( brokerElement.isPresent()) {
-					Referable theBrokerElement = brokerElement.get();
-					// check the semanticId of the brokerElement
-					String submodelIdentifier = ReferenceUtils.firstKeyValue(broker);
-					String path = ReferenceUtils.idShortPath(broker);
-					Object brokerData = environment.getElementValue(submodelIdentifier, path);
-					
+		if ( ModelingKind.INSTANCE.equals(eventElement.getKind()) ) {
+			if ( eventElement.getDirection()!= null) {
+				switch (eventElement.getDirection()) {
+				case INPUT:
+					//
+					EventElementConsumer consumer = new EventElementConsumer(this, eventElement);
+					eventConsumer.put(eventElement, consumer);
+					break;
+				case OUTPUT:
+					EventElementProducer producer = new EventElementProducer(eventElement);
+					eventProducer.put(eventElement, producer);
 				}
 			}
-			// observed reference ... required for assigning handlers ...
-			Reference observed = eventElement.getObserved();
-			// resolve the observed element
-			if ( observed != null ) {
-				Optional<Referable> observedElement = environment.resolve(observed);
-				// 
-			}
-			// is the processor active or not!
-			StateOfEvent state = eventElement.getState();
-			// semanticID for the eventElement - different from semanticID of "observed"
-			Reference eventSemantic = eventElement.getSemanticId();
-			
-		}
-		
+		}	
 	}
-	private Optional<SubmodelElement> resolveMessageBroker(BasicEventElement eventElement) {
-		Reference broker = eventElement.getMessageBroker();
-		if ( broker == null) {
-			// check semantic id - must point to a parent element of kind=Template
-			Reference eventSemanticsRef = eventElement.getSemanticId();
-			Optional<BasicEventElement> eventSemantics = environment.resolve(eventSemanticsRef, BasicEventElement.class);
-			if ( eventSemantics.isPresent()) {
-				BasicEventElement parent = eventSemantics.get();
-				return resolveMessageBroker(parent);
-			}
-			return Optional.empty();
-		}
-		else {
-			return environment.resolve(broker, SubmodelElement.class);
-		}
-		// 
-	}
+
 	/**
 	 * Mapping for EventListeners
 	 */
@@ -196,6 +163,16 @@ public class EventProcessorImpl implements EventProcessor {
 				.findAny();
 		}
 		return Optional.empty();
+		
+	}
+	@Override
+	public void startEventProcessing() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void stopEventProcessing() {
+		// TODO Auto-generated method stub
 		
 	}
 

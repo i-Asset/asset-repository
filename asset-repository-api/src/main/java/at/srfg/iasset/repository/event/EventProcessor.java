@@ -15,6 +15,8 @@ public interface EventProcessor {
 	void sendTestEvent(String string, String semantiId, Object payload);
 	void processIncomingMessage(String topic, String key, String message);
 	
+	void startEventProcessing();
+	void stopEventProcessing();
 	
 	
 }
