@@ -204,8 +204,8 @@ public class AssetAdministrationShellController implements IAssetAdministrationS
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH +"/invoke")
-	public Map<String, Object> invokeOperation(@PathParam("submodelIdentifier") String submodelIdentifier, @PathParam("path") String path,
-			Map<String, Object> parameterMap) {
+	public Object invokeOperation(@PathParam("submodelIdentifier") String submodelIdentifier, @PathParam("path") String path,
+			Object parameterMap) {
 		return environment.invokeOperation(theShell.getId(), 
 				ApiUtils.base64Decode(submodelIdentifier), 
 				path,

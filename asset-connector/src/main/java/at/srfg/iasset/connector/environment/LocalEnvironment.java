@@ -1,6 +1,5 @@
 package at.srfg.iasset.connector.environment;
 
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -9,9 +8,11 @@ import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.Operation;
 import org.eclipse.aas4j.v3.model.Reference;
 
-import at.srfg.iasset.connector.MessageListener;
-import at.srfg.iasset.connector.MessageProducer;
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
+import at.srfg.iasset.repository.component.ModelListener;
+import at.srfg.iasset.repository.event.EventHandler;
+import at.srfg.iasset.repository.event.EventProcessor;
+import at.srfg.iasset.repository.event.EventProducer;
 
 public interface LocalEnvironment {
 	/**
@@ -56,12 +57,12 @@ public interface LocalEnvironment {
 	 */
 	public void removeHandler(String alias);
 	/**
-	 * Add a message listener for the semantic Id
+	 * Add a message listener for a particular semanticId
 	 * @param <T>
 	 * @param reference
 	 * @param listener
 	 */
-	public <T> void addMesssageListener(Reference reference, MessageListener<T> listener);
+	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener);
 	
 	/**
 	 * Obtain a message producer 
@@ -70,7 +71,7 @@ public interface LocalEnvironment {
 	 * @param clazz
 	 * @return
 	 */
-	public <T> MessageProducer<T> getMessageProducer(Reference reference, Class<T> clazz);
+	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz);
 	/**
 	 * Inject a {@link Consumer} function to the local environment. This function's {@link Consumer#accept(Object)} 
 	 * method is called whenever a new value for the identified element is provided
@@ -97,6 +98,19 @@ public interface LocalEnvironment {
 	 * @param path
 	 * @param function
 	 */
-	public void setOperationFunction(String aasIdentifier, String submodelIdentifier, String path, Function<Map<String,Object>,Object> function);
+	public void setOperationFunction(String aasIdentifier, String submodelIdentifier, String path, Function<Object,Object> function);
+	/**
+	 * Execute the operation
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @param path
+	 * @param parameter
+	 * @return
+	 */
+	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter);
+
+	EventProcessor getEventProcessor();
+	
+	
 
 }

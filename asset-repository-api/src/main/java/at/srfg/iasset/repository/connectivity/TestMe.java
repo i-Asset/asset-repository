@@ -26,7 +26,7 @@ public class TestMe {
 		Object o = l.getValue("https://acplt.org/Test_Submodel", "ExampleSubmodelCollectionOrdered");
 		
 		Object broker = c.getRepositoryInterface().getValue("http://iasset.salzburgresearch.at/application", "http://iasset.salzburgresearch.at/application#eventConfig", "messageBroker");
-		
+		Object broker2 = c.getSubmodelInterface().getValue("http://iasset.salzburgresearch.at/application#eventConfig", "messageBroker");
 		AssetAdministrationShell theShell = conn.getAssetAdministrationShell("https://acplt.org/Test_AssetAdministrationShell");
 		Submodel sub = conn.getSubmodel("https://acplt.org/Test_AssetAdministrationShell", "https://acplt.org/Test_Submodel");
 		

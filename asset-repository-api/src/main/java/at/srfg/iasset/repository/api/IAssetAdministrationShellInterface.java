@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.fasterxml.jackson.databind.JsonNode;
 
 import at.srfg.iasset.repository.api.annotation.Base64Encoded;
 import io.swagger.v3.oas.annotations.Operation;
@@ -419,14 +418,7 @@ public interface IAssetAdministrationShellInterface {
 			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE},
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/value")
 	public Object getValue(	
-//			@Base64Encoded
-//			@Parameter(
-//					in = ParameterIn.PATH, 
-//					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
-//					required = true, 
-//					schema = @Schema()) 
-//			@PathVariable("aasIdentifier")
-//			String aasIdentifier,
+
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 
@@ -439,7 +431,12 @@ public interface IAssetAdministrationShellInterface {
 			@PathVariable("path") 
 			String path);
 	
-	
+	/**
+	 * Update the values of the {@link Submodel}'s under the provdided path
+	 * @param submodelIdentifier
+	 * @param path
+	 * @param value
+	 */
 	@Operation(summary =  "Obtain the identifiable element",
 			tags = "Asset Administration Shell Interface (Connector Only)")
 	@RequestMapping(
@@ -447,14 +444,7 @@ public interface IAssetAdministrationShellInterface {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/value")
 	public void setValue(
-//			@Base64Encoded
-//			@Parameter(
-//					in = ParameterIn.PATH, 
-//					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
-//					required = true, 
-//					schema = @Schema()) 
-//			@PathVariable("aasIdentifier")
-//			String aasIdentifier,
+
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 
@@ -479,7 +469,7 @@ public interface IAssetAdministrationShellInterface {
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
-	public Map<String,Object> invokeOperation(
+	public Object invokeOperation(
 //			@Base64Encoded
 //			@Parameter(
 //					in = ParameterIn.PATH, 
@@ -500,7 +490,7 @@ public interface IAssetAdministrationShellInterface {
 			@PathVariable("path") 
 			String path,
 			@RequestBody
-			Map<String, Object> parameterMap);
+			Object parameterMap);
 	
 	/**
 	 * Obtain the {@link AssetAdministrationShell} 

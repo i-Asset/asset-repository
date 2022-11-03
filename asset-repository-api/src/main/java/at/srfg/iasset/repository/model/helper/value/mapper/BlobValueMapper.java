@@ -9,12 +9,12 @@ import at.srfg.iasset.repository.model.helper.value.BlobValue;
 public class BlobValueMapper implements ValueMapper<Blob, BlobValue> {
 
 	@Override
-	public BlobValue getValueOnly(Blob modelElement) {
+	public BlobValue mapToValue(Blob modelElement) {
 		return new BlobValue(modelElement.getContentType(), modelElement.getValue());
 	}
 
 	@Override
-	public Blob applyValue(Blob modelElement, JsonNode valueNode) {
+	public Blob mapValueToElement(Blob modelElement, JsonNode valueNode) {
 		valueNode.get("value");
 		return modelElement;
 	}

@@ -25,6 +25,18 @@
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
 		</dependency>
+		<!-- messaging clients -->
+		<dependency>
+		    <groupId>org.apache.kafka</groupId>
+		    <artifactId>kafka-clients</artifactId>
+		    <version>2.7.0</version>
+		</dependency>
+	    <dependency>
+	        <groupId>org.eclipse.paho</groupId>
+	        <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+	        <version>1.2.0</version>
+	    </dependency>		
+
 		<!-- 
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>

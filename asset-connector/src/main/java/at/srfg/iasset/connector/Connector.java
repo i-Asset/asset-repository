@@ -3,18 +3,22 @@ package at.srfg.iasset.connector;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.eclipse.aas4j.v3.model.EventPayload;
 import org.eclipse.aas4j.v3.model.Reference;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
+import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
-import at.srfg.iasset.connector.environment.ModelListener;
+import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.event.EventHandler;
+import at.srfg.iasset.repository.event.EventProcessor;
+import at.srfg.iasset.repository.event.EventProducer;
 
 public class Connector implements LocalEnvironment {
 	
@@ -69,6 +73,29 @@ public class Connector implements LocalEnvironment {
 
 					});
 			connector.register("https://acplt.org/Test_AssetAdministrationShell");
+			// 
+			connector.register(AASFull.AAS_BELT_INSTANCE.getId());
+			/*
+			 * The event processor should 
+			 */
+			connector.getEventProcessor().registerHandler(
+					"https://acplt.org/Test_AssetAdministrationShell_Missing", 
+					"https://acplt.org/Test_Submodel_Missing", 
+					"http://acplt.org/Events/ExampleBasicEvent", 
+					new EventHandler<String>() {
+
+				@Override
+				public void onEventMessage(EventPayload eventPayload, String payload) {
+					System.out.println(payload);
+					
+				}
+
+				@Override
+				public Class<String> getPayloadType() {
+					return String.class;
+				}
+			});
+			connector.getEventProcessor().sendTestEvent("topic","http://acplt.org/Events/ExampleBasicEvent",  "This is a test payload");
 			
 			System.in.read();
 			connector.stop();
@@ -104,12 +131,16 @@ public class Connector implements LocalEnvironment {
 	}
 	@Override
 	public void setOperationFunction(String aasIdentifier, String submodelIdentifier, String path,
-			Function<Map<String, Object>, Object> function) {
+			Function<Object, Object> function) {
 		serviceEnvironment.setOperationFunction(aasIdentifier, submodelIdentifier, path, function);		
 	}
 	@Override
 	public ConnectorEndpoint startEndpoint(int port) {
 		return serviceEnvironment.startEndpoint(port);
+	}
+	@Override
+	public EventProcessor getEventProcessor() {
+		return serviceEnvironment.getEventProcessor();
 	}
 	@Override
 	public void shutdownEndpoint() {
@@ -134,16 +165,23 @@ public class Connector implements LocalEnvironment {
 
 
 	@Override
-	public <T> void addMesssageListener(Reference reference, MessageListener<T> listener) {
+	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener) {
 		// TODO Auto-generated method stub
+		serviceEnvironment.getEventProcessor().registerHandler(currentStringValue, currentStringValue, reference, listener);
 		
 	}
 
 
 	@Override
-	public <T> MessageProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
+	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
+		return serviceEnvironment.invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
 	}
 
 

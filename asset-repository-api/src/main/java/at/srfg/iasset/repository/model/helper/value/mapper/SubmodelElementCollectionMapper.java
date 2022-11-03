@@ -13,7 +13,7 @@ import at.srfg.iasset.repository.model.helper.value.SubmodelElementCollectionVal
 public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElementCollection, SubmodelElementCollectionValue>{
 
 	@Override
-	public SubmodelElementCollectionValue getValueOnly(SubmodelElementCollection modelElement) {
+	public SubmodelElementCollectionValue mapToValue(SubmodelElementCollection modelElement) {
 		SubmodelElementCollectionValue value = new SubmodelElementCollectionValue();
 		// TODO Auto-generated method stub
 		for ( SubmodelElement element : modelElement.getValues()) {
@@ -23,7 +23,7 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 	}
 
 	@Override
-	public SubmodelElementCollection applyValue(SubmodelElementCollection modelElement, JsonNode valueNode) {
+	public SubmodelElementCollection mapValueToElement(SubmodelElementCollection modelElement, JsonNode valueNode) {
 		// TODO Auto-generated method stub
 		modelElement.getValues().stream().forEach(new Consumer<SubmodelElement>() {
 

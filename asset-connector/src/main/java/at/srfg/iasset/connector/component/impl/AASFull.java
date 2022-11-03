@@ -18,14 +18,69 @@ package at.srfg.iasset.connector.component.impl;
 import java.util.Arrays;
 import java.util.Base64;
 
-import org.eclipse.aas4j.v3.model.*;
-import org.eclipse.aas4j.v3.model.impl.*;
+import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.AssetKind;
+import org.eclipse.aas4j.v3.model.ConceptDescription;
+import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.aas4j.v3.model.DataTypeIEC61360;
+import org.eclipse.aas4j.v3.model.Direction;
+import org.eclipse.aas4j.v3.model.EntityType;
+import org.eclipse.aas4j.v3.model.Environment;
+import org.eclipse.aas4j.v3.model.KeyTypes;
+import org.eclipse.aas4j.v3.model.LevelType;
+import org.eclipse.aas4j.v3.model.ModelingKind;
+import org.eclipse.aas4j.v3.model.ReferenceTypes;
+import org.eclipse.aas4j.v3.model.StateOfEvent;
+import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.aas4j.v3.model.impl.DefaultAdministrativeInformation;
+import org.eclipse.aas4j.v3.model.impl.DefaultAnnotatedRelationshipElement;
+import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.impl.DefaultAssetInformation;
+import org.eclipse.aas4j.v3.model.impl.DefaultBasicEventElement;
+import org.eclipse.aas4j.v3.model.impl.DefaultBlob;
+import org.eclipse.aas4j.v3.model.impl.DefaultCapability;
+import org.eclipse.aas4j.v3.model.impl.DefaultConceptDescription;
+import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecification;
+import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationIEC61360;
+import org.eclipse.aas4j.v3.model.impl.DefaultEntity;
+import org.eclipse.aas4j.v3.model.impl.DefaultEnvironment;
+import org.eclipse.aas4j.v3.model.impl.DefaultFile;
+import org.eclipse.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.aas4j.v3.model.impl.DefaultMultiLanguageProperty;
+import org.eclipse.aas4j.v3.model.impl.DefaultOperation;
+import org.eclipse.aas4j.v3.model.impl.DefaultOperationVariable;
+import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.aas4j.v3.model.impl.DefaultQualifier;
+import org.eclipse.aas4j.v3.model.impl.DefaultRange;
+import org.eclipse.aas4j.v3.model.impl.DefaultReference;
+import org.eclipse.aas4j.v3.model.impl.DefaultReferenceElement;
+import org.eclipse.aas4j.v3.model.impl.DefaultRelationshipElement;
+import org.eclipse.aas4j.v3.model.impl.DefaultSpecificAssetId;
+import org.eclipse.aas4j.v3.model.impl.DefaultSubmodel;
+import org.eclipse.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
+import org.eclipse.aas4j.v3.model.impl.DefaultValueList;
+import org.eclipse.aas4j.v3.model.impl.DefaultValueReferencePair;
+
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 // TODO import org.eclipse.aas4j.v3.rc02.model.impl.DefaultEmbeddedDataSpecification;
 
 
 public class AASFull {
 
+	public static final AssetAdministrationShell AAS_BELT_TEMPLATE = createTypeAasForBelt();
+	public static final AssetAdministrationShell AAS_BELT_INSTANCE = createInstanceAasForBelt();
+	public static final Submodel SUBMODEL_BELT_PROPERTIES_TEMPLATE = createSubmodelTemplateForBeltProperties();
+	public static final Submodel SUBMODEL_BELT_PROPERTIES_INSTANCE = createSubmodelInstanceForBeltProperties();
+	public static final Submodel SUBMODEL_BELT_EVENT_TEMPLATE = createSubmodelTemplateForBeltEvents();
+	public static final Submodel SUBMODEL_BELT_EVENT_INSTANCE = createSubmodelInstanceForBeltEvents();
+	public static final Submodel SUBMODEL_BELT_OPERATIONS_TEMPLATE = createSubmodelTemplateForBeltOperation();
+	public static final Submodel SUBMODEL_BELT_OPERATIONS_INSTANCE = createSubmodelInstanceForBeltOperation();
+	
+	public static final ConceptDescription CONCEPT_DESCRIPTION_MESSAGE_BROKER = createConceptDescriptionForMessageBroker();
+	public static final ConceptDescription CONCEPT_DESCRIPTION_BELT_STATE = createConceptDescriptionForBeltState();
+	
     public static final AssetAdministrationShell AAS_1 = createAAS1();
     public static final AssetAdministrationShell AAS_2 = createAAS2();
     public static final AssetAdministrationShell AAS_3 = createAAS3();
@@ -42,6 +97,481 @@ public class AASFull {
     public final static ConceptDescription CONCEPT_DESCRIPTION_3 = createConceptDescription3();
     public final static ConceptDescription CONCEPT_DESCRIPTION_4 = createConceptDescription4();
     public static final Environment ENVIRONMENT = createEnvironment();
+    
+    public static AssetAdministrationShell createTypeAasForBelt() {
+    	return new DefaultAssetAdministrationShell.Builder()
+    			.id("http://iasset.salzburgresearch.at/labor/belt#aas")
+    			.idShort("belt")
+    			.assetInformation(new DefaultAssetInformation.Builder()
+    					.assetKind(AssetKind.TYPE)
+    					.globalAssetId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/labor/belt"))
+    					.specificAssetId(new DefaultSpecificAssetId.Builder()
+    							.semanticId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://specificAssetId.belt.com"))
+    							.build() )
+    					.build())
+    			.displayName(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("i-Asset Type for Belt").build()
+    				)
+    			.administration(new DefaultAdministrativeInformation.Builder()
+    					.version("V0.01")
+    					.version("001")
+    					.build() )
+    			.build();
+    }
+    public static AssetAdministrationShell createInstanceAasForBelt() {
+    	return new DefaultAssetAdministrationShell.Builder()
+    			.id("http://iasset.salzburgresearch.at/labor/beltInstance")
+    			.idShort("beltInstance")
+    			.assetInformation(new DefaultAssetInformation.Builder()
+    					.assetKind(AssetKind.TYPE)
+    					.globalAssetId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/labor/belt"))
+    					.specificAssetId(new DefaultSpecificAssetId.Builder()
+    							.semanticId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://specificAssetId.belt.com"))
+    							.build() )
+    					.build())
+    			.displayName(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("i-Asset Type for Belt").build()
+    				)
+    			.administration(new DefaultAdministrativeInformation.Builder()
+    					.version("V0.01")
+    					.version("001")
+    					.build() )
+    			// point to the type aas
+    			.derivedFrom(ReferenceUtils.fromIdentifiable(createTypeAasForBelt()))
+    			.build();
+    }
+
+    public static Submodel createSubmodelTemplateForBeltProperties() {
+    	return new DefaultSubmodel.Builder()
+    			.idShort("properties")
+    			.id("http://iasset.salzburgresearch.at/labor/belt#properties")
+    			.displayName(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("i-Asset Belt-Propeties Submodel").build()
+    					)
+    			.description(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("i-Asset Belt Properties Submodel")
+    					.build())
+    			.kind(ModelingKind.TEMPLATE)
+    			// the belt-info-Type refers to it's parent type
+//    			.semanticId(ReferenceUtils.fromIdentifiable(createSubmodelForInfoModel()))
+    			.submodelElement(new DefaultSubmodelElementCollection.Builder()
+    					.idShort("beltData")
+    	    			.displayName(new DefaultLangString.Builder()
+    	    					.language("de")
+    	    					.text("i-Asset Belt-Data Contaoner").build()
+    	    					)
+    	    			.kind(ModelingKind.TEMPLATE)
+    	    			// TODO create concept description for belt data
+//    	    			.semanticId(null)
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("state")
+    	    					.kind(ModelingKind.TEMPLATE)
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("Status Förderband (on/off)").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.BOOLEAN)
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("moving")
+    	    					.kind(ModelingKind.TEMPLATE)
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("Förderband in Bewegung(on/off)").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.BOOLEAN)
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("direction")
+    	    					.kind(ModelingKind.TEMPLATE)
+    	    					.category("variable")
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("Bewegungsrichtung").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.STRING)
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("distance")
+    	    					.kind(ModelingKind.TEMPLATE)
+    	    					.category("variable")
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("zurückgelegte Distanz").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.DECIMAL)
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("timeElapsed")
+    	    					.category("variable")
+    	    					.kind(ModelingKind.TEMPLATE)
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("Bewegungsdauer gesamt").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.DURATION)
+    	    					.build())
+    					.build())
+    			.build();
+    }
+    public static Submodel createSubmodelInstanceForBeltProperties() {
+    	return new DefaultSubmodel.Builder()
+    			.idShort("properties")
+    			.id("http://iasset.salzburgresearch.at/labor/beltInstance/properties")
+    			.displayName(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("i-Asset Belt-Propeties Submodel").build()
+    					)
+    			.description(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("i-Asset Belt Properties Submodel")
+    					.build())
+    			.kind(ModelingKind.INSTANCE)
+    			// the belt-info-Type refers to it's parent type
+    			.semanticId(ReferenceUtils.fromIdentifiable(createSubmodelTemplateForBeltProperties()))
+    			.submodelElement(new DefaultSubmodelElementCollection.Builder()
+    					.idShort("beltData")
+    	    			.displayName(new DefaultLangString.Builder()
+    	    					.language("de")
+    	    					.text("i-Asset Belt-Data Contaoner").build()
+    	    					)
+    	    			.kind(ModelingKind.INSTANCE)
+    	    			.semanticId(new DefaultReference.Builder()
+    	    					.type(ReferenceTypes.MODEL_REFERENCE)
+    	    					.key(new DefaultKey.Builder()
+    	    							.type(KeyTypes.SUBMODEL)
+    	    							.value("http://iasset.salzburgresearch.at/labor/belt#properties")
+    	    							.build())
+    	    					.key(new DefaultKey.Builder()
+    	    							.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
+    	    							.value("beltData")
+    	    							.build())
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("state")
+    	    	    			.semanticId(new DefaultReference.Builder()
+    	    	    					.type(ReferenceTypes.MODEL_REFERENCE)
+    	    	    					.key(new DefaultKey.Builder()
+    	    	    							.type(KeyTypes.SUBMODEL)
+    	    	    							.value("http://iasset.salzburgresearch.at/labor/belt#properties")
+    	    	    							.build())
+    	    	    					.key(new DefaultKey.Builder()
+    	    	    							.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
+    	    	    							.value("beltData")
+    	    	    							.build())
+    	    	    					.key(new DefaultKey.Builder()
+    	    	    							.type(KeyTypes.PROPERTY)
+    	    	    							.value("state")
+    	    	    							.build())
+    	    	    					.build())
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("Status Förderband (on/off)").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.BOOLEAN)
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("moving")
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("Förderband in Bewegung(on/off)").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.BOOLEAN)
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("direction")
+    	    					.category("variable")
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("Bewegungsrichtung").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.STRING)
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("distance")
+    	    					.category("variable")
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("zurückgelegte Distanz").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.DECIMAL)
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("timeElapsed")
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language("de")
+    	    	    					.text("Bewegungsdauer gesamt").build()
+    	    	    					)
+    	    	    			.valueType(DataTypeDefXsd.DURATION)
+    	    					.build())
+    					.build())
+    			.build();
+    }
+    /**
+     * Create the {@link ConceptDescription} defining the property for the belt state
+     * @return
+     */
+    public static ConceptDescription createConceptDescriptionForBeltState() {
+    	return new DefaultConceptDescription.Builder()
+    			.id("http://iasset.salzburgresearch.at/labor/belt/data/state")
+    			.idShort("state")
+    			.category("ConceptProperty")
+    			.isCaseOf(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/labor/belt/data/state"))
+    			// Abbild aus Semantic Lookup!!
+    			.embeddedDataSpecification(new DefaultDataSpecification.Builder()
+    					.dataSpecificationContent(new DefaultDataSpecificationIEC61360.Builder()
+    							.dataType(DataTypeIEC61360.STRING)
+    							.preferredName(new DefaultLangString.Builder()
+    									.language("de")
+    									.text("On/Off Zustand des Förderbandes")
+    									.build())
+    							.valueList(new DefaultValueList.Builder()
+    									.valueReferencePairs(new DefaultValueReferencePair.Builder()
+    											.value("ON")
+    											.valueId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/labor/belt/data/state/on"))
+    											.build())
+    									.valueReferencePairs(new DefaultValueReferencePair.Builder()
+    											.value("OFF")
+    											.valueId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/labor/belt/data/state/off"))
+    											.build())
+    									.build())
+    							.build())
+    					.build())
+    			.build();
+    }
+
+    public static Submodel createSubmodelTemplateForBeltOperation() {
+    	return new DefaultSubmodel.Builder()
+    			.id("http://iasset.salzburgresearch.at/labor/belt#operations")
+    			.idShort("operations")
+    			.kind(ModelingKind.TEMPLATE)
+    			.displayName(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("Förderband Funktionen").build()
+    					)
+    			.submodelElement(new DefaultOperation.Builder()
+    					.idShort("switchBusyLight")
+    					.category("function")
+    	    			.displayName(new DefaultLangString.Builder()
+    	    					.language("de")
+    	    					.text("Kontroll-Lampe ein/ausschalten").build()
+    	    					)
+    	    			.kind(ModelingKind.TEMPLATE)
+    	    			.inoutputVariable(new DefaultOperationVariable.Builder()
+    	    					.value(new DefaultProperty.Builder()
+    	    							.idShort("state")
+    	    							.category("constant")
+    	    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    	    					.language("de")
+    	    	    	    					.text("Neuer Status für Kontroll-Lampe").build()
+    	    	    	    					)
+    	    	    	    			.valueType(DataTypeDefXsd.BOOLEAN)
+    	    							.build())
+    	    					.build())
+    					.build())
+    			.submodelElement(new DefaultOperation.Builder()
+    					.idShort("moveBelt")
+    					.category("function")
+    	    			.displayName(new DefaultLangString.Builder()
+    	    					.language("de")
+    	    					.text("Band vor/zurück bewegen").build()
+    	    					)
+    	    			.kind(ModelingKind.TEMPLATE)
+    	    			.inputVariable(new DefaultOperationVariable.Builder()
+    	    					.value(new DefaultProperty.Builder()
+    	    	    					.idShort("direction")
+    	    	    					.category("constant")
+    	    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    	    					.language("de")
+    	    	    	    					.text("Bewegungsrichtung").build()
+    	    	    	    					)
+    	    	    	    			.valueType(DataTypeDefXsd.STRING)
+    	    	    					.build())
+    	    					.value(new DefaultProperty.Builder()
+    	    	    					.idShort("distance")
+    	    	    					.category("constant")
+    	    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    	    					.language("de")
+    	    	    	    					.text("Zurückzulegende Entfernung").build()
+    	    	    	    					)
+    	    	    	    			.valueType(DataTypeDefXsd.STRING)
+    	    	    					.build())
+    	    					.build())
+    					.build())
+    			.build();
+    }
+    public static Submodel createSubmodelInstanceForBeltOperation() {
+    	return new DefaultSubmodel.Builder()
+    			.id("http://iasset.salzburgresearch.at/labor/beltInstance/operations")
+    			.idShort("operations")
+    			.kind(ModelingKind.INSTANCE)
+    			.displayName(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("Förderband Funktionen").build()
+    					)
+    			.semanticId(ReferenceUtils.fromIdentifiable(createSubmodelTemplateForBeltOperation()))
+    			.submodelElement(new DefaultOperation.Builder()
+    					.idShort("switchBusyLight")
+    					.category("function")
+    	    			.displayName(new DefaultLangString.Builder()
+    	    					.language("de")
+    	    					.text("Kontroll-Lampe ein/ausschalten").build()
+    	    					)
+    	    			.kind(ModelingKind.INSTANCE)
+    	    			.inoutputVariable(new DefaultOperationVariable.Builder()
+    	    					.value(new DefaultProperty.Builder()
+    	    							.idShort("state")
+    	    							.category("constant")
+    	    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    	    					.language("de")
+    	    	    	    					.text("Neuer Status für Kontroll-Lampe").build()
+    	    	    	    					)
+    	    	    	    			.valueType(DataTypeDefXsd.BOOLEAN)
+    	    							.build())
+    	    					.build())
+    					.build())
+    			.submodelElement(new DefaultOperation.Builder()
+    					.idShort("moveBelt")
+    					.category("function")
+    	    			.displayName(new DefaultLangString.Builder()
+    	    					.language("de")
+    	    					.text("Band vor/zurück bewegen").build()
+    	    					)
+    	    			.kind(ModelingKind.INSTANCE)
+    	    			.inputVariable(new DefaultOperationVariable.Builder()
+    	    					.value(new DefaultProperty.Builder()
+    	    	    					.idShort("direction")
+    	    	    					.category("constant")
+    	    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    	    					.language("de")
+    	    	    	    					.text("Bewegungsrichtung").build()
+    	    	    	    					)
+    	    	    	    			.valueType(DataTypeDefXsd.STRING)
+    	    	    					.build())
+    	    					.value(new DefaultProperty.Builder()
+    	    	    					.idShort("distance")
+    	    	    					.category("constant")
+    	    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    	    					.language("de")
+    	    	    	    					.text("Zurückzulegende Entfernung").build()
+    	    	    	    					)
+    	    	    	    			.valueType(DataTypeDefXsd.STRING)
+    	    	    					.build())
+    	    					.build())
+    					.build())
+    			.build();
+    }
+
+    public static Submodel createSubmodelTemplateForBeltEvents() {
+    	return new DefaultSubmodel.Builder()
+    			.id("http://iasset.salzburgresearch.at/labor/belt#events")
+    			.idShort("events")
+    			.kind(ModelingKind.TEMPLATE)
+    			.displayName(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("Förderband Ereignisse").build()
+    					)
+    			.submodelElement(new DefaultBasicEventElement.Builder()
+    					.idShort("beltEvent")
+    					.kind(ModelingKind.TEMPLATE)
+//    					.observed(new DefaultReference.Builder()
+//    							.type(ReferenceTypes.MODEL_REFERENCE)
+//    							.key(new DefaultKey.Builder()
+//    									.type(KeyTypes.SUBMODEL)
+//    									.value(createSubmodelTemplateForBeltProperties().getId())
+//    									.build())
+//    							.key(new DefaultKey.Builder()
+//    									.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
+//    									.value("beltData")
+//    									.build())
+//    							.build())
+    					
+    					// message broker acts as default information
+    					.messageBroker(new DefaultReference.Builder()
+    							.type(ReferenceTypes.MODEL_REFERENCE)
+    							.key(new DefaultKey.Builder()
+    									.type(KeyTypes.SUBMODEL)
+    									.value("http://iasset.salzburgresearch.at/application#eventConfig")
+    									.build())
+    							.key(new DefaultKey.Builder()
+    									.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
+    									.value("messageBroker")
+    									.build())
+    							.build())
+    					.build())
+    			.build();
+    }
+    public static Submodel createSubmodelInstanceForBeltEvents() {
+    	return new DefaultSubmodel.Builder()
+    			.id("http://iasset.salzburgresearch.at/labor/beltInstance/events")
+    			.idShort("events")
+    			.kind(ModelingKind.INSTANCE)
+    			.displayName(new DefaultLangString.Builder()
+    					.language("de")
+    					.text("Förderband Ereignisse").build()
+    					)
+    			.semanticId(ReferenceUtils.fromIdentifiable(createSubmodelTemplateForBeltEvents()))
+    			.submodelElement(new DefaultBasicEventElement.Builder()
+    					.idShort("beltEvent")
+    					.kind(ModelingKind.INSTANCE)
+    					.semanticId(new DefaultReference.Builder()
+    							.type(ReferenceTypes.MODEL_REFERENCE)
+    							.key(new DefaultKey.Builder()
+    									.type(KeyTypes.SUBMODEL)
+    									.value("http://iasset.salzburgresearch.at/labor/belt#events")
+    									.build())
+    							.key(new DefaultKey.Builder()
+    									.type(KeyTypes.EVENT_ELEMENT)
+    									.value("beltEvent")
+    									.build())
+    							.build())
+    					.messageTopic("messageTopic")
+    					.observed(new DefaultReference.Builder()
+    							.type(ReferenceTypes.MODEL_REFERENCE)
+    							.key(new DefaultKey.Builder()
+    									.type(KeyTypes.SUBMODEL)
+    									.value(createSubmodelInstanceForBeltProperties().getId())
+    									.build())
+    							.key(new DefaultKey.Builder()
+    									.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
+    									.value("beltData")
+    									.build())
+    							.build())
+    					.messageBroker(new DefaultReference.Builder()
+    							.type(ReferenceTypes.MODEL_REFERENCE)
+    							.key(new DefaultKey.Builder()
+    									.type(KeyTypes.SUBMODEL)
+    									.value("http://iasset.salzburgresearch.at/application#eventConfig")
+    									.build())
+    							.key(new DefaultKey.Builder()
+    									.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
+    									.value("messageBroker")
+    									.build())
+    							.build())
+    					.build())
+    			.build();
+    }
+    public static ConceptDescription createConceptDescriptionForMessageBroker() {
+        return new DefaultConceptDescription.Builder()
+        		.id("http://iasset.salzburgresearch.at/data/messageBroker")
+                .idShort("messageBroker")
+                .category("ConceptClass")
+                .descriptions(Arrays.asList(
+                        new DefaultLangString.Builder().text("Concept referencing the messageBroker").language("en").build(),
+                        new DefaultLangString.Builder().text("Concept zum MessageBroker ").language("de").build()
+                        ))
+                .administration(new DefaultAdministrativeInformation.Builder()
+                        .version("0.9")
+                        .revision("0")
+                        .build())
+                .isCaseOf(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/data/messageBroker"))
+                .build();
+    }
+    
 
     public static AssetAdministrationShell createAAS1() {
         return new DefaultAssetAdministrationShell.Builder()
@@ -619,6 +1149,16 @@ public class AASFull {
                                         .build())
                                 .type(ReferenceTypes.GLOBAL_REFERENCE)
                                 .build())
+//                        .messageBroker(new DefaultReference.Builder()
+//                        		.key(new DefaultKey.Builder()
+//                        				.type(KeyTypes.SUBMODEL)
+//                        				.value("http://iasset.salzburgresearch.at/application#eventConfig")
+//                        				.build())
+//                        		.key(new DefaultKey.Builder()
+//                        				.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
+//                        				.value("messageBroker")
+//                        				.build())
+//                        		.build())
                         .observed(new DefaultReference.Builder()
                                 .key(new DefaultKey.Builder()
                                         .type(KeyTypes.SUBMODEL)
@@ -1173,8 +1713,10 @@ public class AASFull {
                         .build())
                 .submodelElement(new DefaultBasicEventElement.Builder()
                         .idShort("ExampleBasicEvent")
+                        .kind(ModelingKind.INSTANCE)
                         .category("Parameter")
                         .direction(Direction.INPUT)
+                        .messageTopic("topic")
                         .state(StateOfEvent.ON)
                         .descriptions(Arrays.asList(
                                 new DefaultLangString.Builder().text("Example BasicEvent object").language("en-us").build(),
