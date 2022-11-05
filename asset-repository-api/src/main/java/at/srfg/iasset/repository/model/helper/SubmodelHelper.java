@@ -82,10 +82,6 @@ public class SubmodelHelper {
 			
 			
 			String token = tokenIterator.next();
-			// SubmodelElementList ...
-			if ( token.contains("[")) {
-				
-			}
 			
 			Optional<SubmodelElement> optElement = getChild(parent, token, SubmodelElement.class);
 			
@@ -104,6 +100,36 @@ public class SubmodelHelper {
 			
 		}
 		return Optional.ofNullable(element);
+	}
+	public Reference getReference(String path) {
+		Reference modelRef = ReferenceUtils.toReference(submodel);
+		Path thePath = new Path(path);
+		Iterator<String> tokenIterator = thePath.iterator();
+		Referable parent = submodel;
+		SubmodelElement element = null;
+		while (tokenIterator.hasNext()) {
+			
+			
+			String token = tokenIterator.next();
+			
+			Optional<SubmodelElement> optElement = getChild(parent, token, SubmodelElement.class);
+			
+			
+			
+			if ( ! optElement.isPresent() ) {
+				throw new IllegalArgumentException(String.format("Provided path %s is not valid", path));
+			}
+			else {
+				element = optElement.get();
+				modelRef = ReferenceUtils.toReference(modelRef, element);
+			}
+			if (tokenIterator.hasNext()) {
+				parent = optElement.get();
+				
+			}
+			
+		}
+		return modelRef;
 	}
 	public Optional<SubmodelElement> getSubmodelElementAt(List<Key> keys) {
 		Iterator<Key> keyIterator = keys.iterator();
@@ -300,6 +326,9 @@ public class SubmodelHelper {
 			
 		
 	}
+	public Object resolveValue(Iterator<Key> keyIterator) {
+		return resolveValue(submodel, keyIterator);
+	}
 	private Optional<Referable> resolveKeyPath(Referable container, Iterator<Key> iterator  ) {
 		Key elementKey = iterator.next();
 		
@@ -309,5 +338,17 @@ public class SubmodelHelper {
 		}
 		return element;
 		
+	}
+	private Object resolveValue(Referable container, Iterator<Key> iterator) {
+		Key elementKey = iterator.next();
+		
+		Optional<SubmodelElement>  element = getChild(container, elementKey.getValue(), SubmodelElement.class);
+		if ( element.isPresent() && iterator.hasNext()) {
+			return resolveKeyPath(element.get(), iterator);
+		}
+		if ( element.isPresent()) {
+			return getValueOnly(element.get());
+		}
+		return null;
 	}
 }

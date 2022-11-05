@@ -9,6 +9,7 @@ import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.EventElement;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
@@ -134,6 +135,12 @@ public interface ServiceEnvironment {
 	 * @return
 	 */
 	Object getElementValue(String submodelIdentifier, String path);
+	/**
+	 * Obtain the ValueOnly representation of a {@link Reference} of type {@link ReferenceTypes#MODEL_REFERENCE}
+	 * @param reference
+	 * @return The value only serialization of the referenced element
+	 */
+	Object getElementValue(Reference reference);
 	/**
 	 * Update a {@link SubmodelElement} based on it's ValueOnly representation
 	 * @param aasIdentifier

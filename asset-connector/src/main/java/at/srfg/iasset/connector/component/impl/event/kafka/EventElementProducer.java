@@ -1,46 +1,52 @@
 package at.srfg.iasset.connector.component.impl.event.kafka;
 
-import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.eclipse.aas4j.v3.model.BasicEventElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class EventElementProducer {
-	private Producer<Long, String> producer;
-	private String hosts = "iasset.salzburgresearch.at:9092";
-	private String topic;
-	public EventElementProducer(BasicEventElement element) {
-		this.topic = element.getIdShort();
-	}
-	public void startProducer() {
-		producer = ProducerCreator.createProducer(topic, hosts);
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
+import at.srfg.iasset.repository.event.EventProducer;
+
+public class EventElementProducer<T> implements EventProducer<T>{
+	private Logger logger = LoggerFactory.getLogger(EventElementProducer.class);
+	
+	private Sender sender;
+	private EventPayloadHelper eventElement;
+	
+	public EventElementProducer(EventPayloadHelper element) {
+		this.eventElement = element;
+		
+		this.sender = new Sender(eventElement.getTopic());
+		//
 	}
 	
-	public void sendMessage(String payload) {
-		sendMessage(payload,null);
-	}
-	public void sendMessage(String payload, Callback callback) {
-		ProducerRecord<Long, String> record = new ProducerRecord<Long, String>(topic, payload);
+	/**
+	 * use the messaging infrastructure to send the (typed) payload
+	 */
+	@Override
+	public void sendEvent(T payload) {
 		try {
-			if ( callback != null ) {
-				producer.send(record,callback);
-			}
-			else {
-				producer.send(record);
-			}
-		}
-		finally {
-			
+			sender.sendMessage(eventElement.asPayload(payloadObjectAsString(payload)));
+		} catch (JsonProcessingException e) {
+			logger.error(e.getMessage());
 		}
 		
 	}
-	
-	public void close() {
-		try {
-			producer.close();
-		} 
-		finally {
-			producer = null;
+	/**
+	 * Helper method to transform the provided (typed) payload into it's string representation
+	 * @param payload
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	private String payloadObjectAsString(T payload) throws JsonProcessingException {
+		if ( ! String.class.isInstance(payload)) {
+			return ClientFactory.getObjectMapper().writeValueAsString(payload);
 		}
+		else if (Number.class.isInstance(payload) ) {
+			return payload.toString();
+		}
+		return payload.toString();
 	}
+
 }

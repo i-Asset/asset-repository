@@ -431,6 +431,11 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		return null;
 	}
 
+	@Override
+	public Object getElementValue(Reference reference) {
+		throw new UnsupportedOperationException("Not yet implemented!");
+	}
+
 
 	
 }

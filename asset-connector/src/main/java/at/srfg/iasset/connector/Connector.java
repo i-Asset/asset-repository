@@ -3,12 +3,16 @@ package at.srfg.iasset.connector;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.eclipse.aas4j.v3.model.EventPayload;
+import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.impl.AASFull;
@@ -19,6 +23,7 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.event.EventHandler;
 import at.srfg.iasset.repository.event.EventProcessor;
 import at.srfg.iasset.repository.event.EventProducer;
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class Connector implements LocalEnvironment {
 	
@@ -113,8 +118,6 @@ public class Connector implements LocalEnvironment {
 			 * The event processor should 
 			 */
 			connector.getEventProcessor().registerHandler(
-					"https://acplt.org/Test_AssetAdministrationShell_Missing", 
-					"https://acplt.org/Test_Submodel_Missing", 
 					"http://acplt.org/Events/ExampleBasicEvent", 
 					new EventHandler<String>() {
 
@@ -129,7 +132,11 @@ public class Connector implements LocalEnvironment {
 					return String.class;
 				}
 			});
-			connector.getEventProcessor().sendTestEvent("topic","http://acplt.org/Events/ExampleBasicEvent",  "This is a test payload");
+			connector.getEventProcessor().startEventProcessing();
+		
+//			connector.getEventProcessor().sendTestEvent(createTestPayload("topic", "Das ist die Testnachricht"));
+			EventProducer<String> simpleProducer = connector.getEventProcessor().getProducer("http://iasset.salzburgresearch.at/beltDataEvent", String.class);
+			simpleProducer.sendEvent("Das ist die Testnachricht!");
 			
 			System.in.read();
 			connector.stop();
@@ -141,7 +148,18 @@ public class Connector implements LocalEnvironment {
 			e.printStackTrace();
 		}
 	}
-	
+	private static EventPayload createTestPayload(String topic, String message) {
+		return new DefaultEventPayload.Builder()
+				.source(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://messageSource.org"))
+				.sourceSemanticId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://messageSource.org/semantics"))
+				.observableReference(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://observableElement.org"))
+				.observableSemanticId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://acplt.org/Events/ExampleBasicEvent"))
+				.subjectId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://messageSource.org/subjectId"))
+				.payload(message)
+				.timeStamp(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE))
+				.topic(topic)
+				.build();
+	}
 	public void register(String aasIdentifier) {
 		serviceEnvironment.register(aasIdentifier);
 	}
@@ -200,8 +218,7 @@ public class Connector implements LocalEnvironment {
 
 	@Override
 	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener) {
-		// TODO Auto-generated method stub
-		serviceEnvironment.getEventProcessor().registerHandler(currentStringValue, currentStringValue, reference, listener);
+		serviceEnvironment.getEventProcessor().registerHandler(reference, listener);
 		
 	}
 

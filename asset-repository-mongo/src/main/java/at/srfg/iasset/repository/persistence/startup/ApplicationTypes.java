@@ -89,8 +89,8 @@ public class ApplicationTypes {
     					.language(LANGUAGE)
     					.text("i-Asset Root Application beschreibt den Einstiegspunkt bzw. das Top-Level-Element für Anwendungen")
     					.build())
-    			.submodel(ReferenceUtils.fromIdentifiable(createSubmodelForInfoModel()))
-    			.submodel(ReferenceUtils.fromIdentifiable(createSubmodelForRootEventConfiguration()))
+    			.submodel(ReferenceUtils.toReference(createSubmodelForInfoModel()))
+    			.submodel(ReferenceUtils.toReference(createSubmodelForRootEventConfiguration()))
     			.build();
 
     }
@@ -130,14 +130,14 @@ public class ApplicationTypes {
     					.build())
     			.kind(ModelingKind.TEMPLATE)
     			// the belt-info-Type refers to it's parent type
-    			.semanticId(ReferenceUtils.fromIdentifiable(createSubmodelForInfoModel()))
+    			.semanticId(ReferenceUtils.toReference(createSubmodelForInfoModel()))
     			.submodelElement(new DefaultProperty.Builder()
     					.idShort("manufacturer")
     					.category("constant")
     					.kind(ModelingKind.INSTANCE)
     					.value("Hersteller Förderband")
     					.valueType(DataTypeDefXsd.STRING)
-    					.semanticId(ReferenceUtils.fromIdentifiable(createConceptDescriptionForManufacturerName()))
+    					.semanticId(ReferenceUtils.toReference(createConceptDescriptionForManufacturerName()))
     					.build())
     			.submodelElement(new DefaultBlob.Builder()
     					.idShort("logo")
@@ -162,7 +162,7 @@ public class ApplicationTypes {
     					.build())
     			.kind(ModelingKind.TEMPLATE)
     			// the belt-info-Type refers to it's parent type
-    			.semanticId(ReferenceUtils.fromIdentifiable(createSubmodelForInfoModel()))
+    			.semanticId(ReferenceUtils.toReference(createSubmodelForInfoModel()))
     			.submodelElement(new DefaultSubmodelElementCollection.Builder()
     					.idShort("beltData")
     	    			.displayName(new DefaultLangString.Builder()
@@ -298,7 +298,7 @@ public class ApplicationTypes {
     									.value("beltData")
     									.build())
     							.build())
-    					.messageBroker(ReferenceUtils.fromIdentifiable(createConceptDescriptionForMessageBroker()))
+    					.messageBroker(ReferenceUtils.toReference(createConceptDescriptionForMessageBroker()))
     					.build())
     			.build();
     }
@@ -471,9 +471,9 @@ public class ApplicationTypes {
     					.idShort("sensorData")
     					.kind(ModelingKind.TEMPLATE)
     					.direction(Direction.OUTPUT)
-    					.messageBroker(ReferenceUtils.fromIdentifiable(createConceptDescriptionForMessageBroker()))
+    					.messageBroker(ReferenceUtils.toReference(createConceptDescriptionForMessageBroker()))
     					.messageTopic("sensorData")
-    					.semanticId(ReferenceUtils.fromIdentifiable(createConceptDescriptionForSensorEventType()))
+    					.semanticId(ReferenceUtils.toReference(createConceptDescriptionForSensorEventType()))
     					.build()
     				)
     			.build();

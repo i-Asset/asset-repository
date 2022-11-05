@@ -1,6 +1,7 @@
 package at.srfg.iasset.repository.utils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
@@ -59,6 +60,12 @@ public class ReferenceUtils {
 				.build();
 			
 	}
+	/**
+	 * 
+	 * @param identifiable
+	 * @return
+	 * @deprecated use {@link #toReference(Identifiable)} instead!
+	 */
 	public static Reference fromIdentifiable(Identifiable identifiable) {
 		return toReference(identifiable);
 	}
@@ -91,7 +98,112 @@ public class ReferenceUtils {
      * @return a reference representing the identifiable
      */
     public static Reference toReference(Identifiable identifiable) {
-        return toReference(identifiable, AASModelHelper.getDefaultImplementation(Reference.class), AASModelHelper.getDefaultImplementation(Key.class));
+        return toReference(identifiable, 
+        		AASModelHelper.getDefaultImplementation(Reference.class), 
+        		AASModelHelper.getDefaultImplementation(Key.class));
+    }
+    /**
+     * Creates a reference for an element given a potential parent using
+     * provided implementation types for reference and key
+     *
+     * @param parent Reference to the parent. Can only be null when element is
+     * instance of Identifiable, otherwise result will always be null
+     * @param element the element to create a reference for
+     * @param referenceType implementation type of Reference interface
+     * @param keyType implementation type of Key interface
+     *
+     * @return A reference representing the element or null if either element is
+     * null or parent is null and element not an instance of Identifiable. In
+     * case element is an instance of Identifiable, the returned reference will
+     * only contain one key pointing directly to the element.
+     * 
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     * 
+     */
+    public static Reference toReference(Reference parent, Referable element, Class<? extends Reference> referenceType, Class<? extends Key> keyType) {
+        if (element == null) {
+            return null;
+        } else if (Identifiable.class.isAssignableFrom(element.getClass())) {
+            return toReference((Identifiable) element, referenceType, keyType);
+        } else {
+            Reference result = clone(parent, referenceType, keyType);
+            if (result != null) {
+                try {
+                    Key newKey = keyType.getConstructor().newInstance();
+                    newKey.setType(referableToKeyType(element));
+                    newKey.setValue(element.getIdShort());
+                    result.getKeys().add(newKey);
+                } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    throw new IllegalArgumentException("error parsing reference - could not instantiate reference type", ex);
+                }
+            }
+            return result;
+        }
+    }
+    /**
+     * Creates a deep-copy clone of a reference
+     *
+     * @param reference the reference to clone
+     * @return the cloned reference
+     * 
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     */
+    public static Reference clone(Reference reference) {
+        return clone(reference, AASModelHelper.getDefaultImplementation(Reference.class), AASModelHelper.getDefaultImplementation(Key.class));
+    }
+
+    /**
+     * Creates a deep-copy clone of a reference using provided implementation
+     * types for reference and key
+     *
+     * @param reference the reference to clone
+     * @param referenceType implementation type of Reference interface
+     * @param keyType implementation type of Key interface
+     *
+     * @return the cloned reference
+     * 
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     * 
+     */
+    public static Reference clone(Reference reference, Class<? extends Reference> referenceType, Class<? extends Key> keyType) {
+        if (reference == null || reference.getKeys() == null || reference.getKeys().isEmpty()) {
+            return null;
+        }
+        try {
+            Reference result = referenceType.getConstructor().newInstance();
+            List<Key> newKeys = new ArrayList<>();
+            for (Key key : reference.getKeys()) {
+                Key newKey = keyType.getConstructor().newInstance();
+                newKey.setType(key.getType());
+                newKey.setValue(key.getValue());
+                newKeys.add(newKey);
+            }
+            result.setKeys(newKeys);
+            return result;
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new IllegalArgumentException("error parsing reference - could not instantiate reference type", ex);
+        }
+    }
+
+    /**
+     * Creates a reference for an element given a potential parent
+     * 
+     *
+     * @param parent Reference to the parent. Can only be null when element is
+     * instance of Identifiable, otherwise result will always be null
+     * @param element the element to create a reference for
+     * @return A reference representing the element or null if either element is
+     * null or parent is null and element not an instance of Identifiable. In
+     * case element is an instance of Identifiable, the returned reference will
+     * only contain one key pointing directly to the element.
+     * 
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     */
+    public static Reference toReference(Reference parent, Referable element) {
+        return toReference(parent,
+                element,
+                AASModelHelper.getDefaultImplementation(Reference.class),
+                AASModelHelper.getDefaultImplementation(Key.class));
     }
 
 	/**
@@ -121,6 +233,8 @@ public class ReferenceUtils {
      * @return a Java interface representing the provided KeyElements type or
      * null if no matching Class/interface could be found. It also returns
      * abstract types like {@link KeyTypes#SUBMODEL_ELEMENT} or {@link KeyTypes#DATA_ELEMENT}
+     * 
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
      */
     public static Class<?> keyTypeToClass(KeyTypes key) {
         return Stream.concat(AASModelHelper.INTERFACES.stream(), AASModelHelper.INTERFACES_WITHOUT_DEFAULT_IMPLEMENTATION.stream())
@@ -135,6 +249,9 @@ public class ReferenceUtils {
      * @return the most specific KeyElements type representing the Referable,
      * i.e. abstract types like SUBMODEL_ELEMENT or DATA_ELEMENT are never
      * returned; null if there is no corresponding KeyElements type
+     * 
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     * 
      */
     public static KeyTypes referableToKeyType(Referable referable) {
         Class<?> aasInterface = AASModelHelper.getAasInterface(referable.getClass());

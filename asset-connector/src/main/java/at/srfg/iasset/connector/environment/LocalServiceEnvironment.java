@@ -251,6 +251,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public <T extends Referable> Optional<T> resolve(Reference reference, Class<T> type) {
+		
 		Optional<Referable> ref = resolve(reference);
 		if ( ref.isPresent() && type.isInstance(ref.get()) ) {
 			return Optional.of(type.cast(ref.get()));
@@ -669,7 +670,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener) {
-		getEventProcessor().registerHandler(getHostAddress(), getHostAddress(), reference, listener);
+		getEventProcessor().registerHandler(reference, listener);
 		
 	}
 
@@ -724,34 +725,35 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public Optional<Referable> resolve(Reference reference) {
-		// TODO: 
-		Iterator<Key> keyIterator = reference.getKeys().iterator();
-		if ( keyIterator.hasNext()) {
-			Key rootKey = keyIterator.next();
-			KeyTypes keyType = rootKey.getType();
-			switch(keyType) {
-			case SUBMODEL:
-				Optional<Submodel> keySub = getSubmodel(rootKey.getValue());
-				if ( keySub.isPresent()) {
-					return new SubmodelHelper(keySub.get()).resolveKeyPath(keyIterator);
+		if ( reference != null) {
+			Iterator<Key> keyIterator = reference.getKeys().iterator();
+			if ( keyIterator.hasNext()) {
+				Key rootKey = keyIterator.next();
+				KeyTypes keyType = rootKey.getType();
+				switch(keyType) {
+				case SUBMODEL:
+					Optional<Submodel> keySub = getSubmodel(rootKey.getValue());
+					if ( keySub.isPresent()) {
+						return new SubmodelHelper(keySub.get()).resolveKeyPath(keyIterator);
+					}
+					break;
+				case CONCEPT_DESCRIPTION:
+					Optional<ConceptDescription> cDesc = getConceptDescription(rootKey.getValue());
+					if ( cDesc.isPresent()) {
+						return Optional.of(cDesc.get());
+					}
+					break;
+				case ASSET_ADMINISTRATION_SHELL:
+					Optional<AssetAdministrationShell> aas = storage.findAssetAdministrationShellById(rootKey.getValue());
+					if ( aas.isPresent()) {
+						return Optional.of(aas.get());
+					}
+					break;
+				case GLOBAL_REFERENCE:
+					return Optional.empty();
+				default:
+					throw new IllegalArgumentException("Provided reference points to a non-identifiable element!");
 				}
-				break;
-			case CONCEPT_DESCRIPTION:
-				Optional<ConceptDescription> cDesc = getConceptDescription(rootKey.getValue());
-				if ( cDesc.isPresent()) {
-					return Optional.of(cDesc.get());
-				}
-				break;
-			case ASSET_ADMINISTRATION_SHELL:
-				Optional<AssetAdministrationShell> aas = storage.findAssetAdministrationShellById(rootKey.getValue());
-				if ( aas.isPresent()) {
-					return Optional.of(aas.get());
-				}
-				break;
-			case GLOBAL_REFERENCE:
-				return Optional.empty();
-			default:
-				throw new IllegalArgumentException("Provided reference points to a non-identifiable element!");
 			}
 		}
 		
@@ -779,6 +781,40 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	public <T>  T getElementValue(String submodelIdentifier, String path, Class<T> clazz) {
 		Object value = getElementValue(submodelIdentifier, path);
 		return objectMapper.convertValue(value, clazz);
+	}
+
+	@Override
+	public Object getElementValue(Reference reference) {
+		Iterator<Key> keyIterator = reference.getKeys().iterator();
+		if ( keyIterator.hasNext()) {
+			Key rootKey = keyIterator.next();
+			KeyTypes keyType = rootKey.getType();
+			switch(keyType) {
+			case SUBMODEL:
+				Optional<Submodel> keySub = getSubmodel(rootKey.getValue());
+				if ( keySub.isPresent()) {
+					return new SubmodelHelper(keySub.get()).resolveValue(keyIterator);
+				}
+				break;
+//			case CONCEPT_DESCRIPTION:
+//				Optional<ConceptDescription> cDesc = getConceptDescription(rootKey.getValue());
+//				if ( cDesc.isPresent()) {
+//					return Optional.of(cDesc.get());
+//				}
+//				break;
+//			case ASSET_ADMINISTRATION_SHELL:
+//				Optional<AssetAdministrationShell> aas = storage.findAssetAdministrationShellById(rootKey.getValue());
+//				if ( aas.isPresent()) {
+//					return Optional.of(aas.get());
+//				}
+//				break;
+//			case GLOBAL_REFERENCE:
+//				return Optional.empty();
+			default:
+				throw new IllegalArgumentException("Provided reference points to a non-identifiable element!");
+			}
+		}
+		return null;
 	}
 
 }
