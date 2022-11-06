@@ -330,14 +330,17 @@ public class SubmodelHelper {
 		return resolveValue(submodel, keyIterator);
 	}
 	private Optional<Referable> resolveKeyPath(Referable container, Iterator<Key> iterator  ) {
-		Key elementKey = iterator.next();
-		
-		Optional<Referable>  element = getChild(container, elementKey.getValue(), Referable.class);
-		if ( element.isPresent() && iterator.hasNext()) {
-			return resolveKeyPath(element.get(), iterator);
+		if ( iterator.hasNext()) {
+			Key elementKey = iterator.next();
+			
+			Optional<Referable>  element = getChild(container, elementKey.getValue(), Referable.class);
+			if ( element.isPresent() && iterator.hasNext()) {
+				return resolveKeyPath(element.get(), iterator);
+			}
+			return element;
+			
 		}
-		return element;
-		
+		return Optional.empty();
 	}
 	private Object resolveValue(Referable container, Iterator<Key> iterator) {
 		Key elementKey = iterator.next();

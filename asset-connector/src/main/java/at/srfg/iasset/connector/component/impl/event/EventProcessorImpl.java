@@ -27,11 +27,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.connector.component.impl.event.kafka.EventElementConsumer;
 import at.srfg.iasset.connector.component.impl.event.kafka.EventElementProducer;
-import at.srfg.iasset.connector.component.impl.event.kafka.EventPayloadHelper;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.event.EventHandler;
 import at.srfg.iasset.repository.event.EventProcessor;
 import at.srfg.iasset.repository.event.EventProducer;
+import at.srfg.iasset.repository.model.helper.EventPayloadHelper;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class EventProcessorImpl implements EventProcessor {
@@ -51,6 +51,9 @@ public class EventProcessorImpl implements EventProcessor {
 	
 	List<EventPayloadHelper> payloadHelper = new ArrayList<EventPayloadHelper>();
 	List<EventElementConsumer> consumers;
+	
+	ExecutorService executor;
+	List<MessageProducer> outgoingProducer = new ArrayList<EventProcessorImpl.MessageProducer>();
 	// 
 	public EventProcessorImpl(ObjectMapper objectMapper, ServiceEnvironment environment) {
 		this.objectMapper = objectMapper;
@@ -78,7 +81,6 @@ public class EventProcessorImpl implements EventProcessor {
 	
 	
 	
-	@Override
 	public void processIncomingMessage(String topic, String key, String message) {
 		// 
 		try {
@@ -244,6 +246,11 @@ public class EventProcessorImpl implements EventProcessor {
 	}
 	@Override
 	public void startEventProcessing() {
+		startOutgoing();
+		startEventConsumer();
+	}
+	private void startEventConsumer() {
+		
 		consumers = new ArrayList<EventElementConsumer>();
 		// possibly separate based on broker type and hosts
 		Set<String> topics = payloadHelper.stream()
@@ -264,7 +271,7 @@ public class EventProcessorImpl implements EventProcessor {
 				})
 				.collect(Collectors.toSet());
 		int numConsumers = 3;
-		final ExecutorService executor = Executors.newFixedThreadPool(numConsumers);
+		executor = Executors.newFixedThreadPool(numConsumers);
 		for (int i = 0; i < numConsumers; i++) {
 			// 
 			
@@ -288,10 +295,84 @@ public class EventProcessorImpl implements EventProcessor {
 			}
 		});
 	}
+	private void startOutgoing() {
+		payloadHelper.stream().filter(new Predicate<EventPayloadHelper>() {
+
+			@Override
+			public boolean test(EventPayloadHelper t) {
+				return t.isActive() && t.isProducing();
+			}
+		})
+		.forEach(new Consumer<EventPayloadHelper>() {
+
+			@Override
+			public void accept(EventPayloadHelper t) {
+				MessageProducer runner = new MessageProducer(t);
+				runner.start(); 
+				
+			}
+		});
+	}
 	@Override
 	public void stopEventProcessing() {
+		if ( executor!=null) {
+			executor.shutdown();
+		}
+		outgoingProducer.forEach(new Consumer<MessageProducer>() {
 
-
+			@Override
+			public void accept(MessageProducer t) {
+				t.stop();
+				
+			}
+		});
+		
+	}
+	
+	private class MessageProducer implements Runnable {
+		private long timeOut;
+		EventElementProducer<Object> producer;
+		EventPayloadHelper payloadHelper;
+		
+		private Thread runner;
+		boolean alive = true;
+		
+		MessageProducer(EventPayloadHelper eventElement) {
+			// use 2 seconds by default
+			// TODO: use timeout from event element
+			this.payloadHelper = eventElement;
+			this.timeOut = 2000;
+			producer = new EventElementProducer<Object>(eventElement);
+					
+		}
+		
+		public void start() {
+			alive = true;
+			runner = new Thread(this);
+			runner.start();
+		}
+		public void stop() {
+			alive = false;
+			
+		}
+		
+		@Override
+		public void run() {
+			while (alive) {
+				try {
+					// obtain the current values
+					Object value = payloadHelper.getPayload();
+					if ( value != null) {
+						producer.sendEvent(value);
+					}
+					Thread.sleep(timeOut);
+				} catch (InterruptedException e) {
+					
+				}
+				
+			}
+		}
+		
 	}
 
 }

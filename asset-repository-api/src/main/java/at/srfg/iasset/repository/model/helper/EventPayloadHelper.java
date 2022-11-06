@@ -1,9 +1,8 @@
-package at.srfg.iasset.connector.component.impl.event.kafka;
+package at.srfg.iasset.repository.model.helper;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -11,7 +10,6 @@ import java.util.function.Predicate;
 import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.eclipse.aas4j.v3.model.Direction;
 import org.eclipse.aas4j.v3.model.EventPayload;
-import org.eclipse.aas4j.v3.model.HasSemantics;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.StateOfEvent;
@@ -22,7 +20,7 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 
 public class EventPayloadHelper {
 	final BasicEventElement eventElement;
-	
+	SubmodelElement observedElement;
 	Reference observed;
 	Reference observedSemantic;
 	// should be reference to the event element responsible for sending
@@ -37,11 +35,13 @@ public class EventPayloadHelper {
 	public EventPayloadHelper initialize(ServiceEnvironment environment) {
 		this.matchingReferences = new ArrayList<Reference>();
 		this.observed = eventElement.getObserved();
+		this.observedElement = environment.resolve(this.observed, SubmodelElement.class).orElse(null);
 		this.observedSemantic = initializeSemantics(environment, matchingReferences, observed);
 		
 		this.sourceSemantic = initializeSemantics(environment, matchingReferences, eventElement.getSemanticId());
 		return this;
 	}
+	
 	private Reference initializeSemantics(ServiceEnvironment environment, List<Reference> matching, Reference reference) {
 		if ( reference != null ) {
 			matching.add(reference);
@@ -60,6 +60,9 @@ public class EventPayloadHelper {
 	}
 	public String getTopic() {
 		return eventElement.getMessageTopic();
+	}
+	public Object getPayload() {
+		return ValueHelper.toValue(this.observedElement);
 	}
 	public boolean matches(Reference reference) {
 		return matchingReferences.contains(reference);

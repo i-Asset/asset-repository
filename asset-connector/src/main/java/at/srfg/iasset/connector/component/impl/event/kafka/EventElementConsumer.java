@@ -13,7 +13,7 @@ import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.srfg.iasset.repository.event.EventProcessor;
+import at.srfg.iasset.connector.component.impl.event.EventProcessorImpl;
 
 /**
  * Consumer for incoming messages. Registers for a given topic
@@ -22,7 +22,7 @@ import at.srfg.iasset.repository.event.EventProcessor;
  */
 public class EventElementConsumer implements Runnable {
     private Logger logger = LoggerFactory.getLogger(BasicEventElement.class);
-    private EventProcessor processor;
+    private EventProcessorImpl processor;
     private Consumer<Long, String> consumer;
     private Set<String> topics;
     private String hosts;
@@ -30,7 +30,7 @@ public class EventElementConsumer implements Runnable {
     
     
     
-	public EventElementConsumer(Set<String> topic, EventProcessor processor) {
+	public EventElementConsumer(Set<String> topic, EventProcessorImpl processor) {
 
     	this.processor = processor;
     	// use idShort as default topic and the default hosts setting

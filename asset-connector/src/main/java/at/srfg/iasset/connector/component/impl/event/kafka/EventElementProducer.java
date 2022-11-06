@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.event.EventProducer;
+import at.srfg.iasset.repository.model.helper.EventPayloadHelper;
 
 public class EventElementProducer<T> implements EventProducer<T>{
 	private Logger logger = LoggerFactory.getLogger(EventElementProducer.class);

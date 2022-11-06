@@ -179,6 +179,7 @@ public class ReferenceUtils {
                 newKeys.add(newKey);
             }
             result.setKeys(newKeys);
+            result.setType(reference.getType());
             return result;
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new IllegalArgumentException("error parsing reference - could not instantiate reference type", ex);

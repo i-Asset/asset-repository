@@ -58,6 +58,7 @@ import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
 import at.srfg.iasset.repository.model.helper.SubmodelHelper;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
+import at.srfg.iasset.repository.model.helper.visitor.ReferenceCollector;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnvironment {
@@ -165,7 +166,8 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE);
 		setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
 		
-
+		Set<Reference> references = new ReferenceCollector(this, KeyTypes.BASIC_EVENT_ELEMENT).collect(AASFull.AAS_BELT_INSTANCE);
+		references.size();
 	}
 	
 	public void addModelListener(ModelListener listener) {
@@ -734,7 +736,10 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 				case SUBMODEL:
 					Optional<Submodel> keySub = getSubmodel(rootKey.getValue());
 					if ( keySub.isPresent()) {
-						return new SubmodelHelper(keySub.get()).resolveKeyPath(keyIterator);
+						if ( keyIterator.hasNext()) {
+							return new SubmodelHelper(keySub.get()).resolveKeyPath(keyIterator);
+						}
+						return Optional.of(keySub.get());
 					}
 					break;
 				case CONCEPT_DESCRIPTION:
