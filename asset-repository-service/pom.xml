@@ -75,6 +75,11 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
+			<!-- resolve dependencies with openfeign -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
 		<dependency>
 			<!-- required dependency for eureka client to report health metrics, etc. -->
 			<groupId>org.springframework.boot</groupId>
@@ -83,9 +88,9 @@
 
 		<!-- Spring mongodb -->
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
 		<!-- test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -111,6 +116,11 @@
 		<dependency>
 			<groupId>at.srfg.iasset</groupId>
 			<artifactId>asset-repository-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>at.srfg.iasset</groupId>
+			<artifactId>semantic-lookup-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

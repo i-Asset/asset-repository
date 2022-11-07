@@ -14,9 +14,11 @@ import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
 
+import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
+import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.event.EventHandler;
 import at.srfg.iasset.repository.event.EventProcessor;

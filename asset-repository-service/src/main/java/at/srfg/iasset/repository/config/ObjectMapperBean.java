@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
 public class ObjectMapperBean {
@@ -35,6 +36,7 @@ public class ObjectMapperBean {
 				.serializationInclusion(JsonInclude.Include.NON_EMPTY)
 				.addModule(buildCustomSerializerModule())
 				.addModule(buildImplementationModule())
+				.addModule(new JavaTimeModule())
 				//
 				.annotationIntrospector(new AASModelIntrospector())
 				.build();
