@@ -29,7 +29,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Finchley.RELEASE</version>
+				<version>2021.0.4</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -53,6 +53,7 @@
 
 	<dependencies>
 		<dependency>
+			<!-- required dependency for eureka client to report health metrics, etc. -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
@@ -85,6 +86,7 @@
 		
 		<!--Spring Cloud-->
 		<dependency>
+			<!-- register with eureka service discovery server -->
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
@@ -93,10 +95,15 @@
 			<artifactId>spring-cloud-starter-config</artifactId>
 		</dependency>
 		<dependency>
+			<!-- required for backwards compatibility with bootstrap.yml -->
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
-		
+
 		<!-- Security, JWT -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -201,6 +208,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>at.srfg.iasset.semantic.lookup.SemanticLookupApplication</mainClass>
+				</configuration>
 				<executions>
 					<execution>
 						<id>repackage</id>
