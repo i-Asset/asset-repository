@@ -35,3 +35,6 @@ springdoc:
     path: ${REPOSITORY_SERVICE_API_DOCS_PATH:/repository-api-docs}
   swagger-ui:
     url: ${REPOSITORY_SERVICE_SWAGGER_URL:http://localhost:8081/repository-api-docs}
+    urls:
+      name: "my_url"
+      url: ${REPOSITORY_SERVICE_SWAGGER_URL:http://localhost:8081/repository-api-docs}
