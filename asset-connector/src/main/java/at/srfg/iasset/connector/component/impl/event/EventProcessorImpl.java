@@ -307,8 +307,10 @@ public class EventProcessorImpl implements EventProcessor {
 
 			@Override
 			public void accept(EventPayloadHelper t) {
-				MessageProducer runner = new MessageProducer(t);
-				runner.start(); 
+				if ( t.getTopic() != null) {
+					MessageProducer runner = new MessageProducer(t);
+					runner.start(); 
+				}
 				
 			}
 		});

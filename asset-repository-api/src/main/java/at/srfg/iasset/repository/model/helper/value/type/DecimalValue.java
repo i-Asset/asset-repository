@@ -11,7 +11,9 @@ public class DecimalValue extends Value<BigDecimal>{
 
 	@Override
 	public Value<BigDecimal> fromValue(String stringValue) {
-		setValue(new BigDecimal(stringValue));
+		if ( stringValue!=null) {
+			setValue(new BigDecimal(stringValue));
+		}
 		return this;
 	}
 	@Override
