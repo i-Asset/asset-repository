@@ -7,7 +7,7 @@ import at.srfg.iasset.repository.model.helper.value.ReferenceElementValue;
 public class ReferenceElementValueMapper implements ValueMapper<ReferenceElement, ReferenceElementValue> {
 
 	@Override
-	public ReferenceElementValue getValueOnly(ReferenceElement modelElement) {
+	public ReferenceElementValue mapToValue(ReferenceElement modelElement) {
 		return new ReferenceElementValue(modelElement.getValue().getKeys());
 	}
 

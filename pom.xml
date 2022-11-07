@@ -14,8 +14,11 @@
 		<java.version>11</java.version>
 		<revision>${project.version}</revision>
 		<jersey.version>2.32</jersey.version>
+		<springdoc.version>1.6.12</springdoc.version>
 	</properties>
 	<modules>
+		<module>semantic-lookup-api</module>
+		<module>semantic-lookup-service</module>
 		<module>asset-connector</module>
 		<module>asset-repository-api</module>
 		<module>asset-repository-mongo</module>

@@ -12,8 +12,8 @@ public interface ValueMapper<M extends SubmodelElement, V extends SubmodelElemen
 	 * @param modelElement The SubmodelElement
 	 * @return
 	 */
-	V getValueOnly(M modelElement);
-	default M applyValue(M modelElement, JsonNode valueNode) {
+	V mapToValue(M modelElement);
+	default M mapValueToElement(M modelElement, JsonNode valueNode) {
 		return modelElement;
 	}
 	default M applyValues(M modelElement, V valueObject) {

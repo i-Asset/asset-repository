@@ -30,13 +30,18 @@ public class InstanceOperation extends DefaultOperation implements Operation {
 	}
 	
 	@JsonIgnore
-	private Function<Map<String,Object>, Object> function;
+	private Function<Object, Object> function;
 
-	public Function<Map<String, Object>, Object> function() {
+	public Function<Object, Object> function() {
 		return function;
 	}
-
-	public void function(Function<Map<String, Object>, Object> function) {
+	public Object invoke(Object parameter) {
+		if ( function != null) {
+			return function.apply(parameter);
+		}
+		return null;
+	}
+	public void function(Function<Object, Object> function) {
 		this.function = function;
 	}
 

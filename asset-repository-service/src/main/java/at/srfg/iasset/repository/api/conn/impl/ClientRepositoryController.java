@@ -121,8 +121,8 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 	}
 
 	@Override
-	public Map<String, Object> invokeOperation(String aasIdentifier, String submodelIdentifier, String path, 
-			Map<String, Object> parameterMap) {
+	public Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, 
+			Object parameterMap) {
 		return new HashMap<String, Object>();
 	}
 	@Override

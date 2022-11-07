@@ -3,28 +3,30 @@ package at.srfg.iasset.connector.environment;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.EventElement;
+import org.eclipse.aas4j.v3.model.DataElement;
+import org.eclipse.aas4j.v3.model.Key;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Operation;
 import org.eclipse.aas4j.v3.model.Property;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.RelationshipElement;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -32,68 +34,64 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.util.Base64Utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.srfg.iasset.connector.MessageListener;
-import at.srfg.iasset.connector.MessageProducer;
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.config.MarshallingFeature;
 import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.connector.component.impl.HttpComponent;
 import at.srfg.iasset.connector.component.impl.RepositoryConnection;
+import at.srfg.iasset.connector.component.impl.event.EventProcessorImpl;
 import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationRepositoryController;
 import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationShellController;
+import at.srfg.iasset.repository.component.ModelChangeProvider;
+import at.srfg.iasset.repository.component.ModelListener;
+import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
-import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
-import at.srfg.iasset.repository.model.custom.InstanceEnvironment;
+import at.srfg.iasset.repository.event.EventHandler;
+import at.srfg.iasset.repository.event.EventProcessor;
+import at.srfg.iasset.repository.event.EventProducer;
+import at.srfg.iasset.repository.model.InMemoryStorage;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
 import at.srfg.iasset.repository.model.helper.SubmodelHelper;
+import at.srfg.iasset.repository.model.helper.ValueHelper;
+import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
+import at.srfg.iasset.repository.model.helper.visitor.ReferenceCollector;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnvironment {
-	private InstanceEnvironment environment;
+//	private InstanceEnvironment environment;
+	private Persistence storage;
 	
-	private final Collection<ModelListener> listeners = new HashSet<ModelListener>();
-	
+//	private final Collection<ModelListener> listeners = new HashSet<ModelListener>();
+	private final ObjectMapper objectMapper;
 	private final Set<String> registrations = new HashSet<String>();
 	private final URI repositoryURI;
 	private final RepositoryConnection repository;
 	private ConnectorEndpoint httpEndpoint;
+	private EventProcessorImpl eventProcessor;
+	
+	private ModelChangeProvider changeProvider = ModelChangeProvider.getProvider();
 
 	
 	public LocalServiceEnvironment(URI repositoryURI) {
 		this.repositoryURI = repositoryURI;
 		this.repository = RepositoryConnection.getConnector(repositoryURI);
-		
-		environment = new InstanceEnvironment();
-		// TODO: REMOVE test data!
-		environment.addAssetAdministrationShell(AASFull.AAS_1.getId(), AASFull.AAS_1);
-		environment.addAssetAdministrationShell(AASFull.AAS_2.getId(), AASFull.AAS_2);
-		environment.addAssetAdministrationShell(AASFull.AAS_3.getId(), AASFull.AAS_3);
-		environment.addAssetAdministrationShell(AASFull.AAS_4.getId(), AASFull.AAS_4);
-		environment.addSubmodel(AASFull.SUBMODEL_1.getId(), AASFull.SUBMODEL_1);
-		environment.addSubmodel(AASFull.SUBMODEL_2.getId(), AASFull.SUBMODEL_2);
-		environment.addSubmodel(AASFull.SUBMODEL_3.getId(), AASFull.SUBMODEL_3);
-		environment.addSubmodel(AASFull.SUBMODEL_4.getId(), AASFull.SUBMODEL_4);
-		environment.addSubmodel(AASFull.SUBMODEL_5.getId(), AASFull.SUBMODEL_5);
-		environment.addSubmodel(AASFull.SUBMODEL_6.getId(), AASFull.SUBMODEL_6);
-		environment.addSubmodel(AASFull.SUBMODEL_7.getId(), AASFull.SUBMODEL_7);
-		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_1);
-		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_2);
-		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_3);
-		environment.addConceptDescription(AASFull.CONCEPT_DESCRIPTION_4);
-		listeners.add(new ModelListener() {
+		// in the local service environment we may use this objectmapper
+		this.objectMapper = ClientFactory.getObjectMapper();
+		eventProcessor = new EventProcessorImpl(this.objectMapper, this);
+		storage = new InMemoryStorage();
+//		environment = new InstanceEnvironment(changeProvider);
+		// The model update listener is currently not working!
+		changeProvider.addListener(new ModelListener() {
+			
+
 			
 			@Override
-			public void propertyValueChanged(String path, String oldValue, String newValue) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void propertyRemoved(String path) {
+			public void propertyRemoved(String path, Property property) {
 				System.out.println("Element removed: "+ path);
 				
 			}
@@ -105,7 +103,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			}
 			
 			@Override
-			public void operationRemoved(String path) {
+			public void operationRemoved(String path, Operation operation) {
 				// TODO Auto-generated method stub
 				
 			}
@@ -117,14 +115,15 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			}
 			
 			@Override
-			public void eventElementRemoved(String path) {
+			public void eventElementRemoved(String path, BasicEventElement eventElement) {
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			public void eventElementCreated(String path, EventElement eventElement) {
-				// TODO Auto-generated method stub
+			public void eventElementCreated(String path, BasicEventElement eventElement) {
+				// tell the processor that a new event element has been added
+				eventProcessor.registerEventElement(eventElement);
 				
 			}
 
@@ -133,49 +132,121 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 				System.out.println("Element created: " + path + " - " + element.getIdShort());
 				
 			}
+
+			@Override
+			public void dataElementChanged(String path, DataElement property) {
+				System.out.println("Property changed: " + path + " - " + property.getIdShort());
+				
+			}
 		});
+		// TODO: REMOVE test data!
+		setAssetAdministrationShell(AASFull.AAS_1.getId(), AASFull.AAS_1);
+		setAssetAdministrationShell(AASFull.AAS_2.getId(), AASFull.AAS_2);
+		setAssetAdministrationShell(AASFull.AAS_3.getId(), AASFull.AAS_3);
+		setAssetAdministrationShell(AASFull.AAS_4.getId(), AASFull.AAS_4);
+		setAssetAdministrationShell(AASFull.AAS_4.getId(), AASFull.AAS_4);
+		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_1.getId(), AASFull.SUBMODEL_1);
+		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_2.getId(), AASFull.SUBMODEL_2);
+		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_3.getId(), AASFull.SUBMODEL_3);
+		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_4.getId(), AASFull.SUBMODEL_4);
+		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_5.getId(), AASFull.SUBMODEL_5);
+		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_6.getId(), AASFull.SUBMODEL_6);
+//		environment.setSubmodel(AASFull.SUBMODEL_7.getId(), AASFull.SUBMODEL_7);
+		setConceptDescription(AASFull.CONCEPT_DESCRIPTION_1.getId(), AASFull.CONCEPT_DESCRIPTION_1);
+		setConceptDescription(AASFull.CONCEPT_DESCRIPTION_2.getId(), AASFull.CONCEPT_DESCRIPTION_2);
+		setConceptDescription(AASFull.CONCEPT_DESCRIPTION_3.getId(), AASFull.CONCEPT_DESCRIPTION_3);
+		setConceptDescription(AASFull.CONCEPT_DESCRIPTION_4.getId(), AASFull.CONCEPT_DESCRIPTION_4);
+		// 
+		setAssetAdministrationShell(AASFull.AAS_BELT_TEMPLATE.getId(), AASFull.AAS_BELT_TEMPLATE);
+		setSubmodel(AASFull.AAS_BELT_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_TEMPLATE);
+		setSubmodel(AASFull.AAS_BELT_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_EVENT_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_EVENT_TEMPLATE);
+		setSubmodel(AASFull.AAS_BELT_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE);
+		// belt instance data
+		setAssetAdministrationShell(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.AAS_BELT_INSTANCE);
+		setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
+		setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE);
+		setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
+		
+		Set<Reference> references = new ReferenceCollector(this, KeyTypes.BASIC_EVENT_ELEMENT).collect(AASFull.AAS_BELT_INSTANCE);
+		references.size();
 	}
 	
 	public void addModelListener(ModelListener listener) {
-		listeners.add(listener);
+		changeProvider.addListener(listener);
 	}
 	public void removeModelListener(ModelListener listener) {
-		listeners.remove(listener);
+		changeProvider.removeListener(listener);
 	}
 
 	@Override
 	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier) {
-		return environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		Optional<AssetAdministrationShell> shell = storage.findAssetAdministrationShellById(aasIdentifier);
+		if ( ReferenceUtils.extractReferenceFromList(shell.get().getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL).isPresent() ) {
+			return storage.findSubmodelById(submodelIdentifier);
+		}		
+		return Optional.empty();
+	}
+	public Optional<Submodel> getSubmodel(String identifier) {
+		return storage.findSubmodelById(identifier).or(new Supplier<Optional<? extends Submodel>>() {
+
+			@Override
+			public Optional<? extends Submodel> get() {
+				// TODO Auto-generated method stub
+				Optional<Submodel> fromRemote = repository.getSubmodel(identifier);
+				if (fromRemote.isPresent()) {
+					return Optional.of(storage.persist(fromRemote.get()));
+				}
+				return Optional.empty();
+			}
+		});
+		
 	}
 
 	@Override
 	public Optional<AssetAdministrationShell> getAssetAdministrationShell(String identifier) {
-		return environment.getAssetAdministrationShell(identifier);
+		return storage.findAssetAdministrationShellById(identifier);
 	}
 
 	@Override
 	public AssetAdministrationShell setAssetAdministrationShell(String aasIdentifier, AssetAdministrationShell theShell) {
-		environment.addAssetAdministrationShell(aasIdentifier, theShell);
-		return theShell;
+		theShell.setId(aasIdentifier);
+		return storage.persist(theShell);
 	}
-
+	
 	@Override
 	public Optional<ConceptDescription> getConceptDescription(String identifier) {
-		Optional<ConceptDescription>  cDesc = environment.getConceptDescription(identifier);
-		return cDesc.or(new Supplier<Optional<ConceptDescription>>() {
-
-			@Override
-			public Optional<ConceptDescription> get() {
-				
-				return Optional.empty();
-			}});
+		return storage.findConceptDescriptionById(identifier)
+			.or(new Supplier<Optional<ConceptDescription>>() {
+				/**
+				 * Obtain the requested {@link ConceptDescription} from the repository!
+				 */
+				@Override
+				public Optional<ConceptDescription> get() {
+					Optional<ConceptDescription> fromRepo = repository.getConceptDescription(identifier);
+					if ( fromRepo.isPresent()) {
+						// 
+						return Optional.of(storage.persist(fromRepo.get()));
+						
+					}
+					return Optional.empty();
+				}});
 	}
 
 	@Override
 	public boolean deleteAssetAdministrationShellById(String identifier) {
-		return environment.deleteAssetAdministrationShell(identifier);
+		storage.deleteAssetAdministrationShellById(identifier);
+		return true;
 	}
 
+	public boolean deleteSubmodel(String aasIdentifier, String submodelIdentifier) {
+		Optional<Submodel> toDelete = getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( toDelete.isPresent() ) {
+			storage.deleteSubmodelById(submodelIdentifier);
+			notifyDeletion(toDelete.get());
+			return true;
+		}
+		return false;
+	}
 	@Override
 	public boolean deleteSubmodelReference(String aasIdentifier, Reference ref) {
 		throw new UnsupportedOperationException("Not yet implemented!");
@@ -183,17 +254,22 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public <T extends Referable> Optional<T> resolve(Reference reference, Class<T> type) {
-		throw new UnsupportedOperationException("Not yet implemented!");
+		
+		Optional<Referable> ref = resolve(reference);
+		if ( ref.isPresent() && type.isInstance(ref.get()) ) {
+			return Optional.of(type.cast(ref.get()));
+		}
+		return Optional.empty();
 	}
 
 	@Override
 	public List<AssetAdministrationShell> getAllAssetAdministrationShells() {
-		return environment.getAssetAdministrationShells();
+		return storage.getAssetAdministrationShells();
 	}
 
 	@Override
 	public boolean deleteSubmodelElement(String aasIdentifier, String submodelIdentifier, String path) {
-		Optional<Submodel> submodel = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( submodel.isPresent()) {
 			SubmodelHelper helper = new SubmodelHelper(submodel.get());
 			Optional<SubmodelElement> deleted = helper.removeSubmodelElementAt(path);
@@ -201,7 +277,13 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 				@Override
 				public void accept(SubmodelElement t) {
-					submodelElementRemoved(aasIdentifier, submodelIdentifier, path, t);
+					new EventElementCollector().collect(t).forEach(new Consumer<BasicEventElement>() {
+
+						@Override
+						public void accept(BasicEventElement t) {
+							changeProvider.eventElementRemoved(t);
+						}});
+					
 					
 				}
 			});
@@ -213,7 +295,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	@Override
 	public SubmodelElement setSubmodelElement(String aasIdentifier, String submodelIdentifier, String idShortPath,
 			SubmodelElement body) {
-		Optional<Submodel> submodel = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( submodel.isPresent()) {
 			
 			SubmodelHelper helper = new SubmodelHelper(submodel.get());
@@ -222,7 +304,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 				@Override
 				public void accept(SubmodelElement t) {
-					submodelElementRemoved(aasIdentifier, submodelIdentifier, idShortPath, t);
+					changeProvider.elementRemoved(t);
 					
 				}
 			});
@@ -232,7 +314,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 				@Override
 				public void accept(SubmodelElement t) {
-					submodelElementAdded(aasIdentifier, submodelIdentifier, idShortPath, t);
+					changeProvider.elementCreated(t);
 					
 				}
 			});
@@ -246,7 +328,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public Optional<SubmodelElement> getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path) {
-		Optional<Submodel> submodel = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( submodel.isPresent()) {
 			return new SubmodelHelper(submodel.get()).getSubmodelElementAt(path);
 		}
@@ -255,16 +337,28 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public Submodel setSubmodel(String aasIdentifier, String submodelIdentifier, Submodel submodel) {
-		Optional<AssetAdministrationShell> shell = environment.getAssetAdministrationShell(aasIdentifier);
+		Optional<AssetAdministrationShell> shell = getAssetAdministrationShell(aasIdentifier);
 		if ( shell.isPresent()) {
 			AssetAdministrationShell theShell = shell.get();
-			Optional<Reference> ref = ReferenceUtils.getReference(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
+			Optional<Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
 			if (ref.isEmpty()) {
-				Reference newRef = AasUtils.toReference(submodel);
+				Reference newRef = ReferenceUtils.toReference(submodel);
 				theShell.getSubmodels().add(newRef);
 			}
-			environment.addSubmodel(submodelIdentifier, submodel);
+			Optional<Submodel> existing = storage.findSubmodelById(submodelIdentifier);
+
+			existing.ifPresent(new Consumer<Submodel>() {
+				
+				@Override
+				public void accept(Submodel t) {
+					notifyDeletion(t);
+				}
+			});
+			submodel.setId(submodelIdentifier);
+			Submodel stored = storage.persist(submodel);
+			notifyCreation(stored);
 		}
+
 		return null;
 	}
 
@@ -276,7 +370,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public Object getElementValue(String aasIdentifier, String submodelIdentifier, String path) {
-		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent() ) {
 			return new SubmodelHelper(sub.get()).getValueAt(path);
 		}
@@ -286,19 +380,22 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public void setElementValue(String aasIdentifier, String submodelIdentifier, String path, Object value) {
-		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent() ) {
 			// make a json node out of it
 			JsonNode node = ClientFactory.getObjectMapper().valueToTree(value);
-			new SubmodelHelper(sub.get()).setValueAt(path, node);
+			Optional<SubmodelElement> element = new SubmodelHelper(sub.get()).setValueAt(path, node);
+			if ( element.isPresent()) {
+				changeProvider.elementChanged(element.get());
+			}
 		}
 		
 	}
 
 	@Override
 	public ConceptDescription setConceptDescription(String cdIdentifier, ConceptDescription conceptDescription) {
-		// TODO Auto-generated method stub
-		return null;
+		conceptDescription.setId(cdIdentifier);
+		return storage.persist(conceptDescription);
 	}
 
 	@Override
@@ -315,10 +412,10 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier) {
-		Optional<AssetAdministrationShell> shell = environment.getAssetAdministrationShell(aasIdentifier);
+		Optional<AssetAdministrationShell> shell = getAssetAdministrationShell(aasIdentifier);
 		if ( shell.isPresent()) {
 			AssetAdministrationShell theShell = shell.get();
-			Optional<Reference> ref = ReferenceUtils.getReference(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
+			Optional<Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
 			if (ref.isPresent()) {
 				theShell.getSubmodels().remove(ref.get());
 				return theShell.getSubmodels();
@@ -334,41 +431,25 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 
 	@Override
-	public Map<String, Object> invokeOperation(String id, String base64Decode, String path,
-			Map<String, Object> parameterMap) {
+	public Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameterMap) {
 		// TODO Auto-generated method stub
+		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( sub.isPresent()) {
+			Optional<Operation> operation = new SubmodelHelper(sub.get()).getSubmodelElementAt(path,Operation.class);
+			if ( operation.isPresent() ) {
+				if (InstanceOperation.class.isInstance(operation.get())) {
+					InstanceOperation theOperation = InstanceOperation.class.cast(operation.get());
+					return theOperation.invoke(parameterMap);
+					
+				}
+			}
+		}
 		return null;
-	}
-	
-	private void submodelElementRemoved(String aasIdentifier, String submodelIdentifier, String path, SubmodelElement element) {
-		if ( Property.class.isInstance(element) || RelationshipElement.class.isInstance(element)) {
-			listeners.forEach(new Consumer<ModelListener>() {
-
-				@Override
-				public void accept(ModelListener t) {
-					t.propertyRemoved(path);
-					
-				}
-			});
-		}
-		
-	}
-	private void submodelElementAdded(String aasIdentifier, String submodelIdentifier, String path, SubmodelElement element) {
-		if ( Property.class.isInstance(element) || RelationshipElement.class.isInstance(element)) {
-			listeners.forEach(new Consumer<ModelListener>() {
-
-				@Override
-				public void accept(ModelListener t) {
-					t.submodelElementCreated(path, element);
-					
-				}
-			});
-		}
 	}
 
 	@Override
 	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path, Consumer<String> consumer) {
-		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
 			SubmodelHelper helper = new SubmodelHelper(sub.get());
 			Optional<Property> property = helper.getSubmodelElementAt(path, Property.class);
@@ -390,7 +471,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public void setValueSupplier(String aasIdentifier, String submodelIdentifier, String path, Supplier<String> supplier) {
-		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
 			SubmodelHelper helper = new SubmodelHelper(sub.get());
 			Optional<Property> property = helper.getSubmodelElementAt(path, Property.class);
@@ -414,8 +495,8 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public void setOperationFunction(String aasIdentifier, String submodelIdentifier, String path,
-			Function<Map<String,Object>, Object> operation) {
-		Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+			Function<Object, Object> operation) {
+		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
 			SubmodelHelper helper = new SubmodelHelper(sub.get());
 			Optional<Operation> property = helper.getSubmodelElementAt(path, Operation.class);
@@ -445,7 +526,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 	public boolean register(String aasIdentifier) {
 
-		Optional<AssetAdministrationShell> shellToRegister = environment.getAssetAdministrationShell(aasIdentifier);
+		Optional<AssetAdministrationShell> shellToRegister = getAssetAdministrationShell(aasIdentifier);
 		if ( shellToRegister.isPresent()) {
 			String idEncoded = Base64Utils.encodeToString(aasIdentifier.getBytes());
 			String pathToShell = repositoryURI.getPath() + String.format("shells/%s", idEncoded);
@@ -506,6 +587,29 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		rootConfig.register(AssetAdministrationRepositoryController.class);
 		return rootConfig;
 	}
+	private <T extends Referable> void notifyDeletion(T deletedElement) {
+		new EventElementCollector().collect(deletedElement).forEach(new Consumer<BasicEventElement>() {
+
+			@Override
+			public void accept(BasicEventElement t) {
+				changeProvider.eventElementRemoved(t);
+			}
+		});
+
+
+	}
+	private <T extends Referable> void notifyCreation(T createdElement) {
+		new EventElementCollector().collect(createdElement).forEach(new Consumer<BasicEventElement>() {
+
+			@Override
+			public void accept(BasicEventElement t) {
+				changeProvider.eventElementAdded(t);
+			}
+		});
+
+
+	}
+
 	private ResourceConfig getShellConfig(AssetAdministrationShell forShell) {
 		ResourceConfig shellConfig = new ResourceConfig();
 		final ServiceEnvironment injectedEnvironment = this;
@@ -541,7 +645,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public void addHandler(String aasIdentifier) {
-		Optional<AssetAdministrationShell> theShell = environment.getAssetAdministrationShell(aasIdentifier);
+		Optional<AssetAdministrationShell> theShell = getAssetAdministrationShell(aasIdentifier);
 		if ( theShell.isPresent()) {
 			httpEndpoint.addHttpHandler(theShell.get().getIdShort(), getShellConfig(theShell.get()));
 		}
@@ -550,7 +654,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public void addHandler(String aasIdentifier, String alias) {
-		Optional<AssetAdministrationShell> theShell = environment.getAssetAdministrationShell(aasIdentifier);
+		Optional<AssetAdministrationShell> theShell = getAssetAdministrationShell(aasIdentifier);
 		if ( theShell.isPresent()) {
 			httpEndpoint.addHttpHandler(alias, getShellConfig(theShell.get()));
 		}
@@ -558,7 +662,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 	@Override
 	public void removeHandler(String alias) {
-		Optional<AssetAdministrationShell> theShell = environment.getAssetAdministrationShell(alias);
+		Optional<AssetAdministrationShell> theShell = getAssetAdministrationShell(alias);
 		if ( theShell.isPresent()) {
 			httpEndpoint.removeHttpHandler(theShell.get().getIdShort());
 		}
@@ -568,16 +672,139 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 
 	@Override
-	public <T> void addMesssageListener(Reference reference, MessageListener<T> listener) {
-		// TODO Auto-generated method stub
+	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener) {
+		getEventProcessor().registerHandler(reference, listener);
 		
 	}
 
 	@Override
-	public <T> MessageProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
-		// TODO Auto-generated method stub
-		return null;
+	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
+		return getEventProcessor().getProducer(reference, clazz);
 	}
 
+	@Override
+	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
+		
+		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( sub.isPresent()) {
+			Optional<Operation> operation = new SubmodelHelper(sub.get()).getSubmodelElementAt(path, Operation.class);
+			if ( operation.isPresent() && InstanceOperation.class.isInstance(operation.get())) {
+				InstanceOperation instance = (InstanceOperation)operation.get();
+				return instance.invoke(parameter);
+			}
+		}
+		// when element not found locally, try to invoke the operation remote! 
+		return repository.invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
+	}
+
+	@Override
+	public <T extends SubmodelElement> List<T> getSubmodelElements(String aasIdentifier, String submodelIdentifier, Reference semanticId, Class<T> clazz) {
+		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( sub.isPresent()) {
+			return new EventElementCollector().collect(sub.get()).stream()
+				.filter(new Predicate<SubmodelElement>() {
+
+					@Override
+					public boolean test(SubmodelElement t) {
+						return t.getSemanticId().equals(semanticId);
+					}
+				})
+				.map(new Function<SubmodelElement, T>() {
+
+					@Override
+					public T apply(SubmodelElement t) {
+						return clazz.cast(t);
+					}})
+				.collect(Collectors.toList());
+		}
+		return new ArrayList<>();
+	}
+
+	public EventProcessor getEventProcessor() {
+		return eventProcessor;
+		
+	}
+
+	@Override
+	public Optional<Referable> resolve(Reference reference) {
+		if ( reference != null) {
+			Iterator<Key> keyIterator = reference.getKeys().iterator();
+			if ( keyIterator.hasNext()) {
+				Key rootKey = keyIterator.next();
+				KeyTypes keyType = rootKey.getType();
+				switch(keyType) {
+				case SUBMODEL:
+					Optional<Submodel> keySub = getSubmodel(rootKey.getValue());
+					if ( keySub.isPresent()) {
+						if ( keyIterator.hasNext()) {
+							return new SubmodelHelper(keySub.get()).resolveKeyPath(keyIterator);
+						}
+						return Optional.of(keySub.get());
+					}
+					break;
+				case CONCEPT_DESCRIPTION:
+					Optional<ConceptDescription> cDesc = getConceptDescription(rootKey.getValue());
+					if ( cDesc.isPresent()) {
+						return Optional.of(cDesc.get());
+					}
+					break;
+				case ASSET_ADMINISTRATION_SHELL:
+					Optional<AssetAdministrationShell> aas = storage.findAssetAdministrationShellById(rootKey.getValue());
+					if ( aas.isPresent()) {
+						if (keyIterator.hasNext()) {
+							Key submodelKey = keyIterator.next();
+							Optional<Submodel> submodel = getSubmodel(rootKey.getValue(), submodelKey.getValue() );
+							if ( submodel.isPresent()) {
+								if ( keyIterator.hasNext()) {
+									return new SubmodelHelper(submodel.get()).resolveKeyPath(keyIterator);
+								}
+								return Optional.of(submodel.get());
+							}
+						}
+						return Optional.of(aas.get());
+					}
+					break;
+				case GLOBAL_REFERENCE:
+					return Optional.empty();
+				default:
+					throw new IllegalArgumentException("Provided reference points to a non-identifiable element!");
+				}
+			}
+		}
+		
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<SubmodelElement> getSubmodelElement(String submodelIdentifier, String path) {
+		Optional<Submodel> submodel = getSubmodel(submodelIdentifier);
+		if ( submodel.isPresent()) {
+			return new SubmodelHelper(submodel.get()).getSubmodelElementAt(path);
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public Object getElementValue(String submodelIdentifier, String path) {
+		Optional<Submodel> submodel = getSubmodel(submodelIdentifier);
+		if ( submodel.isPresent()) {
+			return new SubmodelHelper(submodel.get()).getValueAt(path);
+		}
+		return null;
+	}
+	@Override
+	public <T>  T getElementValue(String submodelIdentifier, String path, Class<T> clazz) {
+		Object value = getElementValue(submodelIdentifier, path);
+		return objectMapper.convertValue(value, clazz);
+	}
+
+	@Override
+	public Object getElementValue(Reference reference) {
+		Optional<SubmodelElement> referenced = resolve(reference, SubmodelElement.class);
+		if ( referenced.isPresent() ) {
+			return ValueHelper.toValue(referenced.get());
+		}
+		return null;
+	}
 
 }

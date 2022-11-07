@@ -26,11 +26,12 @@ import at.srfg.iasset.repository.utils.ReferenceUtils;
 public class SubmodelHelper {
 	public static final String PATH_DELIMITER = "\\.";
 	private final Submodel submodel;
+//	private Optional<ModelEventProvider> eventProvider;
 	
 	public SubmodelHelper(Submodel submodel) {
 		this.submodel = submodel;
 	}
-	
+
 	public Submodel getSubmodel() {
 		return submodel;
 	}
@@ -61,6 +62,7 @@ public class SubmodelHelper {
 			}
 		}
 		if ( removeChild(parent, toDelete)) {
+			// check for data elements and event elements		
 			return Optional.of(toDelete);
 		}
 		return Optional.empty();
@@ -80,10 +82,6 @@ public class SubmodelHelper {
 			
 			
 			String token = tokenIterator.next();
-			// SubmodelElementList ...
-			if ( token.contains("[")) {
-				
-			}
 			
 			Optional<SubmodelElement> optElement = getChild(parent, token, SubmodelElement.class);
 			
@@ -103,6 +101,55 @@ public class SubmodelHelper {
 		}
 		return Optional.ofNullable(element);
 	}
+	public Reference getReference(String path) {
+		Reference modelRef = ReferenceUtils.toReference(submodel);
+		Path thePath = new Path(path);
+		Iterator<String> tokenIterator = thePath.iterator();
+		Referable parent = submodel;
+		SubmodelElement element = null;
+		while (tokenIterator.hasNext()) {
+			
+			
+			String token = tokenIterator.next();
+			
+			Optional<SubmodelElement> optElement = getChild(parent, token, SubmodelElement.class);
+			
+			
+			
+			if ( ! optElement.isPresent() ) {
+				throw new IllegalArgumentException(String.format("Provided path %s is not valid", path));
+			}
+			else {
+				element = optElement.get();
+				modelRef = ReferenceUtils.toReference(modelRef, element);
+			}
+			if (tokenIterator.hasNext()) {
+				parent = optElement.get();
+				
+			}
+			
+		}
+		return modelRef;
+	}
+	public Optional<SubmodelElement> getSubmodelElementAt(List<Key> keys) {
+		Iterator<Key> keyIterator = keys.iterator();
+		Referable element = submodel;
+		while ( keyIterator.hasNext() ) {
+			Key key = keyIterator.next();
+			Class<?> keyClass = ReferenceUtils.keyTypeToClass(key.getType());
+			Optional<SubmodelElement> child = getChild(submodel, key.getValue(), SubmodelElement.class);
+			if ( child.isPresent() && keyClass.isInstance(child.get())) {
+				element = child.get(); 
+			}
+			else {
+				return Optional.empty();
+			}
+		}
+		if (SubmodelElement.class.isInstance(element) ) {
+			return Optional.of(SubmodelElement.class.cast(element));
+		}
+		return Optional.empty();
+	}
 	public <T extends SubmodelElement> Optional<T> getSubmodelElementAt(String path, Class<T> clazz) {
 		Optional<SubmodelElement> elem = getSubmodelElementAt(path);
 		if (elem.isPresent() && clazz.isInstance(elem.get())) {
@@ -119,13 +166,13 @@ public class SubmodelHelper {
 		}
 		return new HashMap<String, Object>();
 	}
-	public void setValueAt(String path, JsonNode value) {
+	public Optional<SubmodelElement> setValueAt(String path, JsonNode value) {
 		Optional<SubmodelElement> elem = getSubmodelElementAt(path);
 		if ( elem.isPresent()) {
 			setValueOnly(elem.get(), value);
 			
 		}
-		
+		return elem;
 	}
 	private void setValueOnly(SubmodelElement submodelElement, JsonNode value) {
 		ValueHelper.applyValue(submodelElement, value);
@@ -272,5 +319,39 @@ public class SubmodelHelper {
 	public SubmodelElementValue getValueOnly(SubmodelElement referable) {
 		return ValueHelper.toValue(referable);
 	}
-	
+
+	public Optional<Referable> resolveKeyPath(Iterator<Key> keyIterator ) {
+		return resolveKeyPath(submodel, keyIterator);
+		
+			
+		
+	}
+	public Object resolveValue(Iterator<Key> keyIterator) {
+		return resolveValue(submodel, keyIterator);
+	}
+	private Optional<Referable> resolveKeyPath(Referable container, Iterator<Key> iterator  ) {
+		if ( iterator.hasNext()) {
+			Key elementKey = iterator.next();
+			
+			Optional<Referable>  element = getChild(container, elementKey.getValue(), Referable.class);
+			if ( element.isPresent() && iterator.hasNext()) {
+				return resolveKeyPath(element.get(), iterator);
+			}
+			return element;
+			
+		}
+		return Optional.empty();
+	}
+	private Object resolveValue(Referable container, Iterator<Key> iterator) {
+		Key elementKey = iterator.next();
+		
+		Optional<SubmodelElement>  element = getChild(container, elementKey.getValue(), SubmodelElement.class);
+		if ( element.isPresent() && iterator.hasNext()) {
+			return resolveKeyPath(element.get(), iterator);
+		}
+		if ( element.isPresent()) {
+			return getValueOnly(element.get());
+		}
+		return null;
+	}
 }

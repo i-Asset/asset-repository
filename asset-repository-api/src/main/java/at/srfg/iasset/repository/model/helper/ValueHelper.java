@@ -56,7 +56,7 @@ public class ValueHelper {
 	public static <M extends SubmodelElement, V extends SubmodelElementValue> V toValue(M submodelElement) {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
-			return (V) ((ValueMapper<M,V>)mapper.get(propertyInterface)).getValueOnly(submodelElement);
+			return (V) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapToValue(submodelElement);
 		}
 		return null;
 		
@@ -67,7 +67,7 @@ public class ValueHelper {
 	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, JsonNode node) {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(modelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
-			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).applyValue(modelElement, node);
+			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapValueToElement(modelElement, node);
 		}
 		return null;
 	}

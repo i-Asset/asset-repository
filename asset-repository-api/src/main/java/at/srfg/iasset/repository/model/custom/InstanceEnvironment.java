@@ -1,32 +1,39 @@
 package at.srfg.iasset.repository.model.custom;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetKind;
+import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.DataSpecification;
 import org.eclipse.aas4j.v3.model.Environment;
 import org.eclipse.aas4j.v3.model.KeyTypes;
+import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 
+import at.srfg.iasset.repository.component.ModelChangeProvider;
+import at.srfg.iasset.repository.component.Persistence;
+import at.srfg.iasset.repository.model.InMemoryStorage;
+import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class InstanceEnvironment implements Environment {
+	Persistence storage;
 	
-	private final Map<String, AssetAdministrationShell> assetAdministrationShell = new HashMap<String, AssetAdministrationShell>();
-	private final Map<String, Submodel> submodel = new HashMap<String, Submodel>();
-	private final Map<String, ConceptDescription> conceptDescription = new HashMap<String, ConceptDescription>();
-
+	private final ModelChangeProvider changeProvider;
+	public InstanceEnvironment(ModelChangeProvider provider) {
+		this.storage = new InMemoryStorage();
+		this.changeProvider = provider;
+	}
 	@Override
 	public List<AssetAdministrationShell> getAssetAdministrationShells() {
-		return assetAdministrationShell.values().stream().collect(Collectors.toList());
+		return storage.getAssetAdministrationShells();
 	}
 	public List<AssetAdministrationShell> getAssetAdministrationShells(AssetKind kind) {
 		return getAssetAdministrationShells().stream().filter(new Predicate<AssetAdministrationShell>() {
@@ -43,38 +50,67 @@ public class InstanceEnvironment implements Environment {
 	}
 	public void addAssetAdministrationShell(String id, AssetAdministrationShell shell) {
 		shell.setId(id);
-		assetAdministrationShell.put(id, shell);
+		storage.persist(shell);
 	}
 	public Optional<AssetAdministrationShell> getAssetAdministrationShell(String aasIdentifier) {
-		return Optional.ofNullable(assetAdministrationShell.get(aasIdentifier));
+		return storage.findAssetAdministrationShellById(aasIdentifier);
 	}
 	
 
 	@Override
 	public void setAssetAdministrationShells(List<AssetAdministrationShell> assetAdministrationShells) {
-		assetAdministrationShells.clear();
-		for ( AssetAdministrationShell aas : assetAdministrationShells) {
-			assetAdministrationShell.put(aas.getId(), aas);
-		}
+		storage.setAssetAdministrationShells(assetAdministrationShells);
 	}
 	public boolean deleteAssetAdministrationShell(String aasIdentifier) {
-		AssetAdministrationShell s = assetAdministrationShell.remove(aasIdentifier);
-		// 
-		return s != null;
+		storage.deleteAssetAdministrationShellById(aasIdentifier);
+		return true;
 	}
 	@Override
 	public List<Submodel> getSubmodels() {
-		return submodel.values().stream().collect(Collectors.toList());
+		return storage.getSubmodels();
 	}
-	public void addSubmodel(String id, Submodel sub) {
+	
+	public void setSubmodel(String id, Submodel sub) {
+		Optional<Submodel> existing = storage.findSubmodelById(id);
+		existing.ifPresent(new Consumer<Submodel>() {
+
+			@Override
+			public void accept(Submodel t) {
+				notifyDeletion(t);
+			}
+		});
 		sub.setId(id);
-		submodel.put(id, sub);
+		Submodel stored = storage.persist(sub);
+		notifyCreation(stored);
+	}
+	private <T extends Referable> void notifyDeletion(T deletedElement) {
+		new EventElementCollector().collect(deletedElement).forEach(new Consumer<BasicEventElement>() {
+
+			@Override
+			public void accept(BasicEventElement t) {
+				changeProvider.eventElementRemoved(t);
+			}
+		});
+
+
+	}
+	private <T extends Referable> void notifyCreation(T createdElement) {
+		new EventElementCollector().collect(createdElement).forEach(new Consumer<BasicEventElement>() {
+
+			@Override
+			public void accept(BasicEventElement t) {
+				changeProvider.eventElementAdded(t);
+			}
+		});
+
+
 	}
 	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier) {
 		Optional<AssetAdministrationShell> aas = getAssetAdministrationShell(aasIdentifier);
 		if ( aas.isPresent()) {
-			// TODO: check that aas contains submodel
-			return Optional.ofNullable(submodel.get(submodelIdentifier));
+			if ( ReferenceUtils.extractReferenceFromList(aas.get().getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL).isPresent() ) {
+				return storage.findSubmodelById(submodelIdentifier);
+			}
 		}
 		return Optional.empty();
 	}
@@ -87,13 +123,9 @@ public class InstanceEnvironment implements Environment {
 	public boolean deleteSubmodel(String aasIdentifier, String submodelIdentifier) {
 		Optional<AssetAdministrationShell> shell = getAssetAdministrationShell(aasIdentifier);
 		if ( shell.isPresent() ) {
-			AssetAdministrationShell theShell = shell.get();
-			Optional<Reference> subRef = ReferenceUtils.getReference(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
-			if ( subRef.isPresent() ) {
-				theShell.getSubmodels().remove(subRef.get());
-				// TODO: check for references of other submodels
-				Submodel s = submodel.remove(submodelIdentifier);
-				return s != null;
+			if ( ReferenceUtils.extractReferenceFromList(shell.get().getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL).isPresent() ) {
+				storage.deleteSubmodelById(submodelIdentifier);
+				return true;
 			}
 		}
 		return false;
@@ -105,26 +137,24 @@ public class InstanceEnvironment implements Environment {
 
 	@Override
 	public void setSubmodels(List<Submodel> submodels) {
-		submodel.clear();
 		for ( Submodel sub : submodels) {
-			submodel.put(sub.getId(), sub);
+			setSubmodel(sub.getId(), sub);
 		}
-		
 	}
 
 	@Override
 	public List<ConceptDescription> getConceptDescriptions() {
-		return conceptDescription.values().stream().collect(Collectors.toList());
+		return storage.getConceptDescriptions();
 
 	}
-	public void addConceptDescription(ConceptDescription cd) {
-		conceptDescription.put(cd.getId(), cd);
+	public void setConceptDescription(ConceptDescription cd) {
+		
+		storage.persist(cd);
 	}
 	@Override
 	public void setConceptDescriptions(List<ConceptDescription> conceptDescriptions) {
-		conceptDescription.clear();
-		for ( ConceptDescription cd : conceptDescriptions) {
-			conceptDescription.put(cd.getId(), cd);
+		for (ConceptDescription cd : conceptDescriptions) {
+			setConceptDescription(cd);
 		}
 		
 	}
@@ -141,8 +171,19 @@ public class InstanceEnvironment implements Environment {
 		
 	}
 	public Optional<ConceptDescription> getConceptDescription(String identifier) {
-		return Optional.ofNullable(conceptDescription.get(identifier));
+		Optional<ConceptDescription> conceptDescription = storage.findConceptDescriptionById(identifier);
+		return conceptDescription;
 	}
 
-
+	public <T extends Referable> Optional<T> resolveReference(Reference reference, Class<T> clazz) {
+		//AasUtils.resolve(reference, storage, clazz)
+		//
+		return Optional.empty();
+	}
+	public Optional<Submodel> getSubmodel(String subodelIdentifier) {
+		Optional<Submodel> submodel = storage.findSubmodelById(subodelIdentifier);
+		if ( submodel.isEmpty()) {
+		}
+		return submodel;
+	}
 }

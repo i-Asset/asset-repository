@@ -20,18 +20,23 @@ node('iasset-jenkins-slave') {
             sh 'mvn test'
         }
 
-        stage('Build Service Container') {
+        stage('Build Service Containers') {
             sh 'docker build . -f asset-repository-service/src/main/docker/Dockerfile \
                 --build-arg JAR_FILE=asset-repository-service/target/*.jar \
                 -t iassetplatform/asset-repository-service:staging'
+            sh 'docker build . -f semantic-lookup-service/src/main/docker/Dockerfile \
+                --build-arg JAR_FILE=semantic-lookup-service/target/*.jar \
+                -t iassetplatform/semantic-lookup-service:staging'
         }
 
         stage('Push Docker') {
             sh 'docker push iassetplatform/asset-repository-service:staging'
+            sh 'docker push iassetplatform/semantic-lookup-service:staging'
         }
 
         stage('Deploy on staging server') {
             sh 'ssh staging "cd /srv/docker-setup/staging/ && ./run-staging.sh restart-single asset-repository-service"'
+            sh 'ssh staging "cd /srv/docker-setup/staging/ && ./run-staging.sh restart-single semantic-lookup-service"'
         }
     }
 
@@ -74,19 +79,25 @@ node('iasset-jenkins-slave') {
             sh 'mvn clean install -DskipTests'
         }
 
-        stage('Build Service Container') {
+        stage('Build Service Containers') {
             sh 'docker build . -f asset-repository-service/src/main/docker/Dockerfile \
                 --build-arg JAR_FILE=asset-repository-service/target/*.jar \
                 -t iassetplatform/asset-repository-service:' + env.TAG_NAME
+            sh 'docker build . -f semantic-lookup-service/src/main/docker/Dockerfile \
+                --build-arg JAR_FILE=semantic-lookup-service/target/*.jar \
+                -t iassetplatform/semantic-lookup-service:' + env.TAG_NAME
         }
 
         stage('Push Docker Container') {
             sh 'docker push iassetplatform/asset-repository-service:' + env.TAG_NAME
             sh 'docker push iassetplatform/asset-repository-service:latest'
+            sh 'docker push iassetplatform/semantic-lookup-service:' + env.TAG_NAME
+            sh 'docker push iassetplatform/semantic-lookup-service:latest'
         }
 
         stage('Deploy on PROD server') {
             sh 'ssh prod "cd /data/deployment_setup/prod/ && sudo ./run-prod.sh restart-single asset-repository-service"'
+            sh 'ssh prod "cd /data/deployment_setup/prod/ && sudo ./run-prod.sh restart-single semantic-lookup-service"'
         }
 
     }

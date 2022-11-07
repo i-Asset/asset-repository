@@ -3,7 +3,6 @@ package at.srfg.iasset.repository.service.helper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -15,6 +14,7 @@ import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.Endpoint;
+import org.eclipse.aas4j.v3.model.Identifiable;
 import org.eclipse.aas4j.v3.model.Key;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Property;
@@ -25,14 +25,13 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.model.helper.SubmodelHelper;
-import at.srfg.iasset.repository.persistence.service.AssetAdministrationShellRepository;
-import at.srfg.iasset.repository.persistence.service.ConceptDescriptionRepository;
-import at.srfg.iasset.repository.persistence.service.SubmodelRepository;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 @Service
@@ -40,7 +39,8 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	@Autowired
 	private Persistence storage;
 	
-	
+	@Autowired
+	private ObjectMapper aasMapper;
 
 	@Override
 	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier) {
@@ -134,9 +134,60 @@ public class RepositoryEnvironment implements ServiceEnvironment {
         
 		return Optional.empty();
 	}
+	public Optional<Referable> resolve(Reference reference) {
+		switch(reference.getType()) {
+		case GLOBAL_REFERENCE:
+			KeyTypes type = ReferenceUtils.firstKeyType(reference);
+			break;
+		case MODEL_REFERENCE:
+			break;
+		}
+		return Optional.empty();
+	}
+	private Optional<Referable> resolveReferable(List<Key> keys) {
+		if ( keys == null || keys.isEmpty() ) {
+			return null;
+		}
+		
+		// first key points to an identifiable
+		Optional<Identifiable> root = resolveIdentifiable(keys.get(0));
+		Referable referable = null;
+		for (Key key : keys ) {
+			Class<?> clazzExpected = ReferenceUtils.keyTypeToClass(key.getType());
+			
+			
+		}
+		List<Key> idShortKey = keys.subList(0, keys.size()-1);
+		
+		return Optional.empty();
+	}
+	private Optional<Identifiable> resolveIdentifiable(Key key) {
+		switch(key.getType()) {
+		case SUBMODEL:
+			Optional<Submodel> sub = storage.findSubmodelById(key.getValue());
+			if ( sub.isPresent()) {
+				return Optional.of(sub.get());
+			}
+			break;
+		case CONCEPT_DESCRIPTION:
+			Optional<ConceptDescription> conceptDescription = storage.findConceptDescriptionById(key.getValue());
+			if ( conceptDescription.isPresent()) {
+				return Optional.of(conceptDescription.get());
+			}
+			break;
+		case ASSET_ADMINISTRATION_SHELL:
+			Optional<AssetAdministrationShell> aas = storage.findAssetAdministrationShellById(key.getValue());
+			if ( aas.isPresent()) {
+				return Optional.of(aas.get());
+			}
+			break;
+		default:
+		}
+		return Optional.empty();
+	}
 	@Override
 	public List<AssetAdministrationShell> getAllAssetAdministrationShells() {
-		return storage.findAllAssetAdministrationShell();
+		return storage.getAssetAdministrationShells();
 	}
 	@Override
 	public boolean deleteSubmodelElement(String aasIdentifier, String submodelIdentifier, String path) {
@@ -322,8 +373,8 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		return null;
 	}
 	@Override
-	public Map<String, Object> invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
-			Map<String, Object> parameterMap) {
+	public Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
+			Object parameterMap) {
 		
 		Optional<AssetAdministrationShellDescriptor> descriptor = storage.findAssetAdministrationShellDescriptorById(aasIdentifier);
 		if ( descriptor.isPresent()) {
@@ -336,6 +387,53 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		}
 		// TODO: report the absence of the shell!
 		return null;
+	}
+
+	@Override
+	public <T extends SubmodelElement> List<T> getSubmodelElements(String aasIdentifier, String submodelIdentifier,
+			Reference semanticId, Class<T> clazz) {
+//		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
+//		if ( sub.isPresent()) {
+//			new EventElementCollector().collect(sub.get());
+//		}
+		return new ArrayList<T>();
+	}
+
+	@Override
+	public Optional<Submodel> getSubmodel(String submodelIdentifier) {
+		return storage.findSubmodelById(submodelIdentifier);
+	}
+
+	@Override
+	public Optional<SubmodelElement> getSubmodelElement(String submodelIdentifier, String path) {
+		Optional<Submodel> theSub = getSubmodel(submodelIdentifier);
+		if ( theSub.isPresent()) {
+			return new SubmodelHelper(theSub.get()).getSubmodelElementAt(path);
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public Object getElementValue(String submodelIdentifier, String path) {
+		Optional<Submodel> theSub = getSubmodel(submodelIdentifier);
+		if ( theSub.isPresent()) {
+			return new SubmodelHelper(theSub.get()).getValueAt(path);
+		}
+		return null;
+	}
+	@Override
+	public <T> T getElementValue(String submodelIdentifier, String path, Class<T> clazz) {
+		Optional<Submodel> theSub = getSubmodel(submodelIdentifier);
+		if ( theSub.isPresent()) {
+			Object value = new SubmodelHelper(theSub.get()).getValueAt(path);
+			return aasMapper.convertValue(value, clazz);
+		}
+		return null;
+	}
+
+	@Override
+	public Object getElementValue(Reference reference) {
+		throw new UnsupportedOperationException("Not yet implemented!");
 	}
 
 

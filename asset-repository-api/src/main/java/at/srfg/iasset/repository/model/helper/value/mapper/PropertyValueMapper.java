@@ -10,15 +10,18 @@ import at.srfg.iasset.repository.model.helper.value.type.ValueType;
 
 public class PropertyValueMapper implements ValueMapper<Property, PropertyValue>{
 
+
 	@Override
-	public PropertyValue getValueOnly(Property modelElement) {
+	public PropertyValue mapToValue(Property modelElement) {
 		return new PropertyValue(ValueType.getValue(modelElement.getValueType(), modelElement.getValue()));
 	}
 
 	@Override
-	public Property applyValue(Property modelElement, JsonNode valueNode) {
+	public Property mapValueToElement(Property modelElement, JsonNode valueNode) {
 		Value<?> typedValue = ValueType.getValue(modelElement.getValueType(), valueNode.asText());
 		modelElement.setValue(typedValue.toString());
+		// 
+
 		return modelElement;
 	}
 

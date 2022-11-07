@@ -3,18 +3,27 @@ package at.srfg.iasset.connector;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.eclipse.aas4j.v3.model.EventPayload;
+import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
+import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
-import at.srfg.iasset.connector.environment.ModelListener;
+import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.event.EventHandler;
+import at.srfg.iasset.repository.event.EventProcessor;
+import at.srfg.iasset.repository.event.EventProducer;
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class Connector implements LocalEnvironment {
 	
@@ -68,7 +77,66 @@ public class Connector implements LocalEnvironment {
 
 
 					});
+			// sample for belt data
+			// currently no write via AAS planned!
+			
+//			connector.setValueConsumer(
+//					"http://iasset.salzburgresearch.at/labor/beltInstance", 
+//					"http://iasset.salzburgresearch.at/labor/beltInstance/properties", 
+//					"beltData.state", 
+//					new Consumer<String>() {
+//
+//						@Override
+//						public void accept(final String t) {
+//							// replace with OPC-UA Write
+//							System.out.println("New Value provided: " + t);
+//							connector.currentStringValue = t;
+//							
+//						}
+//					});
+			
+			// used to read OPC-UA values
+			connector.setValueSupplier(
+					"http://iasset.salzburgresearch.at/labor/beltInstance", 
+					"http://iasset.salzburgresearch.at/labor/beltInstance/properties", 
+					// path
+					"beltData.state", 
+					new Supplier<String>() {
+
+						@Override
+						public String get() {
+							// replace with OPC-UA Read
+							return connector.currentStringValue;
+						}
+
+
+					});
 			connector.register("https://acplt.org/Test_AssetAdministrationShell");
+			// 
+			connector.register(AASFull.AAS_BELT_INSTANCE.getId());
+			/*
+			 * The event processor should 
+			 */
+			connector.getEventProcessor().registerHandler(
+					"http://acplt.org/Events/ExampleBasicEvent", 
+					new EventHandler<String>() {
+
+				@Override
+				public void onEventMessage(EventPayload eventPayload, String payload) {
+					System.out.println(payload);
+					
+				}
+
+				@Override
+				public Class<String> getPayloadType() {
+					return String.class;
+				}
+			});
+			connector.getEventProcessor().startEventProcessing();
+		
+//			connector.getEventProcessor().sendTestEvent(createTestPayload("topic", "Das ist die Testnachricht"));
+			EventProducer<String> simpleProducer = connector.getEventProcessor().getProducer("http://iasset.salzburgresearch.at/beltDataEvent", String.class);
+			simpleProducer.sendEvent("Das ist die Testnachricht!");
 			
 			System.in.read();
 			connector.stop();
@@ -80,7 +148,18 @@ public class Connector implements LocalEnvironment {
 			e.printStackTrace();
 		}
 	}
-	
+	private static EventPayload createTestPayload(String topic, String message) {
+		return new DefaultEventPayload.Builder()
+				.source(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://messageSource.org"))
+				.sourceSemanticId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://messageSource.org/semantics"))
+				.observableReference(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://observableElement.org"))
+				.observableSemanticId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://acplt.org/Events/ExampleBasicEvent"))
+				.subjectId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://messageSource.org/subjectId"))
+				.payload(message)
+				.timeStamp(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE))
+				.topic(topic)
+				.build();
+	}
 	public void register(String aasIdentifier) {
 		serviceEnvironment.register(aasIdentifier);
 	}
@@ -104,12 +183,16 @@ public class Connector implements LocalEnvironment {
 	}
 	@Override
 	public void setOperationFunction(String aasIdentifier, String submodelIdentifier, String path,
-			Function<Map<String, Object>, Object> function) {
+			Function<Object, Object> function) {
 		serviceEnvironment.setOperationFunction(aasIdentifier, submodelIdentifier, path, function);		
 	}
 	@Override
 	public ConnectorEndpoint startEndpoint(int port) {
 		return serviceEnvironment.startEndpoint(port);
+	}
+	@Override
+	public EventProcessor getEventProcessor() {
+		return serviceEnvironment.getEventProcessor();
 	}
 	@Override
 	public void shutdownEndpoint() {
@@ -134,16 +217,22 @@ public class Connector implements LocalEnvironment {
 
 
 	@Override
-	public <T> void addMesssageListener(Reference reference, MessageListener<T> listener) {
-		// TODO Auto-generated method stub
+	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener) {
+		serviceEnvironment.getEventProcessor().registerHandler(reference, listener);
 		
 	}
 
 
 	@Override
-	public <T> MessageProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
+	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
+		return serviceEnvironment.invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
 	}
 
 

@@ -7,6 +7,7 @@ import javax.ws.rs.ServiceUnavailableException;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
@@ -16,6 +17,7 @@ import org.eclipse.aas4j.v3.model.impl.DefaultEndpoint;
 import at.srfg.iasset.connector.component.impl.RepositoryConnection;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.api.IAssetDirectory;
+import at.srfg.iasset.repository.api.SubmodelRepositoryInterface;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 
 public class RepositoryRestConnector implements RepositoryConnection {
@@ -32,6 +34,9 @@ public class RepositoryRestConnector implements RepositoryConnection {
 
 	private IAssetDirectory getDirectoryService() {
 		return connection.getIAssetDirectory();
+	}
+	private SubmodelRepositoryInterface getSubmodelRepositoryInterface() {
+		return connection.getSubmodelInterface();
 	}
 
 	@Override
@@ -57,6 +62,12 @@ public class RepositoryRestConnector implements RepositoryConnection {
 	}
 
 	@Override
+	public Optional<Submodel> getSubmodel(String submodelIdentifier) {
+		Submodel sub = getSubmodelRepositoryInterface().getSubmodel(submodelIdentifier);
+		return Optional.ofNullable(sub);
+	}
+
+	@Override
 	public <T extends SubmodelElement> Optional<T> getSubmodelElement(String aasIdentifier, String submodelIdentifier,
 			String path, Class<T> elementClass) {
 		try {
@@ -70,6 +81,13 @@ public class RepositoryRestConnector implements RepositoryConnection {
 			// Improve Exception Handling
 			return null;
 		}
+	}
+
+	@Override
+	public Optional<ConceptDescription> getConceptDescription(String conceptIdentifier) {
+		ConceptDescription cd = getRepositoryService().getConceptDescription(conceptIdentifier);
+
+		return Optional.ofNullable(cd);
 	}
 
 	@Override
@@ -104,6 +122,16 @@ public class RepositoryRestConnector implements RepositoryConnection {
 			return false;
 		}
 
+	}
+
+	@Override
+	public Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
+		try {
+			return getRepositoryService().invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
+		} catch (ServiceUnavailableException e) {
+			return null;
+		}
+		
 	}
 
 }

@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
@@ -34,11 +35,19 @@ public interface RepositoryConnection {
 	 * @return The aas object or null when not found
 	 */
 	Optional<AssetAdministrationShell> getAssetAdministrationShell(String aasIdentifier);
-	
+	/**
+	 * Obtain a {@link Submodel} based on it's identifier. The submodel must be assigned to the {@link AssetAdministrationShell}
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @return
+	 */
 	Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier);
+	Optional<Submodel> getSubmodel(String submodelIdentifier);
+	Optional<ConceptDescription> getConceptDescription(String conceptIdentifier);
+	
 	
 	<T extends SubmodelElement> Optional<T> getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path, Class<T> elementClass);
-	
+	Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter);
 	static RepositoryConnection getConnector(URI uri) {
 		return new RepositoryRestConnector(uri);
 	}

@@ -4,10 +4,12 @@ import java.net.URI;
 import java.net.URL;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.api.IAssetDirectory;
+import at.srfg.iasset.repository.api.SubmodelRepositoryInterface;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.connectivity.rest.ConsumerFactory;
 
@@ -28,7 +30,8 @@ public interface ConnectionProvider {
 	/**
 	 * Obtain a service interface connected to the Asset Administration Shell Repository Interface!
 	 * Each of the methods in the interface requires the {@link AssetAdministrationShell}'s identifier as a 
-	 * first parameter. 
+	 * first parameter.
+	 *  
 	 * <p>
 	 * The final service path is combine with the provided <code>host address</code> and the suffix <code>/repository</code>
 	 * </p>
@@ -50,6 +53,11 @@ public interface ConnectionProvider {
 	 */
 	IAssetAdministrationShellInterface getShellInterface();
 	/**
+	 * Interface provided by the repository allowing direct access to {@link Submodel} data!
+	 * @return
+	 */
+	SubmodelRepositoryInterface getSubmodelInterface();
+	/**
 	 * Obtain a service interface connected with the central repository service
 	 * @return
 	 */
@@ -58,6 +66,7 @@ public interface ConnectionProvider {
 	class Connection implements ConnectionProvider {
 		private IAssetAdministrationShellRepositoryInterface repositoryInterface;
 		private IAssetDirectory directoryInterface;
+		private SubmodelRepositoryInterface submodelRepository;
 		final String host;
 		private Connection(String host) {
 			this.host = host;
@@ -97,6 +106,19 @@ public interface ConnectionProvider {
 						IAssetDirectory.class);	
 			}
 			return directoryInterface;
+		}
+		@Override
+		public SubmodelRepositoryInterface getSubmodelInterface() {
+			if ( submodelRepository == null) {
+				submodelRepository = ConsumerFactory.createConsumer(
+						// construct the URL
+						host + "subrepo",
+						// the Client Factory creates a client configured with the AAS Model (default implementations & mixins)
+						ClientFactory.getInstance().getClient(), 
+						// the interface class
+						SubmodelRepositoryInterface.class);	
+			}
+			return submodelRepository;
 		}
 		
 	}

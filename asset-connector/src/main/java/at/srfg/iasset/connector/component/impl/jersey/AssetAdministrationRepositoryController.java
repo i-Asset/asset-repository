@@ -1,7 +1,6 @@
 package at.srfg.iasset.connector.component.impl.jersey;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -23,8 +22,6 @@ import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
@@ -240,14 +237,14 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
-	public Map<String, Object> invokeOperation(
+	public Object invokeOperation(
 			@PathParam("aasIdentifier")
 			String aasIdentifier, 
 			@PathParam("submodelIdentifier")
 			String submodelIdentifier, 
 			@PathParam("path")
 			String path,
-			Map<String, Object> parameterMap) {
+			Object parameterMap) {
 		return environment.invokeOperation(					
 					ApiUtils.base64Decode(aasIdentifier), 
 					ApiUtils.base64Decode(submodelIdentifier), 

@@ -6,19 +6,27 @@ import java.util.Optional;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
+import org.eclipse.aas4j.v3.model.EventElement;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
 public interface ServiceEnvironment {
 	/**
-	 * Obtain a {@link Submodel} 
+	 * Obtain a {@link Submodel}. The {@link Submodel} is only returned when it exists and is assigned to the {@link AssetAdministrationShell}
 	 * @param aasIdentifier The {@link AssetAdministrationShell} containing/referencing the {@link Submodel}
-	 * @param submodelIdentifier The {@link Submodel}
+	 * @param submodelIdentifier The {@link Submodel} to retrieve
 	 * @return The {@link Submodel} when found, {@link Optional#empty()} otherwise
 	 */
 	Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier);
+	/**
+	 * Obtain a {@link Submodel} based on it's identifier. 
+	 * @param submodelIdentifier The submodel to retieve
+	 * @return The {@link Submodel} when found, {@link Optional#empty()} otherwise
+	 */
+	Optional<Submodel> getSubmodel(String submodelIdentifier);
 	/**
 	 * Check for the {@link AssetAdministrationShell}
 	 * @param identifier
@@ -58,6 +66,12 @@ public interface ServiceEnvironment {
 	 */
 	<T extends Referable> Optional<T> resolve(Reference reference, Class<T> type);
 	/**
+	 * Resolve the reference from the environment
+	 * @param reference
+	 * @return
+	 */
+	Optional<Referable> resolve(Reference reference);
+	/**
 	 * Retrieve all asset {@link AssetAdministrationShell} 
 	 * @return
 	 */
@@ -88,6 +102,7 @@ public interface ServiceEnvironment {
 	 * @return
 	 */
 	Optional<SubmodelElement> getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path);
+	Optional<SubmodelElement> getSubmodelElement(String submodelIdentifier, String path);
 
 	/**
 	 * Update a submodel in the repository. Maintain the list of assigned repositories with the AAS
@@ -113,6 +128,20 @@ public interface ServiceEnvironment {
 	 */
 	Object getElementValue(String aasIdentifier, String submodelIdentifier, String path);
 	/**
+	 * Obtain the ValueOnly representation of a SubmodelElement
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @param path
+	 * @return
+	 */
+	Object getElementValue(String submodelIdentifier, String path);
+	/**
+	 * Obtain the ValueOnly representation of a {@link Reference} of type {@link ReferenceTypes#MODEL_REFERENCE}
+	 * @param reference
+	 * @return The value only serialization of the referenced element
+	 */
+	Object getElementValue(Reference reference);
+	/**
 	 * Update a {@link SubmodelElement} based on it's ValueOnly representation
 	 * @param aasIdentifier
 	 * @param submodelIdentifier
@@ -135,7 +164,7 @@ public interface ServiceEnvironment {
 	List<Reference> getSubmodelReferences(String aasIdentifier);
 	/**
 	 * Update the submodel reference list of the {@link AssetAdministrationShell}
-	 * @param id
+	 * @param aasIdentifier
 	 * @param submodels
 	 * @return
 	 */
@@ -143,26 +172,45 @@ public interface ServiceEnvironment {
 	/**
 	 * Remove a submodel reference from the {@link AssetAdministrationShell}. The {@link Submodel} itsel
 	 * is not affected by this operation!
-	 * @param id
+	 * @param aasIdentifier
 	 * @param submodelIdentifier
 	 * @return
 	 */
-	List<Reference> deleteSubmodelReference(String id, String submodelIdentifier);
+	List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier);
 	/**
 	 * Add a new {@link SubmodelElement} to the identified {@link Submodel}
-	 * @param id
-	 * @param base64Decode
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
 	 * @param element
 	 */
-	SubmodelElement setSubmodelElement(String id, String submodelIdentifier, SubmodelElement element);
+	SubmodelElement setSubmodelElement(String aasIdentifier, String submodelIdentifier, SubmodelElement element);
 	/**
 	 * Execute the identified operation
-	 * @param id
-	 * @param base64Decode
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
 	 * @param path
 	 * @param parameterMap
 	 * @return
 	 */
-	Map<String, Object> invokeOperation(String id, String base64Decode, String path, Map<String, Object> parameterMap);
+	Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameterMap);
+	/**
+	 * Find all {@link SubmodelElement} of the requested type and with the required semanticId 
+	 * @param <T>
+	 * @param semanticId
+	 * @param clazz
+	 * @return
+	 */
+	<T extends SubmodelElement> List<T> getSubmodelElements(String aasIdentifier, String submodelIdentifier, Reference semanticId, Class<T> clazz);
+	/**
+	 * Obtain the value only representation of the {@link SubmodelElement} and convert it to the provided type!
+	 * @param <T>
+	 * @param submodelIdentifier
+	 * @param path
+	 * @param clazz
+	 * @return
+	 */
+	<T> T getElementValue(String submodelIdentifier, String path, Class<T> clazz);
+	
+	
 
 }

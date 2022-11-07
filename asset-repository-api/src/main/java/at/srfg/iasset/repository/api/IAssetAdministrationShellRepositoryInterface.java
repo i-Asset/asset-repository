@@ -475,7 +475,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
-	public Map<String,Object> invokeOperation(
+	public Object invokeOperation(
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 
@@ -496,7 +496,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 			@PathVariable("path")
 			String path,
 			@RequestBody
-			Map<String, Object> parameterMap);
+			Object parameterMap);
 	
 	/**
 	 * Obtain the {@link AssetAdministrationShell} 

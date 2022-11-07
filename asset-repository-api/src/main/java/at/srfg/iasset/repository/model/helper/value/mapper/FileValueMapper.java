@@ -9,7 +9,7 @@ import at.srfg.iasset.repository.model.helper.value.FileValue;
 public class FileValueMapper implements ValueMapper<File, FileValue> {
 
 	@Override
-	public FileValue getValueOnly(File modelElement) {
+	public FileValue mapToValue(File modelElement) {
 		return new FileValue(modelElement.getContentType(), modelElement.getValue());
 	}
 
