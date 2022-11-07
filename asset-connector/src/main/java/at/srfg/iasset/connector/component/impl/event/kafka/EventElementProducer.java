@@ -1,5 +1,7 @@
 package at.srfg.iasset.connector.component.impl.event.kafka;
 
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,13 @@ public class EventElementProducer<T> implements EventProducer<T>{
 		this.eventElement = element;
 		
 		this.sender = new Sender(eventElement.getTopic());
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				sender.close();
+			}
+		});
+
 		//
 	}
 	
@@ -48,6 +57,9 @@ public class EventElementProducer<T> implements EventProducer<T>{
 			return payload.toString();
 		}
 		return payload.toString();
+	}
+	public void stop() {
+		this.sender.close();
 	}
 
 }

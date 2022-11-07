@@ -37,6 +37,7 @@ public class Connector implements LocalEnvironment {
 	
 	public void stop() {
 		serviceEnvironment.shutdownEndpoint();
+		serviceEnvironment.getEventProcessor().stopEventProcessing();
 	}
 	
 	public ServiceEnvironment getServiceEnvironment() {
@@ -138,27 +139,16 @@ public class Connector implements LocalEnvironment {
 			EventProducer<String> simpleProducer = connector.getEventProcessor().getProducer("http://iasset.salzburgresearch.at/beltDataEvent", String.class);
 			simpleProducer.sendEvent("Das ist die Testnachricht!");
 			
-			System.in.read();
+//			System.in.read();
+			connector.getEventProcessor().stopEventProcessing();
 			connector.stop();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	private static EventPayload createTestPayload(String topic, String message) {
-		return new DefaultEventPayload.Builder()
-				.source(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://messageSource.org"))
-				.sourceSemanticId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://messageSource.org/semantics"))
-				.observableReference(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://observableElement.org"))
-				.observableSemanticId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://acplt.org/Events/ExampleBasicEvent"))
-				.subjectId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://messageSource.org/subjectId"))
-				.payload(message)
-				.timeStamp(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE))
-				.topic(topic)
-				.build();
 	}
 	public void register(String aasIdentifier) {
 		serviceEnvironment.register(aasIdentifier);
@@ -206,34 +196,24 @@ public class Connector implements LocalEnvironment {
 	@Override
 	public void addHandler(String aasIdentifier, String alias) {
 		serviceEnvironment.addHandler(aasIdentifier, alias);
-
-		
 	}
 	@Override
 	public void removeHandler(String alias) {
 		serviceEnvironment.removeHandler(alias);
-		
 	}
-
 
 	@Override
 	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener) {
 		serviceEnvironment.getEventProcessor().registerHandler(reference, listener);
-		
 	}
-
 
 	@Override
 	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
-		// TODO Auto-generated method stub
-		return null;
+		return getEventProcessor().getProducer(reference, clazz);
 	}
-
 
 	@Override
 	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
 		return serviceEnvironment.invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
 	}
-
-
 }

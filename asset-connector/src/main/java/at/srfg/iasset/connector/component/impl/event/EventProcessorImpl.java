@@ -247,7 +247,7 @@ public class EventProcessorImpl implements EventProcessor {
 	@Override
 	public void startEventProcessing() {
 		startOutgoing();
-		startEventConsumer();
+//		startEventConsumer();
 	}
 	private void startEventConsumer() {
 		
@@ -309,6 +309,7 @@ public class EventProcessorImpl implements EventProcessor {
 			public void accept(EventPayloadHelper t) {
 				if ( t.getTopic() != null) {
 					MessageProducer runner = new MessageProducer(t);
+					outgoingProducer.add(runner);
 					runner.start(); 
 				}
 				
@@ -317,9 +318,9 @@ public class EventProcessorImpl implements EventProcessor {
 	}
 	@Override
 	public void stopEventProcessing() {
-		if ( executor!=null) {
-			executor.shutdown();
-		}
+//		if ( executor!=null) {
+//			executor.shutdown();
+//		}
 		outgoingProducer.forEach(new Consumer<MessageProducer>() {
 
 			@Override
@@ -344,7 +345,6 @@ public class EventProcessorImpl implements EventProcessor {
 			// TODO: use timeout from event element
 			this.payloadHelper = eventElement;
 			this.timeOut = 2000;
-			producer = new EventElementProducer<Object>(eventElement);
 					
 		}
 		
@@ -360,19 +360,24 @@ public class EventProcessorImpl implements EventProcessor {
 		
 		@Override
 		public void run() {
-			while (alive) {
-				try {
-					// obtain the current values
-					Object value = payloadHelper.getPayload();
-					if ( value != null) {
-						producer.sendEvent(value);
+			producer = new EventElementProducer<Object>(payloadHelper);
+			try {
+				while (alive) {
+					try {
+						// obtain the current values
+						Object value = payloadHelper.getPayload();
+						if ( value != null) {
+							producer.sendEvent(value);
+						}
+						Thread.sleep(timeOut);
+					} catch (InterruptedException e) {
+						
 					}
-					Thread.sleep(timeOut);
-				} catch (InterruptedException e) {
-					
 				}
-				
+			} finally {
+				producer.stop();
 			}
+			System.out.println("Exiting " + payloadHelper.getTopic());
 		}
 		
 	}

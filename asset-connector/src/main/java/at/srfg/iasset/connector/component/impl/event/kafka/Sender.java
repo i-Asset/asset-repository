@@ -64,11 +64,14 @@ public final class Sender {
 	}
 
 	public void close() {
-		try {
-			producer.close();
-		} 
-		finally {
-			producer = null;
+		if ( producer != null) {
+			try {
+				producer.close();
+			} 
+			finally {
+				producer = null;
+			}
+			
 		}
 	}
 }

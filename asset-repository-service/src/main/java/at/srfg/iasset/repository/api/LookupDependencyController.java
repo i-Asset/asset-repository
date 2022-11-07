@@ -22,7 +22,7 @@ public class LookupDependencyController implements SemanticLookupService {
 
 	@Override
 	public Optional<ConceptBase> getConcept(String identifier) {
-
+		Optional<ConceptBase> res = lookup.getConcept(identifier);
 		return lookup.getConcept(identifier);
 	}
 

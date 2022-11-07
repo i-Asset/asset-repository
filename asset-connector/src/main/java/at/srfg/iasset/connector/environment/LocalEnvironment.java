@@ -44,7 +44,6 @@ public interface LocalEnvironment {
 	 */
 	public void addHandler(String aasIdentifier);
 	/**
-	/**
 	 * Add a dedicated service handler for the identified {@link AssetAdministrationShell}.
 	 * The service handler is created with the provided alias name  
 	 * @param aasIdentifier
