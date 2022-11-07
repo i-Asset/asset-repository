@@ -57,6 +57,7 @@ import at.srfg.iasset.repository.model.InMemoryStorage;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
 import at.srfg.iasset.repository.model.helper.SubmodelHelper;
+import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
 import at.srfg.iasset.repository.model.helper.visitor.ReferenceCollector;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
@@ -678,8 +679,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
-		// TODO Auto-generated method stub
-		return null;
+		return getEventProcessor().getProducer(reference, clazz);
 	}
 
 	@Override
@@ -751,6 +751,16 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 				case ASSET_ADMINISTRATION_SHELL:
 					Optional<AssetAdministrationShell> aas = storage.findAssetAdministrationShellById(rootKey.getValue());
 					if ( aas.isPresent()) {
+						if (keyIterator.hasNext()) {
+							Key submodelKey = keyIterator.next();
+							Optional<Submodel> submodel = getSubmodel(rootKey.getValue(), submodelKey.getValue() );
+							if ( submodel.isPresent()) {
+								if ( keyIterator.hasNext()) {
+									return new SubmodelHelper(submodel.get()).resolveKeyPath(keyIterator);
+								}
+								return Optional.of(submodel.get());
+							}
+						}
 						return Optional.of(aas.get());
 					}
 					break;
@@ -790,34 +800,9 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 	@Override
 	public Object getElementValue(Reference reference) {
-		Iterator<Key> keyIterator = reference.getKeys().iterator();
-		if ( keyIterator.hasNext()) {
-			Key rootKey = keyIterator.next();
-			KeyTypes keyType = rootKey.getType();
-			switch(keyType) {
-			case SUBMODEL:
-				Optional<Submodel> keySub = getSubmodel(rootKey.getValue());
-				if ( keySub.isPresent()) {
-					return new SubmodelHelper(keySub.get()).resolveValue(keyIterator);
-				}
-				break;
-//			case CONCEPT_DESCRIPTION:
-//				Optional<ConceptDescription> cDesc = getConceptDescription(rootKey.getValue());
-//				if ( cDesc.isPresent()) {
-//					return Optional.of(cDesc.get());
-//				}
-//				break;
-//			case ASSET_ADMINISTRATION_SHELL:
-//				Optional<AssetAdministrationShell> aas = storage.findAssetAdministrationShellById(rootKey.getValue());
-//				if ( aas.isPresent()) {
-//					return Optional.of(aas.get());
-//				}
-//				break;
-//			case GLOBAL_REFERENCE:
-//				return Optional.empty();
-			default:
-				throw new IllegalArgumentException("Provided reference points to a non-identifiable element!");
-			}
+		Optional<SubmodelElement> referenced = resolve(reference, SubmodelElement.class);
+		if ( referenced.isPresent() ) {
+			return ValueHelper.toValue(referenced.get());
 		}
 		return null;
 	}

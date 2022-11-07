@@ -108,7 +108,10 @@ public interface LocalEnvironment {
 	 * @return
 	 */
 	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter);
-
+	/**
+	 * Obtain the event processor.
+	 * @return
+	 */
 	EventProcessor getEventProcessor();
 	
 	

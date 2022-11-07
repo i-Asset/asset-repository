@@ -1,0 +1,69 @@
+server:
+  port: ${PORT:8084}
+
+spring:
+  application:
+    name: semantic-lookup-service
+  cloud:
+    config:
+      enabled: ${CONFIG_SERVER_ENABLED:true}
+      uri: ${CONFIG_SERVER_URI:http://localhost:8888}
+      failFast: ${CONFIG_SERVER_FAILFAST:false}
+    service-registry:
+      auto-registration:
+        enabled: ${DISCOVERY_ENABLED:true}
+        fail-fast: ${DISCOVERY_FAILFAST:false}
+    discovery:
+      # by disabling the service discovery the application/service can be started in "standalone mode".
+      # service discovery is disabled by default and should be enabled (set to true) for the "cloud mode".
+      # it can be set via an environment variable or the config server
+      enabled: ${discovery.enabled:${DISCOVERY_ENABLED:true}}
+  jpa:
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    properties:
+      hibernate:
+        type: debug
+        temp:
+          use_jdbc_metadata_defaults: false
+        id:
+          new_generator_mappings: true
+  datasource:
+    name: eclassdb
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${ECLASS_HOST:localhost}:${ECLASS_PORT:5432}/${ECLASS_DB:eclassdb}?ApplicationName=eclass-service
+    username: ${ECLASS_USER:root}
+    password: ${ECLASS_PASSWORD:changeme}
+    test-on-borrow: true
+    test-while-idle: true
+    remove-abandoned: true
+    log-abandoned: true
+    initial-size: 3
+    max-active: 3
+    max-idle: 3
+    min-idle: 3
+    max-wait: 90000
+    time-between-eviction-runs-millis: 60000
+    min-evictable-idle-time-millis: 3600000
+    validation-query: "SELECT 1;" # Validation query must be set in order to test connections
+    dbcp:
+      default-auto-commit: false
+
+solr:
+  host: ${SOLR_HOST:http://localhost:8983/solr/}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+nimble:
+  corsEnabled: true
+  platformHost: ${ECLASS_SERVICE_URL:http://localhost:8084}
+
+iAsset:
+  ns:
+    replace: false
+    replaceWith: ${ONTOLOGY_NAMESPACE:https://secure.salzburgresearch.at/}
