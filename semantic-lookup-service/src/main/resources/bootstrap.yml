@@ -17,7 +17,7 @@ spring:
       # by disabling the service discovery the application/service can be started in "standalone mode".
       # service discovery is disabled by default and should be enabled (set to true) for the "cloud mode".
       # it can be set via an environment variable or the config server
-      enabled: ${discovery.enabled:${DISCOVERY_ENABLED:true}}
+      enabled: ${discovery.enabled:${DISCOVERY_ENABLED:false}}
   jpa:
     show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
