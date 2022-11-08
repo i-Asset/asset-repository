@@ -18,8 +18,8 @@ spring:
       failFast: ${vcap.services.config-service.failFast:${CONFIG_SERVER_FAILFAST:false}}
     service-registry:
       auto-registration:
-        enabled: ${DISCOVERY_ENABLED:true}
-        fail-fast: ${DISCOVERY_FAILFAST:false}
+        enabled: ${DISCOVERY_ENABLED:false}
+        fail-fast: ${DISCOVERY_FAILFAST:true}
     discovery:
       # by disabling the service discovery the application/service can be started in "standalone mode".
       # service discovery is disabled by default and should be enabled (set to true) for the "cloud mode".
