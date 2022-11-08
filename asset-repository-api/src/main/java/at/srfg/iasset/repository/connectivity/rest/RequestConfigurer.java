@@ -148,8 +148,8 @@ public class RequestConfigurer {
 				if (  ((Parameter) annotation).in() == ParameterIn.PATH ) { // open api
 					return ((Parameter) annotation).name();
 				}
-			} else if ( annotation.annotationType() == RequestParam.class) { // spring web
-				return ((RequestParam)annotation).name();
+//			} else if ( annotation.annotationType() == RequestParam.class) { // spring web
+//				return ((RequestParam)annotation).name();
 			}
 		}
 		return null;
@@ -188,12 +188,14 @@ public class RequestConfigurer {
 			}
 			// Spring Annotation
 			else if (annotation.annotationType() == RequestParam.class) {
-				return ((RequestParam) annotation).name();
+				return ((RequestParam) annotation).value();
 			}
 			// 
 			else if ( annotation.annotationType() == Parameter.class)  {
 				if (  ((Parameter) annotation).in() == ParameterIn.QUERY ) { // open api
-					return ((Parameter) annotation).name();
+					if ( ((Parameter)annotation).name() != null && ((Parameter)annotation).name().length()>0) {
+						return ((Parameter) annotation).name();
+					}
 				}
 			}
 		}
