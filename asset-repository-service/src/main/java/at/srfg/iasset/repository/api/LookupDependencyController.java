@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import at.srfg.iasset.repository.api.dependency.SemanticLookup;
-import at.srfg.iasset.semantic.api.SemanticLookupService;
 import at.srfg.iasset.semantic.model.ConceptBase;
 import at.srfg.iasset.semantic.model.ConceptClass;
 import at.srfg.iasset.semantic.model.ConceptProperty;
@@ -21,19 +20,19 @@ public class LookupDependencyController implements SemanticLookupService {
 	SemanticLookup lookup;
 
 	@Override
-	public Optional<ConceptBase> getConcept(String identifier) {
+	public ConceptBase getConcept(String identifier) {
 		Optional<ConceptBase> res = lookup.getConcept(identifier);
-		return lookup.getConcept(identifier);
+		return lookup.getConcept(identifier).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptBase> addConcept(ConceptBase concept) {
-		return lookup.addConcept(concept);
+	public ConceptBase addConcept(ConceptBase concept) {
+		return lookup.addConcept(concept).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptBase> setConcept(ConceptBase concept) {
-		return lookup.setConcept(concept);
+	public ConceptBase setConcept(ConceptBase concept) {
+		return lookup.setConcept(concept).orElse(null);
 	}
 
 	@Override
@@ -42,18 +41,18 @@ public class LookupDependencyController implements SemanticLookupService {
 	}
 
 	@Override
-	public Optional<ConceptClass> getConceptClass(String identifier) {
-		return lookup.getConceptClass(identifier);
+	public ConceptClass getConceptClass(String identifier) {
+		return lookup.getConceptClass(identifier).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptClass> addConceptClass(String parentIdentifier, ConceptClass conceptClass) {
-		return lookup.addConceptClass(parentIdentifier, conceptClass);
+	public ConceptClass addConceptClass(String parentIdentifier, ConceptClass conceptClass) {
+		return lookup.addConceptClass(parentIdentifier, conceptClass).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptClass> setConceptClass(ConceptClass conceptClass) {
-		return lookup.setConceptClass(conceptClass);
+	public ConceptClass setConceptClass(ConceptClass conceptClass) {
+		return lookup.setConceptClass(conceptClass).orElse(null);
 	}
 
 	@Override
@@ -102,18 +101,18 @@ public class LookupDependencyController implements SemanticLookupService {
 	}
 
 	@Override
-	public Optional<ConceptProperty> getProperty(String identifier) {
-		return lookup.getProperty(identifier);
+	public ConceptProperty getProperty(String identifier) {
+		return lookup.getProperty(identifier).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptProperty> addProperty(ConceptProperty property) {
-		return lookup.addProperty(property);
+	public ConceptProperty addProperty(ConceptProperty property) {
+		return lookup.addProperty(property).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptProperty> setProperty(ConceptProperty property) {
-		return lookup.setProperty(property);
+	public ConceptProperty setProperty(ConceptProperty property) {
+		return lookup.setProperty(property).orElse(property);
 	}
 
 	@Override
@@ -127,18 +126,18 @@ public class LookupDependencyController implements SemanticLookupService {
 	}
 
 	@Override
-	public Optional<ConceptPropertyUnit> getPropertyUnit(String identifier) {
-		return lookup.getPropertyUnit(identifier);
+	public ConceptPropertyUnit getPropertyUnit(String identifier) {
+		return lookup.getPropertyUnit(identifier).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptPropertyUnit> addPropertyUnit(ConceptPropertyUnit property) {
-		return lookup.addPropertyUnit(property);
+	public ConceptPropertyUnit addPropertyUnit(ConceptPropertyUnit property) {
+		return lookup.addPropertyUnit(property).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptPropertyUnit> setPropertyUnit(ConceptPropertyUnit property) {
-		return lookup.setPropertyUnit(property);
+	public ConceptPropertyUnit setPropertyUnit(ConceptPropertyUnit property) {
+		return lookup.setPropertyUnit(property).orElse(property);
 	}
 
 	@Override
@@ -147,18 +146,18 @@ public class LookupDependencyController implements SemanticLookupService {
 	}
 
 	@Override
-	public Optional<ConceptPropertyValue> getPropertyValue(String identifier) {
-		return lookup.getPropertyValue(identifier);
+	public ConceptPropertyValue getPropertyValue(String identifier) {
+		return lookup.getPropertyValue(identifier).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptPropertyValue> addPropertyValue(ConceptPropertyValue property) {
-		return lookup.addPropertyValue(property);
+	public ConceptPropertyValue addPropertyValue(ConceptPropertyValue property) {
+		return lookup.addPropertyValue(property).orElse(null);
 	}
 
 	@Override
-	public Optional<ConceptPropertyValue> setPropertyValue(ConceptPropertyValue property) {
-		return lookup.setPropertyValue(property);
+	public ConceptPropertyValue setPropertyValue(ConceptPropertyValue property) {
+		return lookup.setPropertyValue(property).orElse(property);
 	}
 
 	@Override

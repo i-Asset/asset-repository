@@ -52,5 +52,10 @@
 			<groupId>javax.xml.ws</groupId>
 			<artifactId>jaxws-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>at.srfg.iasset</groupId>
+			<artifactId>semantic-lookup-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

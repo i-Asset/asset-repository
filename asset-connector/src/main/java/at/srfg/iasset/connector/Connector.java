@@ -134,7 +134,7 @@ public class Connector implements LocalEnvironment {
 			EventProducer<String> simpleProducer = connector.getEventProcessor().getProducer("http://iasset.salzburgresearch.at/beltDataEvent", String.class);
 			simpleProducer.sendEvent("Das ist die Testnachricht!");
 			
-//			System.in.read();
+			System.in.read();
 			connector.getEventProcessor().stopEventProcessing();
 			connector.stop();
 		} catch (URISyntaxException e) {
