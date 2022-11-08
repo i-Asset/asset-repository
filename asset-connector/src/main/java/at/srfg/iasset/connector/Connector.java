@@ -1,18 +1,13 @@
 package at.srfg.iasset.connector;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.eclipse.aas4j.v3.model.EventPayload;
-import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.impl.AASFull;
@@ -23,7 +18,6 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.event.EventHandler;
 import at.srfg.iasset.repository.event.EventProcessor;
 import at.srfg.iasset.repository.event.EventProducer;
-import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class Connector implements LocalEnvironment {
 	
@@ -52,6 +46,7 @@ public class Connector implements LocalEnvironment {
 			connector.startEndpoint(5050);
 			// create 
 			connector.addHandler("https://acplt.org/Test_AssetAdministrationShell", "test");
+			
 			connector.setValueConsumer(
 					"https://acplt.org/Test_AssetAdministrationShell", 
 					"https://acplt.org/Test_Submodel", 

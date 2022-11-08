@@ -246,8 +246,46 @@ public class EventProcessorImpl implements EventProcessor {
 	}
 	@Override
 	public void startEventProcessing() {
-		startOutgoing();
-//		startEventConsumer();
+		startEventProducer();
+		startEventConsumer();
+	}
+	@Override
+	public void stopEventProcessing() {
+		stopEventConsumer();
+		stopEventProducer();
+		
+	}
+	private void startEventProducer() {
+		payloadHelper.stream().filter(new Predicate<EventPayloadHelper>() {
+	
+			@Override
+			public boolean test(EventPayloadHelper t) {
+				return t.isActive() && t.isProducing();
+			}
+		})
+		.forEach(new Consumer<EventPayloadHelper>() {
+	
+			@Override
+			public void accept(EventPayloadHelper t) {
+				if ( t.getTopic() != null) {
+					MessageProducer runner = new MessageProducer(t);
+					outgoingProducer.add(runner);
+					runner.start(); 
+				}
+				
+			}
+		});
+	}
+	private void stopEventProducer() {
+		outgoingProducer.forEach(new Consumer<MessageProducer>() {
+
+			@Override
+			public void accept(MessageProducer t) {
+				t.stop();
+				
+			}
+		});
+		outgoingProducer.clear();
 	}
 	private void startEventConsumer() {
 		
@@ -295,43 +333,14 @@ public class EventProcessorImpl implements EventProcessor {
 			}
 		});
 	}
-	private void startOutgoing() {
-		payloadHelper.stream().filter(new Predicate<EventPayloadHelper>() {
-
-			@Override
-			public boolean test(EventPayloadHelper t) {
-				return t.isActive() && t.isProducing();
-			}
-		})
-		.forEach(new Consumer<EventPayloadHelper>() {
-
-			@Override
-			public void accept(EventPayloadHelper t) {
-				if ( t.getTopic() != null) {
-					MessageProducer runner = new MessageProducer(t);
-					outgoingProducer.add(runner);
-					runner.start(); 
-				}
-				
-			}
-		});
+	private void stopEventConsumer() {
+		for (EventElementConsumer consumer : consumers) {
+			consumer.shutdown();
+			
+		}
+		executor.shutdown();
+		consumers.clear();
 	}
-	@Override
-	public void stopEventProcessing() {
-//		if ( executor!=null) {
-//			executor.shutdown();
-//		}
-		outgoingProducer.forEach(new Consumer<MessageProducer>() {
-
-			@Override
-			public void accept(MessageProducer t) {
-				t.stop();
-				
-			}
-		});
-		
-	}
-	
 	private class MessageProducer implements Runnable {
 		private long timeOut;
 		EventElementProducer<Object> producer;
