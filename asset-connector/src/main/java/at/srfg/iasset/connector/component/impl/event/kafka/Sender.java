@@ -22,7 +22,7 @@ public final class Sender {
 	private String hosts;
 	private final String topic;
 	public Sender(String topic) {
-		this(topic, "iasset.salzburgresearch.at:9092");
+		this(topic, "iasset.sensornet.salzburgresearch.at:9092");
 	}
 	public Sender(String topic, String hosts) {
 		this.topic = topic;

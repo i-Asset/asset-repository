@@ -36,7 +36,7 @@ public class EventElementConsumer implements Runnable {
     	// use idShort as default topic and the default hosts setting
     	// TODO: extract topic & hosts from eventElement!
     	this.topics = topic;
-    	this.hosts = "iasset.salzburgresearch.at:9092";
+    	this.hosts = "iasset.sensornet.salzburgresearch.at:9092";
 		
 	}
 	@Override

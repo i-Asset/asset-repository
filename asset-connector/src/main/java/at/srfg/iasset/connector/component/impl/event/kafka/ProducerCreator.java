@@ -9,7 +9,7 @@ import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 public class ProducerCreator {
-    public static String KAFKA_BROKERS = "iasset.salzburgresearch.at:9092";
+    public static String KAFKA_BROKERS = "iasset.sensornet.salzburgresearch.at:9092";
     public static Integer MESSAGE_COUNT=1000;
     public static String CLIENT_ID="client1";
     public static String TOPIC_NAME="demo";
