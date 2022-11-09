@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.Operation;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.repository.component.ModelListener;
@@ -22,7 +23,8 @@ public interface LocalEnvironment {
 	 * @return
 	 */
 	public ConnectorEndpoint startEndpoint(int port);
-	
+	public void addAdministrationShell(AssetAdministrationShell shell);
+	public void addSubmodel(String aasIdentifer, Submodel submodel);
 	/**
 	 * Stop the HTTP(s) endpoint
 	 */

@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.EventPayload;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
@@ -218,5 +219,19 @@ public class Connector implements LocalEnvironment {
 	@Override
 	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
 		return serviceEnvironment.invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
+	}
+
+
+	@Override
+	public void addAdministrationShell(AssetAdministrationShell shell) {
+		serviceEnvironment.addAdministrationShell(shell);
+		
+	}
+
+
+	@Override
+	public void addSubmodel(String aasIdentifer, Submodel submodel) {
+		serviceEnvironment.addSubmodel(aasIdentifer, submodel);
+		
 	}
 }

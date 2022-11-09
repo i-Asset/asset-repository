@@ -171,6 +171,18 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		references.size();
 	}
 	
+	@Override
+	public void addAdministrationShell(AssetAdministrationShell shell) {
+		setAssetAdministrationShell(shell.getId(), shell);
+		
+	}
+
+	@Override
+	public void addSubmodel(String aasIdentifer, Submodel submodel) {
+		setSubmodel(aasIdentifer, submodel.getId(), submodel);
+		
+	}
+
 	public void addModelListener(ModelListener listener) {
 		changeProvider.addListener(listener);
 	}
