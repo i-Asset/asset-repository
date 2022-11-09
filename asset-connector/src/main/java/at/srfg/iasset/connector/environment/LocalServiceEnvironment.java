@@ -683,6 +683,16 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 
 	@Override
+	public <T> EventProducer<T> getMessageProducer(String submodelIdentifier, Reference reference, Class<T> clazz) {
+		Optional<Submodel> sub = getSubmodel(submodelIdentifier);
+		if ( sub.isPresent()) {
+			return getEventProcessor().getProducer(reference, clazz);
+		}
+		// fallback
+		return null;
+	}
+
+	@Override
 	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
 		
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);

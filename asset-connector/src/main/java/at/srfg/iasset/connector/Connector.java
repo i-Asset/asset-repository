@@ -2,12 +2,14 @@ package at.srfg.iasset.connector;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.eclipse.aas4j.v3.model.EventPayload;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.impl.AASFull;
@@ -206,6 +208,12 @@ public class Connector implements LocalEnvironment {
 	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
 		return getEventProcessor().getProducer(reference, clazz);
 	}
+
+	@Override
+	public <T> EventProducer<T> getMessageProducer(String submodelIdentifier, Reference reference, Class<T> clazz) {
+		return serviceEnvironment.getMessageProducer(submodelIdentifier, reference, clazz);
+	}
+
 
 	@Override
 	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {

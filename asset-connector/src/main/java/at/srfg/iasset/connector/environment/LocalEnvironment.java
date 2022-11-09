@@ -71,6 +71,7 @@ public interface LocalEnvironment {
 	 * @return
 	 */
 	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz);
+	public <T> EventProducer<T> getMessageProducer(String submodelIdentifier, Reference reference, Class<T> clazz);
 	/**
 	 * Inject a {@link Consumer} function to the local environment. This function's {@link Consumer#accept(Object)} 
 	 * method is called whenever a new value for the identified element is provided
