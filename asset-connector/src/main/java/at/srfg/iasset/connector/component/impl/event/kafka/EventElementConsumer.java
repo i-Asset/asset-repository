@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.common.Uuid;
 import org.apache.kafka.common.errors.WakeupException;
 import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class EventElementConsumer implements Runnable {
 	@Override
 	public void run() {
 		// configure with hosts 
-		consumer = ConsumerCreator.createConsumer(payloadHelper.getTopic(), topics, hosts);
+		consumer = ConsumerCreator.createConsumer(Uuid.randomUuid().toString(), topics, hosts);
 		try {
 			while (true) {
 				ConsumerRecords<Long, String> records = consumer.poll(Duration.ofMillis(Long.MAX_VALUE));
