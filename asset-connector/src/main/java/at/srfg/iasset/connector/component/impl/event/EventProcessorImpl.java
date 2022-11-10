@@ -2,7 +2,6 @@ package at.srfg.iasset.connector.component.impl.event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,7 +10,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -43,14 +41,15 @@ public class EventProcessorImpl implements EventProcessor {
 	/**
 	 * Mapping for EventListeners, the reference used is the key!
 	 */
-	final Map<EventPayloadHelper, Set<EventHandler<?>>> eventHandler = new HashMap<EventPayloadHelper,Set<EventHandler<?>>>();
+//	final Map<EventPayloadHelper, Set<EventHandler<?>>> eventHandler = new HashMap<EventPayloadHelper,Set<EventHandler<?>>>();
+	final Map<EventPayloadHelper, Set<EventHandler<?>>> eventElementConsumer = new HashMap<EventPayloadHelper, Set<EventHandler<?>>>();
 	/**
 	 * Mapping for {@link EventProducer}
 	 */
 	final Map<Reference, EventProducer<?>> eventProducer = new HashMap<Reference, EventProducer<?>>();
 	
 	List<EventPayloadHelper> payloadHelper = new ArrayList<EventPayloadHelper>();
-	List<EventElementConsumer> consumers;
+//	List<EventElementConsumer> consumers;
 	
 	ExecutorService executor;
 	List<MessageProducer> outgoingProducer = new ArrayList<EventProcessorImpl.MessageProducer>();
@@ -76,63 +75,23 @@ public class EventProcessorImpl implements EventProcessor {
 	}
 
 	private void collectEventElement(BasicEventElement eventElement) {
-		payloadHelper.add(new EventPayloadHelper(eventElement).initialize(environment));
-	}
-	
-	
-	
-	public void processIncomingMessage(String topic, String key, String message) {
+		EventPayloadHelper helper = new EventPayloadHelper(eventElement).initialize(environment); 
+		payloadHelper.add(helper);
 		// 
-		try {
-			final EventPayload fullPayload = objectMapper.readerFor(EventPayload.class).readValue(message);
-			// traverse all handlers
-			findPayloadHelper(fullPayload).stream()
-				.filter(new Predicate<EventPayloadHelper>() {
-
-					@Override
-					public boolean test(EventPayloadHelper t) {
-						// consider ".internal" or ".external" extensions from Distribution Network
-						return topic.startsWith(t.getTopic());
-					}
-				})
-				.forEach(new Consumer<EventPayloadHelper>() {
-
-				@Override
-				public void accept(EventPayloadHelper t) {
-					for (EventHandler<?> handler : eventHandler.get(t)) {
-						try {
-							Object payload = objectMapper.readerFor(handler.getPayloadType()).readValue(fullPayload.getPayload());
-							acceptPayload(handler, payload);
-							
-						} catch (JsonProcessingException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
-					}
-					
-				}
-				/**
-				 * Convert the payload object into the {@link EventHandler}'s type and 
-				 * invoke the {@link EventHandler#onEventMessage(EventPayload, Object)}
-				 * method.
-				 * @param <T>
-				 * @param handler
-				 * @param payload
-				 */
-				private <T> void acceptPayload(EventHandler<T> handler, Object payload) {
-					T val = objectMapper.convertValue(payload, handler.getPayloadType());
-					handler.onEventMessage(fullPayload, val);
-				}
-
-			});;
+		if (!eventConsumer.containsKey(eventElement.getMessageTopic())) {
+			EventElementConsumer consumer = new EventElementConsumer(
+					eventElement.getMessageTopic(), 
+					helper);
 			
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			eventConsumer.put(eventElement.getMessageTopic(), consumer);
+			
 		}
 		
 	}
+	
+	
+	
+
 	@Override
 	public <T> void registerHandler(String semanticId, EventHandler<T> handler) {
 		registerHandler(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, semanticId), handler);
@@ -145,8 +104,11 @@ public class EventProcessorImpl implements EventProcessor {
 			@Override
 			public void accept(EventPayloadHelper t) {
 				if (t.isConsuming()) {
-					eventHandler.putIfAbsent(t, new HashSet<EventHandler<?>>());
-					eventHandler.get(t).add(handler);
+					if (!eventConsumer.containsKey(t.getTopic())) {
+						EventElementConsumer consumer = new EventElementConsumer(t.getTopic(), t);
+						eventConsumer.put(t.getTopic(), consumer);
+					}
+					t.addEventHandler(handler);
 				}
 			}
 		});
@@ -289,40 +251,44 @@ public class EventProcessorImpl implements EventProcessor {
 		outgoingProducer.clear();
 	}
 	private void startEventConsumer() {
-		
-		consumers = new ArrayList<EventElementConsumer>();
-		// possibly separate based on broker type and hosts
-		Set<String> topics = payloadHelper.stream()
-				.filter(new Predicate<EventPayloadHelper>() {
-					
-					@Override
-					public boolean test(EventPayloadHelper t) {
-						return t.isConsuming() && t.getTopic()!=null;
-					}
-				})
-				.map(new Function<EventPayloadHelper, String>(){
-					
-					@Override
-					public String apply(EventPayloadHelper t) {
-						return t.getTopic();
-					}
-					
-				})
-				.collect(Collectors.toSet());
-		int numConsumers = 3;
-		executor = Executors.newFixedThreadPool(numConsumers);
-		for (int i = 0; i < numConsumers; i++) {
-			// 
-			
-			EventElementConsumer consumer = new EventElementConsumer(topics, this);
-			consumers.add(consumer);
-			executor.submit(consumer);
+		executor = Executors.newCachedThreadPool();
+		for ( String topic : eventConsumer.keySet()) {
+			executor.submit(eventConsumer.get(topic));
 		}
 		
+//		consumers = new ArrayList<EventElementConsumer>();
+//		// possibly separate based on broker type and hosts
+//		Set<String> topics = payloadHelper.stream()
+//				.filter(new Predicate<EventPayloadHelper>() {
+//					
+//					@Override
+//					public boolean test(EventPayloadHelper t) {
+//						return t.isConsuming() && t.getTopic()!=null;
+//					}
+//				})
+//				.map(new Function<EventPayloadHelper, String>(){
+//					
+//					@Override
+//					public String apply(EventPayloadHelper t) {
+//						return t.getTopic();
+//					}
+//					
+//				})
+//				.collect(Collectors.toSet());
+//		int numConsumers = 3;
+//		executor = Executors.newFixedThreadPool(numConsumers);
+//		for (int i = 0; i < numConsumers; i++) {
+//			// 
+//			
+//			EventElementConsumer consumer = new EventElementConsumer(topics, this);
+//			consumers.add(consumer);
+//			executor.submit(consumer);
+//		}
+//		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				for (EventElementConsumer consumer : consumers) {
+				for (EventElementConsumer consumer : eventConsumer.values()) {
 					consumer.shutdown();
 				}
 				executor.shutdown();
@@ -335,12 +301,16 @@ public class EventProcessorImpl implements EventProcessor {
 		});
 	}
 	private void stopEventConsumer() {
-		for (EventElementConsumer consumer : consumers) {
-			consumer.shutdown();
-			
+		for (String topic : eventConsumer.keySet()) {
+			eventConsumer.get(topic).shutdown();
 		}
-		executor.shutdown();
-		consumers.clear();
+		eventConsumer.clear();
+//		for (EventElementConsumer consumer : consumers) {
+//			consumer.shutdown();
+//			
+//		}
+//		executor.shutdown();
+//		consumers.clear();
 	}
 	private class MessageProducer implements Runnable {
 		private long timeOut;

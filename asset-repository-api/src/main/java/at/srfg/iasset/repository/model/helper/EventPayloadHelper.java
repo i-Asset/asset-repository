@@ -3,8 +3,10 @@ package at.srfg.iasset.repository.model.helper;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.eclipse.aas4j.v3.model.BasicEventElement;
@@ -16,7 +18,12 @@ import org.eclipse.aas4j.v3.model.StateOfEvent;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
+import at.srfg.iasset.repository.event.EventHandler;
 
 public class EventPayloadHelper {
 	final BasicEventElement eventElement;
@@ -28,9 +35,14 @@ public class EventPayloadHelper {
 	Reference sourceSemantic;
 	Reference subjectId;
 	private List<Reference> matchingReferences;
+	private Set<EventHandler<?>> handler;
+	ObjectMapper objectMapper = ClientFactory.getObjectMapper();
+
+	
 
 	public EventPayloadHelper(BasicEventElement eventElement) {
 		this.eventElement = eventElement;
+		this.handler = new HashSet<EventHandler<?>>();
 	}
 	public EventPayloadHelper initialize(ServiceEnvironment environment) {
 		this.matchingReferences = new ArrayList<Reference>();
@@ -58,6 +70,37 @@ public class EventPayloadHelper {
 		return null;
 		
 	}
+	public void addEventHandler(EventHandler<?> handler) {
+		this.handler.add(handler);
+	}
+	public void processIncomingMessage(String topic, String key, String message) {
+
+		try {
+			final EventPayload fullPayload = objectMapper.readerFor(EventPayload.class).readValue(message);
+			for (EventHandler<?> eventHandler: handler) {
+					Object payload = objectMapper.readerFor(eventHandler.getPayloadType()).readValue(fullPayload.getPayload());
+					
+					acceptPayload(fullPayload, payload, eventHandler);
+			}
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	/**
+	 * Convert the payload object into the {@link EventHandler}'s type and 
+	 * invoke the {@link EventHandler#onEventMessage(EventPayload, Object)}
+	 * method.
+	 * @param <T>
+	 * @param handler
+	 * @param payload
+	 */
+	private <T> void acceptPayload(EventPayload fullPayload, Object payload, EventHandler<T> handler) {
+		T val = objectMapper.convertValue(payload, handler.getPayloadType());
+		handler.onEventMessage(fullPayload, (T) val);
+	}
+
 	public String getTopic() {
 		return eventElement.getMessageTopic();
 	}
