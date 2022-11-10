@@ -722,6 +722,15 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 
 	@Override
+	public <T> void registerEventHandler(String submodelIdentifier, Reference reference, EventHandler<T> handler) {
+		Optional<Submodel> sub = getSubmodel(submodelIdentifier);
+		if ( sub.isPresent()) {
+			getEventProcessor().registerHandler(reference, handler);
+		}
+		
+	}
+
+	@Override
 	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
 		
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);

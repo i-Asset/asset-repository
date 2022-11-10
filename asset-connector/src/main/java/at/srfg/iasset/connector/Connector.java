@@ -128,42 +128,52 @@ public class Connector implements LocalEnvironment {
 			/*
 			 * The event processor should 
 			 */
-			connector.getEventProcessor().registerHandler(
-					"http://acplt.org/Events/ExampleBasicEvent", 
-					new EventHandler<String>() {
-
-				@Override
-				public void onEventMessage(EventPayload eventPayload, String payload) {
-					System.out.println(payload);
-					
-				}
-
-				@Override
-				public Class<String> getPayloadType() {
-					return String.class;
-				}
-			});
-			connector.getEventProcessor().registerHandler(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/semantic/fault"), new EventHandler<Fault>() {
-
-				@Override
-				public void onEventMessage(EventPayload eventPayload, Fault payload) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public Class<Fault> getPayloadType() {
-					return Fault.class;
-				}});
+//			connector.getEventProcessor().registerHandler(
+//					"http://acplt.org/Events/ExampleBasicEvent", 
+//					new EventHandler<String>() {
+//
+//				@Override
+//				public void onEventMessage(EventPayload eventPayload, String payload) {
+//					System.out.println(payload);
+//					
+//				}
+//
+//				@Override
+//				public Class<String> getPayloadType() {
+//					return String.class;
+//				}
+//			});
+			connector.registerEventHandler(					
+					AASFaultSubmodel.SUBMODEL_FAULT1.getId(), 
+					ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/semantic/fault"), 
+					new EventHandler<Fault>() {
+		
+						@Override
+						public void onEventMessage(EventPayload eventPayload, Fault payload) {
+							System.out.println(payload.getFaultId() + " " + payload.getShortText()) ;
+							
+						}
+		
+						@Override
+						public Class<Fault> getPayloadType() {
+							return Fault.class;
+						}});
+			
+			
 			connector.getEventProcessor().startEventProcessing();
 		
-//			EventProducer<String> simpleProducer = connector.getEventProcessor().getProducer("http://iasset.salzburgresearch.at/beltDataEvent", String.class);
-//			simpleProducer.sendEvent("Das ist die Testnachricht!");
+
 			EventProducer<Fault> faultProducer = connector.getMessageProducer(
 					AASFaultSubmodel.SUBMODEL_FAULT1.getId(), 
 					ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/semantic/fault"), 
 					Fault.class);
-			faultProducer.sendEvent(new Fault())
+			
+			Fault f = new Fault();
+			f.setFaultId("12345");
+			f.setAssetId("assetId");
+			f.setSenderUserId("im am the user");
+			f.setShortText("this is a short");
+			faultProducer.sendEvent(f);
 ;			System.in.read();
 			connector.getEventProcessor().stopEventProcessing();
 			connector.stop();
@@ -241,7 +251,10 @@ public class Connector implements LocalEnvironment {
 	public <T> EventProducer<T> getMessageProducer(String submodelIdentifier, Reference reference, Class<T> clazz) {
 		return serviceEnvironment.getMessageProducer(submodelIdentifier, reference, clazz);
 	}
-
+	@Override
+	public <T> void registerEventHandler(String submodelIdentifier, Reference reference, EventHandler<T> clazz) {
+		serviceEnvironment.registerEventHandler(submodelIdentifier, reference, clazz);
+	}
 
 	@Override
 	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
@@ -261,4 +274,5 @@ public class Connector implements LocalEnvironment {
 		serviceEnvironment.addSubmodel(aasIdentifer, submodel);
 		
 	}
+	
 }

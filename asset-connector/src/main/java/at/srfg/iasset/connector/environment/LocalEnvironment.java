@@ -125,6 +125,14 @@ public interface LocalEnvironment {
 	 * @return
 	 */
 	EventProcessor getEventProcessor();
+	/**
+	 * Register an eventHandler for messages coming from the {@link Submodel} identified by <code>submodelIdentifier</code>
+	 * @param <T>
+	 * @param submodelIdentifier
+	 * @param reference
+	 * @param clazz
+	 */
+	<T> void registerEventHandler(String submodelIdentifier, Reference reference, EventHandler<T> clazz);
 	
 	
 
