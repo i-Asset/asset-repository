@@ -143,7 +143,18 @@ public class Connector implements LocalEnvironment {
 					return String.class;
 				}
 			});
-			
+			connector.getEventProcessor().registerHandler(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/semantic/fault"), new EventHandler<Fault>() {
+
+				@Override
+				public void onEventMessage(EventPayload eventPayload, Fault payload) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public Class<Fault> getPayloadType() {
+					return Fault.class;
+				}});
 			connector.getEventProcessor().startEventProcessing();
 		
 //			EventProducer<String> simpleProducer = connector.getEventProcessor().getProducer("http://iasset.salzburgresearch.at/beltDataEvent", String.class);
