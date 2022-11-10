@@ -246,7 +246,8 @@ public class EventProcessorImpl implements EventProcessor {
 	}
 	@Override
 	public void startEventProcessing() {
-		startEventProducer();
+		// do not start producer automatically
+		// startEventProducer();
 		startEventConsumer();
 	}
 	@Override
