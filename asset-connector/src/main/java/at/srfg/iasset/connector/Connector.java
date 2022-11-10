@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.EventPayload;
+import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 
@@ -21,6 +22,9 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.event.EventHandler;
 import at.srfg.iasset.repository.event.EventProcessor;
 import at.srfg.iasset.repository.event.EventProducer;
+import at.srfg.iasset.repository.model.AASFaultSubmodel;
+import at.srfg.iasset.repository.model.Fault;
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class Connector implements LocalEnvironment {
 	
@@ -76,6 +80,14 @@ public class Connector implements LocalEnvironment {
 
 
 					});
+//			connector.setOperationFunction("id", "submodel", "path", new Function<Object, Object>() {
+//
+//				@Override
+//				public Object apply(Object t) {
+//					
+//					return null;
+//				}
+//			});
 			// sample for belt data
 			// currently no write via AAS planned!
 			
@@ -131,13 +143,17 @@ public class Connector implements LocalEnvironment {
 					return String.class;
 				}
 			});
+			
 			connector.getEventProcessor().startEventProcessing();
 		
-//			connector.getEventProcessor().sendTestEvent(createTestPayload("topic", "Das ist die Testnachricht"));
-			EventProducer<String> simpleProducer = connector.getEventProcessor().getProducer("http://iasset.salzburgresearch.at/beltDataEvent", String.class);
-			simpleProducer.sendEvent("Das ist die Testnachricht!");
-			
-			System.in.read();
+//			EventProducer<String> simpleProducer = connector.getEventProcessor().getProducer("http://iasset.salzburgresearch.at/beltDataEvent", String.class);
+//			simpleProducer.sendEvent("Das ist die Testnachricht!");
+			EventProducer<Fault> faultProducer = connector.getMessageProducer(
+					AASFaultSubmodel.SUBMODEL_FAULT1.getId(), 
+					ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/semantic/fault"), 
+					Fault.class);
+			faultProducer.sendEvent(new Fault())
+;			System.in.read();
 			connector.getEventProcessor().stopEventProcessing();
 			connector.stop();
 		} catch (URISyntaxException e) {

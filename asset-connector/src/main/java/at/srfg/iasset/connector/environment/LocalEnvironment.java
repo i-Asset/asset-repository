@@ -23,7 +23,17 @@ public interface LocalEnvironment {
 	 * @return
 	 */
 	public ConnectorEndpoint startEndpoint(int port);
+	/**
+	 * Add a new {@link AssetAdministrationShell} to the local environment
+	 * @param shell
+	 */
 	public void addAdministrationShell(AssetAdministrationShell shell);
+	/**
+	 * Add a new {@link Submodel} to the local environment. The model is registered
+	 * with the identified {@link AssetAdministrationShell} 
+	 * @param aasIdentifer
+	 * @param submodel
+	 */
 	public void addSubmodel(String aasIdentifer, Submodel submodel);
 	/**
 	 * Stop the HTTP(s) endpoint

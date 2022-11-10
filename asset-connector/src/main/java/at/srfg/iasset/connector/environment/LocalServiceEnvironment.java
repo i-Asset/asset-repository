@@ -193,9 +193,11 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	@Override
 	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier) {
 		Optional<AssetAdministrationShell> shell = storage.findAssetAdministrationShellById(aasIdentifier);
-		if ( ReferenceUtils.extractReferenceFromList(shell.get().getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL).isPresent() ) {
-			return storage.findSubmodelById(submodelIdentifier);
-		}		
+		if ( shell.isPresent()) {
+			if ( ReferenceUtils.extractReferenceFromList(shell.get().getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL).isPresent() ) {
+				return storage.findSubmodelById(submodelIdentifier);
+			}		
+		}
 		return Optional.empty();
 	}
 	public Optional<Submodel> getSubmodel(String identifier) {
@@ -206,7 +208,8 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 				// TODO Auto-generated method stub
 				Optional<Submodel> fromRemote = repository.getSubmodel(identifier);
 				if (fromRemote.isPresent()) {
-					return Optional.of(storage.persist(fromRemote.get()));
+					return Optional.of(internalSubmodel(identifier, fromRemote.get()));
+//					return Optional.of(storage.persist(fromRemote.get()));
 				}
 				return Optional.empty();
 			}
@@ -346,7 +349,21 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		}
 		return Optional.empty();
 	}
+	private Submodel internalSubmodel(String submodelIdentifier, Submodel submodel) {
+		Optional<Submodel> existing = storage.findSubmodelById(submodelIdentifier);
 
+		existing.ifPresent(new Consumer<Submodel>() {
+			
+			@Override
+			public void accept(Submodel t) {
+				notifyDeletion(t);
+			}
+		});
+		submodel.setId(submodelIdentifier);
+		Submodel stored = storage.persist(submodel);
+		notifyCreation(stored);
+		return stored;
+	}
 	@Override
 	public Submodel setSubmodel(String aasIdentifier, String submodelIdentifier, Submodel submodel) {
 		Optional<AssetAdministrationShell> shell = getAssetAdministrationShell(aasIdentifier);

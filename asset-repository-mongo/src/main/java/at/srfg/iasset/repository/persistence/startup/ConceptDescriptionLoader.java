@@ -8,6 +8,7 @@ import org.eclipse.aas4j.v3.model.Submodel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import at.srfg.iasset.repository.model.AASFaultSubmodel;
 import at.srfg.iasset.repository.persistence.model.AssetAdministrationShellData;
 import at.srfg.iasset.repository.persistence.service.AssetAdministrationShellDataRepository;
 import at.srfg.iasset.repository.persistence.service.AssetAdministrationShellRepository;
@@ -93,7 +94,7 @@ public class ConceptDescriptionLoader {
     	conceptDescriptionRepository.save(ApplicationTypes.createConceptDescriptionForManufacturerName());
     	
     	
-    	
+    	submodelRepository.save(AASFaultSubmodel.SUBMODEL_FAULT1);
 	}
 
 
