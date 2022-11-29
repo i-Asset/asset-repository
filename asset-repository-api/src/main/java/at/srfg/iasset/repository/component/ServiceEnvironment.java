@@ -194,6 +194,13 @@ public interface ServiceEnvironment {
 	 */
 	Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameterMap);
 	/**
+	 * Execute the identified operation
+	 * @param operation
+	 * @param parameter
+	 * @return
+	 */
+	Object invokeOperation(Reference operation, Object parameter);
+	/**
 	 * Find all {@link SubmodelElement} of the requested type and with the required semanticId 
 	 * @param <T>
 	 * @param semanticId

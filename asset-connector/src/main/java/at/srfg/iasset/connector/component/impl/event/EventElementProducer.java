@@ -1,15 +1,13 @@
-package at.srfg.iasset.connector.component.impl.event.kafka;
-
-import java.util.concurrent.TimeUnit;
+package at.srfg.iasset.connector.component.impl.event;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import at.srfg.iasset.connector.component.EventProducer;
+import at.srfg.iasset.connector.component.impl.event.kafka.Sender;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
-import at.srfg.iasset.repository.event.EventProducer;
-import at.srfg.iasset.repository.model.helper.EventPayloadHelper;
 
 public class EventElementProducer<T> implements EventProducer<T>{
 	private Logger logger = LoggerFactory.getLogger(EventElementProducer.class);
@@ -60,6 +58,14 @@ public class EventElementProducer<T> implements EventProducer<T>{
 	}
 	public void stop() {
 		this.sender.close();
+	}
+
+	@Override
+	public void close() {
+		if ( this.sender != null) {
+			this.sender.close();
+		}
+		
 	}
 
 }

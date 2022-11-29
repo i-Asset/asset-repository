@@ -1,0 +1,193 @@
+package at.srfg.iasset.connector.component.impl.event;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+
+import org.eclipse.aas4j.v3.model.BasicEventElement;
+import org.eclipse.aas4j.v3.model.Direction;
+import org.eclipse.aas4j.v3.model.EventPayload;
+import org.eclipse.aas4j.v3.model.Referable;
+import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.StateOfEvent;
+import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import at.srfg.iasset.connector.component.EventHandler;
+import at.srfg.iasset.connector.component.impl.PayloadConsumer;
+import at.srfg.iasset.connector.component.impl.event.kafka.EventElementConsumer;
+import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
+import at.srfg.iasset.repository.model.custom.InstanceOperation;
+import io.swagger.v3.oas.annotations.Operation;
+
+public class EventPayloadHelper implements PayloadConsumer {
+	// source
+	Reference source;
+	BasicEventElement sourceElement;
+	Reference sourceSemantic;
+	// observed
+	Reference observed;
+	Referable observedElement;
+	Reference observedSemantic;
+	// should be reference to the event element responsible for sending
+	Reference subjectId;
+	private List<Reference> matchingReferences;
+	private Set<EventHandler<?>> handler;
+	private EventConsumer consumer;
+	ObjectMapper objectMapper = ClientFactory.getObjectMapper();
+
+	public EventPayloadHelper() {
+		this.matchingReferences = new ArrayList<Reference>();
+
+		
+	}
+	public EventPayloadHelper source(Reference source, BasicEventElement sourceElement) {
+		this.source = source;
+		return this;
+	}
+	public EventPayloadHelper sourceSemantic(Optional<Reference> sourceSemantic) {
+		this.sourceSemantic = sourceSemantic.orElse(null);
+		return this;
+	}
+	public EventPayloadHelper observed(Reference observed, Referable observedElement) {
+		this.observed = observed;
+		this.observedElement = observedElement;
+		return this;
+	}
+	public EventPayloadHelper observedSemantic(Optional<Reference> observedSemantic) {
+		this.observedSemantic = observedSemantic.orElse(null);
+		return this;
+	}
+	public EventPayloadHelper subjectId(Optional<Reference> subjectId) {
+		this.subjectId = subjectId.orElse(null);
+		return this;
+	}
+	public EventPayloadHelper matches(Reference ... reference) {
+		this.matchingReferences.addAll(Arrays.asList(reference));
+		return this;
+	}
+	
+	public EventPayloadHelper initialize() {
+		// in case the observed element is an observation
+		if ( Operation.class.isInstance(observedElement)) {
+			// add event handler which invokes the 
+			addEventHandler( new EventHandler<Object>() {
+
+				@Override
+				public void onEventMessage(EventPayload eventPayload, Object payload) {
+					if ( InstanceOperation.class.isInstance(EventPayloadHelper.this.observedElement)) {
+						InstanceOperation.class.cast(EventPayloadHelper.this.observedElement).invoke(payload);
+					}
+				}
+
+				@Override
+				public Class<Object> getPayloadType() {
+					return Object.class;
+				}
+			});
+		}
+
+		return this;
+	}
+	
+	public void addEventHandler(EventHandler<?> handler) {
+		this.handler.add(handler);
+		// check whether the consumer is already present
+		if ( consumer == null )  {
+			// the groupId must be unique for each event element
+			// the topic may contain wildcards
+			consumer = new EventElementConsumer(getTopic(), this);
+			Thread consumerThread = new Thread(consumer);
+			//
+			consumerThread.start();
+			// register a shutdown hook, so that the consumer is closed
+			// when the VM is stopped
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					// close the listeners
+					consumer.close();
+				}
+			});
+		}
+	}
+	
+	public void removeHandler(EventHandler<?> handler) {
+		// TODO: implement
+	}
+	public void processIncomingMessage(String topic, String key, String message) {
+		try {
+			final EventPayload fullPayload = objectMapper.readerFor(EventPayload.class).readValue(message);
+			for (EventHandler<?> eventHandler: handler) {
+					Object payload = objectMapper.readerFor(eventHandler.getPayloadType()).readValue(fullPayload.getPayload());
+					
+					acceptPayload(fullPayload, payload, eventHandler);
+			}
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	/**
+	 * Convert the payload object into the {@link EventHandler}'s type and 
+	 * invoke the {@link EventHandler#onEventMessage(EventPayload, Object)}
+	 * method.
+	 * @param <T>
+	 * @param handler
+	 * @param payload
+	 */
+	private <T> void acceptPayload(EventPayload fullPayload, Object payload, EventHandler<T> handler) {
+		T val = objectMapper.convertValue(payload, handler.getPayloadType());
+		handler.onEventMessage(fullPayload, (T) val);
+	}
+
+	public String getTopic() {
+		return sourceElement.getMessageTopic();
+	}
+//	public Object getPayload() {
+//		return ValueHelper.toValue(this.observedElement);
+//	}
+	public boolean matches(Reference reference) {
+		return matchingReferences.contains(reference);
+	}
+	public boolean isActive() {
+		return !StateOfEvent.OFF.equals(sourceElement.getState());
+	}
+	public boolean isProducing() {
+		return Direction.OUTPUT.equals(sourceElement.getDirection() );
+	}
+	public boolean isConsuming() {
+		return Direction.INPUT.equals(sourceElement.getDirection() );
+	}
+	public boolean matches(List<Reference> references) {
+		return references.stream().filter(new Predicate<Reference>() {
+	
+				@Override
+				public boolean test(Reference t) {
+					return matches(t);
+				}
+			}).findFirst()
+			.isPresent();
+	}
+	public EventPayload asPayload(String payload) {
+		return new DefaultEventPayload.Builder()
+		.source(source)
+		.sourceSemanticId(sourceSemantic)
+		.observableReference(observed)
+		.observableSemanticId(observedSemantic)
+		.subjectId(subjectId)
+		.payload(payload)
+		.timeStamp(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE))
+		.topic(sourceElement.getMessageTopic())
+		.build();
+	}
+	
+}

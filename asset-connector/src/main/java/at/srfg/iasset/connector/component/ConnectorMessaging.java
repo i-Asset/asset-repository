@@ -1,4 +1,4 @@
-package at.srfg.iasset.repository.event;
+package at.srfg.iasset.connector.component;
 
 import org.eclipse.aas4j.v3.model.Reference;
 
@@ -8,7 +8,7 @@ import org.eclipse.aas4j.v3.model.Reference;
  * @author dglachs
  *
  */
-public interface EventProcessor {
+public interface ConnectorMessaging {
 
 	/**
 	 * Registers an {@link EventHandler} with the messaging infrastructure.

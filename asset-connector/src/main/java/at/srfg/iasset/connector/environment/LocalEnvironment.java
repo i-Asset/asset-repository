@@ -10,10 +10,10 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
+import at.srfg.iasset.connector.component.ConnectorMessaging;
+import at.srfg.iasset.connector.component.EventHandler;
+import at.srfg.iasset.connector.component.EventProducer;
 import at.srfg.iasset.repository.component.ModelListener;
-import at.srfg.iasset.repository.event.EventHandler;
-import at.srfg.iasset.repository.event.EventProcessor;
-import at.srfg.iasset.repository.event.EventProducer;
 
 public interface LocalEnvironment {
 	/**
@@ -124,7 +124,7 @@ public interface LocalEnvironment {
 	 * Obtain the event processor.
 	 * @return
 	 */
-	EventProcessor getEventProcessor();
+	ConnectorMessaging getEventProcessor();
 	/**
 	 * Register an eventHandler for messages coming from the {@link Submodel} identified by <code>submodelIdentifier</code>
 	 * @param <T>

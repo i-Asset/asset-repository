@@ -1,4 +1,4 @@
-package at.srfg.iasset.repository.event;
+package at.srfg.iasset.connector.component;
 
 import org.eclipse.aas4j.v3.model.EventPayload;
 
@@ -7,7 +7,7 @@ import org.eclipse.aas4j.v3.model.EventPayload;
  * messages. 
  * <p>
  * An {@link EventHandler} can be attached to the messaging infrastructure
- * with {@link EventProcessor#registerHandler(String, EventHandler)} where 
+ * with {@link ConnectorMessaging#registerHandler(String, EventHandler)} where 
  * the provided Reference is used to interlink the handler with the messages
  * </p>
  * @author dglachs

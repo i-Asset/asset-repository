@@ -390,6 +390,11 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	}
 
 	@Override
+	public Object invokeOperation(Reference operation, Object parameter) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public <T extends SubmodelElement> List<T> getSubmodelElements(String aasIdentifier, String submodelIdentifier,
 			Reference semanticId, Class<T> clazz) {
 //		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);

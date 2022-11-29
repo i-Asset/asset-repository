@@ -1,11 +1,11 @@
-package at.srfg.iasset.repository.event;
+package at.srfg.iasset.connector.component;
 
 import org.eclipse.aas4j.v3.model.Reference;
 
 /**
  * Interface for sending events to the outer messaging interface.
  * <p>
- * Use {@link EventProcessor#getProducer(String, Class)} to obtain a working {@link EventProducer}.
+ * Use {@link ConnectorMessaging#getProducer(String, Class)} to obtain a working {@link EventProducer}.
  * 
  * The returned {@link EventProducer} is linked to the outer messaging infrastructure based on the 
  * provided {@link Reference}!
@@ -14,8 +14,8 @@ import org.eclipse.aas4j.v3.model.Reference;
  * @author dglachs
  *
  * @param <T>
- * @see EventProcessor#getProducer(String, Class)
- * @see EventProcessor#getProducer(org.eclipse.aas4j.v3.model.Reference, Class)
+ * @see ConnectorMessaging#getProducer(String, Class)
+ * @see ConnectorMessaging#getProducer(org.eclipse.aas4j.v3.model.Reference, Class)
  */
 public interface EventProducer<T> {
 	/**
@@ -23,4 +23,8 @@ public interface EventProducer<T> {
 	 * @param payload
 	 */
 	void sendEvent(T payload);
+	/**
+	 * Explicitly stop the underlying messaging infrastructure
+	 */
+	void close();
 }

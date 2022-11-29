@@ -37,11 +37,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
+import at.srfg.iasset.connector.component.ConnectorMessaging;
+import at.srfg.iasset.connector.component.EventHandler;
+import at.srfg.iasset.connector.component.EventProducer;
 import at.srfg.iasset.connector.component.config.MarshallingFeature;
 import at.srfg.iasset.connector.component.impl.AASFull;
+import at.srfg.iasset.connector.component.impl.MessagingComponent;
 import at.srfg.iasset.connector.component.impl.HttpComponent;
 import at.srfg.iasset.connector.component.impl.RepositoryConnection;
-import at.srfg.iasset.connector.component.impl.event.EventProcessorImpl;
 import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationRepositoryController;
 import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationShellController;
 import at.srfg.iasset.repository.component.ModelChangeProvider;
@@ -50,9 +53,6 @@ import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
-import at.srfg.iasset.repository.event.EventHandler;
-import at.srfg.iasset.repository.event.EventProcessor;
-import at.srfg.iasset.repository.event.EventProducer;
 import at.srfg.iasset.repository.model.InMemoryStorage;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
@@ -72,7 +72,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	private final URI repositoryURI;
 	private final RepositoryConnection repository;
 	private ConnectorEndpoint httpEndpoint;
-	private EventProcessorImpl eventProcessor;
+	private MessagingComponent eventProcessor;
 	
 	private ModelChangeProvider changeProvider = ModelChangeProvider.getProvider();
 
@@ -82,7 +82,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		this.repository = RepositoryConnection.getConnector(repositoryURI);
 		// in the local service environment we may use this objectmapper
 		this.objectMapper = ClientFactory.getObjectMapper();
-		eventProcessor = new EventProcessorImpl(this.objectMapper, this);
+		eventProcessor = new MessagingComponent(this.objectMapper, this);
 		storage = new InMemoryStorage();
 //		environment = new InstanceEnvironment(changeProvider);
 		// The model update listener is currently not working!
@@ -477,6 +477,18 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 
 	@Override
+	public Object invokeOperation(Reference operation, Object parameter) {
+		Optional<Operation> theOperation = resolve(operation, Operation.class);
+		if ( theOperation.isPresent()) {
+			if (InstanceOperation.class.isInstance(theOperation.get())) {
+				InstanceOperation instanceOperation = InstanceOperation.class.cast(theOperation.get());
+				return instanceOperation.invoke(parameter);
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path, Consumer<String> consumer) {
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
@@ -768,7 +780,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		return new ArrayList<>();
 	}
 
-	public EventProcessor getEventProcessor() {
+	public ConnectorMessaging getEventProcessor() {
 		return eventProcessor;
 		
 	}

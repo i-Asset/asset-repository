@@ -1,7 +1,8 @@
-package at.srfg.iasset.connector.component.impl.event;
+package at.srfg.iasset.connector.component.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,31 +18,33 @@ import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.eclipse.aas4j.v3.model.EventPayload;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.ModelingKind;
+import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.StateOfEvent;
+import org.eclipse.aas4j.v3.model.SubmodelElement;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import at.srfg.iasset.connector.component.ConnectorMessaging;
+import at.srfg.iasset.connector.component.EventHandler;
+import at.srfg.iasset.connector.component.EventProducer;
+import at.srfg.iasset.connector.component.impl.event.EventConsumer;
+import at.srfg.iasset.connector.component.impl.event.EventElementProducer;
+import at.srfg.iasset.connector.component.impl.event.EventPayloadHelper;
 import at.srfg.iasset.connector.component.impl.event.kafka.EventElementConsumer;
-import at.srfg.iasset.connector.component.impl.event.kafka.EventElementProducer;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
-import at.srfg.iasset.repository.event.EventHandler;
-import at.srfg.iasset.repository.event.EventProcessor;
-import at.srfg.iasset.repository.event.EventProducer;
-import at.srfg.iasset.repository.model.helper.EventPayloadHelper;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
-public class EventProcessorImpl implements EventProcessor {
+public class MessagingComponent implements ConnectorMessaging {
 	final ObjectMapper objectMapper;
 	final ServiceEnvironment environment;
 	
-	final Map<String, EventElementConsumer> eventConsumer;
+	final Map<String, EventConsumer> eventConsumer;
 	
 	/**
 	 * Mapping for EventListeners, the reference used is the key!
 	 */
-//	final Map<EventPayloadHelper, Set<EventHandler<?>>> eventHandler = new HashMap<EventPayloadHelper,Set<EventHandler<?>>>();
 	final Map<EventPayloadHelper, Set<EventHandler<?>>> eventElementConsumer = new HashMap<EventPayloadHelper, Set<EventHandler<?>>>();
 	/**
 	 * Mapping for {@link EventProducer}
@@ -52,13 +55,63 @@ public class EventProcessorImpl implements EventProcessor {
 //	List<EventElementConsumer> consumers;
 	
 	ExecutorService executor;
-	List<MessageProducer> outgoingProducer = new ArrayList<EventProcessorImpl.MessageProducer>();
+	List<EventProducer<?>> outgoingProducer = new ArrayList<EventProducer<?>>();
 	// 
-	public EventProcessorImpl(ObjectMapper objectMapper, ServiceEnvironment environment) {
+	public MessagingComponent(ObjectMapper objectMapper, ServiceEnvironment environment) {
 		this.objectMapper = objectMapper;
 		this.environment = environment;
-		this.eventConsumer = new HashMap<String, EventElementConsumer>();
+		this.eventConsumer = new HashMap<String, EventConsumer>();
 	}
+	public void registerEventElement(Reference source) {
+		Optional<BasicEventElement> theSourceElement = environment.resolve(source, BasicEventElement.class);
+		if ( theSourceElement.isPresent()) {
+			Set<Reference> matchingReferences = new HashSet<Reference>();
+			BasicEventElement sourceElement = theSourceElement.get();
+			Optional<Referable> observedElement = environment.resolve(sourceElement.getObserved());
+			if ( observedElement.isPresent()) {
+				Optional<Reference> sourceSemantic = initializeSemantics(source, matchingReferences);
+				Optional<Reference> observedSemantic = initializeSemantics(sourceElement.getObserved(), matchingReferences);
+				if ( observedSemantic.isPresent()) {
+				}
+				// TODO: define subjectId
+				Optional<Reference> subjectId = Optional.empty();
+				// source and observed are mandatory
+				EventPayloadHelper helper = new EventPayloadHelper()
+						// reference to source, and the resolved source element
+						.source(source, sourceElement)
+						// reference to observed and the resolved observed element
+						.observed(sourceElement.getObserved(), observedElement.get())
+						// reference to source semantic
+						.sourceSemantic(sourceSemantic)
+						// reference to observed semantic
+						.observedSemantic(observedSemantic)
+						// reference to subject id
+						.subjectId(subjectId);
+				// keep the helper in the list, so that the helper can be found by EventHandlers ...
+				payloadHelper.add(helper);
+				
+			}
+			
+		}
+	}
+
+	private Optional<Reference> initializeSemantics(Reference reference, Set<Reference> matching) {
+		if ( reference != null ) {
+			matching.add(reference);
+			if ( !ReferenceTypes.GLOBAL_REFERENCE.equals(reference.getType())) {
+				Optional<SubmodelElement> semanticReference = environment.resolve(reference, SubmodelElement.class);
+				if ( semanticReference.isPresent() && semanticReference.get().getSemanticId() != null) {
+					return initializeSemantics(semanticReference.get().getSemanticId(), matching);
+				}
+			}
+			else {
+				return Optional.of(reference);
+			}
+		}
+		return Optional.empty();
+		
+	}
+
 	public void registerEventElement(BasicEventElement eventElement) {
 		// only instance elements may be registered to act!
 		if ( ModelingKind.INSTANCE.equals(eventElement.getKind()) ) {
@@ -73,24 +126,19 @@ public class EventProcessorImpl implements EventProcessor {
 			}
 		}	
 	}
-
+	
 	private void collectEventElement(BasicEventElement eventElement) {
-		EventPayloadHelper helper = new EventPayloadHelper(eventElement).initialize(environment); 
-		payloadHelper.add(helper);
-		// 
-		if (!eventConsumer.containsKey(eventElement.getMessageTopic())) {
-			EventElementConsumer consumer = new EventElementConsumer(
-					eventElement.getMessageTopic(), 
-					helper);
-			
-			eventConsumer.put(eventElement.getMessageTopic(), consumer);
-			
-		}
-		
+//		EventPayloadHelper helper = new EventPayloadHelper(eventElement).initialize(environment); 
+//		payloadHelper.add(helper);
+//		// 
+//		if (!eventConsumer.containsKey(eventElement.getMessageTopic())) {
+//			EventConsumer consumer = new EventElementConsumer(
+//					eventElement.getMessageTopic(), 
+//					helper);
+//			
+//			eventConsumer.put(eventElement.getMessageTopic(), consumer);
+//		}
 	}
-	
-	
-	
 
 	@Override
 	public <T> void registerHandler(String semanticId, EventHandler<T> handler) {
@@ -105,7 +153,7 @@ public class EventProcessorImpl implements EventProcessor {
 			public void accept(EventPayloadHelper t) {
 				if (t.isConsuming()) {
 					if (!eventConsumer.containsKey(t.getTopic())) {
-						EventElementConsumer consumer = new EventElementConsumer(t.getTopic(), t);
+						EventConsumer consumer = new EventElementConsumer(t.getTopic(), t);
 						eventConsumer.put(t.getTopic(), consumer);
 					}
 					t.addEventHandler(handler);
@@ -129,6 +177,14 @@ public class EventProcessorImpl implements EventProcessor {
 				}).findFirst();
 		if ( mapper.isPresent()) {
 			EventElementProducer<T> producer = new EventElementProducer<T>(mapper.get());
+			outgoingProducer.add(producer);
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					producer.close();
+				}
+			});
+
 			return (EventProducer<T>) producer;
 		}
 		
@@ -144,31 +200,6 @@ public class EventProcessorImpl implements EventProcessor {
 
 
 
-//	public void sendTestEvent(EventPayload payload) {
-//		try {
-//			String strPayload = objectMapper.writeValueAsString(payload);
-//			processIncomingMessage(strPayload, strPayload, strPayload);
-//		} catch (JsonProcessingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		Optional<EventHandler<?>> handler = findHandler(payload);
-//		handler.ifPresent(new Consumer<EventHandler<?>>() {
-//
-//			@Override
-//			public void accept(EventHandler<?> t) {
-//				acceptPayload(t, payload);
-//				
-//			}
-//			private <T> void acceptPayload(EventHandler<T> handler, Object payload) {
-//				T val = objectMapper.convertValue(payload, handler.getPayloadType());
-//				handler.onEventMessage(null, val);
-//			}
-//		});
-//		
-//	}
-
-	
 	private List<EventPayloadHelper> findPayloadHelper(EventPayload payload) {
 		List<Reference> matchingReferences = new ArrayList<Reference>();
 		if (payload.getObservableSemanticId() != null) {
@@ -218,33 +249,12 @@ public class EventProcessorImpl implements EventProcessor {
 		stopEventProducer();
 		
 	}
-	private void startEventProducer() {
-		payloadHelper.stream().filter(new Predicate<EventPayloadHelper>() {
-	
-			@Override
-			public boolean test(EventPayloadHelper t) {
-				return t.isActive() && t.isProducing();
-			}
-		})
-		.forEach(new Consumer<EventPayloadHelper>() {
-	
-			@Override
-			public void accept(EventPayloadHelper t) {
-				if ( t.getTopic() != null) {
-					MessageProducer runner = new MessageProducer(t);
-					outgoingProducer.add(runner);
-					runner.start(); 
-				}
-				
-			}
-		});
-	}
 	private void stopEventProducer() {
-		outgoingProducer.forEach(new Consumer<MessageProducer>() {
+		outgoingProducer.forEach(new Consumer<EventProducer<?>>() {
 
 			@Override
-			public void accept(MessageProducer t) {
-				t.stop();
+			public void accept(EventProducer t) {
+				t.close();
 				
 			}
 		});
@@ -288,8 +298,8 @@ public class EventProcessorImpl implements EventProcessor {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				for (EventElementConsumer consumer : eventConsumer.values()) {
-					consumer.shutdown();
+				for (EventConsumer consumer : eventConsumer.values()) {
+					consumer.close();
 				}
 				executor.shutdown();
 				try {
@@ -302,9 +312,10 @@ public class EventProcessorImpl implements EventProcessor {
 	}
 	private void stopEventConsumer() {
 		for (String topic : eventConsumer.keySet()) {
-			eventConsumer.get(topic).shutdown();
+			eventConsumer.get(topic).close();
 		}
 		eventConsumer.clear();
+		executor.shutdown();
 //		for (EventElementConsumer consumer : consumers) {
 //			consumer.shutdown();
 //			
@@ -312,54 +323,54 @@ public class EventProcessorImpl implements EventProcessor {
 //		executor.shutdown();
 //		consumers.clear();
 	}
-	private class MessageProducer implements Runnable {
-		private long timeOut;
-		EventElementProducer<Object> producer;
-		EventPayloadHelper payloadHelper;
-		
-		private Thread runner;
-		boolean alive = true;
-		
-		MessageProducer(EventPayloadHelper eventElement) {
-			// use 2 seconds by default
-			// TODO: use timeout from event element
-			this.payloadHelper = eventElement;
-			this.timeOut = 2000;
-					
-		}
-		
-		public void start() {
-			alive = true;
-			runner = new Thread(this);
-			runner.start();
-		}
-		public void stop() {
-			alive = false;
-			
-		}
-		
-		@Override
-		public void run() {
-			producer = new EventElementProducer<Object>(payloadHelper);
-			try {
-				while (alive) {
-					try {
-						// obtain the current values
-						Object value = payloadHelper.getPayload();
-						if ( value != null) {
-							producer.sendEvent(value);
-						}
-						Thread.sleep(timeOut);
-					} catch (InterruptedException e) {
-						
-					}
-				}
-			} finally {
-				producer.stop();
-			}
-			System.out.println("Exiting " + payloadHelper.getTopic());
-		}
-		
-	}
+//	private class MessageProducer implements Runnable {
+//		private long timeOut;
+//		EventElementProducer<Object> producer;
+//		EventPayloadHelper payloadHelper;
+//		
+//		private Thread runner;
+//		boolean alive = true;
+//		
+//		MessageProducer(EventPayloadHelper eventElement) {
+//			// use 2 seconds by default
+//			// TODO: use timeout from event element
+//			this.payloadHelper = eventElement;
+//			this.timeOut = 2000;
+//					
+//		}
+//		
+//		public void start() {
+//			alive = true;
+//			runner = new Thread(this);
+//			runner.start();
+//		}
+//		public void stop() {
+//			alive = false;
+//			
+//		}
+//		
+//		@Override
+//		public void run() {
+//			producer = new EventElementProducer<Object>(payloadHelper);
+//			try {
+//				while (alive) {
+//					try {
+//						// obtain the current values
+//						Object value = payloadHelper.getPayload();
+//						if ( value != null) {
+//							producer.sendEvent(value);
+//						}
+//						Thread.sleep(timeOut);
+//					} catch (InterruptedException e) {
+//						
+//					}
+//				}
+//			} finally {
+//				producer.stop();
+//			}
+//			System.out.println("Exiting " + payloadHelper.getTopic());
+//		}
+//		
+//	}
 
 }

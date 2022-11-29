@@ -2,7 +2,6 @@ package at.srfg.iasset.connector;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -14,14 +13,14 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
+import at.srfg.iasset.connector.component.ConnectorMessaging;
+import at.srfg.iasset.connector.component.EventHandler;
+import at.srfg.iasset.connector.component.EventProducer;
 import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
-import at.srfg.iasset.repository.event.EventHandler;
-import at.srfg.iasset.repository.event.EventProcessor;
-import at.srfg.iasset.repository.event.EventProducer;
 import at.srfg.iasset.repository.model.AASFaultSubmodel;
 import at.srfg.iasset.repository.model.Fault;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
@@ -216,7 +215,7 @@ public class Connector implements LocalEnvironment {
 		return serviceEnvironment.startEndpoint(port);
 	}
 	@Override
-	public EventProcessor getEventProcessor() {
+	public ConnectorMessaging getEventProcessor() {
 		return serviceEnvironment.getEventProcessor();
 	}
 	@Override

@@ -1,10 +1,8 @@
 package at.srfg.iasset.connector.component.impl.event.kafka;
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -15,28 +13,28 @@ import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.srfg.iasset.connector.component.impl.event.EventProcessorImpl;
-import at.srfg.iasset.repository.model.helper.EventPayloadHelper;
+import at.srfg.iasset.connector.component.impl.PayloadConsumer;
+import at.srfg.iasset.connector.component.impl.event.EventConsumer;
 
 /**
  * Consumer for incoming messages. Registers for a given topic
  * @author dglachs
  *
  */
-public class EventElementConsumer implements Runnable {
+public class EventElementConsumer implements EventConsumer {
     private Logger logger = LoggerFactory.getLogger(BasicEventElement.class);
     private Consumer<Long, String> consumer;
     private String topics;
     private String hosts;
     // 
-    private EventPayloadHelper payloadHelper;
+    private PayloadConsumer payloadConsumer;
     
     
     
-    public EventElementConsumer(String topic, EventPayloadHelper payloadHelper)  {
+    public EventElementConsumer(String topic, PayloadConsumer payloadConsumer)  {
     	this.topics = topic;
     	this.hosts = "iasset.sensornet.salzburgresearch.at:9092";
-    	this.payloadHelper = payloadHelper;
+    	this.payloadConsumer = payloadConsumer;
     }
     
 
@@ -53,19 +51,26 @@ public class EventElementConsumer implements Runnable {
 					data.put("offset", record.offset());
 					data.put("value", record.value());
 					logger.trace(data.toString());
-					// processor.processIncomingMessage(record);
-					payloadHelper.processIncomingMessage(record.topic(), "" + record.key(), record.value());
+					// notify the components messaging environment,that a new event message arrived!
+					payloadConsumer.processIncomingMessage(record.topic(), "" + record.key(), record.value());
 					consumer.commitAsync();
 				}
 			}
 		} catch (WakeupException e) {
-			// ignore for shutdown
+			logger.debug("Closing Consumer for topic:" + topics);
 		} finally {
 			consumer.close();
+			logger.debug("Consumer closed for topic:" + topics);
 		}
 	}
     public void shutdown() {
-        consumer.wakeup();
+    	if ( consumer!=null ) {
+    		consumer.wakeup();
+    	}
+    }
+    @Override
+    public void close() {
+    	shutdown();
     }
 
   

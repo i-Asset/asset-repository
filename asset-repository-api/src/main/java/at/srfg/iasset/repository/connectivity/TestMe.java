@@ -13,7 +13,7 @@ import at.srfg.iasset.semantic.model.ConceptBase;
 public class TestMe {
 
 	public static void main(String[] args) {
-		ConnectionProvider c = ConnectionProvider.getConnection("http://localhost:8081/");
+		ConnectionProvider c = ConnectionProvider.getConnection("https://192.168.48.92/");
 		SemanticLookupService lookup = c.getSemanticLookupInterface();
 		
 		ConceptBase base= lookup.getConcept("0173-1#01-ADG629#002");

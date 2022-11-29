@@ -3,6 +3,12 @@ package at.srfg.iasset.connector.component;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import at.srfg.iasset.connector.Connector;
+/**
+ * Represents the REST endpoint of the I4.0 {@link Connector}. 
+ * @author dglachs
+ *
+ */
 public interface ConnectorEndpoint {
 	
 	/**
