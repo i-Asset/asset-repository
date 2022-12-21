@@ -1,4 +1,4 @@
-package at.srfg.iasset.connector.component.impl.conn;
+package at.srfg.iasset.connector.component.endpoint.rest;
 
 import java.net.URI;
 import java.util.Optional;
@@ -14,7 +14,7 @@ import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
 import org.eclipse.aas4j.v3.model.impl.DefaultEndpoint;
 
-import at.srfg.iasset.connector.component.impl.RepositoryConnection;
+import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.api.IAssetDirectory;
 import at.srfg.iasset.repository.api.SubmodelRepositoryInterface;

@@ -1,4 +1,4 @@
-package at.srfg.iasset.connector.component.impl;
+package at.srfg.iasset.connector.component.endpoint;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,8 +21,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.config.MarshallingFeature;
-import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationRepositoryController;
-import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationShellController;
+import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministrationRepositoryController;
+import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministrationShellController;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;

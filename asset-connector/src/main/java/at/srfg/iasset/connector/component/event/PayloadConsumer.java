@@ -1,4 +1,4 @@
-package at.srfg.iasset.connector.component.impl;
+package at.srfg.iasset.connector.component.event;
 
 public interface PayloadConsumer {
 	/**
@@ -8,6 +8,10 @@ public interface PayloadConsumer {
 	 * @param message The message payload as string
 	 */
 	void processIncomingMessage(String topic, String key, String message);
+	/**
+	 * Stop listening for new incoming messages
+	 */
+	void stop();
 	
 
 }

@@ -76,34 +76,11 @@ public class InstanceEnvironment implements Environment {
 
 			@Override
 			public void accept(Submodel t) {
-				notifyDeletion(t);
+				// 
 			}
 		});
 		sub.setId(id);
 		Submodel stored = storage.persist(sub);
-		notifyCreation(stored);
-	}
-	private <T extends Referable> void notifyDeletion(T deletedElement) {
-		new EventElementCollector().collect(deletedElement).forEach(new Consumer<BasicEventElement>() {
-
-			@Override
-			public void accept(BasicEventElement t) {
-				changeProvider.eventElementRemoved(t);
-			}
-		});
-
-
-	}
-	private <T extends Referable> void notifyCreation(T createdElement) {
-		new EventElementCollector().collect(createdElement).forEach(new Consumer<BasicEventElement>() {
-
-			@Override
-			public void accept(BasicEventElement t) {
-				changeProvider.eventElementAdded(t);
-			}
-		});
-
-
 	}
 	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier) {
 		Optional<AssetAdministrationShell> aas = getAssetAdministrationShell(aasIdentifier);

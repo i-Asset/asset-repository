@@ -11,8 +11,8 @@ import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.ConnectorMessaging;
-import at.srfg.iasset.connector.component.EventHandler;
-import at.srfg.iasset.connector.component.EventProducer;
+import at.srfg.iasset.connector.component.event.EventHandler;
+import at.srfg.iasset.connector.component.event.EventProducer;
 import at.srfg.iasset.repository.component.ModelListener;
 
 public interface LocalEnvironment {

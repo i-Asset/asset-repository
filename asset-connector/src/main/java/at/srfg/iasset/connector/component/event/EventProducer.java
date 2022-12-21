@@ -1,6 +1,8 @@
-package at.srfg.iasset.connector.component;
+package at.srfg.iasset.connector.component.event;
 
 import org.eclipse.aas4j.v3.model.Reference;
+
+import at.srfg.iasset.connector.component.ConnectorMessaging;
 
 /**
  * Interface for sending events to the outer messaging interface.
@@ -23,6 +25,12 @@ public interface EventProducer<T> {
 	 * @param payload
 	 */
 	void sendEvent(T payload);
+	/**
+	 * Send the provided (typed) payload object and register for completion notification
+	 * @param payload
+	 * @param callback
+	 */
+	void sendEvent(T payload, Callback<T> callback);
 	/**
 	 * Explicitly stop the underlying messaging infrastructure
 	 */

@@ -14,8 +14,8 @@ import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.ConnectorMessaging;
-import at.srfg.iasset.connector.component.EventHandler;
-import at.srfg.iasset.connector.component.EventProducer;
+import at.srfg.iasset.connector.component.event.EventHandler;
+import at.srfg.iasset.connector.component.event.EventProducer;
 import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
@@ -159,7 +159,6 @@ public class Connector implements LocalEnvironment {
 						}});
 			
 			
-			connector.getEventProcessor().startEventProcessing();
 		
 
 			EventProducer<Fault> faultProducer = connector.getMessageProducer(
@@ -174,7 +173,7 @@ public class Connector implements LocalEnvironment {
 			f.setShortText("this is a short");
 			faultProducer.sendEvent(f);
 ;			System.in.read();
-			connector.getEventProcessor().stopEventProcessing();
+//			connector.getEventProcessor().stopEventProcessing();
 			connector.stop();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block

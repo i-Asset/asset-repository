@@ -1,4 +1,4 @@
-package at.srfg.iasset.connector.component.impl.event;
+package at.srfg.iasset.connector.component.event;
 
 /**
  * Interface for event consumer. The {@link EventConsumer} listens 

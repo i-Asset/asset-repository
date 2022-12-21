@@ -1,4 +1,4 @@
-package at.srfg.iasset.connector.component.impl.jersey;
+package at.srfg.iasset.connector.component.endpoint.controller;
 
 import java.util.List;
 

@@ -47,6 +47,9 @@ public final class Sender {
 			logger.error(e.getLocalizedMessage());
 		}
 	}
+	public void sendMessage(EventPayload eventPayload, Callback callback) {
+		
+	}
 	public void sendMessage(String payload, Callback callback) {
 		ProducerRecord<Long, String> record = new ProducerRecord<Long, String>(topic, payload);
 		try {

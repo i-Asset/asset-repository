@@ -1,12 +1,14 @@
-package at.srfg.iasset.connector.component.impl.event;
+package at.srfg.iasset.connector.component.impl.event.kafka;
 
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import at.srfg.iasset.connector.component.EventProducer;
-import at.srfg.iasset.connector.component.impl.event.kafka.Sender;
+import at.srfg.iasset.connector.component.event.Callback;
+import at.srfg.iasset.connector.component.event.EventProducer;
+import at.srfg.iasset.connector.component.impl.event.EventPayloadHelper;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 
 public class EventElementProducer<T> implements EventProducer<T>{
@@ -36,6 +38,30 @@ public class EventElementProducer<T> implements EventProducer<T>{
 	public void sendEvent(T payload) {
 		try {
 			sender.sendMessage(eventElement.asPayload(payloadObjectAsString(payload)));
+		} catch (JsonProcessingException e) {
+			logger.error(e.getMessage());
+		}
+		
+	}
+	/**
+	 * use the messaging infrastructure to send the (typed) payload
+	 */
+	@Override
+	public void sendEvent(T payload, Callback<T> callBack) {
+		try {
+			sender.sendMessage(eventElement.asPayload(payloadObjectAsString(payload)), new org.apache.kafka.clients.producer.Callback() {
+				
+				@Override
+				public void onCompletion(RecordMetadata metadata, Exception exception) {
+					if  (exception == null) {
+						// notify callback
+						callBack.deliveryComplete(payload);
+					}
+					else {
+						// 
+					}
+				}
+			});
 		} catch (JsonProcessingException e) {
 			logger.error(e.getMessage());
 		}

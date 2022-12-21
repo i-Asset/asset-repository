@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -29,8 +31,11 @@ import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Base64Utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,15 +43,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.ConnectorMessaging;
-import at.srfg.iasset.connector.component.EventHandler;
-import at.srfg.iasset.connector.component.EventProducer;
 import at.srfg.iasset.connector.component.config.MarshallingFeature;
+import at.srfg.iasset.connector.component.endpoint.HttpComponent;
+import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
+import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministrationRepositoryController;
+import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministrationShellController;
+import at.srfg.iasset.connector.component.event.EventHandler;
+import at.srfg.iasset.connector.component.event.EventProducer;
+import at.srfg.iasset.connector.component.event.MessagingComponent;
 import at.srfg.iasset.connector.component.impl.AASFull;
-import at.srfg.iasset.connector.component.impl.MessagingComponent;
-import at.srfg.iasset.connector.component.impl.HttpComponent;
-import at.srfg.iasset.connector.component.impl.RepositoryConnection;
-import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationRepositoryController;
-import at.srfg.iasset.connector.component.impl.jersey.AssetAdministrationShellController;
 import at.srfg.iasset.repository.component.ModelChangeProvider;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
@@ -60,9 +65,11 @@ import at.srfg.iasset.repository.model.helper.SubmodelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
 import at.srfg.iasset.repository.model.helper.visitor.ReferenceCollector;
+import at.srfg.iasset.repository.model.helper.visitor.SubmodelElementCollector;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnvironment {
+	private final Logger logger = LoggerFactory.getLogger(LocalServiceEnvironment.class);
 //	private InstanceEnvironment environment;
 	private Persistence storage;
 	
@@ -88,56 +95,60 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		// The model update listener is currently not working!
 		changeProvider.addListener(new ModelListener() {
 			
-
+			@Override
+			public void propertyRemoved(String submodelIdentifier, String path, Property property) {
+				logger.debug("Property Element removed at path {}", path);
+			}
 			
 			@Override
-			public void propertyRemoved(String path, Property property) {
-				System.out.println("Element removed: "+ path);
+			public void propertyCreated(String submodelIdentifier, String path, Property property) {
+				logger.debug("Property Element created at path {}", path);
 				
 			}
 			
 			@Override
-			public void propertyCreated(String path, Property property) {
-				// TODO Auto-generated method stub
+			public void operationRemoved(String submodelIdentifier, String path, Operation operation) {
+				logger.debug("Operation Element removed at path {}", path);
 				
 			}
 			
 			@Override
-			public void operationRemoved(String path, Operation operation) {
-				// TODO Auto-generated method stub
+			public void operationCreated(String submodelIdentifier, String path, Operation operation) {
+				logger.debug("Operation Element created at path {}", path);
 				
 			}
 			
 			@Override
-			public void operationCreated(String path, Operation operation) {
-				// TODO Auto-generated method stub
+			public void eventElementRemoved(String submodelIdentifier, String path, BasicEventElement eventElement) {
+				logger.debug("Event Element removed at path {}", path);
 				
 			}
 			
 			@Override
-			public void eventElementRemoved(String path, BasicEventElement eventElement) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void eventElementCreated(String path, BasicEventElement eventElement) {
+			public void eventElementCreated(String submodelIdentifier, String path, BasicEventElement eventElement) {
 				// tell the processor that a new event element has been added
-				eventProcessor.registerEventElement(eventElement);
+				logger.debug("Event Element created at path {}", path);
 				
 			}
 
 			@Override
-			public void submodelElementCreated(String path, SubmodelElement element) {
+			public void submodelElementCreated(String submodelIdentifier, String path, SubmodelElement element) {
+				logger.debug("Submodel Element created at path {}", path);
+				
+			}
+			@Override
+			public void submodelElementRemoved(String submodelIdentifier, String path, SubmodelElement element) {
+				logger.debug("Submodel Element Removed at path {}", path);
 				System.out.println("Element created: " + path + " - " + element.getIdShort());
 				
 			}
 
 			@Override
-			public void dataElementChanged(String path, DataElement property) {
+			public void dataElementChanged(String submodelIdentifier, String path, DataElement property) {
 				System.out.println("Property changed: " + path + " - " + property.getIdShort());
 				
 			}
+
 		});
 		// TODO: REMOVE test data!
 		setAssetAdministrationShell(AASFull.AAS_1.getId(), AASFull.AAS_1);
@@ -257,7 +268,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		Optional<Submodel> toDelete = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( toDelete.isPresent() ) {
 			storage.deleteSubmodelById(submodelIdentifier);
-			notifyDeletion(toDelete.get());
+			notifyDeletion(toDelete.get(), "", toDelete.get());
 			return true;
 		}
 		return false;
@@ -292,14 +303,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 				@Override
 				public void accept(SubmodelElement t) {
-					new EventElementCollector().collect(t).forEach(new Consumer<BasicEventElement>() {
-
-						@Override
-						public void accept(BasicEventElement t) {
-							changeProvider.eventElementRemoved(t);
-						}});
-					
-					
+					notifyDeletion(submodel.get(), path, t);
 				}
 			});
 			return deleted.isPresent();
@@ -312,6 +316,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			SubmodelElement body) {
 		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( submodel.isPresent()) {
+			// 
 			
 			SubmodelHelper helper = new SubmodelHelper(submodel.get());
 			Optional<SubmodelElement> oldElement = helper.removeSubmodelElementAt(idShortPath);
@@ -319,17 +324,18 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 				@Override
 				public void accept(SubmodelElement t) {
-					changeProvider.elementRemoved(t);
+					notifyDeletion(submodel.get(), idShortPath, t);
 					
 				}
 			});
 
 			Optional<SubmodelElement> added = helper.setSubmodelElementAt(idShortPath, body);
 			added.ifPresent(new Consumer<SubmodelElement>() {
+				
 
 				@Override
 				public void accept(SubmodelElement t) {
-					changeProvider.elementCreated(t);
+					notifyCreation(submodel.get(), idShortPath, t);
 					
 				}
 			});
@@ -356,12 +362,12 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			
 			@Override
 			public void accept(Submodel t) {
-				notifyDeletion(t);
+				notifyDeletion(submodel, "", t);
 			}
 		});
 		submodel.setId(submodelIdentifier);
 		Submodel stored = storage.persist(submodel);
-		notifyCreation(stored);
+		notifyCreation(submodel, "", stored);
 		return stored;
 	}
 	@Override
@@ -380,12 +386,14 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 				
 				@Override
 				public void accept(Submodel t) {
-					notifyDeletion(t);
+					notifyDeletion(submodel, "", t);
 				}
 			});
+			
 			submodel.setId(submodelIdentifier);
 			Submodel stored = storage.persist(submodel);
-			notifyCreation(stored);
+			notifyCreation(submodel, "", stored);
+			return stored;
 		}
 
 		return null;
@@ -415,7 +423,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			JsonNode node = ClientFactory.getObjectMapper().valueToTree(value);
 			Optional<SubmodelElement> element = new SubmodelHelper(sub.get()).setValueAt(path, node);
 			if ( element.isPresent()) {
-				changeProvider.elementChanged(element.get());
+				notifyChange(sub.get(), path, element.get());
 			}
 		}
 		
@@ -580,7 +588,9 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		}
 		return false;
 	}
-	
+	/**
+	 * Unregister all registered {@link AssetAdministrationShell}s of the current I4.0 Component from the repository. 
+	 */
 	public void unregister() {
 		registrations.forEach(new Consumer<String>() {
 
@@ -591,6 +601,10 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		});
 		registrations.clear();
 	}
+	/**
+	 * Unregister the {@link AssetAdministrationShell} from the repository.
+	 * @param aasIdentifier
+	 */
 	public void unregister(String aasIdentifier) {
 		if ( registrations.contains(aasIdentifier)) {
 			if (repository.unregister(aasIdentifier)) {
@@ -628,29 +642,82 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		rootConfig.register(AssetAdministrationRepositoryController.class);
 		return rootConfig;
 	}
-	private <T extends Referable> void notifyDeletion(T deletedElement) {
-		new EventElementCollector().collect(deletedElement).forEach(new Consumer<BasicEventElement>() {
+	
+	private void notifyChange(Submodel submodel, String path, SubmodelElement submodelElement) {
+		Map<String, SubmodelElement> elements = new SubmodelElementCollector().collectMap(path, submodelElement);
+		
+		elements.forEach(new BiConsumer<String, SubmodelElement>() {
 
 			@Override
-			public void accept(BasicEventElement t) {
-				changeProvider.eventElementRemoved(t);
+			public void accept(String t, SubmodelElement u) {
+				if ( DataElement.class.isInstance(u)) {
+					changeProvider.valueChanged(submodel.getId(), path, DataElement.class.cast(u));
+				}
+			
+			}
+		});		
+	}
+
+	private <T extends Referable> void notifyDeletion(Submodel submodel, String pathToElement, T deletedElement) {
+		// check for the messaging component
+		Map<String, SubmodelElement> elements = new SubmodelElementCollector().collectMap(pathToElement, deletedElement);
+		
+		elements.forEach(new BiConsumer<String, SubmodelElement>() {
+
+			@Override
+			public void accept(String t, SubmodelElement u) {
+				if ( BasicEventElement.class.isInstance(u)) {
+					changeProvider.eventElementRemoved(t, pathToElement, null);
+					// handle removal from messaging
+					Reference elementRef = new SubmodelHelper(submodel).getReference(pathToElement);
+					eventProcessor.removeEventElement(elementRef);
+					
+				}
+				else if ( Operation.class.isInstance(u)) {
+					changeProvider.operationRemoved(submodel.getId(), pathToElement, Operation.class.cast(u));
+				}
+				else if ( Property.class.isInstance(u)) {
+					changeProvider.propertyRemoved(submodel.getId(), pathToElement, Property.class.cast(u));
+				} 
+				else {
+					changeProvider.elementRemoved(submodel.getId(), pathToElement, u);
+				}
+				
+			}
+		});
+	}
+	private <T extends Referable> void notifyCreation(final Submodel submodel, String pathToElement, T createdElement) {
+		new SubmodelElementCollector().collectMap(pathToElement, createdElement).forEach(new BiConsumer<String, SubmodelElement>() {
+
+			@Override
+			public void accept(String t, SubmodelElement u) {
+				if ( BasicEventElement.class.isInstance(u)) {
+					changeProvider.eventElementCreated(submodel.getId(), t, BasicEventElement.class.cast(u));
+					Reference elementRef = new SubmodelHelper(submodel).getReference(t);
+					eventProcessor.registerEventElement(elementRef);
+					
+				}
+				else if ( Operation.class.isInstance(u)) {
+					changeProvider.operationCreated(submodel.getId(), t, Operation.class.cast(u));
+				}
+				else if ( Property.class.isInstance(u)) {
+					changeProvider.propertyCreated(submodel.getId(), t, Property.class.cast(u));
+				}
+				else {
+					changeProvider.elementCreated(submodel.getId(), t, u);
+				}
+					
+				
 			}
 		});
 
 
 	}
-	private <T extends Referable> void notifyCreation(T createdElement) {
-		new EventElementCollector().collect(createdElement).forEach(new Consumer<BasicEventElement>() {
-
-			@Override
-			public void accept(BasicEventElement t) {
-				changeProvider.eventElementAdded(t);
-			}
-		});
-
-
-	}
-
+	/**
+	 * Create a {@link ResourceConfig} used for dedicated {@link HttpHandler}.
+	 * 
+	 * 
+	 */
 	private ResourceConfig getShellConfig(AssetAdministrationShell forShell) {
 		ResourceConfig shellConfig = new ResourceConfig();
 		final ServiceEnvironment injectedEnvironment = this;

@@ -1,14 +1,16 @@
-package at.srfg.iasset.connector.component.impl;
+package at.srfg.iasset.connector.component.endpoint;
 
 import java.net.URI;
 import java.util.Optional;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
+import org.eclipse.aas4j.v3.model.Operation;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
-import at.srfg.iasset.connector.component.impl.conn.RepositoryRestConnector;
+import at.srfg.iasset.connector.component.endpoint.rest.RepositoryRestConnector;
+import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 
 public interface RepositoryConnection {
 	/**
@@ -47,7 +49,25 @@ public interface RepositoryConnection {
 	
 	
 	<T extends SubmodelElement> Optional<T> getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path, Class<T> elementClass);
+	/**
+	 * Invoke an {@link Operation}
+	 * @param aasIdentifier The (active) {@link AssetAdministrationShell} referencing the {@link Submodel}
+	 * @param submodelIdentifier The {@link Submodel} 
+	 * @param path The path pointing to the Operation
+	 * @param parameter The Operations parameters
+	 * @return The result of the invocation.
+	 */
 	Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter);
+	/**
+	 * Obtain a connection to the repository service. The required URI denotes the base URI. The {@link RepositoryConnection}
+	 * acts as s shortcut to
+	 * <ul>
+	 * <li><code>IAssetDirectoryService</code>
+	 * <li>IAssetAdministrationShellRepositoryInterface
+	 * </ul>
+	 * @param uri The base URI of the repository service. 
+	 * @return 
+	 */
 	static RepositoryConnection getConnector(URI uri) {
 		return new RepositoryRestConnector(uri);
 	}

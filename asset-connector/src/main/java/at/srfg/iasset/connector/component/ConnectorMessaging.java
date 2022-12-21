@@ -2,6 +2,9 @@ package at.srfg.iasset.connector.component;
 
 import org.eclipse.aas4j.v3.model.Reference;
 
+import at.srfg.iasset.connector.component.event.EventHandler;
+import at.srfg.iasset.connector.component.event.EventProducer;
+
 /**
  * The EventProcessor is the mediator between the Asset/Application Connector
  * and the outer messaging infrastructure 

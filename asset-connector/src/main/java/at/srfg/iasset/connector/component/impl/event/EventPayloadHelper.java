@@ -2,11 +2,12 @@ package at.srfg.iasset.connector.component.impl.event;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.eclipse.aas4j.v3.model.BasicEventElement;
@@ -20,12 +21,11 @@ import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.srfg.iasset.connector.component.EventHandler;
-import at.srfg.iasset.connector.component.impl.PayloadConsumer;
+import at.srfg.iasset.connector.component.event.EventConsumer;
+import at.srfg.iasset.connector.component.event.EventHandler;
+import at.srfg.iasset.connector.component.event.PayloadConsumer;
 import at.srfg.iasset.connector.component.impl.event.kafka.EventElementConsumer;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
-import at.srfg.iasset.repository.model.custom.InstanceOperation;
-import io.swagger.v3.oas.annotations.Operation;
 
 public class EventPayloadHelper implements PayloadConsumer {
 	// source
@@ -38,65 +38,84 @@ public class EventPayloadHelper implements PayloadConsumer {
 	Reference observedSemantic;
 	// should be reference to the event element responsible for sending
 	Reference subjectId;
-	private List<Reference> matchingReferences;
+	/**
+	 * Set of references which determine when a incoming message is to be 
+	 * handled.
+	 */
+	private Set<Reference> matchingReferences;
 	private Set<EventHandler<?>> handler;
 	private EventConsumer consumer;
 	ObjectMapper objectMapper = ClientFactory.getObjectMapper();
 
 	public EventPayloadHelper() {
-		this.matchingReferences = new ArrayList<Reference>();
-
+		this.matchingReferences = new HashSet<Reference>();
+		this.handler = new HashSet<EventHandler<?>>();
 		
 	}
 	public EventPayloadHelper source(Reference source, BasicEventElement sourceElement) {
 		this.source = source;
+		this.sourceElement = sourceElement;
+		this.matchingReferences.add(source);
 		return this;
 	}
 	public EventPayloadHelper sourceSemantic(Optional<Reference> sourceSemantic) {
-		this.sourceSemantic = sourceSemantic.orElse(null);
+		sourceSemantic.ifPresent(new Consumer<Reference>() {
+
+			@Override
+			public void accept(Reference t) {
+				EventPayloadHelper.this.sourceSemantic = t;
+				EventPayloadHelper.this.matchingReferences.add(t);
+				
+			}});
 		return this;
 	}
+	/**
+	 * Build 
+	 * @param observed
+	 * @param observedElement
+	 * @return
+	 */
 	public EventPayloadHelper observed(Reference observed, Referable observedElement) {
+		// TODO check null
 		this.observed = observed;
+		this.matchingReferences.add(observed);
 		this.observedElement = observedElement;
 		return this;
 	}
 	public EventPayloadHelper observedSemantic(Optional<Reference> observedSemantic) {
-		this.observedSemantic = observedSemantic.orElse(null);
+		observedSemantic.ifPresent(new Consumer<Reference>() {
+
+			@Override
+			public void accept(Reference t) {
+				EventPayloadHelper.this.observedSemantic = t;
+				EventPayloadHelper.this.matchingReferences.add(t);
+				
+			}});
 		return this;
 	}
 	public EventPayloadHelper subjectId(Optional<Reference> subjectId) {
-		this.subjectId = subjectId.orElse(null);
+		subjectId.ifPresent(new Consumer<Reference>() {
+
+			@Override
+			public void accept(Reference t) {
+				EventPayloadHelper.this.subjectId = t;
+				EventPayloadHelper.this.matchingReferences.add(t);
+				
+			}});
 		return this;
+	}
+	public EventPayloadHelper messageBroker(Optional<Reference> messageBroker) {
+		// 
+		
+		return this;
+		
 	}
 	public EventPayloadHelper matches(Reference ... reference) {
 		this.matchingReferences.addAll(Arrays.asList(reference));
 		return this;
 	}
 	
-	public EventPayloadHelper initialize() {
-		// in case the observed element is an observation
-		if ( Operation.class.isInstance(observedElement)) {
-			// add event handler which invokes the 
-			addEventHandler( new EventHandler<Object>() {
 
-				@Override
-				public void onEventMessage(EventPayload eventPayload, Object payload) {
-					if ( InstanceOperation.class.isInstance(EventPayloadHelper.this.observedElement)) {
-						InstanceOperation.class.cast(EventPayloadHelper.this.observedElement).invoke(payload);
-					}
-				}
-
-				@Override
-				public Class<Object> getPayloadType() {
-					return Object.class;
-				}
-			});
-		}
-
-		return this;
-	}
-	
 	public void addEventHandler(EventHandler<?> handler) {
 		this.handler.add(handler);
 		// check whether the consumer is already present
@@ -120,6 +139,7 @@ public class EventPayloadHelper implements PayloadConsumer {
 	}
 	
 	public void removeHandler(EventHandler<?> handler) {
+		
 		// TODO: implement
 	}
 	public void processIncomingMessage(String topic, String key, String message) {
@@ -188,6 +208,13 @@ public class EventPayloadHelper implements PayloadConsumer {
 		.timeStamp(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE))
 		.topic(sourceElement.getMessageTopic())
 		.build();
+	}
+	@Override
+	public void stop() {
+		if (consumer != null) {
+			consumer.close();
+		}
+		
 	}
 	
 }

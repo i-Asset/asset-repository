@@ -1,12 +1,10 @@
 package at.srfg.iasset.repository.component;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.EventElement;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.ReferenceTypes;

@@ -13,8 +13,8 @@ import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.srfg.iasset.connector.component.impl.PayloadConsumer;
-import at.srfg.iasset.connector.component.impl.event.EventConsumer;
+import at.srfg.iasset.connector.component.event.EventConsumer;
+import at.srfg.iasset.connector.component.event.PayloadConsumer;
 
 /**
  * Consumer for incoming messages. Registers for a given topic

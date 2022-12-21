@@ -7,15 +7,14 @@ import java.util.function.Consumer;
 import org.eclipse.aas4j.v3.dataformat.core.visitor.AssetAdministrationShellElementWalkerVisitor;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.BasicEventElement;
-import org.eclipse.aas4j.v3.model.Identifiable;
 import org.eclipse.aas4j.v3.model.Key;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Operation;
 import org.eclipse.aas4j.v3.model.Property;
+import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.aas4j.v3.model.impl.DefaultReference;
@@ -32,7 +31,7 @@ public class ReferenceCollector {
 		
 	}
 	
-    public <T extends Identifiable> Set<Reference> collect(T root) {
+    public <T extends Referable> Set<Reference> collect(T root) {
         Visitor visitor = new Visitor();
         visitor.visit(root);
         return visitor.element;
