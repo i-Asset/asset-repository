@@ -12,6 +12,15 @@ node('iasset-jenkins-slave') {
             git(url: 'git@github.com:i-Asset/asset-repository.git', branch: env.BRANCH_NAME)
         }
 
+        stage('Build Dependencies') {
+            sh 'rm -rf aas4j'
+            sh 'git clone git@github.com:i-Asset/aas4j'
+            dir('aas4j') {
+                sh 'git checkout ' + env.BRANCH_NAME
+                sh 'mvn clean install'
+            }
+        }
+
         stage('Build Java') {
             sh 'mvn clean install -DskipTests'
         }
