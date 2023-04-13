@@ -53,7 +53,7 @@ class LocalServiceEnvironmentTest {
             } ;
         }, "IOException was expected");
 
-        Assertions.assertEquals("Address already in use: bind", thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().startsWith("Address already in use"));
 
         stopEndpoint();
         stopEventProcessor();
