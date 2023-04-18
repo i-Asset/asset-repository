@@ -2,12 +2,14 @@ package at.srfg.iasset.repository.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.aas4j.v3.model.Identifiable;
 import org.eclipse.aas4j.v3.model.Key;
 import org.eclipse.aas4j.v3.model.KeyTypes;
@@ -20,6 +22,12 @@ import org.eclipse.aas4j.v3.model.impl.DefaultReference;
 import at.srfg.iasset.repository.config.AASModelHelper;
 
 public class ReferenceUtils {
+	public static Iterator<Key> keyIterator(Reference ref) {
+		if (ref == null || ref.getKeys() == null || ref.getKeys().isEmpty()) {
+			return null;
+		}
+		return ref.getKeys().iterator();
+	}
 	public static Key firstKey(Reference ref) {
 		if (ref == null || ref.getKeys() == null || ref.getKeys().isEmpty()) {
 			return null;
@@ -117,7 +125,7 @@ public class ReferenceUtils {
      * case element is an instance of Identifiable, the returned reference will
      * only contain one key pointing directly to the element.
      * 
-     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of "original" ReflectionHelper!
      * 
      */
     public static Reference toReference(Reference parent, Referable element, Class<? extends Reference> referenceType, Class<? extends Key> keyType) {
@@ -146,7 +154,7 @@ public class ReferenceUtils {
      * @param reference the reference to clone
      * @return the cloned reference
      * 
-     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of "original" ReflectionHelper
      */
     public static Reference clone(Reference reference) {
         return clone(reference, AASModelHelper.getDefaultImplementation(Reference.class), AASModelHelper.getDefaultImplementation(Key.class));
@@ -162,7 +170,7 @@ public class ReferenceUtils {
      *
      * @return the cloned reference
      * 
-     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of "original" ReflectionHelper
      * 
      */
     public static Reference clone(Reference reference, Class<? extends Reference> referenceType, Class<? extends Key> keyType) {
@@ -198,7 +206,7 @@ public class ReferenceUtils {
      * case element is an instance of Identifiable, the returned reference will
      * only contain one key pointing directly to the element.
      * 
-     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of "original" ReflectionHelper
      */
     public static Reference toReference(Reference parent, Referable element) {
         return toReference(parent,
@@ -235,7 +243,7 @@ public class ReferenceUtils {
      * null if no matching Class/interface could be found. It also returns
      * abstract types like {@link KeyTypes#SUBMODEL_ELEMENT} or {@link KeyTypes#DATA_ELEMENT}
      * 
-     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of "original" ReflectionHelper
      */
     public static Class<?> keyTypeToClass(KeyTypes key) {
         return Stream.concat(AASModelHelper.INTERFACES.stream(), AASModelHelper.INTERFACES_WITHOUT_DEFAULT_IMPLEMENTATION.stream())
@@ -251,7 +259,7 @@ public class ReferenceUtils {
      * i.e. abstract types like SUBMODEL_ELEMENT or DATA_ELEMENT are never
      * returned; null if there is no corresponding KeyElements type
      * 
-     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of {@link ReflectionHelper}
+     * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of "original" ReflectionHelper
      * 
      */
     public static KeyTypes referableToKeyType(Referable referable) {
@@ -272,5 +280,5 @@ public class ReferenceUtils {
 		}
 		return path.toString();
 	}
-
+	 
 }
