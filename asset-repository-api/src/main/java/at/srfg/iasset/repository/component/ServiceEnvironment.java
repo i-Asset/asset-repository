@@ -5,12 +5,17 @@ import java.util.Optional;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
+import org.eclipse.aas4j.v3.model.Identifiable;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
-
+/**
+ * 
+ * @author dglachs
+ *
+ */
 public interface ServiceEnvironment {
 	/**
 	 * Obtain a {@link Submodel}. The {@link Submodel} is only returned when it exists and is assigned to the {@link AssetAdministrationShell}
@@ -49,7 +54,7 @@ public interface ServiceEnvironment {
 	 */
 	boolean deleteAssetAdministrationShellById(String identifier);
 	/**
-	 * Remove a {@link Submodel} (reference) from the 
+	 * Remove a {@link Submodel} (reference) from the AAS
 	 * @param aasIdentifier
 	 * @param ref The reference to delete
 	 * @return
@@ -100,6 +105,13 @@ public interface ServiceEnvironment {
 	 * @return
 	 */
 	Optional<SubmodelElement> getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path);
+	/**
+	 * {@link Submodel} is {@link Identifiable}, therefore it can be processed without 
+	 * 
+	 * @param submodelIdentifier The identifier pointing to the {@link Submodel}
+	 * @param path The idShort-path pointing to the requested {@link SubmodelElement}
+	 * @return The {@link Submodel} or {@link Optional#empty()} when not found
+	 */
 	Optional<SubmodelElement> getSubmodelElement(String submodelIdentifier, String path);
 
 	/**
@@ -116,7 +128,7 @@ public interface ServiceEnvironment {
 	 * @param element
 	 * @return
 	 */
-	Optional<Referable> getSubmodelElement(String aasIdentifier, Reference element);
+	Optional<Referable> getSubmodelElement(AssetAdministrationShell aasIdentifier, Reference element);
 	/**
 	 * Obtain the ValueOnly representation of a SubmodelElement
 	 * @param aasIdentifier
@@ -139,6 +151,12 @@ public interface ServiceEnvironment {
 	 * @return The value only serialization of the referenced element
 	 */
 	Object getElementValue(Reference reference);
+	/**
+	 * Obtain the full representation of a {@link Referable} element. 
+	 * @param reference The {@link Referable} of type {@link ReferenceTypes#MODEL_REFERENCE}
+	 * @return The {@link Referable} element or <code>null</code> when not found
+	 */
+	Optional<Referable> getSubmodelElement(Reference reference);
 	/**
 	 * Update a {@link SubmodelElement} based on it's ValueOnly representation
 	 * @param aasIdentifier
@@ -215,6 +233,7 @@ public interface ServiceEnvironment {
 	 * @return
 	 */
 	<T> T getElementValue(String submodelIdentifier, String path, Class<T> clazz);
+
 	
 	
 

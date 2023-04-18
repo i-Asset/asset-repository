@@ -2,6 +2,7 @@ package at.srfg.iasset.repository.service.helper;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -14,7 +15,6 @@ import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.Endpoint;
-import org.eclipse.aas4j.v3.model.Identifiable;
 import org.eclipse.aas4j.v3.model.Key;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Property;
@@ -23,6 +23,9 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +44,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	
 	@Autowired
 	private ObjectMapper aasMapper;
-
+	
 	@Override
 	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier) {
 		Optional<AssetAdministrationShell> theShell = storage.findAssetAdministrationShellById(aasIdentifier);
@@ -111,26 +114,26 @@ public class RepositoryEnvironment implements ServiceEnvironment {
         if (reference == null || reference.getKeys() == null || reference.getKeys().isEmpty()) {
             return Optional.empty();
         }
-        // last element
-        for ( Key key : reference.getKeys()) {
-        	Class<?> keyType = AasUtils.keyTypeToClass(key.getType());
-        	
-        }
-        int i = reference.getKeys().size() -1;
-        if (type != null) { 
-        	// obtain the desired class element
-            Class<?> actualType = AasUtils.keyTypeToClass(reference.getKeys().get(i).getType());
-            if (actualType == null) {
-//                log.warn("reference {} could not be resolved as key type has no known class.",
-//                        asString(reference));
-                return null;
-            }
-            if (!type.isAssignableFrom(actualType)) {
-//                log.warn("reference {} could not be resolved as target type is not assignable from actual type (target: {}, actual: {})",
-//                        asString(reference), type.getName(), actualType.getName());
-                return null;
-            }
-        }
+//        // last element
+//        for ( Key key : reference.getKeys()) {
+//        	Class<?> keyType = AasUtils.keyTypeToClass(key.getType());
+//        	
+//        }
+//        int i = reference.getKeys().size() -1;
+//        if (type != null) { 
+//        	// obtain the desired class element
+//            Class<?> actualType = AasUtils.keyTypeToClass(reference.getKeys().get(i).getType());
+//            if (actualType == null) {
+////                log.warn("reference {} could not be resolved as key type has no known class.",
+////                        asString(reference));
+//                return null;
+//            }
+//            if (!type.isAssignableFrom(actualType)) {
+////                log.warn("reference {} could not be resolved as target type is not assignable from actual type (target: {}, actual: {})",
+////                        asString(reference), type.getName(), actualType.getName());
+//                return null;
+//            }
+//        }
         
 		return Optional.empty();
 	}
@@ -144,47 +147,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		}
 		return Optional.empty();
 	}
-	private Optional<Referable> resolveReferable(List<Key> keys) {
-		if ( keys == null || keys.isEmpty() ) {
-			return null;
-		}
-		
-		// first key points to an identifiable
-		Optional<Identifiable> root = resolveIdentifiable(keys.get(0));
-		Referable referable = null;
-		for (Key key : keys ) {
-			Class<?> clazzExpected = ReferenceUtils.keyTypeToClass(key.getType());
-			
-			
-		}
-		List<Key> idShortKey = keys.subList(0, keys.size()-1);
-		
-		return Optional.empty();
-	}
-	private Optional<Identifiable> resolveIdentifiable(Key key) {
-		switch(key.getType()) {
-		case SUBMODEL:
-			Optional<Submodel> sub = storage.findSubmodelById(key.getValue());
-			if ( sub.isPresent()) {
-				return Optional.of(sub.get());
-			}
-			break;
-		case CONCEPT_DESCRIPTION:
-			Optional<ConceptDescription> conceptDescription = storage.findConceptDescriptionById(key.getValue());
-			if ( conceptDescription.isPresent()) {
-				return Optional.of(conceptDescription.get());
-			}
-			break;
-		case ASSET_ADMINISTRATION_SHELL:
-			Optional<AssetAdministrationShell> aas = storage.findAssetAdministrationShellById(key.getValue());
-			if ( aas.isPresent()) {
-				return Optional.of(aas.get());
-			}
-			break;
-		default:
-		}
-		return Optional.empty();
-	}
+
 	@Override
 	public List<AssetAdministrationShell> getAllAssetAdministrationShells() {
 		return storage.getAssetAdministrationShells();
@@ -277,10 +240,12 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		return null;
 	}
 
-	@Override
-	public Optional<Referable> getSubmodelElement(String aasIdentifier, Reference element) {
+	public Optional<Referable> getSubmodelElement(AssetAdministrationShell aasIdentifier, Reference element) {
 		// 
 		switch(ReferenceUtils.firstKeyType(element)) {
+		case ASSET_ADMINISTRATION_SHELL:
+			// invalid use ... shell is provided with the first argument
+			break;
 		case CONCEPT_DESCRIPTION:
 			// return the concept description
 			Optional<ConceptDescription> cd = storage.findConceptDescriptionById(ReferenceUtils.firstKeyValue(element));
@@ -291,10 +256,11 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		case SUBMODEL:
 			Optional<Submodel> submodel = storage.findSubmodelById(ReferenceUtils.firstKeyValue(element));
 			if ( submodel.isPresent()) {
-				return new SubmodelHelper(submodel.get()).resolveReference(element);
+				if ( hasSubmodelReference(aasIdentifier, submodel.get().getId())) {
+					return new SubmodelHelper(submodel.get()).resolveReference(element);
+				}
 			}
 			break;
-		case ASSET_ADMINISTRATION_SHELL:
 		default:
 			break;
 		}
@@ -302,7 +268,6 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	}
 	@Override
 	public Object getElementValue(String aasIdentifier, String submodelIdentifier, String path) {
-		// TODO Auto-generated method stub
 		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		
 		if ( submodel.isPresent()) {
@@ -439,6 +404,42 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	@Override
 	public Object getElementValue(Reference reference) {
 		throw new UnsupportedOperationException("Not yet implemented!");
+	}
+
+	@Override
+	public Optional<Referable> getSubmodelElement(Reference reference) {
+		switch(ReferenceUtils.firstKeyType(reference)) {
+		case CONCEPT_DESCRIPTION:
+			// return the concept description
+			Optional<ConceptDescription> cd = storage.findConceptDescriptionById(ReferenceUtils.firstKeyValue(reference));
+			if ( cd.isPresent() ) {
+				return Optional.of(cd.get());
+			}
+			break;
+		case SUBMODEL:
+			Optional<Submodel> submodel = storage.findSubmodelById(ReferenceUtils.firstKeyValue(reference));
+			if ( submodel.isPresent()) {
+				return new SubmodelHelper(submodel.get()).resolveReference(reference);
+			}
+			break;
+		case ASSET_ADMINISTRATION_SHELL:
+			Iterator<Key> keyIterator = ReferenceUtils.keyIterator(reference);
+			// need to extract the first key (AAS) and the second key (Submodel) ...
+			if ( keyIterator != null && keyIterator.hasNext()) {
+				Optional<AssetAdministrationShell> shell = storage.findAssetAdministrationShellById(keyIterator.next().getValue());
+				if (shell.isPresent() && keyIterator.hasNext() ) {
+					// 
+					String submodelIdentifier = keyIterator.next().getValue();
+					if ( hasSubmodelReference(shell.get(), submodelIdentifier)) {
+						reference.getKeys().remove(0);
+						return getSubmodelElement(reference);
+					}
+				}
+			}
+		default:
+			break;
+		}
+		return Optional.empty();
 	}
 
 

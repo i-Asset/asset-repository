@@ -22,9 +22,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
-
+/**
+ * Support Class for manipulating, traversing {@link Submodel} and contained {@link SubmodelElement}.
+ * 
+ * TODO: check for implementing as a service with static methods
+ * @author dglachs
+ *
+ */
 public class SubmodelHelper {
-	public static final String PATH_DELIMITER = "\\.";
+	
 	private final Submodel submodel;
 //	private Optional<ModelEventProvider> eventProvider;
 	
@@ -157,6 +163,11 @@ public class SubmodelHelper {
 		}
 		return Optional.empty();
 	}
+	/**
+	 * Obtain the value-only object for a {@link SubmodelElement}. 
+	 * @param path The path pointing to the element
+	 * @return
+	 */
 	public Object getValueAt(String path) {
 		
 		Optional<SubmodelElement> elem = getSubmodelElementAt(path);
@@ -166,6 +177,12 @@ public class SubmodelHelper {
 		}
 		return new HashMap<String, Object>();
 	}
+	/**
+	 * Update the value of a {@link SubmodelElement}
+	 * @param path The path pointing to the element
+	 * @param value The value
+	 * @return
+	 */
 	public Optional<SubmodelElement> setValueAt(String path, JsonNode value) {
 		Optional<SubmodelElement> elem = getSubmodelElementAt(path);
 		if ( elem.isPresent()) {
@@ -178,7 +195,14 @@ public class SubmodelHelper {
 		ValueHelper.applyValue(submodelElement, value);
 		
 	}
-
+	/**
+	 * Access a child element based on it's idShort
+	 * @param <T>
+	 * @param parent
+	 * @param idShort
+	 * @param type
+	 * @return
+	 */
 	private <T extends Referable> Optional<T> getChild(Referable parent, String idShort, Class<T> type) {
 		if ( SubmodelElementList.class.isInstance(parent)) {
 			List<SubmodelElement> children = getChildren(parent);
@@ -319,7 +343,12 @@ public class SubmodelHelper {
 	public SubmodelElementValue getValueOnly(SubmodelElement referable) {
 		return ValueHelper.toValue(referable);
 	}
-
+	public static <T extends SubmodelElement>  T resolveElement(Referable container, Reference semanticId, Class<T> clazz) {
+		if (Submodel.class.isInstance(container)) {
+			
+		}
+		return null;
+	}
 	public Optional<Referable> resolveKeyPath(Iterator<Key> keyIterator ) {
 		return resolveKeyPath(submodel, keyIterator);
 		

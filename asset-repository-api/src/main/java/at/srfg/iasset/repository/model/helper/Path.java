@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * Helper class for parsing submodel element path's 
+ * 
+ * @author dglachs
+ *
+ */
 public class Path implements Iterable<String> {
 //	private final String DELIMITER = "/";
 	private static final Pattern pattern = Pattern.compile("(([a-zA-Z_0-9])+)");

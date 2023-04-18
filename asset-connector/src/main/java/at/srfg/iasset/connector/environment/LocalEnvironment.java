@@ -76,13 +76,22 @@ public interface LocalEnvironment {
 	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener);
 	
 	/**
-	 * Obtain a message producer 
+	 * Obtain a message producer which is bound to the semantic reference provided. 
+	 * The type Parameter ensures, the payload can be mapped to the provided type.
 	 * @param <T>
 	 * @param reference
 	 * @param clazz
 	 * @return
 	 */
 	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz);
+	/**
+	 * Obtain 
+	 * @param <T>
+	 * @param submodelIdentifier
+	 * @param reference
+	 * @param clazz
+	 * @return
+	 */
 	public <T> EventProducer<T> getMessageProducer(String submodelIdentifier, Reference reference, Class<T> clazz);
 	/**
 	 * Inject a {@link Consumer} function to the local environment. This function's {@link Consumer#accept(Object)} 
@@ -119,7 +128,7 @@ public interface LocalEnvironment {
 	 * @param parameter
 	 * @return
 	 */
-	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter);
+	public Object executeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter);
 	/**
 	 * Obtain the event processor.
 	 * @return

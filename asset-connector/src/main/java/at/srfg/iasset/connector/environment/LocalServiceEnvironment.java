@@ -79,7 +79,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	private final URI repositoryURI;
 	private final RepositoryConnection repository;
 	private ConnectorEndpoint httpEndpoint;
-	private MessagingComponent eventProcessor;
+	private ConnectorMessaging eventProcessor;
 	
 	private ModelChangeProvider changeProvider = ModelChangeProvider.getProvider();
 
@@ -400,7 +400,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 
 	@Override
-	public Optional<Referable> getSubmodelElement(String aasIdentifier, Reference element) {
+	public Optional<Referable> getSubmodelElement(AssetAdministrationShell aasIdentifier, Reference element) {
 		// TODO Auto-generated method stub
 		return Optional.empty();
 	}
@@ -810,7 +810,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	}
 
 	@Override
-	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
+	public Object executeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
 		
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
@@ -932,6 +932,15 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			return ValueHelper.toValue(referenced.get());
 		}
 		return null;
+	}
+	public <T> T getElementValue(Reference reference, Class<T> clazz) {
+		Object value = getElementValue(reference);
+		return objectMapper.convertValue(value, clazz);
+	}
+
+	@Override
+	public Optional<Referable> getSubmodelElement(Reference reference) {
+		return resolve(reference);
 	}
 
 }
