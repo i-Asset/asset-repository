@@ -47,4 +47,14 @@ public class SubmodelRepositoryController implements SubmodelRepositoryInterface
 				path);
 	}
 
+	@Override
+	public Referable getReferableElement(Reference reference) {
+		return server.getSubmodelElement(reference).orElse(null);
+	}
+
+	@Override
+	public Object getValueByReference(Reference reference) {
+		return server.getElementValue(reference);
+	}
+
 }

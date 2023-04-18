@@ -11,6 +11,7 @@ import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -28,6 +29,7 @@ public interface SubmodelRepositoryInterface {
 	final String PATH_SUBMODEL_ELEMENTS			= "/submodel/submodel-elements";
 	final String IDSHORT_PATH 					= "/{path}";
 	final String IDSHORT_PATH_WILDCARD			= "/{path:.+}";
+	final String BY_REFERENCE					= "/reference";
 
 	/**
 	 * Obtain a {@link Submodel} of the identified {@link AssetAdministrationShell}
@@ -65,11 +67,26 @@ public interface SubmodelRepositoryInterface {
 	 * Obtain an model element based on the reference, may be a {@link Submodel} or
 	 * a {@link SubmodelElement}
 	 * 
-	 * @param aasIdentifier
 	 * @param element       Reference to the requested element
-	 * @return
+	 * @return The requested element or <code>null</code>
 	 */
-	@Operation(summary =  "Obtain a referable element by it's path",
+	@Operation(summary =  "Obtain a referable element by reference",
+			tags = "Submodel Repository Interface (Connector)")
+	@RequestMapping(
+			method = RequestMethod.POST,
+			path=BY_REFERENCE)
+	Referable getReferableElement(
+			@RequestBody
+			Reference reference);
+	/**
+	 * Obtain an model element based on the reference, may be a {@link Submodel} or
+	 * a {@link SubmodelElement}
+	 * 
+	 * @param submodelIdentifier Identifier of the submodel 
+	 * @param path               Path pointing to the requested element
+	 * @return The requested element or <code>null</code>
+	 */
+	@Operation(summary =  "Obtain a referable element by refernence",
 			tags = "Submodel Repository Interface (Connector)")
 	@RequestMapping(
 			method = RequestMethod.GET,
@@ -92,10 +109,10 @@ public interface SubmodelRepositoryInterface {
 			String path	);
 
 	/**
-	 * Obtain the children of the element
+	 * Obtain the value of a {@link SubmodelElement}
 	 * 
-	 * @param identifier
-	 * @param path
+	 * @param submodelIdentifier 	The identifier of the submodel 
+	 * @param path 					The idShort-path pointing to the {@link SubmodelElement}
 	 * @return
 	 */
 	@Operation(summary = "Obtain the value of the (Data)Element",
@@ -120,5 +137,19 @@ public interface SubmodelRepositoryInterface {
 					schema = @Schema()) 
 			@PathVariable("path")
 			String path	);
-	
+	/**
+	 * Obtain the value of a model element based on the reference, may be a {@link Submodel} or
+	 * a {@link SubmodelElement}
+	 * 
+	 * @param element       Reference to the requested element
+	 * @return The requested element or <code>null</code>
+	 */
+	@Operation(summary =  "Obtain the value of a referable element by reference",
+			tags = "Submodel Repository Interface (Connector)")
+	@RequestMapping(
+			method = RequestMethod.POST,
+			path=BY_REFERENCE + "/value")
+	Object getValueByReference(
+			@RequestBody
+			Reference reference);	
 }
