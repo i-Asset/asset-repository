@@ -11,10 +11,12 @@ public interface BrokerFactory {
 	EventConsumer getConsumer(String topic, MessageBroker broker);
 	<T> EventProducer<T> getProducer(String topic, MessageBroker broker);
 	class Instance implements BrokerFactory {
-		Map<String, Class<?>> consumerMap;
-		Map<String, Class<?>> producerMap;
+		private static Map<String, Class<?>> consumerMap;
+		private static Map<String, Class<?>> producerMap;
 		static {
+			
 			ScanResult scanResult = new ClassGraph()
+					.acceptPackages(BrokerFactory.class.getPackageName())
 					.enableAllInfo()
 					.scan();
 		}

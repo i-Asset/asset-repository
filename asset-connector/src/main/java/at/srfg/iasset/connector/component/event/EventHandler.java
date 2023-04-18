@@ -10,7 +10,7 @@ import at.srfg.iasset.connector.component.ConnectorMessaging;
  * <p>
  * An {@link EventHandler} can be attached to the messaging infrastructure
  * with {@link ConnectorMessaging#registerHandler(String, EventHandler)} where 
- * the provided Reference is used to interlink the handler with the messages
+ * the provided Reference is used to interlink the handler with the correct topic
  * </p>
  * @author dglachs
  *

@@ -26,7 +26,12 @@ import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministratio
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
-
+/**
+ * Helper Class managing the HTTP endpoint of the Connector / I4.0 Component.
+ *  
+ * @author dglachs
+ *
+ */
 public class HttpComponent implements ConnectorEndpoint {
 	private HttpServer httpServer;
 	private ServerConfiguration serverConfiguration;

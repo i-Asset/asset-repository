@@ -17,18 +17,15 @@ import java.util.stream.Collectors;
 import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.eclipse.aas4j.v3.model.EventPayload;
 import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.ModelingKind;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.StateOfEvent;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.connector.component.ConnectorMessaging;
 import at.srfg.iasset.connector.component.impl.event.EventPayloadHelper;
-import at.srfg.iasset.connector.component.impl.event.kafka.EventElementConsumer;
 import at.srfg.iasset.connector.component.impl.event.kafka.EventElementProducer;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
@@ -65,14 +62,24 @@ public class MessagingComponent implements ConnectorMessaging {
 	public void registerEventElement(Reference source) {
 		Optional<BasicEventElement> theSourceElement = environment.resolve(source, BasicEventElement.class);
 		if ( theSourceElement.isPresent()) {
+			
 			Set<Reference> matchingReferences = new HashSet<Reference>();
 			BasicEventElement sourceElement = theSourceElement.get();
 			Optional<Referable> observedElement = environment.resolve(sourceElement.getObserved());
+			// check for the broker element, this element should specify the surrounding 
+			// messaging environment ...
+			Optional<Referable> brokerElement = environment.resolve(sourceElement.getMessageBroker());
+			
+			if ( brokerElement.isPresent()) {
+				// 
+			}
+			
 			if ( observedElement.isPresent()) {
 				Optional<Reference> sourceSemantic = initializeSemantics(source, matchingReferences);
 				Optional<Reference> observedSemantic = initializeSemantics(sourceElement.getObserved(), matchingReferences);
 				if ( observedSemantic.isPresent()) {
 				}
+				
 				// TODO: define subjectId
 				Optional<Reference> subjectId = Optional.empty();
 				// source and observed are mandatory
@@ -85,16 +92,25 @@ public class MessagingComponent implements ConnectorMessaging {
 						.sourceSemantic(sourceSemantic)
 						// reference to observed semantic
 						.observedSemantic(observedSemantic)
+						// the hosts adress of the messaging infrastructure in use
+						.hosts( "iasset.salzburgresearch.at:9092")
 						// reference to subject id
 						.subjectId(subjectId);
 				// keep the helper in the list, so that the helper can be found by EventHandlers ...
+				
+				if ( brokerElement.isPresent()) {
+					
+				}
 				payloadHelper.add(helper);
 				
 			}
 			
 		}
 	}
-
+	private Optional<Referable> resolveMessageBroker(Reference refToBroker) {
+		environment.resolve(refToBroker);
+		return Optional.empty();
+	}
 	private Optional<Reference> initializeSemantics(Reference reference, Set<Reference> matching) {
 		if ( reference != null ) {
 			matching.add(reference);
@@ -149,8 +165,12 @@ public class MessagingComponent implements ConnectorMessaging {
 					}
 				}).findFirst();
 		if ( mapper.isPresent()) {
-			EventElementProducer<T> producer = new EventElementProducer<T>(mapper.get());
+			// obtain a messaging producer, configured to send typed objects
+			// as the messaging component 
+			EventProducer<T> producer = createProducer(clazz, mapper.get());
 			outgoingProducer.add(producer);
+			// register a shutdown hook, to ensure the producer is closed whenever 
+			// the VM is stopped!
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
 				public void run() {
@@ -160,10 +180,15 @@ public class MessagingComponent implements ConnectorMessaging {
 
 			return (EventProducer<T>) producer;
 		}
-		
+		// TODO: check environment, possibly load the containing submodel from the server environment
 		throw new IllegalArgumentException("No messaging infrastructure for provided reference!");
 	}
-
+	
+	private <T> EventProducer<T> createProducer(Class<T> type, EventPayloadHelper helper) {
+		// helper has MessageBroker (hosts, brokerType) & Topic
+		
+		return new EventElementProducer<T>(helper);
+	}
 	
 
 	@Override

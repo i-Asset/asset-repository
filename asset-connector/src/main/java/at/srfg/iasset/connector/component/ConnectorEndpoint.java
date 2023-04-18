@@ -20,8 +20,8 @@ public interface ConnectorEndpoint {
 	 */
 	public void start(String context, ResourceConfig rootConfig);
 	/**
-	 * Obtain the port the component is providing it's services
-	 * @return
+	 * Obtain the port the component is currently providing it's services
+	 * @return The service port
 	 */
 	public int getPort();
 	/**
@@ -45,7 +45,5 @@ public interface ConnectorEndpoint {
 	 * @return <code>true</code> when a handler is found and stopped, <code>false</code> otherwise
 	 */
 	public boolean removeHttpHandler(String alias);
-	
-
 
 }

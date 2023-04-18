@@ -7,7 +7,19 @@ import at.srfg.iasset.connector.component.event.EventProducer;
 
 /**
  * The EventProcessor is the mediator between the Asset/Application Connector
- * and the outer messaging infrastructure 
+ * and the outer messaging infrastructure.
+ * 
+ * <p>
+ * This interface {@link ConnectorMessaging} defines the API methods for a connector
+ * when communicating with configured messaging environments such as 
+ * <ul>
+ * <li>KAFKA
+ * <li>MQTT
+ * <li>AMQP
+ * <li>others
+ * </ul>
+ * 
+ * </p>
  * @author dglachs
  *
  */
@@ -64,6 +76,8 @@ public interface ConnectorMessaging {
 	 * Stop the messaging infrastructure.
 	 */
 	void stopEventProcessing();
+	void removeEventElement(Reference elementRef);
+	void registerEventElement(Reference elementRef);
 	
 	
 }

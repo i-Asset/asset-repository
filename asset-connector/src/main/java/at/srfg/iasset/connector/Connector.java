@@ -1,7 +1,9 @@
 package at.srfg.iasset.connector;
 
+import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -14,6 +16,7 @@ import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.ConnectorMessaging;
+import at.srfg.iasset.connector.component.event.Callback;
 import at.srfg.iasset.connector.component.event.EventHandler;
 import at.srfg.iasset.connector.component.event.EventProducer;
 import at.srfg.iasset.connector.component.impl.AASFull;
@@ -46,7 +49,14 @@ public class Connector implements LocalEnvironment {
 	}
 
 	public static void main(String [] args) {
+		
 		try {
+			String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+			String connectorPath = rootPath + "connector.properties";
+			
+			Properties connectorProperties = new Properties();
+			connectorProperties.load(new FileInputStream(connectorPath));
+			
 			Connector connector = new Connector( new URI("http://localhost:8081/"));
 			// start the http endpoint for this Connector at port 5050
 			connector.startEndpoint(5050);
@@ -124,24 +134,7 @@ public class Connector implements LocalEnvironment {
 			connector.register("https://acplt.org/Test_AssetAdministrationShell");
 			// 
 			connector.register(AASFull.AAS_BELT_INSTANCE.getId());
-			/*
-			 * The event processor should 
-			 */
-//			connector.getEventProcessor().registerHandler(
-//					"http://acplt.org/Events/ExampleBasicEvent", 
-//					new EventHandler<String>() {
-//
-//				@Override
-//				public void onEventMessage(EventPayload eventPayload, String payload) {
-//					System.out.println(payload);
-//					
-//				}
-//
-//				@Override
-//				public Class<String> getPayloadType() {
-//					return String.class;
-//				}
-//			});
+			
 			connector.registerEventHandler(					
 					AASFaultSubmodel.SUBMODEL_FAULT1.getId(), 
 					ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/semantic/fault"), 
@@ -172,6 +165,15 @@ public class Connector implements LocalEnvironment {
 			f.setSenderUserId("im am the user");
 			f.setShortText("this is a short");
 			faultProducer.sendEvent(f);
+			faultProducer.sendEvent(f, new Callback<Fault>() {
+				
+				@Override
+				public void deliveryComplete(Fault payload) {
+					// The object has been delivered
+					System.out.println(payload.getAssetId());
+					
+				}
+			})
 ;			System.in.read();
 //			connector.getEventProcessor().stopEventProcessing();
 			connector.stop();
@@ -255,7 +257,7 @@ public class Connector implements LocalEnvironment {
 	}
 
 	@Override
-	public Object executeOperaton(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
+	public Object executeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
 		return serviceEnvironment.invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
 	}
 

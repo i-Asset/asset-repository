@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 
 import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.eclipse.aas4j.v3.model.Direction;
+import org.eclipse.aas4j.v3.model.EventElement;
 import org.eclipse.aas4j.v3.model.EventPayload;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
@@ -23,10 +24,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.connector.component.event.EventConsumer;
 import at.srfg.iasset.connector.component.event.EventHandler;
+import at.srfg.iasset.connector.component.event.EventProducer;
 import at.srfg.iasset.connector.component.event.PayloadConsumer;
 import at.srfg.iasset.connector.component.impl.event.kafka.EventElementConsumer;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
-
+/**
+ * Helper class providing messaging functionality for a {@link EventElement}.
+ * 
+ * <p>
+ * 
+ * </p>
+ * 
+ * @author dglachs
+ *
+ */
 public class EventPayloadHelper implements PayloadConsumer {
 	// source
 	Reference source;
@@ -38,6 +49,8 @@ public class EventPayloadHelper implements PayloadConsumer {
 	Reference observedSemantic;
 	// should be reference to the event element responsible for sending
 	Reference subjectId;
+	String hosts;
+	MessageBroker.BrokerType brokerType;
 	/**
 	 * Set of references which determine when a incoming message is to be 
 	 * handled.
@@ -70,7 +83,7 @@ public class EventPayloadHelper implements PayloadConsumer {
 		return this;
 	}
 	/**
-	 * Build 
+	 * Build Method
 	 * @param observed
 	 * @param observedElement
 	 * @return
@@ -82,6 +95,11 @@ public class EventPayloadHelper implements PayloadConsumer {
 		this.observedElement = observedElement;
 		return this;
 	}
+	/**
+	 * Build method
+	 * @param observedSemantic
+	 * @return
+	 */
 	public EventPayloadHelper observedSemantic(Optional<Reference> observedSemantic) {
 		observedSemantic.ifPresent(new Consumer<Reference>() {
 
@@ -104,8 +122,8 @@ public class EventPayloadHelper implements PayloadConsumer {
 			}});
 		return this;
 	}
-	public EventPayloadHelper messageBroker(Optional<Reference> messageBroker) {
-		// 
+	public EventPayloadHelper hosts(String hosts) {
+		// TODO: decide how
 		
 		return this;
 		
@@ -115,7 +133,10 @@ public class EventPayloadHelper implements PayloadConsumer {
 		return this;
 	}
 	
-
+	/**
+	 * Register an {@link EventHandler} with the current messaging infrastructure
+	 * @param handler
+	 */
 	public void addEventHandler(EventHandler<?> handler) {
 		this.handler.add(handler);
 		// check whether the consumer is already present
@@ -136,6 +157,9 @@ public class EventPayloadHelper implements PayloadConsumer {
 				}
 			});
 		}
+	}
+	public <T> EventProducer<T> getEventProducer(Class<T> payloadType) {
+		return null;
 	}
 	
 	public void removeHandler(EventHandler<?> handler) {
@@ -168,13 +192,16 @@ public class EventPayloadHelper implements PayloadConsumer {
 		T val = objectMapper.convertValue(payload, handler.getPayloadType());
 		handler.onEventMessage(fullPayload, (T) val);
 	}
-
+	/**
+	 * Obtain the messaging topic defined in {@link BasicEventElement}
+	 * @return the message topic associated with this {@link EventPayloadHelper}
+	 */
 	public String getTopic() {
 		return sourceElement.getMessageTopic();
 	}
-//	public Object getPayload() {
-//		return ValueHelper.toValue(this.observedElement);
-//	}
+	public String getHosts() {
+		return hosts;
+	}
 	public boolean matches(Reference reference) {
 		return matchingReferences.contains(reference);
 	}
