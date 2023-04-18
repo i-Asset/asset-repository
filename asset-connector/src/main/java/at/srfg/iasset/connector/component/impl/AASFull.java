@@ -29,6 +29,7 @@ import org.eclipse.aas4j.v3.model.Environment;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.LevelType;
 import org.eclipse.aas4j.v3.model.ModelingKind;
+import org.eclipse.aas4j.v3.model.QualifierKind;
 import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.StateOfEvent;
 import org.eclipse.aas4j.v3.model.Submodel;
@@ -44,6 +45,7 @@ import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecification;
 import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationIEC61360;
 import org.eclipse.aas4j.v3.model.impl.DefaultEntity;
 import org.eclipse.aas4j.v3.model.impl.DefaultEnvironment;
+import org.eclipse.aas4j.v3.model.impl.DefaultExtension;
 import org.eclipse.aas4j.v3.model.impl.DefaultFile;
 import org.eclipse.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
@@ -755,6 +757,10 @@ public class AASFull {
                         .type(ReferenceTypes.GLOBAL_REFERENCE)
                         .build())
                 .submodelElement(new DefaultProperty.Builder()
+                		.extension(new DefaultExtension.Builder()
+                				.name("derivedFrom")
+                				.refersTo(null)
+                				.build())
                         .idShort("ManufacturerName")
                         .descriptions(Arrays.asList(
                                 new DefaultLangString.Builder().text("Legally valid designation of the natural or judicial person which is directly responsible for the design, production, packaging and labeling of a product in respect to its being brought into circulation.").language("en-us").build(),
@@ -769,6 +775,7 @@ public class AASFull {
                                 .type(ReferenceTypes.GLOBAL_REFERENCE)
                                 .build())
                         .qualifier(new DefaultQualifier.Builder()
+                        		.kind(QualifierKind.VALUE_QUALIFIER)
                                 .value("100")
                                 .type("http://acplt.org/Qualifier/ExampleQualifier")
                                 .valueType(DataTypeDefXsd.INT)
