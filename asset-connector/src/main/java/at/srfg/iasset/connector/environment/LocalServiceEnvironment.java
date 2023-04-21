@@ -1,46 +1,5 @@
 package at.srfg.iasset.connector.environment;
 
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.BasicEventElement;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.DataElement;
-import org.eclipse.aas4j.v3.model.Key;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Operation;
-import org.eclipse.aas4j.v3.model.Property;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.glassfish.grizzly.http.server.HttpHandler;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Base64Utils;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.ConnectorMessaging;
 import at.srfg.iasset.connector.component.config.MarshallingFeature;
@@ -51,7 +10,6 @@ import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministratio
 import at.srfg.iasset.connector.component.event.EventHandler;
 import at.srfg.iasset.connector.component.event.EventProducer;
 import at.srfg.iasset.connector.component.event.MessagingComponent;
-import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.repository.component.ModelChangeProvider;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
@@ -64,9 +22,20 @@ import at.srfg.iasset.repository.model.custom.InstanceProperty;
 import at.srfg.iasset.repository.model.helper.SubmodelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
-import at.srfg.iasset.repository.model.helper.visitor.ReferenceCollector;
 import at.srfg.iasset.repository.model.helper.visitor.SubmodelElementCollector;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.aas4j.v3.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnvironment {
 	private final Logger logger = LoggerFactory.getLogger(LocalServiceEnvironment.class);
@@ -150,36 +119,6 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			}
 
 		});
-		// TODO: REMOVE test data!
-		setAssetAdministrationShell(AASFull.AAS_1.getId(), AASFull.AAS_1);
-		setAssetAdministrationShell(AASFull.AAS_2.getId(), AASFull.AAS_2);
-		setAssetAdministrationShell(AASFull.AAS_3.getId(), AASFull.AAS_3);
-		setAssetAdministrationShell(AASFull.AAS_4.getId(), AASFull.AAS_4);
-		setAssetAdministrationShell(AASFull.AAS_4.getId(), AASFull.AAS_4);
-		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_1.getId(), AASFull.SUBMODEL_1);
-		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_2.getId(), AASFull.SUBMODEL_2);
-		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_3.getId(), AASFull.SUBMODEL_3);
-		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_4.getId(), AASFull.SUBMODEL_4);
-		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_5.getId(), AASFull.SUBMODEL_5);
-		setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_6.getId(), AASFull.SUBMODEL_6);
-//		environment.setSubmodel(AASFull.SUBMODEL_7.getId(), AASFull.SUBMODEL_7);
-		setConceptDescription(AASFull.CONCEPT_DESCRIPTION_1.getId(), AASFull.CONCEPT_DESCRIPTION_1);
-		setConceptDescription(AASFull.CONCEPT_DESCRIPTION_2.getId(), AASFull.CONCEPT_DESCRIPTION_2);
-		setConceptDescription(AASFull.CONCEPT_DESCRIPTION_3.getId(), AASFull.CONCEPT_DESCRIPTION_3);
-		setConceptDescription(AASFull.CONCEPT_DESCRIPTION_4.getId(), AASFull.CONCEPT_DESCRIPTION_4);
-		// 
-		setAssetAdministrationShell(AASFull.AAS_BELT_TEMPLATE.getId(), AASFull.AAS_BELT_TEMPLATE);
-		setSubmodel(AASFull.AAS_BELT_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_TEMPLATE);
-		setSubmodel(AASFull.AAS_BELT_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_EVENT_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_EVENT_TEMPLATE);
-		setSubmodel(AASFull.AAS_BELT_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE);
-		// belt instance data
-		setAssetAdministrationShell(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.AAS_BELT_INSTANCE);
-		setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
-		setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE);
-		setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
-		
-		Set<Reference> references = new ReferenceCollector(this, KeyTypes.BASIC_EVENT_ELEMENT).collect(AASFull.AAS_BELT_INSTANCE);
-		references.size();
 	}
 	
 	@Override
