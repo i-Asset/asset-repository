@@ -24,18 +24,21 @@ import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
 import at.srfg.iasset.repository.model.helper.visitor.SubmodelElementCollector;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.aas4j.v3.model.*;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Base64Utils;
 
+import java.net.InetAddress;
 import java.net.URI;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.Collectors;
 
 public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnvironment {
 	private final Logger logger = LoggerFactory.getLogger(LocalServiceEnvironment.class);
