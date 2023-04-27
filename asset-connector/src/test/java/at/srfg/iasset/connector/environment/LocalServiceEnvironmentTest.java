@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,12 +27,13 @@ class LocalServiceEnvironmentTest {
     private static final Logger log = LoggerFactory.getLogger(LocalServiceEnvironmentTest.class);
 
     @BeforeAll
-    static void setup() {
-        log.info("@BeforeAll currently empty");
+    static void setup(TestInfo testInfo) {
+        log.info("executing '{}'", testInfo.getTestClass().map(Class::getName).orElse("unknown class"));
     }
 
     @BeforeEach
-    void init() throws URISyntaxException {
+    void init(TestInfo testInfo) throws URISyntaxException {
+        log.info("initializing '{}'", testInfo.getTestMethod().map(Method::getName).orElse("unknown method"));
         URI repositoryURI = new URI(repositoryUriString);
         serviceEnvironmentUnderTest = new LocalServiceEnvironment(repositoryURI);
         log.info("LocalServiceEnvironment with dummy repositoryURI '{}' created", repositoryUriString);
@@ -40,9 +42,14 @@ class LocalServiceEnvironmentTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown(TestInfo testInfo) {
+        log.info("'{}' finished", testInfo.getTestMethod().map(Method::getName).orElse("unknown method"));
     }
 
+    @AfterAll
+    static void finish(TestInfo testInfo) {
+        log.info("'{}' ready", testInfo.getTestClass().map(Class::getName).orElse("unknown class"));
+    }
     @DisplayName("Starting and Stopping of Local Service Environment")
     @Test
     void startAndStopEndpoint() {
@@ -56,7 +63,8 @@ class LocalServiceEnvironmentTest {
             try (ServerSocket s = new ServerSocket(port)) {
                 // do nothing
                 assertNull(s);
-            } ;
+            }
+            ;
         }, "IOException was expected");
 
         Assertions.assertTrue(thrown.getMessage().startsWith("Address already in use"));
@@ -107,14 +115,14 @@ class LocalServiceEnvironmentTest {
     @Test
     void restTest() {
         int port = startEndpointOnFreePort();
-        URI url = URI.create("http://localhost:"+port+"/shells");
+        URI url = URI.create("http://localhost:" + port + "/shells");
         RestTemplate rest = new RestTemplate();
         final ResponseEntity<List> forEntity = rest.getForEntity(url, List.class);
         assertNotNull(forEntity);
         List body = forEntity.getBody();
         assertNotNull(body);
         assertEquals(6, body.size(), "expecting seven preloaded shells");
-        log.info("response: {}", body);
+        log.debug("response: {}", body);
         assertNotNull(body.get(0), "expecting element");
         assertEquals(body.get(0).getClass(), LinkedHashMap.class, "expecting a linked hash map in body");
     }
@@ -185,6 +193,7 @@ class LocalServiceEnvironmentTest {
         serviceEnvironmentUnderTest.setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
         serviceEnvironmentUnderTest.setSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
     }
+
     private void loadAASTestDataWithRemoteModels() {
         serviceEnvironmentUnderTest.setSubmodel(AASFull.AAS_1.getId(), AASFull.SUBMODEL_7.getId(), AASFull.SUBMODEL_7);
 
