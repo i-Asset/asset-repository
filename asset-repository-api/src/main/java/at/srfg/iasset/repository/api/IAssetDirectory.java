@@ -1,7 +1,5 @@
 package at.srfg.iasset.repository.api;
 
-import javax.ws.rs.Path;
-
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.aas4j.v3.model.Submodel;
@@ -16,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.ws.rs.Path;
 
 @Path("")
 @RequestMapping(path = "")

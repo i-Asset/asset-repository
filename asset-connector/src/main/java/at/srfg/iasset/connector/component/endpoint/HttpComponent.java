@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.ws.rs.ProcessingException;
-
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -26,6 +24,7 @@ import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministratio
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
+import jakarta.ws.rs.ProcessingException;
 /**
  * Helper Class managing the HTTP endpoint of the Connector / I4.0 Component.
  *  

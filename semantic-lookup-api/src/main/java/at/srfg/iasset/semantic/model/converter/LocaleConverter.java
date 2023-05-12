@@ -2,7 +2,7 @@ package at.srfg.iasset.semantic.model.converter;
 
 import java.util.Locale;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 public class LocaleConverter implements AttributeConverter<Locale, String> {
     @Override

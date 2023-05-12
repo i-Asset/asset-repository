@@ -4,8 +4,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +16,7 @@ import at.srfg.iasset.semantic.model.ConceptClassProperty;
 import at.srfg.iasset.semantic.model.ConceptProperty;
 import at.srfg.iasset.semantic.model.ConceptPropertyValue;
 import at.srfg.iasset.semantic.model.DataTypeEnum;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class DefaultDataService {

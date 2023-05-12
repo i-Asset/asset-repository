@@ -5,9 +5,6 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.DataSpecificationContent;
 import org.eclipse.aas4j.v3.model.DataTypeIEC61360;
@@ -17,9 +14,9 @@ import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.impl.DefaultConceptDescription;
 import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecification;
 import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationIEC61360;
-import org.eclipse.aas4j.v3.model.impl.DefaultReference;
 import org.eclipse.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.aas4j.v3.model.impl.DefaultReference;
 import org.eclipse.aas4j.v3.model.impl.DefaultValueList;
 import org.eclipse.aas4j.v3.model.impl.DefaultValueReferencePair;
 import org.slf4j.Logger;
@@ -37,6 +34,8 @@ import at.srfg.iasset.repository.model.Result;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @RestController
 public class ConceptDescriptionsApiController implements ConceptDescriptionsApi {

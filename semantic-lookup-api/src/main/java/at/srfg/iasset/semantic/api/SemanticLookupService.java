@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import javax.ws.rs.Path;
-
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +17,7 @@ import at.srfg.iasset.semantic.model.ConceptPropertyValue;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import jakarta.ws.rs.Path;
 /**
  * Service interface - for use with a @FeignClient
  * @author dglachs

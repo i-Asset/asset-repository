@@ -2,9 +2,6 @@ package at.srfg.iasset.repository.api.conn.impl;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
@@ -16,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "repository")

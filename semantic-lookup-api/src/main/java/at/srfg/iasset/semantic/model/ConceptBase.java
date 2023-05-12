@@ -1,19 +1,35 @@
 package at.srfg.iasset.semantic.model;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-
-import at.srfg.iasset.semantic.model.skos.ConceptLabel;
-import at.srfg.iasset.semantic.model.skos.LabelAware;
-import at.srfg.iasset.semantic.model.skos.SKOSLabel.LabelType;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+import at.srfg.iasset.semantic.model.skos.ConceptLabel;
+import at.srfg.iasset.semantic.model.skos.LabelAware;
+import at.srfg.iasset.semantic.model.skos.SKOSLabel.LabelType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * The persistent class for the classification_class database table.

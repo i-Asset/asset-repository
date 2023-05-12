@@ -2,10 +2,6 @@ package at.srfg.iasset.repository.api;
 
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.Identifiable;
@@ -24,6 +20,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 
 /**
  * REST-API for accessing a single {@link AssetAdministrationShell}.

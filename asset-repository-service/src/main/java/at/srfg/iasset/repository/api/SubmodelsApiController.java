@@ -3,9 +3,6 @@ package at.srfg.iasset.repository.api;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.slf4j.Logger;
@@ -27,8 +24,10 @@ import at.srfg.iasset.repository.model.OperationResult;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-06T18:15:09.134Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-06T18:15:09.134Z[GMT]")
 @RestController
 public class SubmodelsApiController implements SubmodelsApi {
 

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetInformation;
@@ -42,6 +40,7 @@ import at.srfg.iasset.repository.model.OperationResult;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 public class ShellsApiController implements ShellsApi {

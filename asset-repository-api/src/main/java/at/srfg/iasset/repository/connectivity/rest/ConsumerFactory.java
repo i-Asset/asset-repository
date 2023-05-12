@@ -15,13 +15,14 @@ import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Configuration;
-
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.ext.Provider;
 
 
 

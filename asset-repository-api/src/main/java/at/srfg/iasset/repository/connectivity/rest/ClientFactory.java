@@ -1,8 +1,5 @@
 package at.srfg.iasset.repository.connectivity.rest;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.ext.ContextResolver;
-
 import org.eclipse.aas4j.v3.model.Operation;
 import org.eclipse.aas4j.v3.model.Property;
 import org.glassfish.jersey.client.ClientConfig;
@@ -14,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.ext.ContextResolver;
 /**
  * Class creating a 
  * @author dglachs

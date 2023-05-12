@@ -1,7 +1,9 @@
 package at.srfg.iasset.semantic.eclass.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 /**
  * The primary key class for the classification_class_property database table.

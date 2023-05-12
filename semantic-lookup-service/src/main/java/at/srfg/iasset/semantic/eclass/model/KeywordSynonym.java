@@ -1,7 +1,12 @@
 package at.srfg.iasset.semantic.eclass.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 
 
 /**

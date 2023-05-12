@@ -1,7 +1,5 @@
 package at.srfg.iasset.repository.config;
 
-import javax.ws.rs.ext.ContextResolver;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +8,8 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import jakarta.ws.rs.ext.ContextResolver;
 
 public class AASJacksonMapperProvider implements ContextResolver<ObjectMapper>{
 	private ObjectMapper mapper;

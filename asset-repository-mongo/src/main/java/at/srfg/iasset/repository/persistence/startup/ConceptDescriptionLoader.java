@@ -1,6 +1,6 @@
 package at.srfg.iasset.repository.persistence.startup;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;

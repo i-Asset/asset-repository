@@ -3,8 +3,6 @@ package at.srfg.iasset.connector.component.endpoint.rest;
 import java.net.URI;
 import java.util.Optional;
 
-import javax.ws.rs.ServiceUnavailableException;
-
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
@@ -19,6 +17,7 @@ import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterfac
 import at.srfg.iasset.repository.api.IAssetDirectory;
 import at.srfg.iasset.repository.api.SubmodelRepositoryInterface;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
+import jakarta.ws.rs.ServiceUnavailableException;
 
 public class RepositoryRestConnector implements RepositoryConnection {
 

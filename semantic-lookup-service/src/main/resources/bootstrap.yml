@@ -19,34 +19,22 @@ spring:
       # it can be set via an environment variable or the config server
       enabled: ${discovery.enabled:${DISCOVERY_ENABLED:false}}
   jpa:
-    show-sql: false
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    show-sql: false
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: ${DDL_AUTO:update}
-    properties:
-      hibernate:
-        type: debug
-        temp:
-          use_jdbc_metadata_defaults: false
-        id:
-          new_generator_mappings: true
+#    properties:
+#      hibernate:
+#        type: debug
+#        temp:
+#          use_jdbc_metadata_defaults: false
+#        id:
+#          new_generator_mappings: true
   datasource:
     name: eclassdb
-    driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://${ECLASS_HOST:localhost}:${ECLASS_PORT:5432}/${ECLASS_DB:eclassdb}?ApplicationName=eclass-service
     username: ${ECLASS_USER:root}
     password: ${ECLASS_PASSWORD:changeme}
-    test-on-borrow: true
-    test-while-idle: true
-    remove-abandoned: true
-    log-abandoned: true
-    initial-size: 3
-    max-active: 3
-    max-idle: 3
-    min-idle: 3
-    max-wait: 90000
-    time-between-eviction-runs-millis: 60000
-    min-evictable-idle-time-millis: 3600000
     validation-query: "SELECT 1;" # Validation query must be set in order to test connections
     dbcp:
       default-auto-commit: false

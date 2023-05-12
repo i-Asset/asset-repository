@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
 import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
@@ -23,9 +21,6 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,6 +31,7 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.model.helper.SubmodelHelper;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
+import jakarta.validation.Valid;
 
 @Service
 public class RepositoryEnvironment implements ServiceEnvironment {

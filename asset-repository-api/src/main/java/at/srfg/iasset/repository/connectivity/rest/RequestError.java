@@ -1,7 +1,7 @@
 package at.srfg.iasset.repository.connectivity.rest;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 
 

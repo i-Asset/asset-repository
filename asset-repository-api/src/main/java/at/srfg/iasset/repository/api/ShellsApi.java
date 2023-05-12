@@ -7,8 +7,6 @@ package at.srfg.iasset.repository.api;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.AssetInformation;
 import org.eclipse.aas4j.v3.model.Reference;
@@ -39,6 +37,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 
 @Validated
 public interface ShellsApi {

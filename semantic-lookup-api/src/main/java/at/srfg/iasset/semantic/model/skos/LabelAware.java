@@ -10,9 +10,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.NotNull;
-
 import at.srfg.iasset.semantic.model.skos.SKOSLabel.LabelType;
+import jakarta.validation.constraints.NotNull;
 
 public interface LabelAware<T extends SKOSLabel> {
 	/**
@@ -122,7 +121,7 @@ public interface LabelAware<T extends SKOSLabel> {
 		
 		Optional<T> desc = getLabel(locale, LabelType.prefLabel);
 		if ( desc.isPresent()) {
-			if ( label == null || label.length() == 0) {
+			if ( label != null && label.length() > 0) {
 //			if ( Strings.isNullOrEmpty(label)) {
 				getLabels().remove(desc.get());
 			}
@@ -132,7 +131,7 @@ public interface LabelAware<T extends SKOSLabel> {
 			}
 		}
 		else {
-			if ( label == null || label.length() == 0) {
+			if ( label != null && label.length() > 0) {
 //			if (! Strings.isNullOrEmpty(label)) {
 				Optional<T> other = checkLabel(locale,  label);
 				if ( other.isPresent()) {
@@ -278,7 +277,7 @@ public interface LabelAware<T extends SKOSLabel> {
 	default void setDefinition(Locale locale, @NotNull String definition) {
 		Optional<T> desc = getLabel(locale, LabelType.definition);
 		if ( desc.isPresent()) {
-			if ( definition == null || definition.length() == 0) {
+			if ( definition != null && definition.length() > 0) {
 //			if ( Strings.isNullOrEmpty(definition)) {
 				getLabels().remove(desc.get());
 			}
@@ -288,7 +287,7 @@ public interface LabelAware<T extends SKOSLabel> {
 			}
 		}
 		else {
-			if ( definition == null || definition.length() == 0) {
+			if ( definition != null && definition.length() > 0) {
 //			if (! Strings.isNullOrEmpty(definition)) {
 				Optional<T> other = checkLabel(locale,  definition);
 				if ( other.isPresent()) {
@@ -319,7 +318,7 @@ public interface LabelAware<T extends SKOSLabel> {
 	default void setComment(Locale locale, @NotNull String comment) {
 		Optional<T> desc = getLabel(locale, LabelType.comment);
 		if ( desc.isPresent()) {
-			if ( comment == null || comment.length() == 0) {
+			if ( comment != null && comment.length() > 0) {
 //			if ( Strings.isNullOrEmpty(comment)) {
 				getLabels().remove(desc.get());
 			}
@@ -329,7 +328,7 @@ public interface LabelAware<T extends SKOSLabel> {
 			}
 		}
 		else {
-			if ( comment == null || comment.length() == 0) {
+			if ( comment != null && comment.length() > 0) {
 //			if (! Strings.isNullOrEmpty(comment)) {
 				Optional<T> other = checkLabel(locale,  comment);
 				if ( other.isPresent()) {
