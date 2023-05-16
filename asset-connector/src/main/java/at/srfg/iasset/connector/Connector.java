@@ -15,13 +15,13 @@ import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
-import at.srfg.iasset.connector.component.ConnectorMessaging;
-import at.srfg.iasset.connector.component.event.Callback;
-import at.srfg.iasset.connector.component.event.EventHandler;
-import at.srfg.iasset.connector.component.event.EventProducer;
 import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
+import at.srfg.iasset.messaging.Callback;
+import at.srfg.iasset.messaging.ConnectorMessaging;
+import at.srfg.iasset.messaging.EventHandler;
+import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.model.AASFaultSubmodel;
@@ -58,6 +58,10 @@ public class Connector implements LocalEnvironment {
 			connectorProperties.load(new FileInputStream(connectorPath));
 			
 			Connector connector = new Connector( new URI("http://localhost:8081/"));
+			connector.addAdministrationShell(AASFull.AAS_BELT_INSTANCE);
+			connector.addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
+			connector.addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE);
+			connector.addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
 			// start the http endpoint for this Connector at port 5050
 			connector.startEndpoint(5050);
 			// create 

@@ -232,8 +232,7 @@ public class AASFull {
     			.id("http://iasset.salzburgresearch.at/labor/beltInstance/properties")
     			.displayName(new DefaultLangString.Builder()
     					.language("de")
-    					.text("i-Asset Belt-Propeties Submodel").build()
-    					)
+    					.text("i-Asset Belt-Propeties Submodel").build())
     			.description(new DefaultLangString.Builder()
     					.language("de")
     					.text("i-Asset Belt Properties Submodel")
@@ -558,6 +557,7 @@ public class AASFull {
     									.value("beltData")
     									.build())
     							.build())
+    					// Referenz auf das Broker-Objekt!
     					.messageBroker(new DefaultReference.Builder()
     							.type(ReferenceTypes.MODEL_REFERENCE)
     							.key(new DefaultKey.Builder()
@@ -567,6 +567,15 @@ public class AASFull {
     							.key(new DefaultKey.Builder()
     									.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
     									.value("messageBroker")
+    									.build())
+    							// referredSemantic verweist auf den "Typ" des referenzierten Elements!!
+    							// 
+    							.referredSemanticId(new DefaultReference.Builder()
+    									.type(ReferenceTypes.GLOBAL_REFERENCE)
+    	    							.key(new DefaultKey.Builder()
+    	    									.type(KeyTypes.CONCEPT_DESCRIPTION)
+    	    									.value("http://iasset.salzburgresearch.at/data/messageBroker")
+    	    									.build())
     									.build())
     							.build())
     					.build())

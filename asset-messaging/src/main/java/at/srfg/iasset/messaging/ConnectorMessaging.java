@@ -1,9 +1,11 @@
-package at.srfg.iasset.connector.component;
+package at.srfg.iasset.messaging;
 
 import org.eclipse.aas4j.v3.model.Reference;
 
-import at.srfg.iasset.connector.component.event.EventHandler;
-import at.srfg.iasset.connector.component.event.EventProducer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import at.srfg.iasset.messaging.impl.MessagingComponent;
+import at.srfg.iasset.repository.component.ServiceEnvironment;
 
 /**
  * The EventProcessor is the mediator between the Asset/Application Connector
@@ -24,6 +26,9 @@ import at.srfg.iasset.connector.component.event.EventProducer;
  *
  */
 public interface ConnectorMessaging {
+	static ConnectorMessaging create(ObjectMapper objectMapper, ServiceEnvironment environment) {
+		return new MessagingComponent(objectMapper, environment);
+	}
 
 	/**
 	 * Registers an {@link EventHandler} with the messaging infrastructure.

@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 
 import org.eclipse.aas4j.v3.model.Entity;
 import org.eclipse.aas4j.v3.model.Key;
-import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
@@ -21,7 +20,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import at.srfg.iasset.repository.model.helper.Path;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
+import at.srfg.iasset.repository.model.helper.value.PropertyValue;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.value.type.Value;
 
 /**
  * Support Class for manipulating, traversing {@link Submodel} and contained {@link SubmodelElement}.
@@ -108,6 +109,32 @@ public class SubmodelUtils {
 			
 		}
 		return Optional.ofNullable(element);
+	}
+	static  public SubmodelElementValue getSubmodelElementValue(SubmodelElement parent, String path ) {
+		Path thePath = new Path(path);
+		//
+		Iterator<String> tokenIterator = thePath.iterator();
+		SubmodelElement element = parent;
+		while (tokenIterator.hasNext()) {
+			
+			
+			String token = tokenIterator.next();
+			
+			Optional<SubmodelElement> optElement = getChild(parent, token, SubmodelElement.class);
+			if ( ! optElement.isPresent() ) {
+				return null;
+			}
+			else {
+				element = optElement.get();
+			}
+			if (tokenIterator.hasNext()) {
+				parent = optElement.get();
+				
+			}
+		}
+		
+		return getValueOnly(element);
+		
 	}
 	/**
 	 * Obtain the reference for a {@link SubmodelElement}
@@ -334,18 +361,18 @@ public class SubmodelUtils {
 //		return null;
 //	}
 	public static Optional<Referable> resolveKeyPath(Submodel submodel, Iterator<Key> keyIterator ) {
-		return resolveKeyPath(submodel, keyIterator);
+		return resolveReferableKeyPath(submodel, keyIterator);
 		
 			
 		
 	}
-	private static Optional<Referable> resolveKeyPath(Referable container, Iterator<Key> iterator  ) {
+	private static Optional<Referable> resolveReferableKeyPath(Referable container, Iterator<Key> iterator  ) {
 		if ( iterator.hasNext()) {
 			Key elementKey = iterator.next();
 			
 			Optional<Referable>  element = getChild(container, elementKey.getValue(), Referable.class);
 			if ( element.isPresent() && iterator.hasNext()) {
-				return resolveKeyPath(element.get(), iterator);
+				return resolveReferableKeyPath(element.get(), iterator);
 			}
 			return element;
 			
@@ -357,7 +384,7 @@ public class SubmodelUtils {
 		
 		Optional<SubmodelElement>  element = getChild(container, elementKey.getValue(), SubmodelElement.class);
 		if ( element.isPresent() && iterator.hasNext()) {
-			return resolveKeyPath(element.get(), iterator);
+			return resolveReferableKeyPath(element.get(), iterator);
 		}
 		if ( element.isPresent()) {
 			return getValueOnly(element.get());

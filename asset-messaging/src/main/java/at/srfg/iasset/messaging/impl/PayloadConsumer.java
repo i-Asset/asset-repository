@@ -1,4 +1,4 @@
-package at.srfg.iasset.connector.component.event;
+package at.srfg.iasset.messaging.impl;
 
 /**
  * Interface for connecting/listening to the outer messaging infrastructure.
@@ -12,10 +12,15 @@ public interface PayloadConsumer {
 	/**
 	 * Process the message retrieved from the outer messaging infrastructure
 	 * @param topic The topic the message was received from
-	 * @param key
 	 * @param message The message payload as string
 	 */
-	void processIncomingMessage(String topic, String key, String message);
+	void processIncomingMessage(String topic, String message);
+	/**
+	 * Process the message retrieved from the outer messaging infrastructure
+	 * @param topic The topic the message was received from
+	 * @param message The message payload as byte array
+	 */
+	void processIncomingMessage(String topic, byte[] message);
 	/**
 	 * Stop listening for new incoming messages, e.g. removes the 
 	 * listener from the environment!

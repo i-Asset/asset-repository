@@ -1,9 +1,9 @@
-package at.srfg.iasset.connector.component.impl.event;
+package at.srfg.iasset.messaging.impl.helper;
 
 public class MessageBroker {
 	private String hosts;
 	private BrokerType brokerType;
-	enum BrokerType {
+	public enum BrokerType {
 		MQTT, KAFKA
 	}
 	public String getHosts() {

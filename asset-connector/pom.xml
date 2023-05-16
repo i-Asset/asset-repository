@@ -10,6 +10,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>at.srfg.iasset</groupId>
+			<artifactId>asset-messaging</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>at.srfg.iasset</groupId>
 			<artifactId>asset-repository-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

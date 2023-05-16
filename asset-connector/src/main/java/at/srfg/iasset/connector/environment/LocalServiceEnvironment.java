@@ -1,15 +1,55 @@
 package at.srfg.iasset.connector.environment;
 
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.BasicEventElement;
+import org.eclipse.aas4j.v3.model.ConceptDescription;
+import org.eclipse.aas4j.v3.model.DataElement;
+import org.eclipse.aas4j.v3.model.Key;
+import org.eclipse.aas4j.v3.model.KeyTypes;
+import org.eclipse.aas4j.v3.model.Operation;
+import org.eclipse.aas4j.v3.model.Property;
+import org.eclipse.aas4j.v3.model.Referable;
+import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.glassfish.grizzly.http.server.HttpHandler;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Base64Utils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
-import at.srfg.iasset.connector.component.ConnectorMessaging;
 import at.srfg.iasset.connector.component.config.MarshallingFeature;
 import at.srfg.iasset.connector.component.endpoint.HttpComponent;
 import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
 import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministrationRepositoryController;
 import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministrationShellController;
-import at.srfg.iasset.connector.component.event.EventHandler;
-import at.srfg.iasset.connector.component.event.EventProducer;
-import at.srfg.iasset.connector.component.event.MessagingComponent;
+import at.srfg.iasset.messaging.ConnectorMessaging;
+import at.srfg.iasset.messaging.EventHandler;
+import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.repository.component.ModelChangeProvider;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
@@ -24,21 +64,7 @@ import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
 import at.srfg.iasset.repository.model.helper.visitor.SubmodelElementCollector;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.eclipse.aas4j.v3.model.*;
-import org.glassfish.jersey.internal.inject.AbstractBinder;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Base64Utils;
-
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.Collectors;
+import at.srfg.iasset.repository.utils.SubmodelUtils;
 
 public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnvironment {
 	private final Logger logger = LoggerFactory.getLogger(LocalServiceEnvironment.class);
@@ -61,7 +87,8 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		this.repository = RepositoryConnection.getConnector(repositoryURI);
 		// in the local service environment we may use this objectmapper
 		this.objectMapper = ClientFactory.getObjectMapper();
-		eventProcessor = new MessagingComponent(this.objectMapper, this);
+		// obtain the messaging component
+		eventProcessor =ConnectorMessaging.create(objectMapper, this);
 		storage = new InMemoryStorage();
 //		environment = new InstanceEnvironment(changeProvider);
 		// The model update listener is currently not working!
@@ -806,7 +833,8 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 					Optional<Submodel> keySub = getSubmodel(rootKey.getValue());
 					if ( keySub.isPresent()) {
 						if ( keyIterator.hasNext()) {
-							return new SubmodelHelper(keySub.get()).resolveKeyPath(keyIterator);
+							return SubmodelUtils.resolveKeyPath(keySub.get(), keyIterator);
+//							return new SubmodelHelper(keySub.get()).resolveKeyPath(keyIterator);
 						}
 						return Optional.of(keySub.get());
 					}
@@ -825,7 +853,8 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 							Optional<Submodel> submodel = getSubmodel(rootKey.getValue(), submodelKey.getValue() );
 							if ( submodel.isPresent()) {
 								if ( keyIterator.hasNext()) {
-									return new SubmodelHelper(submodel.get()).resolveKeyPath(keyIterator);
+									return SubmodelUtils.resolveKeyPath(submodel.get(), keyIterator);
+//									return new SubmodelHelper(submodel.get()).resolveKeyPath(keyIterator);
 								}
 								return Optional.of(submodel.get());
 							}
@@ -843,7 +872,21 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		
 		return Optional.empty();
 	}
-
+	public <T> Optional<T> resolveValue(Reference reference, Class<T> type) {
+		// use empty path! 
+		return resolveValue(reference, "", type);
+	}
+	public <T> Optional<T> resolveValue(Reference reference, String path, Class<T> type) {
+		Optional<Referable> element = resolve(reference);
+		if (element.isPresent()) {
+			Referable referable = element.get();
+			if (SubmodelElement.class.isInstance(referable)) {
+				Object elementValue = SubmodelUtils.getSubmodelElementValue(SubmodelElement.class.cast(referable), path );
+				return Optional.of(objectMapper.convertValue(elementValue, type));
+			}
+		}
+		return Optional.empty();
+	}
 	@Override
 	public Optional<SubmodelElement> getSubmodelElement(String submodelIdentifier, String path) {
 		Optional<Submodel> submodel = getSubmodel(submodelIdentifier);

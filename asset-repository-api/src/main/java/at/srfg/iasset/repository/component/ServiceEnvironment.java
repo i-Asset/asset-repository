@@ -75,6 +75,23 @@ public interface ServiceEnvironment {
 	 */
 	Optional<Referable> resolve(Reference reference);
 	/**
+	 * Resolve the referenced element <b>ValueOnly</b>
+	 * @param <T>
+	 * @param reference The reference to resolve
+	 * @param path The path inside the referenced element.
+	 * @param type The (expected) type of the ValueOnly
+	 * @return
+	 */
+	<T> Optional<T> resolveValue(Reference reference, String path, Class<T> type);
+	/**
+	 * Resolve the referenced element <b>ValueOnly</b>
+	 * @param <T>
+	 * @param reference The reference to resolve
+	 * @param type The (expected) type of the ValueOnly
+	 * @return
+	 */
+	<T> Optional<T> resolveValue(Reference reference, Class<T> type);
+	/**
 	 * Retrieve all asset {@link AssetAdministrationShell} 
 	 * @return
 	 */

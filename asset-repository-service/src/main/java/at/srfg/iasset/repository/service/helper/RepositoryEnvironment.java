@@ -438,6 +438,18 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		return Optional.empty();
 	}
 
+	@Override
+	public <T> Optional<T> resolveValue(Reference reference, String path, Class<T> type) {
+		// TODO IMPLEMENT
+		return Optional.empty();
+	}
+
+	@Override
+	public <T> Optional<T> resolveValue(Reference reference, Class<T> type) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
+
 
 	
 }

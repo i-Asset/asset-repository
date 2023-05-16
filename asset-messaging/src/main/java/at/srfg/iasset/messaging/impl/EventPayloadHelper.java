@@ -1,5 +1,6 @@
-package at.srfg.iasset.connector.component.impl.event;
+package at.srfg.iasset.messaging.impl;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -22,14 +23,14 @@ import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.srfg.iasset.connector.component.event.EventConsumer;
-import at.srfg.iasset.connector.component.event.EventHandler;
-import at.srfg.iasset.connector.component.event.EventProducer;
-import at.srfg.iasset.connector.component.event.PayloadConsumer;
-import at.srfg.iasset.connector.component.impl.event.kafka.EventElementConsumer;
+import at.srfg.iasset.messaging.EventConsumer;
+import at.srfg.iasset.messaging.EventHandler;
+import at.srfg.iasset.messaging.EventProducer;
+import at.srfg.iasset.messaging.impl.helper.BrokerHelper;
+import at.srfg.iasset.messaging.impl.helper.MessageBroker;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 /**
- * Helper class providing messaging functionality for a {@link EventElement}.
+ * Helper class providing messaging functionality for a single {@link EventElement}.
  * 
  * <p>
  * 
@@ -38,19 +39,24 @@ import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
  * @author dglachs
  *
  */
-public class EventPayloadHelper implements PayloadConsumer {
+public class EventPayloadHelper implements PayloadConsumer, EventHelper {
 	// source
 	Reference source;
+	// the source element defining the topic
 	BasicEventElement sourceElement;
+	// semantic reference of the source element
 	Reference sourceSemantic;
 	// observed
 	Reference observed;
+	// the resolved observed element
 	Referable observedElement;
+	// semantic reference of the observed element
 	Reference observedSemantic;
 	// should be reference to the event element responsible for sending
 	Reference subjectId;
+	// The host's address
 	String hosts;
-	MessageBroker.BrokerType brokerType;
+	MessageBroker broker;
 	/**
 	 * Set of references which determine when a incoming message is to be 
 	 * handled.
@@ -58,6 +64,7 @@ public class EventPayloadHelper implements PayloadConsumer {
 	private Set<Reference> matchingReferences;
 	private Set<EventHandler<?>> handler;
 	private EventConsumer consumer;
+	// need to have the object mapper available
 	ObjectMapper objectMapper = ClientFactory.getObjectMapper();
 
 	public EventPayloadHelper() {
@@ -80,6 +87,10 @@ public class EventPayloadHelper implements PayloadConsumer {
 				EventPayloadHelper.this.matchingReferences.add(t);
 				
 			}});
+		return this;
+	}
+	public EventPayloadHelper messageBroker(MessageBroker broker) {
+		this.broker = broker;
 		return this;
 	}
 	/**
@@ -123,8 +134,8 @@ public class EventPayloadHelper implements PayloadConsumer {
 		return this;
 	}
 	public EventPayloadHelper hosts(String hosts) {
-		// TODO: decide how
-		
+		this.hosts = hosts;
+
 		return this;
 		
 	}
@@ -142,11 +153,15 @@ public class EventPayloadHelper implements PayloadConsumer {
 		// check whether the consumer is already present
 		if ( consumer == null )  {
 			// the groupId must be unique for each event element
+			// 
 			// the topic may contain wildcards
-			consumer = new EventElementConsumer(getTopic(), this);
-			Thread consumerThread = new Thread(consumer);
-			//
-			consumerThread.start();
+			
+			// TODO: check for broker type and hosts
+			consumer = BrokerHelper.createConsumer(this);
+			if ( consumer != null) {
+				// 
+				consumer.subscribe(getTopic());
+			}
 			// register a shutdown hook, so that the consumer is closed
 			// when the VM is stopped
 			Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -159,14 +174,45 @@ public class EventPayloadHelper implements PayloadConsumer {
 		}
 	}
 	public <T> EventProducer<T> getEventProducer(Class<T> payloadType) {
-		return null;
+		return BrokerHelper.createProducer(this, payloadType);
 	}
 	
 	public void removeHandler(EventHandler<?> handler) {
 		
 		// TODO: implement
 	}
-	public void processIncomingMessage(String topic, String key, String message) {
+	public void acceptMessage(String topic,  byte[] message ) {
+		try {
+			final EventPayload fullPayload = fromByteArray(message);
+			for (EventHandler<?> eventHandler: handler) {
+					Object payload = objectMapper.readerFor(eventHandler.getPayloadType()).readValue(fullPayload.getPayload());
+					
+					acceptPayload(fullPayload, payload, eventHandler);
+			}
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public void processIncomingMessage(String topic, byte[] message) {
+		try {
+			final EventPayload fullPayload = fromByteArray(message);
+			for (EventHandler<?> eventHandler: handler) {
+					Object payload = objectMapper.readerFor(eventHandler.getPayloadType()).readValue(fullPayload.getPayload());
+					
+					acceptPayload(fullPayload, payload, eventHandler);
+			}
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public void processIncomingMessage(String topic, String message) {
 		try {
 			final EventPayload fullPayload = objectMapper.readerFor(EventPayload.class).readValue(message);
 			for (EventHandler<?> eventHandler: handler) {
@@ -179,6 +225,24 @@ public class EventPayloadHelper implements PayloadConsumer {
 			e.printStackTrace();
 		}
 		
+	}
+	public EventPayload toEventPayload(Object payload) {
+		try {
+			return new DefaultEventPayload.Builder()
+					.source(source)
+					.sourceSemanticId(sourceSemantic)
+					.observableReference(observed)
+					.observableSemanticId(observedSemantic)
+					.subjectId(subjectId)
+					.payload(objectMapper.writeValueAsString(payload))
+					.timeStamp(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE))
+					.topic(sourceElement.getMessageTopic())
+					.build();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 	/**
 	 * Convert the payload object into the {@link EventHandler}'s type and 
@@ -199,8 +263,8 @@ public class EventPayloadHelper implements PayloadConsumer {
 	public String getTopic() {
 		return sourceElement.getMessageTopic();
 	}
-	public String getHosts() {
-		return hosts;
+	public MessageBroker getBroker() {
+		return broker;
 	}
 	public boolean matches(Reference reference) {
 		return matchingReferences.contains(reference);
@@ -243,5 +307,25 @@ public class EventPayloadHelper implements PayloadConsumer {
 		}
 		
 	}
-	
+	@Override
+	public byte[] toByteArray(EventPayload payload) {
+		try {
+			return objectMapper.writeValueAsBytes(payload);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@Override
+	public EventPayload fromByteArray(byte[] payload) {
+		try {
+			return objectMapper.readValue(payload, EventPayload.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

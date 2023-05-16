@@ -1,4 +1,4 @@
-package at.srfg.iasset.connector.component.event;
+package at.srfg.iasset.messaging;
 
 /**
  * Interface to notify a sender, that a message has been delivered!

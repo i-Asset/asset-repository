@@ -1,8 +1,7 @@
-package at.srfg.iasset.connector.component.event;
+package at.srfg.iasset.messaging;
 
 import org.eclipse.aas4j.v3.model.Reference;
 
-import at.srfg.iasset.connector.component.ConnectorMessaging;
 
 /**
  * Interface for sending events to the outer messaging interface.

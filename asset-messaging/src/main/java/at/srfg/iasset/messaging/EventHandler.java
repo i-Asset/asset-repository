@@ -1,8 +1,7 @@
-package at.srfg.iasset.connector.component.event;
+package at.srfg.iasset.messaging;
 
 import org.eclipse.aas4j.v3.model.EventPayload;
 
-import at.srfg.iasset.connector.component.ConnectorMessaging;
 
 /**
  * Typed {@link EventHandler} used to process incoming

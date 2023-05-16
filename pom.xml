@@ -20,6 +20,7 @@
 		<module>semantic-lookup-api</module>
 		<module>semantic-lookup-service</module>
 		<module>asset-connector</module>
+		<module>asset-messaging</module>
 		<module>asset-repository-api</module>
 		<module>asset-repository-mongo</module>
 		<module>asset-repository-service</module>

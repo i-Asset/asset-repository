@@ -6,6 +6,8 @@ server:
     include-message: always
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     # the name of the application represents the global identifier of this microservice.
     name: repository-service
