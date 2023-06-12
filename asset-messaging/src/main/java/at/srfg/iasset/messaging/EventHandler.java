@@ -1,6 +1,7 @@
 package at.srfg.iasset.messaging;
 
 import org.eclipse.aas4j.v3.model.EventPayload;
+import org.eclipse.aas4j.v3.model.Reference;
 
 
 /**
@@ -28,4 +29,9 @@ public interface EventHandler<T> {
 	 * @return
 	 */
 	Class<T> getPayloadType();
+	/**
+	 * Define the semanticId, the Handler is responsible for!
+	 * @return
+	 */
+	Reference getSemanticId();
 }

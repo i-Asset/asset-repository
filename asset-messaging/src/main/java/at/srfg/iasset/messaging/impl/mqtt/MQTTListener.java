@@ -1,24 +1,21 @@
 package at.srfg.iasset.messaging.impl.mqtt;
 
-import org.eclipse.aas4j.v3.model.EventPayload;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import at.srfg.iasset.messaging.EventConsumer;
-import at.srfg.iasset.messaging.impl.EventHelper;
-import at.srfg.iasset.messaging.impl.PayloadConsumer;
+import at.srfg.iasset.messaging.exception.MessagingException;
+import at.srfg.iasset.messaging.impl.MessageConsumer;
+import at.srfg.iasset.messaging.impl.MessageHandler;
 
-public class MqttConsumer implements EventConsumer {
-	private final EventHelper eventHelper;
+public class MQTTListener implements MessageConsumer {
 	private final IMqttClient client;
 	private String topic;
 	
-	public MqttConsumer(EventHelper helper, String clientId) throws MqttException {
-		this.eventHelper = helper;
-		client = new MqttClient(helper.getBroker().getHosts(), clientId, new MemoryPersistence());
+	public MQTTListener(String hosts, String clientId) throws MqttException {
+		client = new MqttClient(hosts, clientId, new MemoryPersistence());
 		MqttConnectOptions options = new MqttConnectOptions();
 		options.setAutomaticReconnect(true);
 		options.setCleanSession(true);
@@ -27,19 +24,17 @@ public class MqttConsumer implements EventConsumer {
 	}
 
 	@Override
-	public void subscribe(String channelTopic) {
+	public void subscribe(String channelTopic, MessageHandler eventHelper) throws MessagingException {
 		try {
 			client.subscribe(channelTopic, (topic, message) -> {
 				// check whether to use byte[] instead of string
 				eventHelper.acceptMessage(topic, message.getPayload());
-//				eventHelper.processIncomingMessage(topic, new String(message.getPayload()));
 			});
 			this.topic = channelTopic;
 		} catch (MqttException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MessagingException(e.getLocalizedMessage());
 		}
-
+		
 	}
 
 	@Override

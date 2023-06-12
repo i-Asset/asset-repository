@@ -1,7 +1,5 @@
 package at.srfg.iasset.messaging;
 
-import at.srfg.iasset.messaging.impl.PayloadConsumer;
-
 /**
  * Interface for event consumer. The {@link EventConsumer} listens 
  * for incoming messages, thus is {@link Runnable}!

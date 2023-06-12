@@ -2,6 +2,8 @@ package at.srfg.iasset.messaging;
 
 import org.eclipse.aas4j.v3.model.Reference;
 
+import at.srfg.iasset.messaging.exception.MessagingException;
+
 
 /**
  * Interface for sending events to the outer messaging interface.
@@ -11,6 +13,9 @@ import org.eclipse.aas4j.v3.model.Reference;
  * The returned {@link EventProducer} is linked to the outer messaging infrastructure based on the 
  * provided {@link Reference}!
  * 
+ * </p>
+ * <p>
+ * Each EventProducer is linked with a {@link EventElementHandler} helper object.
  * </p>
  * @author dglachs
  *
@@ -22,14 +27,17 @@ public interface EventProducer<T> {
 	/**
 	 * Send the provided (typed) payload object
 	 * @param payload
+	 * @throws MessagingException 
 	 */
-	void sendEvent(T payload);
+	void sendEvent(T payload) throws MessagingException;
 	/**
-	 * Send the provided (typed) payload object and register for completion notification
+	 * Send the provided (typed) payload object, and pass along the 
 	 * @param payload
-	 * @param callback
+	 * @param subjectId
 	 */
-	void sendEvent(T payload, Callback<T> callback);
+	void sendEvent(T payload, Reference subjectId) throws MessagingException;
+	<U> void sendEvent(T payload, Reference subjectId, EventHandler<U> updateHandler) throws MessagingException;
+
 	/**
 	 * Explicitly stop the underlying messaging infrastructure
 	 */

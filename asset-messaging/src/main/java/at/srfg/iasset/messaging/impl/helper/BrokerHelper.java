@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 
-import at.srfg.iasset.messaging.EventConsumer;
-import at.srfg.iasset.messaging.EventProducer;
+import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.messaging.impl.BrokerFactory;
-import at.srfg.iasset.messaging.impl.EventHelper;
+import at.srfg.iasset.messaging.impl.MessageConsumer;
+import at.srfg.iasset.messaging.impl.MessageProducer;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 
@@ -32,25 +32,39 @@ public class BrokerHelper {
 			
 			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException
 					| InstantiationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 		}
 	}
-	public static boolean canCreate(MessageBroker broker) {
+	/**
+	 * Create a {@link MessageConsumer} connected with the provided {@link MessageBroker}.
+	 * 
+	 * @param broker The {@link MessageBroker} to connect to
+	 * @param clientId The unique clientId
+	 * @return
+	 * @throws MessagingException
+	 */
+	public static MessageConsumer createConsumer(MessageBroker broker, String clientId) throws MessagingException {
+		if ( canCreate(broker)) {
+			return factory.get(broker.getBrokerType()).createConsumer(broker, clientId);
+		}
+		throw new MessagingException("Cannot create consumer!");
+	}
+	private static boolean canCreate(MessageBroker broker) {
 		return factory.get(broker.getBrokerType()) != null;
 	}
-	public static EventConsumer createConsumer(EventHelper helper) {
-		if ( canCreate(helper.getBroker())) {
-			return factory.get(helper.getBroker().getBrokerType()).createConsumer(helper);
+	/**
+	 * Create a MessageProducer connected with the provided MessageBroker (hosts, broker type)
+	 * @param broker The {@link MessageBroker} to connect to
+	 * @param clientId The unique clientId
+	 * @return
+	 * @throws MessagingException
+	 */
+	public static MessageProducer createProducer(MessageBroker broker, String clientId) throws MessagingException {
+		if ( canCreate(broker)) {
+			return factory.get(broker.getBrokerType()).createProducer(broker, clientId);
 		}
-		return null;
-	}
-	public static <T> EventProducer<T> createProducer(EventHelper helper, Class<T> payloadType) {
-		if ( canCreate(helper.getBroker())) {
-			return factory.get(helper.getBroker().getBrokerType()).getProducer(helper, payloadType);
-		}
-		return null;
+		throw new MessagingException("Cannot create producer - broker element misconfigured!");
 	}
 }

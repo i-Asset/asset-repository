@@ -1,6 +1,5 @@
 package at.srfg.iasset.messaging.impl.mqtt;
 
-import org.eclipse.aas4j.v3.model.EventPayload;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -8,23 +7,15 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import at.srfg.iasset.messaging.exception.MessagingException;
+import at.srfg.iasset.messaging.impl.MessageProducer;
 
-import at.srfg.iasset.messaging.Callback;
-import at.srfg.iasset.messaging.EventProducer;
-import at.srfg.iasset.messaging.impl.EventHelper;
-import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
-
-public class MqttProducer<T> implements EventProducer<T> {
-	private final EventHelper payloadHelper;
+public class MQTTSender implements MessageProducer {
 	private final IMqttClient client;
-	private final String topic;
 	
-	public MqttProducer(EventHelper helper, String clientId) throws MqttException {
-		this.payloadHelper = helper;
-		this.topic = helper.getTopic();
+	public MQTTSender(String hosts, String clientId) throws MqttException {
 		
-		client = new MqttClient(helper.getBroker().getHosts(), clientId, new MemoryPersistence());
+		client = new MqttClient(hosts, clientId, new MemoryPersistence());
 		MqttConnectOptions options = new MqttConnectOptions();
 		options.setAutomaticReconnect(true);
 		options.setCleanSession(true);
@@ -48,28 +39,23 @@ public class MqttProducer<T> implements EventProducer<T> {
 
 	}
 
-	@Override
-	public void sendEvent(T payload) {
-		// 
-		EventPayload eventPayload = payloadHelper.toEventPayload(payload);
+	/**
+	 * Send payload as byte array to message broker
+	 * @param payload
+	 */
+	public void send(String topic, byte[] payload) throws MessagingException {
 		if ( client.isConnected()) {
 			try {
 				MqttMessage msg = new MqttMessage();
 				msg.setQos(0);
-				msg.setPayload(payloadHelper.toByteArray(eventPayload));
+				msg.setPayload(payload);
 				client.publish(topic, msg);
 			} catch (MqttException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
 	}
-	
-	@Override
-	public void sendEvent(T payload, Callback<T> callback) {
-		sendEvent(payload);
-		
-	}
+
 
 }
