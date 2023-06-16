@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +31,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.message.internal.MediaTypes;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,7 +118,7 @@ public class RequestConfigurer {
 		return false;
 	}
 	private String base64Encode(Object obj) {
-		return Base64Utils.encodeToString(obj.toString().getBytes());
+		return Base64.getEncoder().encodeToString(obj.toString().getBytes());
 	}
 	private String encode(Object obj) {
 		try {
