@@ -156,8 +156,14 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 					@Override
 					public MessageBroker get() {
 						MessageBroker broker = new MessageBroker();
-						broker.setBrokerType(BrokerType.MQTT);
-						broker.setHosts("tcp://localhost:1883");
+						try {
+							BrokerType defaultType = BrokerType.valueOf(environment.getConfigProperty("connector.network.broker.type"));
+							broker.setBrokerType(defaultType);
+							broker.setHosts(environment.getConfigProperty("connector.network.broker.hosts"));
+						} catch (Exception e) {
+							
+						}
+						
 						return broker;
 					}
 				});
