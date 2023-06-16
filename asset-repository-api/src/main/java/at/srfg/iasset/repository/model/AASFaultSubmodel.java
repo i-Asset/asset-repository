@@ -1,10 +1,19 @@
 package at.srfg.iasset.repository.model;
 
-import java.util.Arrays;
-import java.util.Base64;
-
-import org.eclipse.aas4j.v3.model.*;
-import org.eclipse.aas4j.v3.model.impl.*;
+import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.aas4j.v3.model.Direction;
+import org.eclipse.aas4j.v3.model.KeyTypes;
+import org.eclipse.aas4j.v3.model.ModelingKind;
+import org.eclipse.aas4j.v3.model.ReferenceTypes;
+import org.eclipse.aas4j.v3.model.StateOfEvent;
+import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.aas4j.v3.model.impl.DefaultBasicEventElement;
+import org.eclipse.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.aas4j.v3.model.impl.DefaultReference;
+import org.eclipse.aas4j.v3.model.impl.DefaultSubmodel;
+import org.eclipse.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
 
 // TODO import org.eclipse.aas4j.v3.rc02.model.impl.DefaultEmbeddedDataSpecification;
 

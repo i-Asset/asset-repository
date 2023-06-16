@@ -3,12 +3,12 @@ package at.srfg.iasset.repository.model.helper.value;
 public class FileValue extends DataElementValue {
 	private String value; 
 	
-	private String mimeType;
+	private String contentType;
 	
 	public FileValue() {
 	}
 	public FileValue(String contentType, String value) {
-		this.mimeType = contentType;
+		this.contentType = contentType;
 		this.value = value;
 	}
 	public String getValue() {
@@ -17,11 +17,11 @@ public class FileValue extends DataElementValue {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	public String getMimeType() {
-		return mimeType;
+	public String getContentType() {
+		return contentType;
 	}
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
+	public void setContentType(String mimeType) {
+		this.contentType = mimeType;
 	}
 	
 }

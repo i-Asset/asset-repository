@@ -1,4 +1,4 @@
-package at.srfg.iasset.repository.model.helper;
+package at.srfg.iasset.repository.model.helper.payload;
 
 
 import java.lang.reflect.InvocationTargetException;
@@ -27,24 +27,24 @@ import io.github.classgraph.ScanResult;
 public class PayloadValueHelper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PayloadValueHelper.class);
 	
-	private static Map<Class<? extends SubmodelElement>, ValueMapper> mapper;
+	private static Map<Class<?>, PayloadValueMapper> mapper;
 	
 	static {
 		
 		if ( mapper == null) {
-			mapper = new HashMap<Class<? extends SubmodelElement>, ValueMapper>();
+			mapper = new HashMap<Class<?>, PayloadValueMapper>();
 			ScanResult scanResult = new ClassGraph()
 					.enableAllInfo()
 					.acceptPackages(ValueMapper.class.getPackageName())
 					.scan();
-			List<Class<?>> mapperClasses = scanResult.getClassesImplementing(ValueMapper.class).loadClasses();
+			List<Class<?>> mapperClasses = scanResult.getClassesImplementing(PayloadValueMapper.class).loadClasses();
 			// build the mapper's
 			for ( Class<?> clazz : mapperClasses) {
-				Class<? extends ValueMapper> vmClass = (Class<? extends ValueMapper>) clazz;
+				Class<? extends PayloadValueMapper> vmClass = (Class<? extends PayloadValueMapper>) clazz;
 				TypeToken typeVariable = TypeToken.of(vmClass).resolveType(ValueMapper.class.getTypeParameters()[0]);
-				Class<? extends SubmodelElement> clazz2 = (Class<? extends SubmodelElement>) typeVariable.getRawType();
+				Class<?> clazz2 = (Class<?>) typeVariable.getRawType();
 				try {
-					ValueMapper valueMapper = ConstructorUtils.invokeConstructor(vmClass);
+					PayloadValueMapper valueMapper = ConstructorUtils.invokeConstructor(vmClass);
 					mapper.put(clazz2, valueMapper);
 				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
 					e.printStackTrace();
@@ -53,23 +53,21 @@ public class PayloadValueHelper {
 		}
 	}
 	@SuppressWarnings("unchecked")
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> V toValue(M submodelElement) {
+	public static <M, V extends PayloadValue> V toValue(M submodelElement) {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
-			return (V) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapToValue(submodelElement);
+			return (V) ((PayloadValueMapper<M,V>)mapper.get(propertyInterface)).mapToValue(submodelElement);
 		}
 		return null;
 		
 	}
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, V value) {
-		return modelElement;
-	}
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, JsonNode node) {
-		Class<?> propertyInterface = AASModelHelper.getAasInterface(modelElement.getClass());
-		if ( mapper.containsKey(propertyInterface)) {
-			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapValueToElement(modelElement, node);
+	public static <M, V extends PayloadValue> M fromValue(V value, Class<M> modelElement) {
+		if (value != null) {
+			Class<?> propertyInterface = AASModelHelper.getAasInterface(modelElement);
+			if ( mapper.containsKey(propertyInterface)) {
+				return (M) ((PayloadValueMapper<M,V>)mapper.get(propertyInterface)).mapFromValue(value);
+			}
 		}
 		return null;
 	}
-
 }

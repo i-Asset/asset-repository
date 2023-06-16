@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
@@ -22,6 +24,15 @@ import org.eclipse.aas4j.v3.model.impl.DefaultReference;
 import at.srfg.iasset.repository.config.AASModelHelper;
 
 public class ReferenceUtils {
+	public static Key[] keys(Reference ref) {
+		if (ref == null || ref.getKeys() == null || ref.getKeys().isEmpty()) {
+			return null;
+		}
+		Key[] keys = new Key[ref.getKeys().size()];
+		ref.getKeys().toArray(keys);
+		return keys;
+		 
+	}
 	public static Iterator<Key> keyIterator(Reference ref) {
 		if (ref == null || ref.getKeys() == null || ref.getKeys().isEmpty()) {
 			return null;
@@ -60,10 +71,26 @@ public class ReferenceUtils {
 		int lastElement = ref.getKeys().size() - 1;
 		return ref.getKeys().get(lastElement).getValue();
 	}
-	
+	public static Reference[] asGlobalReferences(String ... values) {
+		ArrayList<Reference> ref = new ArrayList<>();
+		for (String value : values) {
+			ref.add(asGlobalReference(KeyTypes.GLOBAL_REFERENCE, value));
+		}
+		Reference [] refArray = new Reference[ref.size()];
+		ref.toArray(refArray);
+		return refArray;
+		
+	}
 	public static Reference asGlobalReference(KeyTypes type, String identifier) {
 		return new DefaultReference.Builder()
 				.key(new DefaultKey.Builder().type(type).value(identifier).build())
+				.type(ReferenceTypes.GLOBAL_REFERENCE)
+				.build();
+			
+	}
+	public static Reference asGlobalReference(String identifier) {
+		return new DefaultReference.Builder()
+				.key(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE).value(identifier).build())
 				.type(ReferenceTypes.GLOBAL_REFERENCE)
 				.build();
 			

@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import org.eclipse.aas4j.v3.model.Entity;
 import org.eclipse.aas4j.v3.model.Key;
+import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
@@ -20,9 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import at.srfg.iasset.repository.model.helper.Path;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
-import at.srfg.iasset.repository.model.helper.value.PropertyValue;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
-import at.srfg.iasset.repository.model.helper.value.type.Value;
 
 /**
  * Support Class for manipulating, traversing {@link Submodel} and contained {@link SubmodelElement}.
@@ -31,18 +30,10 @@ import at.srfg.iasset.repository.model.helper.value.type.Value;
  * @author dglachs
  *
  */
+
 public class SubmodelUtils {
 	
-//	private final Submodel submodel;
-////	private Optional<ModelEventProvider> eventProvider;
-//	
-//	public SubmodelUtils(Submodel submodel) {
-//		this.submodel = submodel;
-//	}
-//
-//	public Submodel getSubmodel() {
-//		return submodel;
-//	}
+
 	/**
 	 * remove the {@link SubmodelElement} identified by a dot-separated path
 	 * @param submodel The submodel to work with
@@ -390,5 +381,31 @@ public class SubmodelUtils {
 			return getValueOnly(element.get());
 		}
 		return null;
+	}
+
+	public static Optional<Referable> resolveReference(Submodel submodel, Reference element) {
+		// the first entry points to the submodel
+		String lastKeyValue = ReferenceUtils.lastKeyValue(element);
+		String firstKeyValue = ReferenceUtils.firstKeyValue(element);
+		Referable referenced = submodel;
+		for (Key key : element.getKeys()) {
+			if (KeyTypes.SUBMODEL.equals(key.getType())) {
+				if (submodel.getId().equalsIgnoreCase(lastKeyValue)) {
+					return Optional.of(submodel);
+				}
+				if (submodel.getId().equalsIgnoreCase(firstKeyValue)) {
+					continue;
+				}
+				throw new IllegalStateException("Reference is invalid!");
+			}
+			Optional<Referable> referable = getChild(referenced, key.getValue(), Referable.class);
+			if (referable.isPresent()) {
+				referenced = referable.get();
+			}
+		}
+		if (referenced.getIdShort().equalsIgnoreCase(ReferenceUtils.lastKeyValue(element))) {
+			return Optional.of(referenced);
+		}
+		return Optional.empty();
 	}
 }
