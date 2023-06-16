@@ -29,8 +29,8 @@ import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
-import at.srfg.iasset.repository.model.helper.SubmodelHelper;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
+import at.srfg.iasset.repository.utils.SubmodelUtils;
 import jakarta.validation.Valid;
 
 @Service
@@ -163,7 +163,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		Optional<Submodel> theSubmodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( theSubmodel.isPresent()) {
 			//
-			Optional<SubmodelElement> elementAdded = new SubmodelHelper(theSubmodel.get()).setSubmodelElementAt(idShortPath, body);
+			Optional<SubmodelElement> elementAdded = SubmodelUtils.setSubmodelElementAt(theSubmodel.get(),idShortPath, body);
 			if (elementAdded.isPresent()) {
 				storage.persist(theSubmodel.get());
 				return elementAdded.get();
@@ -180,10 +180,9 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	 * @return
 	 */
 	private boolean deleteSubmodelElementByPath(Submodel submodel, String path) {
-		SubmodelHelper mySubmodel = new SubmodelHelper(submodel);
-		Optional<SubmodelElement> deleted = mySubmodel.removeSubmodelElementAt(path);
+		Optional<SubmodelElement> deleted = SubmodelUtils.removeSubmodelElementAt(submodel, path);
 		if (deleted.isPresent()) {
-			storage.persist(mySubmodel.getSubmodel());
+			storage.persist(submodel);
 			return true;
 		}
 		return false;
@@ -200,7 +199,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	public Optional<SubmodelElement> getSubmodelElement(String aasIdentifier,String submodelIdentifier, String path) {
 		Optional<Submodel> theSub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( theSub.isPresent()) {
-			return new SubmodelHelper(theSub.get()).getSubmodelElementAt(path);
+			return SubmodelUtils.getSubmodelElementAt(theSub.get(), path);
 		}
 		return Optional.empty();
 	}
@@ -253,7 +252,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 			Optional<Submodel> submodel = storage.findSubmodelById(ReferenceUtils.firstKeyValue(element));
 			if ( submodel.isPresent()) {
 				if ( hasSubmodelReference(aasIdentifier, submodel.get().getId())) {
-					return new SubmodelHelper(submodel.get()).resolveReference(element);
+					return SubmodelUtils.resolveReference(submodel.get(),element);
 				}
 			}
 			break;
@@ -267,7 +266,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		
 		if ( submodel.isPresent()) {
-			return new SubmodelHelper(submodel.get()).getValueAt(path);
+			return SubmodelUtils.getValueAt(submodel.get(), path);
 		}
 		return null;
 	}
@@ -374,7 +373,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	public Optional<SubmodelElement> getSubmodelElement(String submodelIdentifier, String path) {
 		Optional<Submodel> theSub = getSubmodel(submodelIdentifier);
 		if ( theSub.isPresent()) {
-			return new SubmodelHelper(theSub.get()).getSubmodelElementAt(path);
+			return SubmodelUtils.getSubmodelElementAt(theSub.get(), path);
 		}
 		return Optional.empty();
 	}
@@ -383,7 +382,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	public Object getElementValue(String submodelIdentifier, String path) {
 		Optional<Submodel> theSub = getSubmodel(submodelIdentifier);
 		if ( theSub.isPresent()) {
-			return new SubmodelHelper(theSub.get()).getValueAt(path);
+			return SubmodelUtils.getValueAt(theSub.get(), path);
 		}
 		return null;
 	}
@@ -391,7 +390,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	public <T> T getElementValue(String submodelIdentifier, String path, Class<T> clazz) {
 		Optional<Submodel> theSub = getSubmodel(submodelIdentifier);
 		if ( theSub.isPresent()) {
-			Object value = new SubmodelHelper(theSub.get()).getValueAt(path);
+			Object value = SubmodelUtils.getValueAt(theSub.get(), path);
 			return aasMapper.convertValue(value, clazz);
 		}
 		return null;
@@ -415,7 +414,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		case SUBMODEL:
 			Optional<Submodel> submodel = storage.findSubmodelById(ReferenceUtils.firstKeyValue(reference));
 			if ( submodel.isPresent()) {
-				return new SubmodelHelper(submodel.get()).resolveReference(reference);
+				return SubmodelUtils.resolveReference(submodel.get(), reference);
 			}
 			break;
 		case ASSET_ADMINISTRATION_SHELL:
@@ -448,6 +447,12 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	public <T> Optional<T> resolveValue(Reference reference, Class<T> type) {
 		// TODO Auto-generated method stub
 		return Optional.empty();
+	}
+
+	@Override
+	public String getConfigProperty(String key) {
+		// TODO IMPLEMENT
+		return null;
 	}
 
 
