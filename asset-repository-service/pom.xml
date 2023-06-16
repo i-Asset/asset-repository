@@ -46,12 +46,6 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<!-- Swagger UI -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.0.3</version>
-		</dependency>
 
 		<!-- Spring Boot Web Framework -->
 		<dependency>
@@ -84,6 +78,12 @@
 			<!-- required dependency for eureka client to report health metrics, etc. -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- Swagger UI -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.0.3</version>
 		</dependency>
 
 		<!-- Spring mongodb -->
