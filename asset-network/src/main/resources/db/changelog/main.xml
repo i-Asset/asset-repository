@@ -1,0 +1,177 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    <changeSet id="000001" author="admin">
+        <createTable tableName="itwin_enterprise">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="display_name" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="legal_name" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="domain" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uri" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="itwin_broker">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="display_name" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hosts" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="broker_type" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="itwin_network">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="network_name" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="work_center" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="station" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="display_name" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enterprise_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="broker_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="enterprise_id"
+                                 baseTableName="itwin_network"
+                                 constraintName="itwin_network_enterprise_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="itwin_enterprise"/>
+        <addForeignKeyConstraint baseColumnNames="broker_id"
+                                 baseTableName="itwin_network"
+                                 constraintName="itwin_network_broker_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="itwin_broker"/>
+		<!-- 
+        <createTable tableName="state_provinces">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="abbreviation" type="char(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="country_id"
+                                 baseTableName="state_provinces"
+                                 constraintName="fk_country_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="countries"/>
+		 -->
+	<!-- 
+        <createTable tableName="customers">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address2" type="varchar(255)"/>
+            <column name="postal_code" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state_province_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="state_province_id"
+                                 baseTableName="customers"
+                                 constraintName="fk_state_province_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="state_provinces"/>
+	 -->
+
+        <loadData file="db/data/enterprise.csv" tableName="itwin_enterprise" usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="display_name" type="string"/>
+            <column name="legal_name" type="string"/>
+            <column name="description" type="string"/>
+			<column name="domain" type="string"/>
+			<column name="uri" type="string"/>
+            
+        </loadData>
+        <loadData file="db/data/broker.csv" tableName="itwin_broker" usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="display_name" type="string"/>
+            <column name="hosts" type="string"/>
+            <column name="broker_type" type="string"/>
+			<column name="username" type="string"/>
+			<column name="password" type="string"/>
+            
+        </loadData>
+        <loadData file="db/data/network.csv" tableName="itwin_network" usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="display_name" type="string"/>
+            <column name="network_name" type="string"/>
+            <column name="work_center" type="string"/>
+            <column name="station" type="string"/>
+            <column name="description" type="string"/>
+			<column name="enterprise_id" type="numeric"/>
+			<column name="broker_id" type="numeric"/>
+            
+        </loadData>
+        <!-- 
+        <loadData file="db/data/state-provinces.csv" tableName="state_provinces" usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="abbreviation" type="string"/>
+            <column name="name" type="string"/>
+            <column name="country_id" type="numeric"/>
+        </loadData>
+         -->
+    </changeSet>
+</databaseChangeLog>

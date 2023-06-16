@@ -1,0 +1,60 @@
+server:
+  port: ${SPRING_APP_PORT:8085}
+  context-path:  ${SPRING_APP_CONTEXT_PATH:/api}
+ 
+spring:
+  datasource:
+    url: ${DATASOURCE_JDBC_URL:jdbc:postgresql://localhost:5432/development}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${DATASOURCE_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+  liquibase:
+    change-log: classpath:db/changelog/main.xml
+ 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:28080/realms/iasset-realm
+  devtools:
+    restart:
+      enabled: true
+  application:
+    # the name of the application represents the global identifier of this microservice.
+    name: asset-network
+  cloud:
+    config:
+      uri: ${vcap.services.config-service.credentials.url:${CONFIG_SERVER_URI:http://localhost:8888}}
+      # failFast is disabled per default, so that the service can start standalone without config server.
+      # failFast should be enabled in production environments.
+      # it can be set via an environment variable or the config server
+      failFast: ${vcap.services.config-service.failFast:${CONFIG_SERVER_FAILFAST:false}}
+    service-registry:
+      auto-registration:
+        enabled: ${DISCOVERY_ENABLED:false}
+        fail-fast: ${DISCOVERY_FAILFAST:true}
+    discovery:
+      # by disabling the service discovery the application/service can be started in "standalone mode".
+      # service discovery is disabled by default and should be enabled (set to true) for the "cloud mode".
+      # it can be set via an environment variable or the config server
+      enabled: ${discovery.enabled:${DISCOVERY_ENABLED:true}}
+      
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
+  
+  
+iasset:
+  keycloak:
+    server-url: http://localhost:28080/auth
+    realm: master
+    username: ${KEYCLOAK_USER:admin}
+    password: ${KEYCLOAK_PASS:admin}
+  openapi:
+    dev-url: http://localhost:8085
+    prod-url: https://iasset-salzburgresearch.at
