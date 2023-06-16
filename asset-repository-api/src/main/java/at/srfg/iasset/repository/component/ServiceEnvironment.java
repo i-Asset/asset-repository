@@ -251,7 +251,7 @@ public interface ServiceEnvironment {
 	 */
 	<T> T getElementValue(String submodelIdentifier, String path, Class<T> clazz);
 
-	
+	String getConfigProperty(String key);
 	
 
 }
