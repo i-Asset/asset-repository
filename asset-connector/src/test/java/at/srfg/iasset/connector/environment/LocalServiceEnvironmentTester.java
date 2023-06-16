@@ -11,7 +11,7 @@ class LocalServiceEnvironmentTester {
 	
 	@Test
 	void testObjectValidation() {
-		LocalServiceEnvironment local = new LocalServiceEnvironment(URI.create("http://localhost:8081/"));
+		LocalServiceEnvironment local = new LocalServiceEnvironment();
 		// search for the submodel holding the SIP
 		// this model is searched with the semanticId of the SIP!
 		// 

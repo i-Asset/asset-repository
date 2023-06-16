@@ -167,7 +167,7 @@ public class HttpComponent implements ConnectorEndpoint {
 			// create custom ObjectMapper
 //			ObjectMapper mapper = ClientFactory.getObjectMapper();
 
-			final LocalServiceEnvironment environment = new LocalServiceEnvironment(URI.create("http://localhost:8080/"));
+			final LocalServiceEnvironment environment = new LocalServiceEnvironment();
 			// create JsonProvider to provide custom ObjectMapper
 //			JacksonJaxbJsonProvider provider = new JacksonJaxbJsonProvider();
 //			provider.setMapper(mapper);

@@ -1,11 +1,14 @@
 package at.srfg.iasset.connector.environment;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.aas4j.v3.model.EventElement;
 import org.eclipse.aas4j.v3.model.Operation;
+import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.Submodel;
 
@@ -13,6 +16,7 @@ import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.messaging.ConnectorMessaging;
 import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.EventProducer;
+import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.component.ModelListener;
 
 public interface LocalEnvironment {
@@ -36,6 +40,11 @@ public interface LocalEnvironment {
 	 */
 	public void addSubmodel(String aasIdentifer, Submodel submodel);
 	/**
+	 * Resolve a reference!
+	 * @param patternReference
+	 */
+	public Optional<Referable> resolveReference(Reference patternReference);
+	/**
 	 * Stop the HTTP(s) endpoint
 	 */
 	public void shutdownEndpoint();
@@ -51,7 +60,7 @@ public interface LocalEnvironment {
 	public void removeModelListener(ModelListener listener);
 	/**
 	 * Add a dedicated service handler for the identified {@link AssetAdministrationShell}.
-	 * The service handler is created with the {@link AssetAdministrationShell#getIdShort()}  
+	 * The service hanaddHandlerdler is created with the {@link AssetAdministrationShell#getIdShort()}  
 	 * @param aasIdentifier
 	 */
 	public void addHandler(String aasIdentifier);
@@ -68,31 +77,14 @@ public interface LocalEnvironment {
 	 */
 	public void removeHandler(String alias);
 	/**
-	 * Add a message listener for a particular semanticId
-	 * @param <T>
-	 * @param reference
-	 * @param listener
-	 */
-	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener);
-	
-	/**
 	 * Obtain a message producer which is bound to the semantic reference provided. 
 	 * The type Parameter ensures, the payload can be mapped to the provided type.
 	 * @param <T>
-	 * @param reference
-	 * @param clazz
+	 * @param reference The model reference to the {@link EventElement}
+	 * @param clazz The type of the payload
 	 * @return
 	 */
-	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz);
-	/**
-	 * Obtain 
-	 * @param <T>
-	 * @param submodelIdentifier
-	 * @param reference
-	 * @param clazz
-	 * @return
-	 */
-	public <T> EventProducer<T> getMessageProducer(String submodelIdentifier, Reference reference, Class<T> clazz);
+	public <T> EventProducer<T> getMessageProducer(Reference referenceToEventElement, Class<T> clazz);
 	/**
 	 * Inject a {@link Consumer} function to the local environment. This function's {@link Consumer#accept(Object)} 
 	 * method is called whenever a new value for the identified element is provided
@@ -135,13 +127,12 @@ public interface LocalEnvironment {
 	 */
 	ConnectorMessaging getEventProcessor();
 	/**
-	 * Register an eventHandler for messages coming from the {@link Submodel} identified by <code>submodelIdentifier</code>
+	 * Register an eventHandler for messages matching all provided references
 	 * @param <T>
-	 * @param submodelIdentifier
-	 * @param reference
+	 * @param reference A list of references which must be provided by the message producer
 	 * @param clazz
 	 */
-	<T> void registerEventHandler(String submodelIdentifier, Reference reference, EventHandler<T> clazz);
+	<T> void registerEventHandler(EventHandler<T> clazz, Reference ...references) throws MessagingException;
 	
 	
 

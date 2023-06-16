@@ -1,9 +1,14 @@
 package at.srfg.iasset.connector.environment;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -36,7 +42,6 @@ import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Base64Utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +55,7 @@ import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministratio
 import at.srfg.iasset.messaging.ConnectorMessaging;
 import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.EventProducer;
+import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.component.ModelChangeProvider;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
@@ -59,7 +65,6 @@ import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.model.InMemoryStorage;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
-import at.srfg.iasset.repository.model.helper.SubmodelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
 import at.srfg.iasset.repository.model.helper.visitor.SubmodelElementCollector;
@@ -81,10 +86,16 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	
 	private ModelChangeProvider changeProvider = ModelChangeProvider.getProvider();
 
+	private final Properties config = new Properties();
+
 	
-	public LocalServiceEnvironment(URI repositoryURI) {
-		this.repositoryURI = repositoryURI;
-		this.repository = RepositoryConnection.getConnector(repositoryURI);
+	public LocalServiceEnvironment() {
+		// TODO: improve configuration management
+		loadConfig();
+		//
+		this.repositoryURI = URI.create(config.getProperty("repository.baseUri"));
+		//
+		this.repository = RepositoryConnection.getConnector(this.repositoryURI);
 		// in the local service environment we may use this objectmapper
 		this.objectMapper = ClientFactory.getObjectMapper();
 		// obtain the messaging component
@@ -266,8 +277,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	public boolean deleteSubmodelElement(String aasIdentifier, String submodelIdentifier, String path) {
 		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( submodel.isPresent()) {
-			SubmodelHelper helper = new SubmodelHelper(submodel.get());
-			Optional<SubmodelElement> deleted = helper.removeSubmodelElementAt(path);
+			Optional<SubmodelElement> deleted = SubmodelUtils.removeSubmodelElementAt(submodel.get(),path);
 			deleted.ifPresent(new Consumer<SubmodelElement>() {
 
 				@Override
@@ -287,8 +297,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		if ( submodel.isPresent()) {
 			// 
 			
-			SubmodelHelper helper = new SubmodelHelper(submodel.get());
-			Optional<SubmodelElement> oldElement = helper.removeSubmodelElementAt(idShortPath);
+			Optional<SubmodelElement> oldElement = SubmodelUtils.removeSubmodelElementAt(submodel.get(), idShortPath);
 			oldElement.ifPresent(new Consumer<SubmodelElement>() {
 
 				@Override
@@ -298,7 +307,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 				}
 			});
 
-			Optional<SubmodelElement> added = helper.setSubmodelElementAt(idShortPath, body);
+			Optional<SubmodelElement> added = SubmodelUtils.setSubmodelElementAt(submodel.get(),idShortPath, body);
 			added.ifPresent(new Consumer<SubmodelElement>() {
 				
 
@@ -320,7 +329,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	public Optional<SubmodelElement> getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path) {
 		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( submodel.isPresent()) {
-			return new SubmodelHelper(submodel.get()).getSubmodelElementAt(path);
+			return SubmodelUtils.getSubmodelElementAt(submodel.get(), path);
 		}
 		return Optional.empty();
 	}
@@ -378,7 +387,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	public Object getElementValue(String aasIdentifier, String submodelIdentifier, String path) {
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent() ) {
-			return new SubmodelHelper(sub.get()).getValueAt(path);
+			return SubmodelUtils.getValueAt(sub.get(), path);
 		}
 
 		return new HashMap<String, Object>();
@@ -390,7 +399,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		if ( sub.isPresent() ) {
 			// make a json node out of it
 			JsonNode node = ClientFactory.getObjectMapper().valueToTree(value);
-			Optional<SubmodelElement> element = new SubmodelHelper(sub.get()).setValueAt(path, node);
+			Optional<SubmodelElement> element = SubmodelUtils.setValueAt(sub.get(),path, node);
 			if ( element.isPresent()) {
 				notifyChange(sub.get(), path, element.get());
 			}
@@ -441,7 +450,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		// TODO Auto-generated method stub
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
-			Optional<Operation> operation = new SubmodelHelper(sub.get()).getSubmodelElementAt(path,Operation.class);
+			Optional<Operation> operation = SubmodelUtils.getSubmodelElementAt(sub.get(), path,Operation.class);
 			if ( operation.isPresent() ) {
 				if (InstanceOperation.class.isInstance(operation.get())) {
 					InstanceOperation theOperation = InstanceOperation.class.cast(operation.get());
@@ -469,14 +478,13 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path, Consumer<String> consumer) {
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
-			SubmodelHelper helper = new SubmodelHelper(sub.get());
-			Optional<Property> property = helper.getSubmodelElementAt(path, Property.class);
+			Optional<Property> property = SubmodelUtils.getSubmodelElementAt(sub.get(), path, Property.class);
 			if ( property.isPresent()) {
 				Property theProp = property.get();
 				if (! InstanceProperty.class.isInstance(theProp)) {
 					// need to exchange the default property
 					theProp = new InstanceProperty(theProp);
-					helper.setSubmodelElementAt(path, theProp);
+					SubmodelUtils.setSubmodelElementAt(sub.get(),path, theProp);
 				}
 				if ( InstanceProperty.class.isInstance(theProp)) {
 					InstanceProperty iProp = InstanceProperty.class.cast(theProp);
@@ -491,14 +499,13 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	public void setValueSupplier(String aasIdentifier, String submodelIdentifier, String path, Supplier<String> supplier) {
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
-			SubmodelHelper helper = new SubmodelHelper(sub.get());
-			Optional<Property> property = helper.getSubmodelElementAt(path, Property.class);
+			Optional<Property> property = SubmodelUtils.getSubmodelElementAt(sub.get(), path, Property.class);
 			if ( property.isPresent()) {
 				Property theProp = property.get();
 				if (! InstanceProperty.class.isInstance(theProp)) {
 					// need to exchange the default property
 					theProp = new InstanceProperty(theProp);
-					helper.setSubmodelElementAt(path, theProp);
+					SubmodelUtils.setSubmodelElementAt(sub.get(), path, theProp);
 				}
 				if ( InstanceProperty.class.isInstance(theProp)) {
 					InstanceProperty iProp = InstanceProperty.class.cast(theProp);
@@ -516,14 +523,13 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 			Function<Object, Object> operation) {
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
-			SubmodelHelper helper = new SubmodelHelper(sub.get());
-			Optional<Operation> property = helper.getSubmodelElementAt(path, Operation.class);
+			Optional<Operation> property = SubmodelUtils.getSubmodelElementAt(sub.get(), path, Operation.class);
 			if ( property.isPresent()) {
 				Operation theProp = property.get();
 				if (! InstanceProperty.class.isInstance(theProp)) {
 					// need to exchange the default property
 					theProp = new InstanceOperation(theProp);
-					helper.setSubmodelElementAt(path, theProp);
+					SubmodelUtils.setSubmodelElementAt(sub.get(), path, theProp);
 				}
 				if ( InstanceOperation.class.isInstance(theProp)) {
 					InstanceOperation iProp = InstanceOperation.class.cast(theProp);
@@ -546,7 +552,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 
 		Optional<AssetAdministrationShell> shellToRegister = getAssetAdministrationShell(aasIdentifier);
 		if ( shellToRegister.isPresent()) {
-			String idEncoded = Base64Utils.encodeToString(aasIdentifier.getBytes());
+			String idEncoded = Base64.getEncoder().encodeToString(aasIdentifier.getBytes());
 			String pathToShell = repositoryURI.getPath() + String.format("shells/%s", idEncoded);
 			URI shellUri = URI.create(String.format("%s://%s:%s%s", repositoryURI.getScheme(), getHostAddress(), httpEndpoint.getPort(), pathToShell));
 			if (repository.register(shellToRegister.get(), shellUri)) {
@@ -638,7 +644,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 				if ( BasicEventElement.class.isInstance(u)) {
 					changeProvider.eventElementRemoved(t, pathToElement, null);
 					// handle removal from messaging
-					Reference elementRef = new SubmodelHelper(submodel).getReference(pathToElement);
+					Reference elementRef = SubmodelUtils.getReference(submodel, pathToElement);
 					eventProcessor.removeEventElement(elementRef);
 					
 				}
@@ -659,21 +665,21 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		new SubmodelElementCollector().collectMap(pathToElement, createdElement).forEach(new BiConsumer<String, SubmodelElement>() {
 
 			@Override
-			public void accept(String t, SubmodelElement u) {
+			public void accept(String pathToElement, SubmodelElement u) {
 				if ( BasicEventElement.class.isInstance(u)) {
-					changeProvider.eventElementCreated(submodel.getId(), t, BasicEventElement.class.cast(u));
-					Reference elementRef = new SubmodelHelper(submodel).getReference(t);
+					changeProvider.eventElementCreated(submodel.getId(), pathToElement, BasicEventElement.class.cast(u));
+					Reference elementRef = SubmodelUtils.getReference(submodel, pathToElement);
 					eventProcessor.registerEventElement(elementRef);
 					
 				}
 				else if ( Operation.class.isInstance(u)) {
-					changeProvider.operationCreated(submodel.getId(), t, Operation.class.cast(u));
+					changeProvider.operationCreated(submodel.getId(), pathToElement, Operation.class.cast(u));
 				}
 				else if ( Property.class.isInstance(u)) {
-					changeProvider.propertyCreated(submodel.getId(), t, Property.class.cast(u));
+					changeProvider.propertyCreated(submodel.getId(), pathToElement, Property.class.cast(u));
 				}
 				else {
-					changeProvider.elementCreated(submodel.getId(), t, u);
+					changeProvider.elementCreated(submodel.getId(), pathToElement, u);
 				}
 					
 				
@@ -748,42 +754,27 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		
 	}
 
-	@Override
-	public <T> void addMesssageListener(Reference reference, EventHandler<T> listener) {
-		getEventProcessor().registerHandler(reference, listener);
-		
-	}
 
 	@Override
 	public <T> EventProducer<T> getMessageProducer(Reference reference, Class<T> clazz) {
 		return getEventProcessor().getProducer(reference, clazz);
 	}
 
-	@Override
-	public <T> EventProducer<T> getMessageProducer(String submodelIdentifier, Reference reference, Class<T> clazz) {
-		Optional<Submodel> sub = getSubmodel(submodelIdentifier);
-		if ( sub.isPresent()) {
-			return getEventProcessor().getProducer(reference, clazz);
-		}
-		// fallback
-		return null;
-	}
-
-	@Override
-	public <T> void registerEventHandler(String submodelIdentifier, Reference reference, EventHandler<T> handler) {
-		Optional<Submodel> sub = getSubmodel(submodelIdentifier);
-		if ( sub.isPresent()) {
-			getEventProcessor().registerHandler(reference, handler);
-		}
-		
-	}
+//	@Override
+//	public <T> void registerEventHandler(String submodelIdentifier, Reference reference, EventHandler<T> handler) {
+//		Optional<Submodel> sub = getSubmodel(submodelIdentifier);
+//		if ( sub.isPresent()) {
+//			getEventProcessor().registerHandler(handler, reference);
+//		}
+//		
+//	}
 
 	@Override
 	public Object executeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
 		
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent()) {
-			Optional<Operation> operation = new SubmodelHelper(sub.get()).getSubmodelElementAt(path, Operation.class);
+			Optional<Operation> operation = SubmodelUtils.getSubmodelElementAt(sub.get(), path, Operation.class);
 			if ( operation.isPresent() && InstanceOperation.class.isInstance(operation.get())) {
 				InstanceOperation instance = (InstanceOperation)operation.get();
 				return instance.invoke(parameter);
@@ -891,7 +882,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	public Optional<SubmodelElement> getSubmodelElement(String submodelIdentifier, String path) {
 		Optional<Submodel> submodel = getSubmodel(submodelIdentifier);
 		if ( submodel.isPresent()) {
-			return new SubmodelHelper(submodel.get()).getSubmodelElementAt(path);
+			return SubmodelUtils.getSubmodelElementAt(submodel.get(), path);
 		}
 		return Optional.empty();
 	}
@@ -900,7 +891,7 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 	public Object getElementValue(String submodelIdentifier, String path) {
 		Optional<Submodel> submodel = getSubmodel(submodelIdentifier);
 		if ( submodel.isPresent()) {
-			return new SubmodelHelper(submodel.get()).getValueAt(path);
+			return SubmodelUtils.getValueAt(submodel.get(),path);
 		}
 		return null;
 	}
@@ -928,4 +919,37 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		return resolve(reference);
 	}
 
+
+	@Override
+	public <T> void registerEventHandler(EventHandler<T> clazz, Reference... references) throws MessagingException {
+		eventProcessor.registerHandler(clazz, references);
+		
+	}
+
+	@Override
+	public Optional<Referable> resolveReference(Reference patternReference) {
+		return resolve(patternReference);
+	}
+
+	@Override
+	public String getConfigProperty(String key) {
+		return config.getProperty(key);
+	}
+	private void loadConfig() {
+		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+		String connectorPath = rootPath + "connector.properties";
+		
+		
+		
+		try {
+			config.load(new FileInputStream(connectorPath));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 }

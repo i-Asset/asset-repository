@@ -35,7 +35,7 @@ class LocalServiceEnvironmentTest {
     void init(TestInfo testInfo) throws URISyntaxException {
         log.info("initializing '{}'", testInfo.getTestMethod().map(Method::getName).orElse("unknown method"));
         URI repositoryURI = new URI(repositoryUriString);
-        serviceEnvironmentUnderTest = new LocalServiceEnvironment(repositoryURI);
+        serviceEnvironmentUnderTest = new LocalServiceEnvironment();
         log.info("LocalServiceEnvironment with dummy repositoryURI '{}' created", repositoryUriString);
         loadAASTestData();
         log.info("test data loaded");
