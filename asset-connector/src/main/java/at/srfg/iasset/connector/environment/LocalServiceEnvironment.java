@@ -1,11 +1,13 @@
 package at.srfg.iasset.connector.environment;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -936,17 +938,20 @@ public class LocalServiceEnvironment implements ServiceEnvironment, LocalEnviron
 		return config.getProperty(key);
 	}
 	private void loadConfig() {
-		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-		String connectorPath = rootPath + "connector.properties";
 		
 		
 		
 		try {
-			config.load(new FileInputStream(connectorPath));
+			URL resource = getClass().getClassLoader().getResource("connector.properties");
+//			config.load(getClass().getResourceAsStream("connector.properties"));
+			config.load(new FileInputStream(new File(resource.toURI())));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
