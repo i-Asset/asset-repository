@@ -38,9 +38,52 @@ public class IsproNGPublicAPIConnector implements IWebhook{
        return postObject("StandardInterface/MaintenanceAlert/Save",alert);
     }
 
-    public IsproNGErrorCause[] GetErrorCauses()
+    public IsproNGErrorCause[] GetObjectErrorCause()
     {
-        return new IsproNGErrorCause[] {};
+        return GetObject("odata/ErrorCauseOData");
+    }
+
+    private IsproNGErrorCause[] GetObject(String path)
+    {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            // URL and parameters for the connection, This particulary returns the information passed
+            URL ulrObject = new URL(this.url + "/" + path);
+            HttpURLConnection httpConnection = (HttpURLConnection) ulrObject.openConnection();
+            httpConnection.setDoOutput(true);
+            httpConnection.setRequestMethod("GET");
+            httpConnection.setRequestProperty("Content-Type", "application/json");
+            httpConnection.setRequestProperty("Accept", "application/json");
+            httpConnection.setRequestProperty("X-api-key", apiKey);
+
+            Integer responseCode = httpConnection.getResponseCode();
+            BufferedReader bufferedReader;
+
+            // Creates a reader buffer
+            if (responseCode > 199 && responseCode < 300) {
+                bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+            } else {
+                bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getErrorStream()));
+            }
+
+            // To receive the response
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            bufferedReader.close();
+            IsproNGOData odata = mapper.readValue(content.toString(),IsproNGOData.class);
+
+            return odata.getValue();
+
+        } catch (Exception e) {
+            System.out.println("Error Message");
+            System.out.println(e.getClass().getSimpleName());
+            System.out.println(e.getMessage());
+        }
+        return new IsproNGErrorCause[]{};
+
     }
 
     private String postObject(String path, Object data){

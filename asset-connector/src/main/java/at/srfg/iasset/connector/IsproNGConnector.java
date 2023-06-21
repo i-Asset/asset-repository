@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import at.srfg.iasset.connector.isproNG.IsproNGErrorCause;
 import at.srfg.iasset.connector.isproNG.IsproNGMaintenanceAlert;
 import at.srfg.iasset.connector.isproNG.IsproNGPublicAPIConnector;
 import at.srfg.iasset.connector.isproNG.IsproNGStStamm;
@@ -196,6 +197,7 @@ public class IsproNGConnector {
                 }
             });
 
+            IsproNGErrorCause[] causes = isproAPI.GetObjectErrorCause();
             createFaultTest(connector);
 
             System.in.read();

@@ -1,9 +1,16 @@
 package at.srfg.iasset.connector.isproNG;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class IsproNGErrorCause {
     public IsproNGErrorCause(String code, String description) {
         this.setCode(code);
         this.setDescription(description);
+    }
+
+    public IsproNGErrorCause() {
+
     }
 
     private String code;
