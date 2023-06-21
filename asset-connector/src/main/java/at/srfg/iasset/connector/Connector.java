@@ -28,30 +28,30 @@ import at.srfg.iasset.repository.model.Fault;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class Connector {
-	
+
 	private String currentStringValue = "123.5";
 	private LocalServiceEnvironment serviceEnvironment;
-	
+
 	public Connector() {
 		this.serviceEnvironment = new LocalServiceEnvironment();
 	}
 
-	
+
 	public void stop() {
 		serviceEnvironment.shutdownEndpoint();
 		serviceEnvironment.getEventProcessor().stopEventProcessing();
 	}
-	
+
 	public ServiceEnvironment getServiceEnvironment() {
 		return serviceEnvironment;
-		
+
 	}
 	public LocalEnvironment getLocalEnvironment() {
 		return serviceEnvironment;
 	}
 
 	public static void main(String [] args) {
-		
+
 		try {
 
 			// TODO: connector mit Anlagenname, -nummer, Standort, Enterprise initialisieren
@@ -63,8 +63,8 @@ public class Connector {
 			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
 			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE);
 			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
-			// load fault submodel 
-			// FIXME: improve 
+			// load fault submodel
+			// FIXME: improve
 			Reference pattern = new DefaultReference.Builder()
 					.type(ReferenceTypes.MODEL_REFERENCE)
 					.key(new DefaultKey.Builder()
@@ -77,30 +77,30 @@ public class Connector {
 			if ( optPattern.isEmpty() ) {
 				return;
 			}
- 			
+
 			// start the http endpoint for this Connector at port 5050
 			connector.getLocalEnvironment().startEndpoint(5050);
-			
-			// create 
+
+			// create
 			connector.getLocalEnvironment().addHandler("https://acplt.org/Test_AssetAdministrationShell", "test");
-			
+
 			connector.getLocalEnvironment().setValueConsumer(
-					"https://acplt.org/Test_AssetAdministrationShell", 
-					"https://acplt.org/Test_Submodel", 
-					"ExampleSubmodelCollectionOrdered.ExampleDecimalProperty", 
+					"https://acplt.org/Test_AssetAdministrationShell",
+					"https://acplt.org/Test_Submodel",
+					"ExampleSubmodelCollectionOrdered.ExampleDecimalProperty",
 					new Consumer<String>() {
 
 						@Override
 						public void accept(final String t) {
 							System.out.println("New Value provided: " + t);
 							connector.currentStringValue = t;
-							
+
 						}
 					});
 			connector.getLocalEnvironment().setValueSupplier(
-					"https://acplt.org/Test_AssetAdministrationShell", 
-					"https://acplt.org/Test_Submodel", 
-					"ExampleSubmodelCollectionOrdered.ExampleDecimalProperty", 
+					"https://acplt.org/Test_AssetAdministrationShell",
+					"https://acplt.org/Test_Submodel",
+					"ExampleSubmodelCollectionOrdered.ExampleDecimalProperty",
 					new Supplier<String>() {
 
 						@Override
@@ -113,10 +113,10 @@ public class Connector {
 
 			// used to read OPC-UA values
 			connector.getLocalEnvironment().setValueSupplier(
-					"http://iasset.salzburgresearch.at/labor/beltInstance", 
-					"http://iasset.salzburgresearch.at/labor/beltInstance/properties", 
+					"http://iasset.salzburgresearch.at/labor/beltInstance",
+					"http://iasset.salzburgresearch.at/labor/beltInstance/properties",
 					// path
-					"beltData.state", 
+					"beltData.state",
 					new Supplier<String>() {
 
 						@Override
@@ -128,19 +128,19 @@ public class Connector {
 
 					});
 			connector.register("https://acplt.org/Test_AssetAdministrationShell");
-			// 
+			//
 			connector.register(AASFull.AAS_BELT_INSTANCE.getId());
 			// TODO: allow registering a Handler with multiple References
 			//       fire event only when ALL references are present!
-			connector.getLocalEnvironment().registerEventHandler(					
+			connector.getLocalEnvironment().registerEventHandler(
 					new EventHandler<Fault>() {
-						
+
 						@Override
 						public void onEventMessage(EventPayload eventPayload, Fault payload) {
 							System.out.println(payload.getFaultId() + " " + payload.getShortText()) ;
-							
+
 						}
-						
+
 						@Override
 						public Class<Fault> getPayloadType() {
 							return Fault.class;
@@ -155,21 +155,23 @@ public class Connector {
 					// multiple references allowed
 					ReferenceUtils.asGlobalReferences("http://iasset.salzburgresearch.at/semantic/fault")
 					);
-			
-			
-		
+
+
+
 
 			EventProducer<Fault> faultProducer = connector.getLocalEnvironment().getMessageProducer(
 					// ModelReference
-					ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/semantic/fault"), 
+					ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/semantic/fault"),
 					Fault.class);
-			
+
+
 			Fault f = new Fault();
 			f.setFaultId("12345");
 			f.setAssetId("assetId");
-			f.setSenderUserId("im am the user");
+			f.setSenderUserId("berni");
 			f.setShortText("this is a short");
 			faultProducer.sendEvent(f);
+
 			System.in.read();
 			// shutdown
 			connector.stop();
