@@ -1,5 +1,7 @@
 package at.srfg.iasset.repository.model;
 
+import java.time.Instant;
+
 import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
 import org.eclipse.aas4j.v3.model.Direction;
 import org.eclipse.aas4j.v3.model.KeyTypes;
@@ -10,10 +12,13 @@ import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.impl.DefaultBasicEventElement;
 import org.eclipse.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.aas4j.v3.model.impl.DefaultOperation;
+import org.eclipse.aas4j.v3.model.impl.DefaultOperationVariable;
 import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
 import org.eclipse.aas4j.v3.model.impl.DefaultReference;
 import org.eclipse.aas4j.v3.model.impl.DefaultSubmodel;
 import org.eclipse.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
+import org.eclipse.aas4j.v3.model.impl.DefaultSubmodelElementList;
 
 // TODO import org.eclipse.aas4j.v3.rc02.model.impl.DefaultEmbeddedDataSpecification;
 
@@ -23,8 +28,8 @@ public class AASFaultSubmodel {
 	public static final String LANGUAGE = "de";
 
     public static final Submodel SUBMODEL_FAULT1 = createSubmodelForFault();
+    public static final Submodel SUBMODEL_FAULT_OPERATIONS = createSubmodelForFaultOperations();
 
-   
     public static Submodel createSubmodelForFault() {
     	return new DefaultSubmodel.Builder()
     			.idShort("properties")
@@ -120,6 +125,7 @@ public class AASFaultSubmodel {
     	    	    					.text("Fault Identifier").build()
     	    	    					)
     	    	    			.valueType(DataTypeDefXsd.STRING)
+    	    	    			.value("Default Value")
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("timestampCreated")
@@ -128,12 +134,13 @@ public class AASFaultSubmodel {
     	    	    					.text("Timestamp Created").build()
     	    	    					)
     	    	    			.valueType(DataTypeDefXsd.DATE_TIME)
+    	    	    			.value(Instant.now().toString())
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("timestampFinished")
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
-    	    	    					.text("Timestamp Created").build()
+    	    	    					.text("Timestamp Finished").build()
     	    	    					)
     	    	    			.valueType(DataTypeDefXsd.DATE_TIME)
     	    					.build())
@@ -197,5 +204,88 @@ public class AASFaultSubmodel {
     					.build())
     			.build();
     }
+   
+    public static Submodel createSubmodelForFaultOperations() {
+    	return new DefaultSubmodel.Builder()
+    			.idShort("operations")
+    			.id("http://iasset.salzburgresearch.at/common/faultOperation")
+    			.displayName(new DefaultLangString.Builder()
+    					.language(LANGUAGE)
+    					.text("i-Asset Fault Operation Submodel").build()
+    					)
+    			.description(new DefaultLangString.Builder()
+    					.language(LANGUAGE)
+    					.text("i-Asset Fault Operation Submodel")
+    					.build())
+    			.kind(ModelingKind.TEMPLATE)
+    			.submodelElement(new DefaultOperation.Builder()
+    					.idShort("getErrorCause")
+    	    			.displayName(new DefaultLangString.Builder()
+    	    					.language(LANGUAGE)
+    	    					.text("Obtain Error Codes for Asset").build()
+    	    			)
+    	    			.inputVariable(new DefaultOperationVariable.Builder()
+    	    					.value(new DefaultProperty.Builder()
+    	    							.idShort("assetIdentifier")
+    	    							.kind(ModelingKind.TEMPLATE)
+    	    	    					.valueType(DataTypeDefXsd.STRING)
+    	    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    	    					.language(LANGUAGE)
+    	    	    	    					.text("Asset Identifier").build()
+    	    	    	    			)
+    	    							.build())
+    	    					.build())
+    	    			.outputVariable(new DefaultOperationVariable.Builder()
+    	    					.value(new DefaultSubmodelElementList.Builder()
+    	    							.category("result")
+    	    							.idShort("errorCodes")
+    	    							.kind(ModelingKind.TEMPLATE)
+    	    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    	    					.language(LANGUAGE)
+    	    	    	    					.text("Error Codes for Asset Result").build()
+    	    	    	    			)
+    	    	    	    			//
+    	    	    	    			.semanticIdListElement(new DefaultReference.Builder()
+    	    	    	    					.type(ReferenceTypes.MODEL_REFERENCE)
+    	    	    	    					.key(new DefaultKey.Builder()
+    	    	    	    							.type(KeyTypes.SUBMODEL)
+    	    	    	    							.value("http://iasset.salzburgresearch.at/common/faultOperation")
+    	    	    	    							.build())
+    	    	    	    					.key(new DefaultKey.Builder()
+    	    	    	    							.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
+    	    	    	    							.value("errorCode")
+    	    	    	    							.build())
+    	    	    	    					.build())
+    	    							.build())
+    	    					.build())
+    					.build())
+    			.submodelElement(new DefaultSubmodelElementCollection.Builder()
+    					.idShort("errorCode")
+    	    			.displayName(new DefaultLangString.Builder()
+    	    					.language(LANGUAGE)
+    	    					.text("Error Code Record").build()
+    	    			)
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("code")
+    	    					.kind(ModelingKind.TEMPLATE)
+    	    					.valueType(DataTypeDefXsd.STRING)
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language(LANGUAGE)
+    	    	    					.text("Code").build()
+    	    	    			)
+    	    					.build())
+    	    			.value(new DefaultProperty.Builder()
+    	    					.idShort("label")
+    	    					.kind(ModelingKind.TEMPLATE)
+    	    					.valueType(DataTypeDefXsd.STRING)
+    	    	    			.displayName(new DefaultLangString.Builder()
+    	    	    					.language(LANGUAGE)
+    	    	    					.text("Error Label").build()
+    	    	    			)
+    	    					.build())
+    					.build())
+    			.build();
+    }
+    
 
 }
