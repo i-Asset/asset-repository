@@ -1,11 +1,11 @@
 package at.srfg.iasset.connector;
 
-import java.io.FileInputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.eclipse.aas4j.v3.model.EventPayload;
@@ -16,6 +16,8 @@ import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.aas4j.v3.model.impl.DefaultReference;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
@@ -23,9 +25,12 @@ import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.model.AASFaultSubmodel;
+import at.srfg.iasset.repository.model.ErrorCode;
 import at.srfg.iasset.repository.model.Fault;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
+
 
 public class Connector {
 	
@@ -60,6 +65,8 @@ public class Connector {
 			// TODO: persistenz & reload
 			Connector connector = new Connector();
 			connector.getLocalEnvironment().addAdministrationShell(AASFull.AAS_BELT_INSTANCE);
+			// load submodel with operations (getErrorCause)
+			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFaultSubmodel.SUBMODEL_FAULT_OPERATIONS);
 			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
 			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE);
 			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
@@ -110,7 +117,28 @@ public class Connector {
 
 
 					});
-
+			// register function to be invoked when "getErrorCause" operation is
+			// invoked via HTTP-Request
+			connector.getLocalEnvironment().setOperationFunction(AASFull.AAS_BELT_INSTANCE.getId(), AASFaultSubmodel.SUBMODEL_FAULT_OPERATIONS.getId(), "getErrorCause", new Function<Object,Object>() {
+				// TODO: make function call "type safe" with generics
+				//       distinguish between function calls with ValueOnly and Full meta data
+				@Override
+				public Object apply(Object t) {  // inputvariable
+					// 
+					JsonNode node = ClientFactory.getObjectMapper().valueToTree(t);
+					Map<String, Object> parameterMap = ClientFactory.getObjectMapper().convertValue(t, Map.class);
+					System.out.println(parameterMap.get("assetIdentifier"));
+					// graphql-Abfrage
+					// output erstellen
+					List<ErrorCode> codes = new ArrayList<>();
+					codes.add(new ErrorCode("c1", "Label C1"));
+					codes.add(new ErrorCode("c2", "Label C2"));
+					codes.add(new ErrorCode("c3", "Label C3"));
+					return codes; // output variable
+				}});
+			
+			
+			
 			// used to read OPC-UA values
 			connector.getLocalEnvironment().setValueSupplier(
 					"http://iasset.salzburgresearch.at/labor/beltInstance", 
