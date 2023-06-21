@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -167,7 +168,7 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 						return broker;
 					}
 				});
-		this.clientId = new ReferenceValue(sourceReference).getValue();
+		this.clientId = new ReferenceValue(sourceReference).getValue() + "-" + UUID.randomUUID().toString();
 		this.topic = this.source.getMessageTopic();
 	}
 	@Override
