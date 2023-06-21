@@ -3,10 +3,9 @@ package at.srfg.iasset.connector;
 import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import at.srfg.iasset.connector.isproNG.IsproNGErrorCause;
@@ -14,6 +13,9 @@ import at.srfg.iasset.connector.isproNG.IsproNGMaintenanceAlert;
 import at.srfg.iasset.connector.isproNG.IsproNGPublicAPIConnector;
 import at.srfg.iasset.connector.isproNG.IsproNGStStamm;
 import at.srfg.iasset.messaging.exception.MessagingException;
+import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
+import at.srfg.iasset.repository.model.ErrorCode;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.eclipse.aas4j.v3.model.EventPayload;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Referable;
@@ -70,6 +72,7 @@ public class IsproNGConnector {
             IsproNGPublicAPIConnector isproAPI = new IsproNGPublicAPIConnector("http://localhost:2518","1n09E-8zjE35kmYw2RhnI767wI7koyf8VHEi4V-tVrgb");
             // start the http endpoint for this Connector at port 5050
             connector.getLocalEnvironment().addAdministrationShell(AASFull.AAS_BELT_INSTANCE);
+            connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFaultSubmodel.SUBMODEL_FAULT_OPERATIONS);
             connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
             connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE);
             connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
@@ -197,7 +200,25 @@ public class IsproNGConnector {
                 }
             });
 
-            IsproNGErrorCause[] causes = isproAPI.GetObjectErrorCause();
+            connector.getLocalEnvironment().setOperationFunction(AASFull.AAS_BELT_INSTANCE.getId(), AASFaultSubmodel.SUBMODEL_FAULT_OPERATIONS.getId(), "getErrorCause", new Function<Object,Object>() {
+                // TODO: make function call "type safe" with generics
+                //       distinguish between function calls with ValueOnly and Full meta data
+                @Override
+                public Object apply(Object t) {  // inputvariable
+                    //
+                    JsonNode node = ClientFactory.getObjectMapper().valueToTree(t);
+                    Map<String, Object> parameterMap = ClientFactory.getObjectMapper().convertValue(t, Map.class);
+                    System.out.println(parameterMap.get("assetIdentifier"));
+                    // graphql-Abfrage
+                    // output erstellen
+                    List<ErrorCode> codes = new ArrayList<>();
+
+                    for (IsproNGErrorCause c: isproAPI.GetObjectErrorCause()) {
+                        codes.add(new ErrorCode(c.getCode(), c.getDescription()));
+                    }
+                    return codes; // output variable
+                }});
+
             createFaultTest(connector);
 
             System.in.read();

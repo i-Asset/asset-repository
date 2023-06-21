@@ -40,7 +40,7 @@ public class IsproNGPublicAPIConnector implements IWebhook{
 
     public IsproNGErrorCause[] GetObjectErrorCause()
     {
-        return GetObject("odata/ErrorCauseOData");
+        return GetObject("odata/CauseOData");
     }
 
     private IsproNGErrorCause[] GetObject(String path)
