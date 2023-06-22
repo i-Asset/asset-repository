@@ -1,23 +1,5 @@
 package at.srfg.iasset.connector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import org.eclipse.aas4j.v3.model.EventPayload;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.aas4j.v3.model.impl.DefaultReference;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
 import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import at.srfg.iasset.connector.environment.LocalServiceEnvironment;
@@ -26,16 +8,32 @@ import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
-import at.srfg.iasset.repository.model.AASFaultSubmodel;
-import at.srfg.iasset.repository.model.ErrorCode;
-import at.srfg.iasset.repository.model.Fault;
+import at.srfg.iasset.repository.model.*;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.eclipse.aas4j.v3.model.*;
+import org.eclipse.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.aas4j.v3.model.impl.DefaultReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static at.srfg.iasset.repository.model.AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION;
 
 
 public class Connector {
 	
 	private String currentStringValue = "123.5";
 	private LocalServiceEnvironment serviceEnvironment;
+
+	public static Logger logger = LoggerFactory.getLogger(Connector.class);
 	
 	public Connector() {
 		this.serviceEnvironment = new LocalServiceEnvironment();
@@ -70,6 +68,9 @@ public class Connector {
 			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
 			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE);
 			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
+
+			connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
+
 			// load fault submodel 
 			// FIXME: improve 
 			Reference pattern = new DefaultReference.Builder()
@@ -183,8 +184,16 @@ public class Connector {
 					// multiple references allowed
 					ReferenceUtils.asGlobalReferences("http://iasset.salzburgresearch.at/semantic/fault")
 					);
-			
-			
+
+
+			connector.getLocalEnvironment().setOperationFunction(AASFull.AAS_BELT_INSTANCE.getId(), AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION.getId(), "getPlantStructure", new Function<Object, Object>() {
+				@Override
+				public Object apply(Object o) {
+					logger.warn("requesting plant structure - not yet implemented!");
+					return null;
+				}
+			});
+
 		
 
 			EventProducer<Fault> faultProducer = connector.getLocalEnvironment().getMessageProducer(
