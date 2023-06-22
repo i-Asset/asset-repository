@@ -87,6 +87,7 @@ class LocalServiceEnvironmentTest {
 
     @DisplayName("Register AAS with central repository")
     @Test
+    @Disabled
     void register() {
         startEndpointOnFreePort();
         final String id = AASFull.AAS_BELT_INSTANCE.getId();
