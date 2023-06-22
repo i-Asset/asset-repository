@@ -161,6 +161,7 @@ public class IsproNGConnector {
 
             //createFaultTest(connector);
 
+            var a = isproAPI.GetObjectPlantStructure();
             System.in.read();
             // shutdown
             connector.stop();
