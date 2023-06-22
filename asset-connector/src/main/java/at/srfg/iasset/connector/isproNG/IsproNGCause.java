@@ -3,13 +3,13 @@ package at.srfg.iasset.connector.isproNG;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class IsproNGErrorCause {
-    public IsproNGErrorCause(String code, String description) {
+public class IsproNGCause {
+    public IsproNGCause(String code, String description) {
         this.setCode(code);
         this.setDescription(description);
     }
 
-    public IsproNGErrorCause() {
+    public IsproNGCause() {
 
     }
 

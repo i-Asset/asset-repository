@@ -1,15 +1,10 @@
 package at.srfg.iasset.connector;
 
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-import at.srfg.iasset.connector.isproNG.IsproNGErrorCause;
+import at.srfg.iasset.connector.isproNG.IsproNGCause;
 import at.srfg.iasset.connector.isproNG.IsproNGMaintenanceAlert;
 import at.srfg.iasset.connector.isproNG.IsproNGPublicAPIConnector;
 import at.srfg.iasset.connector.isproNG.IsproNGStStamm;
@@ -39,8 +34,6 @@ import at.srfg.iasset.repository.utils.ReferenceUtils;
 import com.google.gson.Gson;
 
 public class IsproNGConnector {
-
-    private String currentStringValue = "123.5";
     private LocalServiceEnvironment serviceEnvironment;
 
     public IsproNGConnector() {
@@ -95,55 +88,9 @@ public class IsproNGConnector {
 
             // create
             connector.getLocalEnvironment().addHandler("https://acplt.org/Test_AssetAdministrationShell", "test");
-
-            connector.getLocalEnvironment().setValueConsumer(
-                    "https://acplt.org/Test_AssetAdministrationShell",
-                    "https://acplt.org/Test_Submodel",
-                    "ExampleSubmodelCollectionOrdered.ExampleDecimalProperty",
-                    new Consumer<String>() {
-
-                        @Override
-                        public void accept(final String t) {
-                            System.out.println("New Value provided: " + t);
-                            connector.currentStringValue = t;
-
-                        }
-                    });
-            connector.getLocalEnvironment().setValueSupplier(
-                    "https://acplt.org/Test_AssetAdministrationShell",
-                    "https://acplt.org/Test_Submodel",
-                    "ExampleSubmodelCollectionOrdered.ExampleDecimalProperty",
-                    new Supplier<String>() {
-
-                        @Override
-                        public String get() {
-                            return connector.currentStringValue;
-                        }
-
-
-                    });
-
-            // used to read OPC-UA values
-            connector.getLocalEnvironment().setValueSupplier(
-                    "http://iasset.salzburgresearch.at/labor/beltInstance",
-                    "http://iasset.salzburgresearch.at/labor/beltInstance/properties",
-                    // path
-                    "beltData.state",
-                    new Supplier<String>() {
-
-                        @Override
-                        public String get() {
-                            // replace with OPC-UA Read
-                            return connector.currentStringValue;
-                        }
-
-
-                    });
             connector.register("https://acplt.org/Test_AssetAdministrationShell");
-            //
             connector.register(AASFull.AAS_BELT_INSTANCE.getId());
-            // TODO: allow registering a Handler with multiple References
-            //       fire event only when ALL references are present!
+
             connector.getLocalEnvironment().registerEventHandler(
                     new EventHandler<Fault>() {
 
@@ -166,15 +113,12 @@ public class IsproNGConnector {
                             return ReferenceUtils.asGlobalReference("http://iasset.salzburgresearch.at/semantic/fault");
                         }
                     },
-                    // fire only when these references are in the payload
-                    // multiple references allowed
                     ReferenceUtils.asGlobalReferences("http://iasset.salzburgresearch.at/semantic/fault")
             );
 
             isproAPI.addListener(new Consumer<String>() {
                 @Override
                 public void accept(String s) {
-
                     EventProducer<Fault> faultProducer = connector.getLocalEnvironment().getMessageProducer(
                             // ModelReference
                             ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/semantic/fault"),
@@ -186,7 +130,6 @@ public class IsproNGConnector {
 
                     fault.shortText = stStamm.getText();
                     fault.assetId = stStamm.getFk1();
-                    //fault.longText = stStamm.getNotizSuche();
                     fault.faultId = stStamm.getIhStoerTFreifeld1Meldung();
                     fault.priority = stStamm.getPriority();
                     fault.maintencanceUserId = stStamm.getMonteur1();
@@ -203,22 +146,20 @@ public class IsproNGConnector {
                 // TODO: make function call "type safe" with generics
                 //       distinguish between function calls with ValueOnly and Full meta data
                 @Override
-                public Object apply(Object t) {  // inputvariable
+                public Object apply(Object t) {
                     //
                     JsonNode node = ClientFactory.getObjectMapper().valueToTree(t);
                     Map<String, Object> parameterMap = ClientFactory.getObjectMapper().convertValue(t, Map.class);
                     System.out.println(parameterMap.get("assetIdentifier"));
-                    // graphql-Abfrage
-                    // output erstellen
                     List<ErrorCode> codes = new ArrayList<>();
 
-                    for (IsproNGErrorCause c: isproAPI.GetObjectErrorCause()) {
+                    for (IsproNGCause c: isproAPI.GetObjectErrorCause()) {
                         codes.add(new ErrorCode(c.getCode(), c.getDescription()));
                     }
-                    return codes; // output variable
+                    return codes;
                 }});
 
-            createFaultTest(connector);
+            //createFaultTest(connector);
 
             System.in.read();
             // shutdown

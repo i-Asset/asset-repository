@@ -8,13 +8,13 @@ public class IsproNGOData {
 
     }
 
-    public IsproNGErrorCause[] getValue() {
+    public IsproNGCause[] getValue() {
         return value;
     }
 
-    public void setValue(IsproNGErrorCause[] value) {
+    public void setValue(IsproNGCause[] value) {
         this.value = value;
     }
 
-    private IsproNGErrorCause[] value;
+    private IsproNGCause[] value;
 }

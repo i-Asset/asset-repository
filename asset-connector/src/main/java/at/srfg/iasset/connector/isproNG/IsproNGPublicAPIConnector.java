@@ -38,12 +38,12 @@ public class IsproNGPublicAPIConnector implements IWebhook{
        return postObject("StandardInterface/MaintenanceAlert/Save",alert);
     }
 
-    public IsproNGErrorCause[] GetObjectErrorCause()
+    public IsproNGCause[] GetObjectErrorCause()
     {
         return GetObject("odata/CauseOData");
     }
 
-    private IsproNGErrorCause[] GetObject(String path)
+    private IsproNGCause[] GetObject(String path)
     {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -82,7 +82,7 @@ public class IsproNGPublicAPIConnector implements IWebhook{
             System.out.println(e.getClass().getSimpleName());
             System.out.println(e.getMessage());
         }
-        return new IsproNGErrorCause[]{};
+        return new IsproNGCause[]{};
 
     }
 
