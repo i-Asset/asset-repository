@@ -1,0 +1,4363 @@
+openapi: 3.0.1
+info:
+  title: 'Asset Repository API'
+  version: '1.0'
+  contact:
+    name: 'Dietmar Glachs'
+    email: 'dietmar.glachs@salzburgresearch.at'
+    url: 'https://www.salzburgresearch.at'
+servers:
+  - url: '{protocol}://{server}:{port}/{path}'
+    description: Configurable Server URL
+    variables:
+      protocol:
+        description: http | https
+        default: http
+      server:
+        description: IP address or server name
+        default: localhost
+      port:
+        description: Server port
+        default: '8081'
+      path:
+        description: Server path
+        default: 'repository-service'
+  - url: https://iasset.salzburgresearch.at/repository-service/
+    description: Asset Repository Service on the i-Asset Staging Server
+paths:
+  /submodels/{submodelIdentifier}:
+    get:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Returns a specific Submodel
+      operationId: getSubmodelById
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    put:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Updates an existing Submodel
+      operationId: putSubmodelById
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Submodel'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '204':
+          description: Submodel updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    delete:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Deletes a Submodel
+      operationId: deleteSubmodelById
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '204':
+          description: Submodel deleted successfully
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}:
+    get:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Returns a specific submodel element from the Submodel at a specified path
+      operationId: getSubmodelElementByPathSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      responses:
+        '200':
+          description: Requested submodel element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmodelElement'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    put:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Updates an existing submodel element at a specified path within submodel elements hierarchy
+      operationId: putSubmodelElementByPathSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmodelElement'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '204':
+          description: Submodel element updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    post:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Creates a new submodel element at a specified path within submodel elements hierarchy
+      operationId: postSubmodelElementByPathSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmodelElement'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '201':
+          description: Submodel element created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmodelElement'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    delete:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Deletes a submodel element at a specified path within the submodel elements hierarchy
+      operationId: deleteSubmodelElementByPathSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '204':
+          description: Submodel element deleted successfully
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/attachment:
+    get:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Downloads file content from a specific submodel element from the Submodel at a specified path
+      operationId: getFileByPathSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '405':
+          description: Method not allowed - Download only valid for File submodel element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    put:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Uploads file content to an existing submodel element at a specified path within submodel elements hierarchy
+      operationId: putFileByPathSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+        - name: fileName
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: file detail
+                  format: binary
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '204':
+          description: Submodel element updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '405':
+          description: Method not allowed - Upload only valid for File submodel element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells/{aasIdentifier}:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Returns a specific Asset Administration Shell
+      operationId: getAssetAdministrationShell
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    put:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Updates an existing Asset Administration Shell
+      operationId: putAssetAdministrationShellById
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetAdministrationShell'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '204':
+          description: Asset Administration Shell updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    delete:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Deletes an Asset Administration Shell
+      operationId: deleteAssetAdministrationShellById
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Asset Administration Shell deleted successfully
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells/{aasIdentifier}/submodels/{submodelIdentifier}/submodel:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Returns the Submodel
+      operationId: getSubmodel_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      responses:
+        '200':
+          description: Requested Submodel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submodel'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    put:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Updates the Submodel
+      operationId: putSubmodel
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Submodel'
+        required: true
+      responses:
+        '204':
+          description: Submodel updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells/{aasIdentifier}/submodels/{submodelIdentifier}/submodel/submodel-elements/{idShortPath}:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Returns a specific submodel element from the Submodel at a specified path
+      operationId: getSubmodelElementByPath
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      responses:
+        '200':
+          description: Requested submodel element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmodelElement'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    put:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Updates an existing submodel element at a specified path within submodel elements hierarchy
+      operationId: putSubmodelElementByPath
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmodelElement'
+        required: true
+      responses:
+        '204':
+          description: Submodel element updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Creates a new submodel element at a specified path within submodel elements hierarchy
+      operationId: postSubmodelElementByPath
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmodelElement'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '201':
+          description: Submodel element created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmodelElement'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    delete:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Deletes a submodel element at a specified path within the submodel elements hierarchy
+      operationId: deleteSubmodelElementByPath
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Submodel element deleted successfully
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells/{aasIdentifier}/submodels/{submodelIdentifier}/submodel/submodel-elements/{idShortPath}/attachment:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Downloads file content from a specific submodel element from the Submodel at a specified path
+      operationId: getFileByPath
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Requested file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '405':
+          description: Method not allowed - Download only valid for File submodel element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    put:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Uploads file content to an existing submodel element at a specified path within submodel elements hierarchy
+      operationId: putFileByPath
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated)
+          required: true
+          schema:
+            type: string
+        - name: fileName
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: file detail
+                  format: binary
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '204':
+          description: Submodel element updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '405':
+          description: Method not allowed - Upload only valid for File submodel element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells/{aasIdentifier}/asset-information:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Returns the Asset Information
+      operationId: getAssetInformation
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    put:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Updates the Asset Information
+      operationId: putAssetInformation
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetInformation'
+        required: true
+      responses:
+        '204':
+          description: Asset Information updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /repository/shells/{aasIdentifier}:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Get the AssetAdministrationShell
+      operationId: getAssetAdministrationShell_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AssetAdministrationShell'
+    put:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Add a AssetAdministrationShell to the Repository
+      operationId: setAssetAdministrationShell
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetAdministrationShell'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AssetAdministrationShell'
+  /repository/shells/{aasIdentifier}/aas/submodels/{submodelIdentifier}:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Get the Submodel
+      operationId: getSubmodel_2
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Submodels’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Submodel'
+    put:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Add or update a Submodel to the Repository
+      operationId: setSubmodel
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Submodel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Submodel'
+    delete:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Update the submodel references of the identified AAS
+      operationId: removeSubmodelReference
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reference'
+  /concept:
+    get:
+      tags:
+        - lookup-dependency-controller
+      summary: Read a concept element by its identifier
+      description: 'The result is of type: ConceptClass, Property, PropertyValue or PropertyUnit'
+      operationId: getConcept
+      parameters:
+        - name: id
+          in: query
+          description: Concept Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ConceptClass'
+                  - $ref: '#/components/schemas/ConceptProperty'
+                  - $ref: '#/components/schemas/ConceptPropertyUnit'
+                  - $ref: '#/components/schemas/ConceptPropertyValue'
+    put:
+      tags:
+        - lookup-dependency-controller
+      summary: Add a new concept element to the Semantic Lookup Repository
+      description: 'The object must be of type: ConceptClass, Property, PropertyValue or PropertyUnit'
+      operationId: addConcept
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Concept Identifier (IRDI or URI)
+              oneOf:
+                - $ref: '#/components/schemas/ConceptClass'
+                - $ref: '#/components/schemas/ConceptProperty'
+                - $ref: '#/components/schemas/ConceptPropertyUnit'
+                - $ref: '#/components/schemas/ConceptPropertyValue'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ConceptClass'
+                  - $ref: '#/components/schemas/ConceptProperty'
+                  - $ref: '#/components/schemas/ConceptPropertyUnit'
+                  - $ref: '#/components/schemas/ConceptPropertyValue'
+    post:
+      tags:
+        - lookup-dependency-controller
+      summary: Change an existing concept element in the Semantic Lookup Repository
+      description: 'The object must be of type: ConceptClass, Property, PropertyValue or PropertyUnit'
+      operationId: setConcept
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Concept Identifier (IRDI or URI)
+              oneOf:
+                - $ref: '#/components/schemas/ConceptClass'
+                - $ref: '#/components/schemas/ConceptProperty'
+                - $ref: '#/components/schemas/ConceptPropertyUnit'
+                - $ref: '#/components/schemas/ConceptPropertyValue'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ConceptClass'
+                  - $ref: '#/components/schemas/ConceptProperty'
+                  - $ref: '#/components/schemas/ConceptPropertyUnit'
+                  - $ref: '#/components/schemas/ConceptPropertyValue'
+    delete:
+      tags:
+        - lookup-dependency-controller
+      summary: Delete a concept from the Semantic Lookup Repository
+      description: 'NOTE: Dependent data is also deleted'
+      operationId: deleteConcept
+      parameters:
+        - name: id
+          in: query
+          description: Concept Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+  /concept/value:
+    get:
+      tags:
+        - lookup-dependency-controller
+      summary: Obtain a PropertyValue based on it's ID
+      description: Read the PropertyValue with it's full IRDI
+      operationId: getPropertyValue
+      parameters:
+        - name: id
+          in: query
+          description: PropertyValue Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptPropertyValue'
+    put:
+      tags:
+        - lookup-dependency-controller
+      summary: Add a new property value to the repository
+      description: Read the value with it's full IRDI
+      operationId: addPropertyValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptPropertyValue'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptPropertyValue'
+    post:
+      tags:
+        - lookup-dependency-controller
+      summary: Update an existing property value in the repository
+      description: Read the Property Value with it's full IRDI
+      operationId: setPropertyValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptPropertyValue'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptPropertyValue'
+    delete:
+      tags:
+        - lookup-dependency-controller
+      summary: Delete a PropertyValue from the Semantic Lookup Repository
+      description: 'NOTE: Dependent data is also deleted'
+      operationId: deletePropertyValue
+      parameters:
+        - name: id
+          in: query
+          description: PropertyValue Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+  /concept/unit:
+    get:
+      tags:
+        - lookup-dependency-controller
+      summary: Obtain a PropertyUnit based on it's ID
+      description: Read the PropertyUnit with it's full IRDI
+      operationId: getPropertyUnit
+      parameters:
+        - name: id
+          in: query
+          description: PropertyUnit Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptPropertyUnit'
+    put:
+      tags:
+        - lookup-dependency-controller
+      summary: Add a new property to the repository
+      description: Read the PropertyUnit with it's full IRDI
+      operationId: addPropertyUnit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptPropertyUnit'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptPropertyUnit'
+    post:
+      tags:
+        - lookup-dependency-controller
+      summary: Update an existing property unit in the repository
+      description: Read the PropertyUnit with it's full URI or IRDI
+      operationId: setPropertyUnit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptPropertyUnit'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptPropertyUnit'
+    delete:
+      tags:
+        - lookup-dependency-controller
+      summary: Delete a property unit from the Semantic Lookup Repository
+      description: 'NOTE: Dependent data is also deleted'
+      operationId: deletePropertyUnit
+      parameters:
+        - name: id
+          in: query
+          description: PropertyUnit Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+  /concept/property:
+    get:
+      tags:
+        - lookup-dependency-controller
+      summary: Obtain a Property based on it's ID
+      description: Read the ClassificationClass with it's full IRDI
+      operationId: getProperty
+      parameters:
+        - name: id
+          in: query
+          description: Property Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptProperty'
+    put:
+      tags:
+        - lookup-dependency-controller
+      summary: Add a new property to the repository
+      description: Read the Property with it's full IRDI
+      operationId: addProperty
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptProperty'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptProperty'
+    post:
+      tags:
+        - lookup-dependency-controller
+      summary: Update an existing Property in the repository
+      description: 'Note: dependend data (PropertyUnit, PropertyValue) might be provided'
+      operationId: setProperty
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptProperty'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptProperty'
+    delete:
+      tags:
+        - lookup-dependency-controller
+      summary: Delete one or more from the Semantic Lookup Repository
+      description: 'NOTE: Dependent data (e.g. Assignment to PropertyValues) is also deleted'
+      operationId: deleteProperty
+      parameters:
+        - name: id
+          in: query
+          description: Property Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+  /concept/class:
+    get:
+      tags:
+        - lookup-dependency-controller
+      summary: Read a ConceptClass element based on it's ID
+      description: Read the ConceptClass with it's full URI or IRDI
+      operationId: getConceptClass
+      parameters:
+        - name: id
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptClass'
+    put:
+      tags:
+        - lookup-dependency-controller
+      summary: Add a new ConceptClass element to the repository
+      description: A new class is added, the parentElement may only provided as parameter!
+      operationId: addConceptClass
+      parameters:
+        - name: parentIdentifier
+          in: query
+          description: The ConceptClass Identifier (IRDI or URI) of the parent class - optional
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptClass'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptClass'
+    post:
+      tags:
+        - lookup-dependency-controller
+      summary: Update an existing ConceptClass in the repository
+      description: 'Note: the ConceptClass might contain additional data (parent class) this is not changed'
+      operationId: setConceptClass
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptClass'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptClass'
+    delete:
+      tags:
+        - lookup-dependency-controller
+      summary: Delete a ConceptClass from the Semantic Lookup Repository
+      description: 'NOTE: Dependent data is also deleted'
+      operationId: deleteConceptClass
+      parameters:
+        - name: id
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+  /concept/class/property/values:
+    get:
+      tags:
+        - lookup-dependency-controller
+      summary: Obtain the values allowed for the provided property, (optionally) when used with the given class
+      description: Specify all relevant properties for given concept class
+      operationId: getPropertyValues_1
+      parameters:
+        - name: classid
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: query
+          description: ConceptProperty Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConceptPropertyValue'
+    put:
+      tags:
+        - lookup-dependency-controller
+      summary: Specify the values allowed for the provided property, when used with the given class
+      description: Specify all relevant properties for given concept class
+      operationId: setPropertyValuesByIdForConceptClass
+      parameters:
+        - name: classid
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+        - name: conceptPropertyValue
+          in: query
+          description: List of Property Identifier (IRDI or URI
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConceptPropertyValue'
+    post:
+      tags:
+        - lookup-dependency-controller
+      summary: Specify the values allowed for the provided property, when used with the given class
+      description: Specify all relevant properties for given concept class
+      operationId: setPropertyValuesForConceptClass
+      parameters:
+        - name: classid
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConceptPropertyValue'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConceptPropertyValue'
+    delete:
+      tags:
+        - lookup-dependency-controller
+      summary: Specify the values allowed for the provided property, when used with the given class
+      description: Specify all relevant properties for given concept class
+      operationId: setPropertyValues
+      parameters:
+        - name: classid
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+        - name: conceptPropertyValue
+          in: query
+          description: List of Property Identifier (IRDI or URI
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConceptPropertyValue'
+  /concept/class/properties:
+    get:
+      tags:
+        - lookup-dependency-controller
+      summary: Read all Property data relevant for the given class
+      description: Obtain all relevant properties for given concept class
+      operationId: getPropertiesForConceptClass
+      parameters:
+        - name: id
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+        - name: complete
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConceptProperty'
+    put:
+      tags:
+        - lookup-dependency-controller
+      summary: Add all Property data relevant for the given class
+      description: Specify all relevant properties for given concept class
+      operationId: setPropertiesByIdForConceptClass
+      parameters:
+        - name: id
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+        - name: property
+          in: query
+          description: List of Property Identifier (IRDI or URI
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConceptProperty'
+    post:
+      tags:
+        - lookup-dependency-controller
+      summary: Add all Property data relevant for the given class
+      description: Specify all relevant properties for given concept class
+      operationId: setPropertiesForConceptClass
+      parameters:
+        - name: id
+          in: query
+          description: ConceptClass Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConceptProperty'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConceptProperty'
+  /concept-descriptions/{cdIdentifier}:
+    get:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Returns a specific Concept Description
+      operationId: getConceptDescriptionById
+      parameters:
+        - name: cdIdentifier
+          in: path
+          description: The Concept Description’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    put:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Updates an existing Concept Description
+      operationId: putConceptDescriptionById
+      parameters:
+        - name: cdIdentifier
+          in: path
+          description: The Concept Description’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptDescription'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '204':
+          description: Concept Description updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    delete:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Deletes a Concept Description
+      operationId: deleteConceptDescriptionById
+      parameters:
+        - name: cdIdentifier
+          in: path
+          description: The Concept Description’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '204':
+          description: Concept Description deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /subrepo/reference:
+    post:
+      tags:
+        - Submodel Repository Interface (Connector)
+      summary: Obtain a referable element by reference
+      operationId: getReferableElement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reference'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Referable'
+  /subrepo/reference/value:
+    post:
+      tags:
+        - Submodel Repository Interface (Connector)
+      summary: Obtain the value of a referable element by reference
+      operationId: getValueByReference
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reference'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /submodels:
+    get:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Returns all Submodels
+      operationId: getAllSubmodels
+      parameters:
+        - name: semanticId
+          in: query
+          description: The value of the semantic id reference (BASE64-URL-encoded)
+          required: false
+          schema:
+            type: string
+        - name: idShort
+          in: query
+          description: The Submodel’s idShort
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    post:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Creates a new Submodel
+      operationId: postSubmodel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Submodel'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '201':
+          description: Submodel created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submodel'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /submodels/{submodelIdentifier}/submodel-elements:
+    get:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Returns all submodel elements including their hierarchy
+      operationId: getAllSubmodelElementsSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    post:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Creates a new submodel element
+      operationId: postSubmodelElementSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmodelElement'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '201':
+          description: Submodel element created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmodelElement'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/invoke:
+    post:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Synchronously or asynchronously invokes an Operation at a specified path
+      operationId: invokeOperationSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated), in this case an operation
+          required: true
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: Determines whether an operation invocation is performed asynchronously or synchronously
+          required: false
+          schema:
+            type: string
+            default: 'false'
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationRequest'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '405':
+          description: Method not allowed - Invoke only valid for Operation submodel element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Returns all Asset Administration Shells
+      operationId: getAllAssetAdministrationShells
+      parameters:
+        - name: assetIds
+          in: query
+          description: A list of specific Asset identifiers
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SpecificAssetId'
+        - name: idShort
+          in: query
+          description: The Asset Administration Shell’s IdShort
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Requested Asset Administration Shells
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetAdministrationShell'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Creates a new Asset Administration Shell
+      operationId: postAssetAdministrationShell
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetAdministrationShell'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '201':
+          description: Asset Administration Shell created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetAdministrationShell'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells/{aasIdentifier}/submodels:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Returns all submodel references
+      operationId: getAllSubmodelReferences
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Requested submodel references
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reference'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Creates a submodel reference at the Asset Administration Shell
+      operationId: postSubmodelReference
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reference'
+        required: true
+      responses:
+        '201':
+          description: Submodel reference created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reference'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells/{aasIdentifier}/submodels/{submodelIdentifier}/submodel/submodel-elements:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Returns all submodel elements including their hierarchy
+      operationId: getAllSubmodelElements
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      responses:
+        '200':
+          description: List of found submodel elements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubmodelElement'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Creates a new submodel element
+      operationId: postSubmodelElement
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: level
+          in: query
+          description: Determines the structural depth of the respective resource content
+          required: false
+          schema:
+            type: string
+            default: deep
+            enum:
+              - deep
+              - core
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+        - name: extent
+          in: query
+          description: Determines to which extent the resource is being serialized
+          required: false
+          schema:
+            type: string
+            enum:
+              - withBlobValue
+              - withoutBlobValue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmodelElement'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '201':
+          description: Submodel element created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmodelElement'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells/{aasIdentifier}/submodels/{submodelIdentifier}/submodel/submodel-elements/{idShortPath}/invoke:
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Synchronously or asynchronously invokes an Operation at a specified path
+      operationId: invokeOperation
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated), in this case an operation
+          required: true
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: Determines whether an operation invocation is performed asynchronously or synchronously
+          required: false
+          schema:
+            type: string
+            default: 'false'
+        - name: content
+          in: query
+          description: Determines the request or response kind of the resource
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - metadata
+              - value
+              - reference
+              - path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationRequest'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '405':
+          description: Method not allowed - Invoke only valid for Operation submodel element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /repository/shells/{aasIdentifier}/aas/submodels:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Obtain the submodel references from the AAS
+      operationId: getSubmodels_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reference'
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Update the submodel references of the identified AAS
+      operationId: setSubmodels
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Reference'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reference'
+  /repository/shells/{aasIdentifier}/aas/submodels/{submodelIdentifier}/submodel/submodel-elements:
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Update a submodel's submodel element
+      operationId: setSubmodelElement
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Submodels’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmodelElement'
+        required: true
+      responses:
+        '200':
+          description: OK
+  /repository/shells/{aasIdentifier}/aas/submodels/{submodelIdentifier}/submodel/submodel-elements/{path}/value:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Obtain the value of the (Data)Element
+      operationId: getValue_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          description: The path to the container
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            text/plain:
+              schema:
+                type: object
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Obtain the identifiable element
+      operationId: setValue
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          description: The path to the container
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: OK
+  /repository/shells/{aasIdentifier}/aas/submodels/{submodelIdentifier}/submodel/submodel-elements/{path}/invoke:
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Obtain the identifiable element
+      operationId: invokeOperation_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          description: The path to the container
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /repository/shells/{aasIdentifier}/aas/submodels/{submodelIdentifier}/submodel/submodel-elements/{path}:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Obtain a referable element by it's reference
+      operationId: getSubmodelElement_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          description: The path to the requested element
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Referable'
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Update a submodel element at the provided path
+      operationId: setSubmodelElement_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Submodels’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          description: The path to the container where the new element is to be placed
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmodelElement'
+        required: true
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Obtain the identifiable element
+      operationId: removeSubmodelElement
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          description: The path to the container
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+  /repository/concept-description/{cdIdentifier}:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Get a ConceptDescription
+      operationId: getConceptDescription
+      parameters:
+        - name: cdIdentifier
+          in: path
+          description: The ConceptDescriptions’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ConceptDescription'
+    post:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Get a ConceptDescription
+      operationId: setConceptDescription
+      parameters:
+        - name: cdIdentifier
+          in: path
+          description: The ConceptDescriptions’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptDescription'
+        required: true
+      responses:
+        '200':
+          description: OK
+  /directory/aas/{aasIdentifier}:
+    get:
+      tags:
+        - Asset Administration Shell Directory Interface (for Connector)
+      summary: Obtain the descriptor of an Asset based on it's identifier
+      operationId: lookup
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AssetAdministrationShellDescriptor'
+    post:
+      tags:
+        - Asset Administration Shell Directory Interface (for Connector)
+      summary: Regester a new AssetAdministrationShell Descriptor
+      operationId: register
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetAdministrationShell'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AssetAdministrationShell'
+    delete:
+      tags:
+        - Asset Administration Shell Directory Interface (for Connector)
+      summary: Remove an AssetAdministrationShell Descriptor
+      operationId: unregister
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /directory/aas/{aasIdentifier}/submodel/{submodelIdentifier}:
+    get:
+      tags:
+        - Asset Administration Shell Directory Interface (for Connector)
+      summary: Obtain the descriptor of an Asset based on it's identifier
+      operationId: lookup_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SubmodelDescriptor'
+    post:
+      tags:
+        - Asset Administration Shell Directory Interface (for Connector)
+      summary: Add a SubmodelDescriptor to an existing AssetAdministrationShell Descriptor
+      operationId: register_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel's unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmodelDescriptor'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Submodel'
+    delete:
+      tags:
+        - Asset Administration Shell Directory Interface (for Connector)
+      summary: Delete a SubmodelDescriptor
+      operationId: unregister_1
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The id's of the SubmodelDescriptor to unregister
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /concept-descriptions:
+    get:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Returns all Concept Descriptions
+      operationId: getAllConceptDescriptions
+      parameters:
+        - name: idShort
+          in: query
+          description: The Concept Description’s IdShort
+          required: false
+          schema:
+            type: string
+        - name: isCaseOf
+          in: query
+          description: IsCaseOf reference (UTF8-BASE64-URL-encoded)
+          required: false
+          schema:
+            type: string
+        - name: dataSpecificationRef
+          in: query
+          description: DataSpecification reference (UTF8-BASE64-URL-encoded)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+    post:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Creates a new Concept Description
+      operationId: postConceptDescription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConceptDescription'
+        required: true
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '201':
+          description: Concept Description created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConceptDescription'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /subrepo:
+    get:
+      tags:
+        - Submodel Repository Interface (Connector)
+      summary: Obtain the submodel references from the repository
+      operationId: getSubmodels
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reference'
+  /subrepo/{submodelIdentifier}:
+    get:
+      tags:
+        - Submodel Repository Interface (Connector)
+      summary: Obtain the submodel based on it's identifier from the repository
+      operationId: getSubmodel
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Submodel'
+  /subrepo/{submodelIdentifier}/submodel/submodel-elements/{path}/value:
+    get:
+      tags:
+        - Submodel Repository Interface (Connector)
+      summary: Obtain the value of the (Data)Element
+      operationId: getValue
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          description: The path to the requested element
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            text/plain:
+              schema:
+                type: object
+  /subrepo/{submodelIdentifier}/submodel/submodel-elements/{path}:
+    get:
+      tags:
+        - Submodel Repository Interface (Connector)
+      summary: Obtain a referable element by refernence
+      operationId: getSubmodelElement
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          description: The path to the requested element
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Referable'
+  /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/operation-results/{handleId}:
+    get:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Returns the Operation result of an asynchronous invoked Operation
+      operationId: getOperationAsyncResultSubmodelRepo
+      parameters:
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated), in this case an operation
+          required: true
+          schema:
+            type: string
+        - name: handleId
+          in: path
+          description: The returned handle id of an operation’s asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: content
+          in: query
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - value
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /shells/{aasIdentifier}/submodels/{submodelIdentifier}/submodel/submodel-elements/{idShortPath}/operation-results/{handleId}:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Returns the Operation result of an asynchronous invoked Operation
+      operationId: getOperationAsyncResult
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: idShortPath
+          in: path
+          description: IdShort path to the submodel element (dot-separated), in this case an operation
+          required: true
+          schema:
+            type: string
+        - name: handleId
+          in: path
+          description: The returned handle id of an operation’s asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: content
+          in: query
+          required: false
+          schema:
+            type: string
+            default: normal
+            enum:
+              - normal
+              - value
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /serialization:
+    get:
+      tags:
+        - Asset Administration Shell Environment Serialization API
+      summary: Returns an appropriate serialization based on the specified format (see SerializationFormat)
+      operationId: generateSerializationByIds
+      parameters:
+        - name: aasIds
+          in: query
+          description: The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: submodelIds
+          in: query
+          description: The Submodels' unique ids (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: includeConceptDescriptions
+          in: query
+          description: Include Concept Descriptions?
+          required: true
+          schema:
+            type: string
+            default: 'true'
+      responses:
+        '200':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /repository/shells:
+    get:
+      tags:
+        - Asset Administration Shell Repository Interface (for Connector)
+      summary: Get the AssetAdministrationShell
+      operationId: getAssetAdministrationShells
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetAdministrationShell'
+  /old/{aasIdentifier}:
+    get:
+      tags:
+        - Asset Administration Shell Environment API
+      summary: Returns a specific Asset Administration Shell
+      operationId: getAssetAdministrationShellById
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Requested Asset Administration Shell
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetAdministrationShell'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+  /concept/property/values:
+    get:
+      tags:
+        - lookup-dependency-controller
+      summary: Read all values relevant for the given property, optionally aligned to a given ConceptClass
+      description: When the ConceptClass Identifier is provided, the value list is checked for the particular ConceptClass
+      operationId: getPropertyValues
+      parameters:
+        - name: id
+          in: query
+          description: Property Identifier (IRDI or URI)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConceptPropertyValue'
+  /shells/{aasIdentifier}/submodels/{submodelIdentifier}:
+    delete:
+      tags:
+        - Asset Administration Shell Repository Interface (SPEC)
+      summary: Deletes the submodel reference from the Asset Administration Shell
+      operationId: deleteSubmodelReferenceById
+      parameters:
+        - name: aasIdentifier
+          in: path
+          description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+        - name: submodelIdentifier
+          in: path
+          description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Submodel reference deleted successfully
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '500':
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+components:
+  schemas:
+    AdministrativeInformation:
+      type: object
+      properties:
+        version:
+          type: string
+        revision:
+          type: string
+        embeddedDataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataSpecification'
+        dataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+    DataSpecification:
+      type: object
+      properties:
+        id:
+          type: string
+        dataSpecificationContent:
+          $ref: '#/components/schemas/DataSpecificationContent'
+        administration:
+          $ref: '#/components/schemas/AdministrativeInformation'
+        descriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+    DataSpecificationContent:
+      type: object
+    Extension:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        refersTo:
+          $ref: '#/components/schemas/Reference'
+        valueType:
+          type: string
+          enum:
+            - xs:anyURI
+            - xs:base64Binary
+            - xs:boolean
+            - xs:byte
+            - xs:date
+            - xs:dateTime
+            - xs:dateTimeStamp
+            - xs:dayTimeDuration
+            - xs:decimal
+            - xs:double
+            - xs:duration
+            - xs:float
+            - xs:gDay
+            - xs:gMonth
+            - xs:gMonthDay
+            - xs:gYear
+            - xs:gYearMonth
+            - xs:hexBinary
+            - xs:int
+            - xs:integer
+            - xs:long
+            - xs:negativeInteger
+            - xs:nonNegativeInteger
+            - xs:nonPositiveInteger
+            - xs:positiveInteger
+            - xs:short
+            - xs:string
+            - xs:time
+            - xs:unsignedByte
+            - xs:unsignedInt
+            - xs:unsignedLong
+            - xs:unsignedShort
+            - xs:yearMonthDuration
+        supplementalSemanticIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        semanticId:
+          $ref: '#/components/schemas/Reference'
+    Key:
+      type: object
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+          enum:
+            - AnnotatedRelationshipElement
+            - AssetAdministrationShell
+            - BasicEventElement
+            - Blob
+            - Capability
+            - ConceptDescription
+            - DataElement
+            - Entity
+            - EventElement
+            - File
+            - FragmentReference
+            - GlobalReference
+            - Identifiable
+            - MultiLanguageProperty
+            - Operation
+            - Property
+            - Range
+            - Referable
+            - ReferenceElement
+            - RelationshipElement
+            - Submodel
+            - SubmodelElement
+            - SubmodelElementCollection
+            - SubmodelElementList
+    LangString:
+      type: object
+      properties:
+        language:
+          type: string
+        text:
+          type: string
+    Qualifier:
+      type: object
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+        valueId:
+          $ref: '#/components/schemas/Reference'
+        valueType:
+          type: string
+          enum:
+            - xs:anyURI
+            - xs:base64Binary
+            - xs:boolean
+            - xs:byte
+            - xs:date
+            - xs:dateTime
+            - xs:dateTimeStamp
+            - xs:dayTimeDuration
+            - xs:decimal
+            - xs:double
+            - xs:duration
+            - xs:float
+            - xs:gDay
+            - xs:gMonth
+            - xs:gMonthDay
+            - xs:gYear
+            - xs:gYearMonth
+            - xs:hexBinary
+            - xs:int
+            - xs:integer
+            - xs:long
+            - xs:negativeInteger
+            - xs:nonNegativeInteger
+            - xs:nonPositiveInteger
+            - xs:positiveInteger
+            - xs:short
+            - xs:string
+            - xs:time
+            - xs:unsignedByte
+            - xs:unsignedInt
+            - xs:unsignedLong
+            - xs:unsignedShort
+            - xs:yearMonthDuration
+        kind:
+          type: string
+          enum:
+            - ConceptQualifier
+            - TemplateQualifier
+            - ValueQualifier
+        supplementalSemanticIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        semanticId:
+          $ref: '#/components/schemas/Reference'
+    Reference:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - GlobalReference
+            - ModelReference
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/Key'
+        referredSemanticId:
+          $ref: '#/components/schemas/Reference'
+    Submodel:
+      type: object
+      properties:
+        submodelElements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmodelElement'
+        embeddedDataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataSpecification'
+        dataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        id:
+          type: string
+        administration:
+          $ref: '#/components/schemas/AdministrativeInformation'
+        displayNames:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        category:
+          type: string
+        checksum:
+          type: string
+        descriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        idShort:
+          type: string
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+        supplementalSemanticIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        semanticId:
+          $ref: '#/components/schemas/Reference'
+        kind:
+          type: string
+          enum:
+            - Instance
+            - Template
+        qualifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Qualifier'
+    SubmodelElement:
+      type: object
+      properties:
+        embeddedDataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataSpecification'
+        dataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        supplementalSemanticIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        semanticId:
+          $ref: '#/components/schemas/Reference'
+        kind:
+          type: string
+          enum:
+            - Instance
+            - Template
+        displayNames:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        category:
+          type: string
+        checksum:
+          type: string
+        descriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        idShort:
+          type: string
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+        qualifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Qualifier'
+    Message:
+      type: object
+      properties:
+        code:
+          type: string
+        messageType:
+          type: string
+          enum:
+            - Undefined
+            - Info
+            - Warning
+            - Error
+            - Exception
+        text:
+          type: string
+        timestamp:
+          type: string
+    Result:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        success:
+          type: boolean
+    AccessControl:
+      type: object
+      properties:
+        accessPermissionRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccessPermissionRule'
+        selectableSubjectAttributes:
+          $ref: '#/components/schemas/Reference'
+        defaultSubjectAttributes:
+          $ref: '#/components/schemas/Reference'
+        selectablePermissions:
+          $ref: '#/components/schemas/Reference'
+        defaultPermissions:
+          $ref: '#/components/schemas/Reference'
+        selectableEnvironmentAttributes:
+          $ref: '#/components/schemas/Reference'
+        defaultEnvironmentAttributes:
+          $ref: '#/components/schemas/Reference'
+    AccessControlPolicyPoints:
+      type: object
+      properties:
+        policyAdministrationPoint:
+          $ref: '#/components/schemas/AccessControl'
+    AccessPermissionRule:
+      type: object
+      properties:
+        permissionsPerObjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionsPerObject'
+    AssetAdministrationShell:
+      type: object
+      properties:
+        derivedFrom:
+          $ref: '#/components/schemas/Reference'
+        securitys:
+          type: array
+          items:
+            $ref: '#/components/schemas/Security'
+        submodels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        assetInformation:
+          $ref: '#/components/schemas/AssetInformation'
+        embeddedDataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataSpecification'
+        dataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        id:
+          type: string
+        administration:
+          $ref: '#/components/schemas/AdministrativeInformation'
+        displayNames:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        category:
+          type: string
+        checksum:
+          type: string
+        descriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        idShort:
+          type: string
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+    AssetInformation:
+      type: object
+      properties:
+        assetKind:
+          type: string
+          enum:
+            - Instance
+            - Type
+        defaultThumbnail:
+          $ref: '#/components/schemas/Resource'
+        specificAssetIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpecificAssetId'
+        globalAssetId:
+          $ref: '#/components/schemas/Reference'
+    ObjectAttributes:
+      type: object
+      properties:
+        objectAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+    Permission:
+      type: object
+      properties:
+        permission:
+          $ref: '#/components/schemas/Reference'
+        kindOfPermission:
+          type: string
+          enum:
+            - Allow
+            - Deny
+            - NotApplicable
+            - Undefined
+    PermissionsPerObject:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+        object:
+          $ref: '#/components/schemas/Reference'
+        targetObjectAttributes:
+          $ref: '#/components/schemas/ObjectAttributes'
+    Resource:
+      type: object
+      properties:
+        path:
+          type: string
+        contentType:
+          type: string
+    Security:
+      type: object
+      properties:
+        accessControlPolicyPoints:
+          $ref: '#/components/schemas/AccessControlPolicyPoints'
+    SpecificAssetId:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        externalSubjectId:
+          $ref: '#/components/schemas/Reference'
+        supplementalSemanticIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        semanticId:
+          $ref: '#/components/schemas/Reference'
+    ConceptBase:
+      type: object
+      properties:
+        conceptId:
+          type: string
+        idType:
+          type: string
+          enum:
+            - IRI
+            - IRDI
+        supplier:
+          type: string
+        nameSpace:
+          type: string
+        localName:
+          type: string
+        versionNumber:
+          type: string
+        revisionNumber:
+          type: string
+        versionDate:
+          type: string
+          format: date
+        shortName:
+          type: string
+        conceptType:
+          type: string
+        note:
+          type: string
+        remark:
+          type: string
+        definition:
+          type: object
+          additionalProperties:
+            type: string
+        comment:
+          type: object
+          additionalProperties:
+            type: string
+        preferredLabel:
+          type: object
+          additionalProperties:
+            type: string
+        alternateLabel:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+        hiddenLabel:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+        languages:
+          uniqueItems: true
+          type: array
+          items:
+            type: object
+            properties:
+              language:
+                type: string
+              script:
+                type: string
+              variant:
+                type: string
+              displayName:
+                type: string
+              country:
+                type: string
+              unicodeLocaleAttributes:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+              unicodeLocaleKeys:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+              displayLanguage:
+                type: string
+              displayScript:
+                type: string
+              displayCountry:
+                type: string
+              displayVariant:
+                type: string
+              extensionKeys:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+              iso3Language:
+                type: string
+              iso3Country:
+                type: string
+      discriminator:
+        propertyName: conceptType
+    ConceptClass:
+      type: object
+      description: The full description for the concept class
+      allOf:
+        - $ref: '#/components/schemas/ConceptBase'
+        - type: object
+          properties:
+            level:
+              type: integer
+              format: int32
+            codedName:
+              type: string
+            category:
+              type: string
+            parentElement:
+              $ref: '#/components/schemas/ConceptClass'
+    ConceptProperty:
+      type: object
+      description: The full description for the Property
+      allOf:
+        - $ref: '#/components/schemas/ConceptBase'
+        - type: object
+          properties:
+            category:
+              type: string
+            sourceOfDefinition:
+              type: string
+            coded:
+              type: boolean
+            dataType:
+              type: string
+              enum:
+                - STRING
+                - STRING_TRANSLATABLE
+                - INTEGER_COUNT
+                - INTEGER_MEASURE
+                - INTEGER_CURRENCY
+                - REAL_COUNT
+                - REAL_MEASURE
+                - REAL_CURRENCY
+                - RATIONAL
+                - RATIONAL_MEASURE
+                - BOOLEAN
+                - DATE
+                - URL
+                - TIME
+                - TIMESTAMP
+            values:
+              uniqueItems: true
+              type: array
+              items:
+                $ref: '#/components/schemas/ConceptPropertyValue'
+            unit:
+              $ref: '#/components/schemas/ConceptPropertyUnit'
+    ConceptPropertyUnit:
+      type: object
+      description: The full description for the PropertyUnit
+      allOf:
+        - $ref: '#/components/schemas/ConceptBase'
+        - type: object
+          properties:
+            dinNotation:
+              type: string
+            eceCode:
+              type: string
+            eceName:
+              type: string
+            iecClassification:
+              type: string
+            nameOfDedicatedQuantity:
+              type: string
+            nistName:
+              type: string
+            siName:
+              type: string
+            siNotation:
+              type: string
+            source:
+              type: string
+            structuredNaming:
+              type: string
+    ConceptPropertyValue:
+      type: object
+      description: The full description for the property value
+      allOf:
+        - $ref: '#/components/schemas/ConceptBase'
+        - type: object
+          properties:
+            value:
+              type: string
+            reference:
+              type: string
+            dataType:
+              type: string
+              enum:
+                - STRING
+                - STRING_TRANSLATABLE
+                - INTEGER_COUNT
+                - INTEGER_MEASURE
+                - INTEGER_CURRENCY
+                - REAL_COUNT
+                - REAL_MEASURE
+                - REAL_CURRENCY
+                - RATIONAL
+                - RATIONAL_MEASURE
+                - BOOLEAN
+                - DATE
+                - URL
+                - TIME
+                - TIMESTAMP
+    ConceptDescription:
+      type: object
+      properties:
+        isCaseOfs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        embeddedDataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataSpecification'
+        dataSpecifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        id:
+          type: string
+        administration:
+          $ref: '#/components/schemas/AdministrativeInformation'
+        displayNames:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        category:
+          type: string
+        checksum:
+          type: string
+        descriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        idShort:
+          type: string
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+    Referable:
+      type: object
+      properties:
+        displayNames:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        category:
+          type: string
+        checksum:
+          type: string
+        descriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        idShort:
+          type: string
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+    OperationRequest:
+      type: object
+      properties:
+        inoutputArguments:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationVariable'
+        inputArguments:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationVariable'
+        requestId:
+          type: string
+        timeout:
+          type: integer
+          format: int32
+      description: Operation request object
+    OperationVariable:
+      type: object
+      properties:
+        value:
+          $ref: '#/components/schemas/SubmodelElement'
+    Endpoint:
+      type: object
+      properties:
+        type:
+          type: string
+        address:
+          type: string
+    SubmodelDescriptor:
+      type: object
+      properties:
+        supplementalSemanticIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        semanticId:
+          $ref: '#/components/schemas/Reference'
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+        id:
+          type: string
+        administration:
+          $ref: '#/components/schemas/AdministrativeInformation'
+        displayNames:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        category:
+          type: string
+        checksum:
+          type: string
+        descriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        idShort:
+          type: string
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+      description: The SubmodelDescriptor to register with the AAS
+    AssetAdministrationShellDescriptor:
+      type: object
+      properties:
+        globalAssetId:
+          $ref: '#/components/schemas/Reference'
+        specificAssetId:
+          $ref: '#/components/schemas/SpecificAssetId'
+        submodelDescriptors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmodelDescriptor'
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+        id:
+          type: string
+        administration:
+          $ref: '#/components/schemas/AdministrativeInformation'
+        displayNames:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        category:
+          type: string
+        checksum:
+          type: string
+        descriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangString'
+        idShort:
+          type: string
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
