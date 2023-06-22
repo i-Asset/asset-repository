@@ -1,6 +1,7 @@
 package at.srfg.iasset.connector;
 
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -64,20 +65,18 @@ public class IsproNGConnector {
 
         try {
 
-            // TODO: connector mit Anlagenname, -nummer, Standort, Enterprise initialisieren
-            // TODO: connector mit API-Token initialisieren, der muss sich dann das Token abholen!
-            // TODO: separate Directory & Repository
-            // TODO: persistenz & reload
             IsproNGConnector connector = new IsproNGConnector();
-            IsproNGPublicAPIConnector isproAPI = new IsproNGPublicAPIConnector("http://localhost:2518","1n09E-8zjE35kmYw2RhnI767wI7koyf8VHEi4V-tVrgb");
-            // start the http endpoint for this Connector at port 5050
+            IsproNGPublicAPIConnector isproAPI = new IsproNGPublicAPIConnector(
+                    connector.getServiceEnvironment().getConfigProperty("connector.isprong.baseUri"),
+                    connector.getServiceEnvironment().getConfigProperty("connector.isprong.apikey"));
+
+
             connector.getLocalEnvironment().addAdministrationShell(AASFull.AAS_BELT_INSTANCE);
             connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFaultSubmodel.SUBMODEL_FAULT_OPERATIONS);
             connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
             connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_EVENT_INSTANCE);
             connector.getLocalEnvironment().addSubmodel(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
-            // load fault submodel
-            // FIXME: improve
+
             Reference pattern = new DefaultReference.Builder()
                     .type(ReferenceTypes.MODEL_REFERENCE)
                     .key(new DefaultKey.Builder()
