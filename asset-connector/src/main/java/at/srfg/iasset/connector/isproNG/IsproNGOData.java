@@ -3,18 +3,18 @@ package at.srfg.iasset.connector.isproNG;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class IsproNGOData {
+public class IsproNGOData<T> {
     public IsproNGOData(){
 
     }
 
-    public IsproNGCause[] getValue() {
+    public T[] getValue() {
         return value;
     }
 
-    public void setValue(IsproNGCause[] value) {
+    public void setValue(T[] value) {
         this.value = value;
     }
 
-    private IsproNGCause[] value;
+    private T[] value;
 }

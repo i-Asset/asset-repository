@@ -43,7 +43,12 @@ public class IsproNGPublicAPIConnector implements IWebhook{
         return GetObject("odata/CauseOData");
     }
 
-    private IsproNGCause[] GetObject(String path)
+    public IsproNGPlantStructure[] GetObjectPlantStructure()
+    {
+        return GetObject("odata/PlantStructureOData");
+    }
+
+    private <T>T[] GetObject(String path)
     {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -73,7 +78,7 @@ public class IsproNGPublicAPIConnector implements IWebhook{
                 content.append(line).append("\n");
             }
             bufferedReader.close();
-            IsproNGOData odata = mapper.readValue(content.toString(),IsproNGOData.class);
+            IsproNGOData<T> odata = mapper.readValue(content.toString(),IsproNGOData.class);
 
             return odata.getValue();
 
@@ -82,7 +87,7 @@ public class IsproNGPublicAPIConnector implements IWebhook{
             System.out.println(e.getClass().getSimpleName());
             System.out.println(e.getMessage());
         }
-        return new IsproNGCause[]{};
+        return null;
 
     }
 
