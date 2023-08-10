@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.reflect.TypeToken;
 
+import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.value.mapper.ValueMapper;
@@ -64,10 +65,19 @@ public class ValueHelper {
 	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, V value) {
 		return modelElement;
 	}
+	@SuppressWarnings("unchecked")
 	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, JsonNode node) {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(modelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
 			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapValueToElement(modelElement, node);
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(ServiceEnvironment environment, M modelElement, JsonNode node) {
+		Class<?> propertyInterface = AASModelHelper.getAasInterface(modelElement.getClass());
+		if ( mapper.containsKey(propertyInterface)) {
+			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapValueToTemplate(environment, modelElement, node);
 		}
 		return null;
 	}

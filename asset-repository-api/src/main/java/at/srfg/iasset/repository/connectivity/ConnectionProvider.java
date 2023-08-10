@@ -8,7 +8,7 @@ import org.eclipse.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
-import at.srfg.iasset.repository.api.IAssetDirectory;
+import at.srfg.iasset.repository.api.DirectoryInterface;
 import at.srfg.iasset.repository.api.SemanticLookupService;
 import at.srfg.iasset.repository.api.SubmodelRepositoryInterface;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
@@ -64,11 +64,11 @@ public interface ConnectionProvider {
 	 * Obtain a service interface connected with the central repository service
 	 * @return
 	 */
-	IAssetDirectory getIAssetDirectory();
+	DirectoryInterface getIAssetDirectory();
 
 	class Connection implements ConnectionProvider {
 		private IAssetAdministrationShellRepositoryInterface repositoryInterface;
-		private IAssetDirectory directoryInterface;
+		private DirectoryInterface directoryInterface;
 		private SubmodelRepositoryInterface submodelRepository;
 		private SemanticLookupService lookupService;
 		final String host;
@@ -99,7 +99,7 @@ public interface ConnectionProvider {
 						IAssetAdministrationShellInterface.class);	
 		}
 		@Override
-		public IAssetDirectory getIAssetDirectory() {
+		public DirectoryInterface getIAssetDirectory() {
 			if ( directoryInterface == null) {
 				directoryInterface = ConsumerFactory.createConsumer(
 						// construct the URL
@@ -107,7 +107,7 @@ public interface ConnectionProvider {
 						// the Client Factory creates a client configured with the AAS Model (default implementations & mixins)
 						ClientFactory.getInstance().getClient(), 
 						// the interface class
-						IAssetDirectory.class);	
+						DirectoryInterface.class);	
 			}
 			return directoryInterface;
 		}

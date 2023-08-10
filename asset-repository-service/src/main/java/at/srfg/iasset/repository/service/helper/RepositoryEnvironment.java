@@ -18,6 +18,7 @@ import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.Property;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,16 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
+import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
+import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.visitor.SemanticLookupVisitor;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationRequestValue;
+import at.srfg.iasset.repository.model.operation.OperationResult;
+import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
 import jakarta.validation.Valid;
@@ -107,30 +115,47 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	}
 	@Override
 	public <T extends Referable> Optional<T> resolve(Reference reference, Class<T> type) {
-        if (reference == null || reference.getKeys() == null || reference.getKeys().isEmpty()) {
-            return Optional.empty();
-        }
-//        // last element
-//        for ( Key key : reference.getKeys()) {
-//        	Class<?> keyType = AasUtils.keyTypeToClass(key.getType());
-//        	
-//        }
-//        int i = reference.getKeys().size() -1;
-//        if (type != null) { 
-//        	// obtain the desired class element
-//            Class<?> actualType = AasUtils.keyTypeToClass(reference.getKeys().get(i).getType());
-//            if (actualType == null) {
-////                log.warn("reference {} could not be resolved as key type has no known class.",
-////                        asString(reference));
-//                return null;
-//            }
-//            if (!type.isAssignableFrom(actualType)) {
-////                log.warn("reference {} could not be resolved as target type is not assignable from actual type (target: {}, actual: {})",
-////                        asString(reference), type.getName(), actualType.getName());
-//                return null;
-//            }
-//        }
-        
+		switch(ReferenceUtils.firstKeyType(reference)) {
+		case CONCEPT_DESCRIPTION:
+			// return the concept description
+			Optional<ConceptDescription> cd = storage.findConceptDescriptionById(ReferenceUtils.firstKeyValue(reference));
+			if ( cd.isPresent() ) {
+				if ( cd.isPresent() && type.isInstance(cd.get())) {
+					return Optional.of(type.cast(cd.get())); 
+					
+				}
+			}
+			break;
+		case SUBMODEL:
+			Optional<Submodel> submodel = storage.findSubmodelById(ReferenceUtils.firstKeyValue(reference));
+			if ( submodel.isPresent()) {
+				Optional<Referable> resolved = SubmodelUtils.resolveReference(submodel.get(), reference);
+				if ( resolved.isPresent() && type.isInstance(resolved.get())) {
+					return Optional.of(type.cast(resolved.get())); 
+					
+				}
+			}
+			break;
+		case ASSET_ADMINISTRATION_SHELL:
+			Iterator<Key> keyIterator = ReferenceUtils.keyIterator(reference);
+			// need to extract the first key (AAS) and the second key (Submodel) ...
+			if ( keyIterator != null && keyIterator.hasNext()) {
+				Optional<AssetAdministrationShell> shell = storage.findAssetAdministrationShellById(keyIterator.next().getValue());
+				if (shell.isPresent() && keyIterator.hasNext() ) {
+					// 
+					String submodelIdentifier = keyIterator.next().getValue();
+					if ( hasSubmodelReference(shell.get(), submodelIdentifier)) {
+						// remove the first key from the 
+						Reference submodelRef = ReferenceUtils.clone(reference);
+						submodelRef.getKeys().remove(0);
+						// resolve the remainder (Reference now points to Submodel)
+						return resolve(submodelRef,type);
+					}
+				}
+			}
+		default:
+			break;
+		}
 		return Optional.empty();
 	}
 	public Optional<Referable> resolve(Reference reference) {
@@ -235,6 +260,12 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		return null;
 	}
 
+	@Override
+	public Submodel setSubmodel(String submodelIdentifier, Submodel submodel) {
+		submodel.setId(submodelIdentifier);
+		return storage.persist(submodel);
+	}
+
 	public Optional<Referable> getSubmodelElement(AssetAdministrationShell aasIdentifier, Reference element) {
 		// 
 		switch(ReferenceUtils.firstKeyType(element)) {
@@ -262,7 +293,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		return Optional.empty();
 	}
 	@Override
-	public Object getElementValue(String aasIdentifier, String submodelIdentifier, String path) {
+	public SubmodelElementValue getElementValue(String aasIdentifier, String submodelIdentifier, String path) {
 		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		
 		if ( submodel.isPresent()) {
@@ -332,27 +363,27 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		}
 		return null;
 	}
-	@Override
-	public Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
-			Object parameterMap) {
-		
-		Optional<AssetAdministrationShellDescriptor> descriptor = storage.findAssetAdministrationShellDescriptorById(aasIdentifier);
-		if ( descriptor.isPresent()) {
-			Optional<Endpoint> endpoint = descriptor.get().getEndpoints().stream().findFirst();
-			if (endpoint.isPresent()) {
-				
-				IAssetAdministrationShellInterface shellConnector = ConnectionProvider.getConnection(endpoint.get().getAddress()).getShellInterface();
-				return shellConnector.invokeOperation(submodelIdentifier, path, parameterMap);
-			}
-		}
-		// TODO: report the absence of the shell!
-		return null;
-	}
+//	@Override
+//	public OperationResultValue invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
+//			OperationRequestValue parameterMap) {
+//		
+//		Optional<AssetAdministrationShellDescriptor> descriptor = storage.findAssetAdministrationShellDescriptorById(aasIdentifier);
+//		if ( descriptor.isPresent()) {
+//			Optional<Endpoint> endpoint = descriptor.get().getEndpoints().stream().findFirst();
+//			if (endpoint.isPresent()) {
+//				
+//				IAssetAdministrationShellInterface shellConnector = ConnectionProvider.getConnection(endpoint.get().getAddress()).getShellInterface();
+//				return shellConnector.invokeOperation(submodelIdentifier, path, parameterMap);
+//			}
+//		}
+//		// TODO: report the absence of the shell!
+//		return null;
+//	}
 
-	@Override
-	public Object invokeOperation(Reference operation, Object parameter) {
-		throw new UnsupportedOperationException();
-	}
+//	@Override
+//	public Object invokeOperation(Reference operation, Object parameter) {
+//		throw new UnsupportedOperationException();
+//	}
 
 	@Override
 	public <T extends SubmodelElement> List<T> getSubmodelElements(String aasIdentifier, String submodelIdentifier,
@@ -379,10 +410,19 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	}
 
 	@Override
-	public Object getElementValue(String submodelIdentifier, String path) {
+	public SubmodelElementValue getElementValue(String submodelIdentifier, String path) {
 		Optional<Submodel> theSub = getSubmodel(submodelIdentifier);
 		if ( theSub.isPresent()) {
 			return SubmodelUtils.getValueAt(theSub.get(), path);
+		}
+		return null;
+	}
+	@Override
+	public <T> T getElementValue(String aasIdentifier, String submodelIdentifier, String path, Class<T> clazz) {
+		Optional<Submodel> theSub = getSubmodel(aasIdentifier, submodelIdentifier);
+		if ( theSub.isPresent()) {
+			Object value = SubmodelUtils.getValueAt(theSub.get(), path);
+			return aasMapper.convertValue(value, clazz);
 		}
 		return null;
 	}
@@ -397,42 +437,30 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	}
 
 	@Override
-	public Object getElementValue(Reference reference) {
+	public SubmodelElementValue getElementValue(Reference reference) {
 		throw new UnsupportedOperationException("Not yet implemented!");
 	}
 
 	@Override
 	public Optional<Referable> getSubmodelElement(Reference reference) {
-		switch(ReferenceUtils.firstKeyType(reference)) {
-		case CONCEPT_DESCRIPTION:
-			// return the concept description
-			Optional<ConceptDescription> cd = storage.findConceptDescriptionById(ReferenceUtils.firstKeyValue(reference));
-			if ( cd.isPresent() ) {
-				return Optional.of(cd.get());
+		return Optional.empty();
+	}
+
+	@Override
+	public <T extends SubmodelElement> Optional<T> getSubmodelElement(Reference reference, Class<T> clazz) {
+		// only model references are allowed
+		if (reference.getType()==null || ReferenceTypes.MODEL_REFERENCE.equals(reference.getType())) {
+			return resolve(reference, clazz);		
+		}
+		// TODO: in case it is a global reference, we will need to search the storage 
+		// for an element !!
+		for ( Submodel submodel : storage.getSubmodels() ) {
+			//
+			Optional<T> elemWithRef = new SemanticLookupVisitor(submodel).findElement(reference, clazz);
+			if ( elemWithRef.isPresent()) {
+				return elemWithRef;
 			}
-			break;
-		case SUBMODEL:
-			Optional<Submodel> submodel = storage.findSubmodelById(ReferenceUtils.firstKeyValue(reference));
-			if ( submodel.isPresent()) {
-				return SubmodelUtils.resolveReference(submodel.get(), reference);
-			}
-			break;
-		case ASSET_ADMINISTRATION_SHELL:
-			Iterator<Key> keyIterator = ReferenceUtils.keyIterator(reference);
-			// need to extract the first key (AAS) and the second key (Submodel) ...
-			if ( keyIterator != null && keyIterator.hasNext()) {
-				Optional<AssetAdministrationShell> shell = storage.findAssetAdministrationShellById(keyIterator.next().getValue());
-				if (shell.isPresent() && keyIterator.hasNext() ) {
-					// 
-					String submodelIdentifier = keyIterator.next().getValue();
-					if ( hasSubmodelReference(shell.get(), submodelIdentifier)) {
-						reference.getKeys().remove(0);
-						return getSubmodelElement(reference);
-					}
-				}
-			}
-		default:
-			break;
+			// not found in this submodel, continue ... 
 		}
 		return Optional.empty();
 	}
@@ -452,6 +480,41 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	@Override
 	public String getConfigProperty(String key) {
 		// TODO IMPLEMENT
+		return null;
+	}
+
+	@Override
+	public void addModelListener(ModelListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeModelListener(ModelListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public OperationResult invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
+			OperationRequest parameterMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public OperationResultValue invokeOperationValue(String aasIdentifier, String submodelIdentifier, String path,
+			OperationRequestValue parameterMap) {
+		Optional<AssetAdministrationShellDescriptor> descriptor = storage.findAssetAdministrationShellDescriptorById(aasIdentifier);
+		if ( descriptor.isPresent()) {
+			Optional<Endpoint> endpoint = descriptor.get().getEndpoints().stream().findFirst();
+			if (endpoint.isPresent()) {
+				
+				IAssetAdministrationShellInterface shellConnector = ConnectionProvider.getConnection(endpoint.get().getAddress()).getShellInterface();
+				return shellConnector.invokeOperation(submodelIdentifier, path, parameterMap);
+			}
+		}
+		// TODO: report the absence of the shell!
 		return null;
 	}
 

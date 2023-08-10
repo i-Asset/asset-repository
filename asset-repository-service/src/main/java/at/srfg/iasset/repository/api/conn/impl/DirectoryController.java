@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import at.srfg.iasset.repository.api.ApiUtils;
-import at.srfg.iasset.repository.api.IAssetDirectory;
+import at.srfg.iasset.repository.api.DirectoryInterface;
 import at.srfg.iasset.repository.component.DirectoryService;
 
 @RestController
 @RequestMapping(path = "directory")
-public class DirectoryController implements IAssetDirectory {
+public class DirectoryController implements DirectoryInterface {
 	@Autowired
 	private DirectoryService service;
 

@@ -1,7 +1,5 @@
 package at.srfg.iasset.repository.model.helper.payload;
 
-import java.time.Instant;
-
 import at.srfg.iasset.repository.model.helper.value.BlobValue;
 
 public class EventPayloadValue extends PayloadValue {

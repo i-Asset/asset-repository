@@ -1,0 +1,24 @@
+package at.srfg.iasset.repository.model.operation;
+
+/**
+ * Simple Interface for providing callback implementations
+ * 
+ * @author dglachs
+ *
+ */
+public interface OperationCallback {
+	/**
+	 * Execute the desired method. The method receives an 
+	 * {@link OperationInvocation} object providing access
+	 * to the input/output parameters: 
+	 * <ul>
+	 * <li>{@link OperationInvocation#getInput(Object)} (only for operations with exactly one input parameter
+	 * <li>{@link OperationInvocation#getInput(String, Object)} for accessing the named variables
+	 * <li>{@link OperationInvocation#setOutput(Object)} for setting the named result variable
+	 * <li>{@link OperationInvocation#setOutput(String, Object)} for setting the named result variable
+	 * </ul>
+	 * @param invocation The {@link OperationInvocation} object
+	 */
+	public void execute(OperationInvocation invocation);
+
+}

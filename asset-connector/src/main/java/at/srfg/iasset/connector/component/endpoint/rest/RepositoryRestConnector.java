@@ -13,10 +13,14 @@ import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor
 import org.eclipse.aas4j.v3.model.impl.DefaultEndpoint;
 
 import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
+import at.srfg.iasset.repository.api.DirectoryInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
-import at.srfg.iasset.repository.api.IAssetDirectory;
 import at.srfg.iasset.repository.api.SubmodelRepositoryInterface;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationRequestValue;
+import at.srfg.iasset.repository.model.operation.OperationResult;
+import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import jakarta.ws.rs.ServiceUnavailableException;
 
 public class RepositoryRestConnector implements RepositoryConnection {
@@ -31,7 +35,7 @@ public class RepositoryRestConnector implements RepositoryConnection {
 		return connection.getRepositoryInterface();
 	}
 
-	private IAssetDirectory getDirectoryService() {
+	private DirectoryInterface getDirectoryService() {
 		return connection.getIAssetDirectory();
 	}
 	private SubmodelRepositoryInterface getSubmodelRepositoryInterface() {
@@ -124,13 +128,23 @@ public class RepositoryRestConnector implements RepositoryConnection {
 	}
 
 	@Override
-	public Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
+	public OperationResult invokeOperation(String aasIdentifier, String submodelIdentifier, String path, OperationRequest parameter) {
 		try {
 			return getRepositoryService().invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
 		} catch (ServiceUnavailableException e) {
 			return null;
 		}
 		
+	}
+
+	@Override
+	public OperationResultValue invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
+			OperationRequestValue parameter) {
+		try {
+			return getRepositoryService().invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
+		} catch (ServiceUnavailableException e) {
+			return null;
+		}
 	}
 
 }

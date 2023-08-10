@@ -8,7 +8,10 @@ public class ReferenceElementValueMapper implements ValueMapper<ReferenceElement
 
 	@Override
 	public ReferenceElementValue mapToValue(ReferenceElement modelElement) {
-		return new ReferenceElementValue(modelElement.getValue().getKeys());
+		if ( modelElement.getValue() != null ) {
+			return new ReferenceElementValue(modelElement.getValue().getKeys());
+		}
+		return null;
 	}
 
 }

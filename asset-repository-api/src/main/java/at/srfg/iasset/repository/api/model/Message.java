@@ -1,69 +1,22 @@
-package at.srfg.iasset.repository.model;
+package at.srfg.iasset.repository.api.model;
 
 import java.util.Objects;
 
-import org.springframework.validation.annotation.Validated;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Message
  */
-@Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-08-06T18:15:09.134Z[GMT]")
 
 
 public class Message   {
-  @JsonProperty("code")
   private String code = null;
 
-  /**
-   * Gets or Sets messageType
-   */
-  public enum MessageTypeEnum {
-    UNDEFINED("Undefined"),
-    
-    INFO("Info"),
-    
-    WARNING("Warning"),
-    
-    ERROR("Error"),
-    
-    EXCEPTION("Exception");
 
-    private String value;
+  private MessageType messageType = null;
 
-    MessageTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static MessageTypeEnum fromValue(String text) {
-      for (MessageTypeEnum b : MessageTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("messageType")
-  private MessageTypeEnum messageType = null;
-
-  @JsonProperty("text")
   private String text = null;
 
-  @JsonProperty("timestamp")
   private String timestamp = null;
 
   public Message code(String code) {
@@ -75,7 +28,6 @@ public class Message   {
    * Get code
    * @return code
    **/
-  @Schema(description = "")
   
     public String getCode() {
     return code;
@@ -85,7 +37,7 @@ public class Message   {
     this.code = code;
   }
 
-  public Message messageType(MessageTypeEnum messageType) {
+  public Message messageType(MessageType messageType) {
     this.messageType = messageType;
     return this;
   }
@@ -94,13 +46,12 @@ public class Message   {
    * Get messageType
    * @return messageType
    **/
-  @Schema(description = "")
   
-    public MessageTypeEnum getMessageType() {
+    public MessageType getMessageType() {
     return messageType;
   }
 
-  public void setMessageType(MessageTypeEnum messageType) {
+  public void setMessageType(MessageType messageType) {
     this.messageType = messageType;
   }
 
@@ -113,7 +64,6 @@ public class Message   {
    * Get text
    * @return text
    **/
-  @Schema(description = "")
   
     public String getText() {
     return text;
@@ -132,7 +82,6 @@ public class Message   {
    * Get timestamp
    * @return timestamp
    **/
-  @Schema(description = "")
   
     public String getTimestamp() {
     return timestamp;

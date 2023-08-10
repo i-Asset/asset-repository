@@ -3,10 +3,13 @@ package at.srfg.iasset.repository.model.helper.value;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public class SubmodelElementListValue extends SubmodelElementValue {
 	/**
 	 * 
 	 */
+	@JsonValue
 	private List<SubmodelElementValue> values;
 	
 	public SubmodelElementListValue() {

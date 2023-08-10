@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import org.eclipse.aas4j.v3.model.BasicEventElement;
 import org.eclipse.aas4j.v3.model.Direction;
@@ -25,6 +23,7 @@ import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import at.srfg.iasset.messaging.ConnectorMessaging;
 import at.srfg.iasset.messaging.EventElementHandler;
 import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.EventProducer;
@@ -33,8 +32,6 @@ import at.srfg.iasset.messaging.impl.helper.BrokerHelper;
 import at.srfg.iasset.messaging.impl.helper.EventHandlerWrapped;
 import at.srfg.iasset.messaging.impl.helper.EventProducerImpl;
 import at.srfg.iasset.messaging.impl.helper.MessageBroker;
-import at.srfg.iasset.messaging.impl.helper.MessageBroker.BrokerType;
-import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.model.helper.payload.EventPayloadValue;
 import at.srfg.iasset.repository.model.helper.payload.ReferenceValue;
@@ -83,26 +80,26 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 	 * The connection to the messaging environment, used for sending messages!
 	 * There is only one producer per {@link EventElement}
 	 */
-	MessageProducer producer;
+	private MessageProducer producer;
 	/**
 	 * The connection to the messaging environment, used for reading messages!
 	 * There is only one consumer/listener per {@link EventElement}
 	 */
-	MessageConsumer consumer;
+	private MessageConsumer consumer;
 	/**
 	 * The list of matching references. The list of matching references
 	 * is used to determine which {@link EventElementHandler} to use
 	 * when requesting a producer or registering a consumer. 
 	 */
-	final Set<Reference> matching = new HashSet<>();
+	private final Set<Reference> matching = new HashSet<>();
 	/**
 	 * manage a list of "active" eventhandlers
 	 */
-	final Set<EventHandlerWrapped<?>> eventHandler = new HashSet<>();
+	private final Set<EventHandlerWrapped<?>> eventHandler = new HashSet<>();
 	/**
 	 * The (local) service environment
 	 */
-	ServiceEnvironment environment;
+//	private ServiceEnvironment environment;
 	String clientId;
 	String topic;
 	/**
@@ -111,71 +108,60 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 	 * @param sourceReference
 	 * @throws MessagingException
 	 */
-	public EventElementHandlerImpl(ServiceEnvironment environment, Reference sourceReference) throws MessagingException {
-		
-		this.environment = environment;
-		// keep the reference
-		this.sourceReference = sourceReference;
-		// keep the reference in the list
-		this.matching.add(sourceReference);
-		// resolve the source element from the provided source reference - reference must point to a event element
-		Optional<BasicEventElement> theSource = environment.resolve(sourceReference, BasicEventElement.class);
-		if ( theSource.isEmpty()) {
-			throw new MessagingException("Source element not properly configured!");
-		}
-		else {
-			this.source = theSource.get();
-		}
-		// use the source to obtain 
-		this.sourceSemantic = this.source.getSemanticId();
-		this.matching.add(sourceSemantic);
-		this.observedReference = this.source.getObserved();
-		this.matching.add(observedReference);
-		this.matching.add(observedSemanticId);
-		// resolve the observed element
-		Optional<Referable> theObserved = this.environment.resolve(observedReference);
-		if ( theObserved.isEmpty()) {
-			throw new MessagingException("Observed element not properly configured: " + new ReferenceValue(observedReference).getValue());
-		}
-		else {
-			this.observed = theObserved.get();
-			if ( this.observed instanceof HasSemantics) {
-				HasSemantics observedSemantics = (HasSemantics) this.observed;
-				this.observedSemanticId = observedSemantics.getSemanticId();
-				if ( this.observedSemanticId!=null) {
-					this.matching.add(this.observedSemanticId);
-					this.matching.addAll(observedSemantics.getSupplementalSemanticIds());
-				}
+	public EventElementHandlerImpl(
+					ConnectorMessaging parent,
+					BasicEventElement source,			// The "resolved" element
+					Reference sourceReference,			// The reference to the source Element
+					Referable observed,					// the "resolved" observed element
+					Reference observedReference,		// the reference to the observed element
+					MessageBroker messageBroker			// broker settings (host, type)
+			) {
+		this.source = source;
+		if ( this.source instanceof HasSemantics) {
+			// manage the semantic references
+			HasSemantics sourceSemantics = (HasSemantics) this.source;
+			this.observedSemanticId = sourceSemantics.getSemanticId();
+			if ( this.observedSemanticId!=null) {
+				this.matching.add(this.observedSemanticId);
+				this.matching.addAll(sourceSemantics.getSupplementalSemanticIds());
 			}
 		}
-		// resolve the broker element
-		//
-		this.broker = environment.resolveValue(this.source.getMessageBroker(), MessageBroker.class)
-				// TODO: use broker settings from configuration!!
-				.orElseGet(new Supplier<MessageBroker>() {
-					// FIXME: use from config!
-					@Override
-					public MessageBroker get() {
-						MessageBroker broker = new MessageBroker();
-						try {
-							BrokerType defaultType = BrokerType.valueOf(environment.getConfigProperty("connector.network.broker.type"));
-							broker.setBrokerType(defaultType);
-							broker.setHosts(environment.getConfigProperty("connector.network.broker.hosts"));
-						} catch (Exception e) {
-							
-						}
-						
-						return broker;
-					}
-				});
+		this.sourceReference = sourceReference;
+		this.matching.add(sourceReference);
+		this.observed = observed;
+		this.observedReference = observedReference;
+		this.matching.add(observedReference);
+
+		if ( this.observed instanceof HasSemantics) {
+			// manage the semantic references
+			HasSemantics observedSemantics = (HasSemantics) this.observed;
+			this.observedSemanticId = observedSemantics.getSemanticId();
+			if ( this.observedSemanticId!=null) {
+				this.matching.add(this.observedSemanticId);
+				this.matching.addAll(observedSemantics.getSupplementalSemanticIds());
+			}
+		}
+		this.broker = messageBroker;
 		this.clientId = new ReferenceValue(sourceReference).getValue() + "-" + UUID.randomUUID().toString();
+		// TODO: handle missing topic
 		this.topic = this.source.getMessageTopic();
+
 	}
+	
+	
 	@Override
 	public <T> EventProducer<T> getProducer(Class<T> type) {
 		if ( producer == null) {
 			try {
 				producer = BrokerHelper.createProducer(broker, clientId);
+				Runtime.getRuntime().addShutdownHook(new Thread("Shutdown-Hook."+clientId) {
+					@Override
+					public void run() {
+						// close the listeners
+						producer.close();
+					}
+				});
+
 			} catch (MessagingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -256,7 +242,21 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 				return matching.contains(t);
 			}});
 	}
+	@Override
+	public boolean handlesReferences(List<Reference> references) {
+		// when no references provided
+		if ( references == null || references.size() == 0) {
+			return false;
+		}
+		return references.stream().allMatch(new Predicate<Reference>() {
 
+			@Override
+			public boolean test(Reference t) {
+				// each of the provided references must be in the 
+				// matching list
+				return matching.contains(t);
+			}});
+	}
 	@Override
 	public boolean isActive() {
 		return StateOfEvent.ON.equals(source.getState());
@@ -274,28 +274,51 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 
 	@Override
 	public <T> void registerHandler(EventHandler<T> handler, Reference ... references ) throws MessagingException {
-		if (consumer == null ) {
-			consumer = BrokerHelper.createConsumer(broker, clientId);
-			consumer.subscribe(topic, this);
-		}
-		// register a shutdown hook, so that the consumer is closed
-		// when the VM is stopped
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				// close the listeners
-				consumer.close();
+		if ( Direction.INPUT.equals(source.getDirection())) {
+			if (consumer == null ) {
+				consumer = BrokerHelper.createConsumer(broker, clientId);
+				// register a shutdown hook, so that the consumer is closed
+				// when the VM is stopped
+				Runtime.getRuntime().addShutdownHook(new Thread() {
+					@Override
+					public void run() {
+						// close the listeners
+						consumer.close();
+					}
+				});
 			}
-		});
-		
-		EventHandlerWrapped<T> wapped = new EventHandlerWrapped<>(handler, references);
-		eventHandler.add(wapped);
+			// subscribe the current handler for the configured topic!
+			consumer.subscribe(topic, this);
+			
+			EventHandlerWrapped<T> wrapped = new EventHandlerWrapped<>(handler, references);
+			eventHandler.add(wrapped);
+			
+		}
 	
 	}
 	@Override
-	public <T> void registerHandler(EventHandler<T> handler) throws MessagingException {
-		registerHandler(handler, null);
-		
+	public <T> void registerHandler(EventHandler<T> handler, String topic, Reference ... references ) throws MessagingException {
+		if ( Direction.INPUT.equals(source.getDirection())) {
+			if (consumer == null ) {
+				consumer = BrokerHelper.createConsumer(broker, clientId);
+			}
+			// register a shutdown hook, so that the consumer is closed
+			// when the VM is stopped
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					// close the listeners
+					consumer.close();
+				}
+			});
+			// subscribe the current handler for the provided topic!
+			consumer.subscribe(topic, this);
+			
+			EventHandlerWrapped<T> wapped = new EventHandlerWrapped<>(handler, references);
+			eventHandler.add(wapped);
+			
+		}
+	
 	}
 	@Override
 	public <T> void removeHandler(EventHandler<T> handler) {

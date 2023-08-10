@@ -1,5 +1,6 @@
 package at.srfg.iasset.repository.config;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,9 +16,11 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.eclipse.aas4j.v3.dataformat.core.util.MostSpecificTypeTokenComparator;
+import org.eclipse.aas4j.v3.model.AasSubmodelElements;
 import org.eclipse.aas4j.v3.model.DataSpecificationContent;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -198,7 +201,29 @@ public class AASModelHelper {
     public static boolean isModelInterfaceOrDefaultImplementation(Class<?> type) {
         return isModelInterface(type) || isDefaultImplementation(type);
     }
-
+    public static <T extends SubmodelElement> T newElementInstance(Class<T> interfaceClass) {
+    	Class<?> defaultImpl = getDefaultImplementation(interfaceClass);
+    	try {
+			return (T) defaultImpl.getConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			return null;
+		}
+    	
+    }
+    public static SubmodelElement newSubmodelElement(AasSubmodelElements elementType) {
+    	String interfaceClass = MODEL_PACKAGE_NAME +"."+ elementType.toString();
+    	try {
+    		Class<?> clazz = Class.forName(interfaceClass);
+    		Class<?> defaultImpl = getDefaultImplementation(clazz);
+    		if ( SubmodelElement.class.isAssignableFrom(defaultImpl)) {
+    			return (SubmodelElement) defaultImpl.getConstructor().newInstance();
+    		}
+    		return null;
+    	} catch(Exception e) {
+    		return null;
+    	}
+    }
     public static Class<?> getAasInterface(Class<?> type) {
         Set<Class<?>> implementedAasInterfaces = getAasInterfaces(type);
         if (implementedAasInterfaces.isEmpty()) {
@@ -416,7 +441,7 @@ public class AASModelHelper {
         return defaultImplementations;
     }
 
-    private static Set scanAasInterfaces() {
+    private static Set<Class<?>> scanAasInterfaces() {
         return DEFAULT_IMPLEMENTATIONS.stream().map(x -> x.interfaceType).collect(Collectors.toSet());
     }
 

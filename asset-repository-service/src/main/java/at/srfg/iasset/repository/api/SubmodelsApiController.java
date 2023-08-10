@@ -19,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.srfg.iasset.repository.model.OperationRequest;
-import at.srfg.iasset.repository.model.OperationResult;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationResult;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;

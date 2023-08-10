@@ -18,12 +18,11 @@ public class PropertyValueMapper implements ValueMapper<Property, PropertyValue>
 
 	@Override
 	public Property mapValueToElement(Property modelElement, JsonNode valueNode) {
-		Value<?> typedValue = ValueType.getValue(modelElement.getValueType(), valueNode.asText());
-		modelElement.setValue(typedValue.toString());
+		if ( valueNode != null) {
+			Value<?> typedValue = ValueType.getValue(modelElement.getValueType(), valueNode.asText());
+			modelElement.setValue(typedValue.toString());
+		}
 		// 
-
 		return modelElement;
 	}
-
-
 }

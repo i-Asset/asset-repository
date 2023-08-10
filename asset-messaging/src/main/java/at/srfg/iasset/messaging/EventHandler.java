@@ -29,9 +29,4 @@ public interface EventHandler<T> {
 	 * @return
 	 */
 	Class<T> getPayloadType();
-	/**
-	 * Define the semanticId, the Handler is responsible for!
-	 * @return
-	 */
-	Reference getSemanticId();
 }

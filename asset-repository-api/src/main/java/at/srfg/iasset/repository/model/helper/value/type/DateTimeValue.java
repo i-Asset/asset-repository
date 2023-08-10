@@ -1,19 +1,21 @@
 package at.srfg.iasset.repository.model.helper.value.type;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
-public class DateTimeValue extends Value<ZonedDateTime>{
+public class DateTimeValue extends Value<Instant>{
 
 	public DateTimeValue() {
 		
 	}
-	public DateTimeValue(ZonedDateTime value) {
+	public DateTimeValue(Instant value) {
 		super(value);
 	}
 
 	@Override
-	public Value<ZonedDateTime> fromValue(String stringValue) {
-		setValue(ZonedDateTime.parse(stringValue));
+	public Value<Instant> fromValue(String stringValue) {
+		if ( stringValue !=null ) {
+			setValue(Instant.parse(stringValue));
+		}
 		return this;
 	}
 	@Override

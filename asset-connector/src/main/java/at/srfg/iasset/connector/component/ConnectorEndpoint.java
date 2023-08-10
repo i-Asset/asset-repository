@@ -1,9 +1,9 @@
 package at.srfg.iasset.connector.component;
 
+import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import at.srfg.iasset.connector.Connector;
 /**
  * Represents the REST endpoint of the I4.0 {@link Connector}. 
  * @author dglachs
@@ -18,6 +18,8 @@ public interface ConnectorEndpoint {
 	 * @param rootConfig The {@link ResourceConfig} configuring the REST service endpoint. 
 	 * 
 	 */
+	public void start();
+	public void start(int port);
 	public void start(String context, ResourceConfig rootConfig);
 	/**
 	 * Obtain the port the component is currently providing it's services
@@ -39,6 +41,7 @@ public interface ConnectorEndpoint {
 	 * @param config The {@link ResourceConfig} configuring the handler's REST service endpoint
 	 */
 	public void addHttpHandler(String alias, ResourceConfig config);
+	public void startAlias(String alias, AssetAdministrationShell shell);
 	/**
 	 * Remove a previously started {@link HttpHandler} based on the alias name
 	 * @param alias The name for the {@link HttpHandler}

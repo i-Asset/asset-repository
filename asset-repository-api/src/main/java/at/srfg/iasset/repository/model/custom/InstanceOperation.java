@@ -1,12 +1,12 @@
 package at.srfg.iasset.repository.model.custom;
 
-import java.util.Map;
-import java.util.function.Function;
-
 import org.eclipse.aas4j.v3.model.Operation;
 import org.eclipse.aas4j.v3.model.impl.DefaultOperation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import at.srfg.iasset.repository.model.operation.OperationCallback;
+import at.srfg.iasset.repository.model.operation.OperationInvocation;
 
 public class InstanceOperation extends DefaultOperation implements Operation {
 	public InstanceOperation() {
@@ -30,19 +30,23 @@ public class InstanceOperation extends DefaultOperation implements Operation {
 	}
 	
 	@JsonIgnore
-	private Function<Object, Object> function;
+	private OperationCallback callback;
 
-	public Function<Object, Object> function() {
-		return function;
+	public void callback(OperationCallback callbackFunction) {
+		this.callback = callbackFunction;
 	}
-	public Object invoke(Object parameter) {
-		if ( function != null) {
-			return function.apply(parameter);
+	public OperationCallback callback() {
+		if ( callback == null ) {
+			throw new UnsupportedOperationException("Operation not provided: " + getIdShort());
 		}
-		return null;
+		return this.callback;
 	}
-	public void function(Function<Object, Object> function) {
-		this.function = function;
+
+	public void invokeOperation(OperationInvocation invocation) {
+		if ( callback != null) {
+			callback.execute(invocation);
+		}
 	}
+
 
 }

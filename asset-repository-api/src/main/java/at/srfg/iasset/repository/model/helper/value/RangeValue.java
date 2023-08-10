@@ -10,7 +10,7 @@ public class RangeValue<T> extends DataElementValue {
 		this.max = max;
 	}
 
-	public Value<?> getMin() {
+	public Value<T> getMin() {
 		return min;
 	}
 
@@ -18,7 +18,7 @@ public class RangeValue<T> extends DataElementValue {
 		this.min = min;
 	}
 
-	public Value<?> getMax() {
+	public Value<T> getMax() {
 		return max;
 	}
 

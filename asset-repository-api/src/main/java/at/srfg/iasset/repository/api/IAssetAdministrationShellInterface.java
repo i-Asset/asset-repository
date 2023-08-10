@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import at.srfg.iasset.repository.api.annotation.Base64Encoded;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationRequestValue;
+import at.srfg.iasset.repository.model.operation.OperationResult;
+import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -466,7 +470,7 @@ public interface IAssetAdministrationShellInterface {
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
-	public Object invokeOperation(
+	public OperationResult invokeOperation(
 //			@Base64Encoded
 //			@Parameter(
 //					in = ParameterIn.PATH, 
@@ -487,8 +491,42 @@ public interface IAssetAdministrationShellInterface {
 			@PathVariable("path") 
 			String path,
 			@RequestBody
-			Object parameterMap);
+			OperationRequest parameterMap);
 	
+	/**
+	 * Invoke the operation named with the path
+	 * @param path
+	 * @param parameterMap
+	 * @return
+	 */
+	@Operation(summary =  "Invoke an Operation",
+			tags = "Asset Administration Shell Interface (Connector Only)")
+	@RequestMapping(
+			method = RequestMethod.POST,
+			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke/$value")
+	public OperationResultValue invokeOperation(
+//			@Base64Encoded
+//			@Parameter(
+//					in = ParameterIn.PATH, 
+//					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
+//					required = true, 
+//					schema = @Schema()) 
+//			@PathVariable("aasIdentifier")
+//			String aasIdentifier,
+			@Base64Encoded
+			@Parameter(
+					in = ParameterIn.PATH, 
+					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
+					required = true, 
+					schema = @Schema()) 
+			@PathVariable("submodelIdentifier")
+			String submodelIdentifier,
+			@Parameter(description = "The path to the container")
+			@PathVariable("path") 
+			String path,
+			@RequestBody
+			OperationRequestValue parameterMap);
+
 	/**
 	 * Obtain the {@link AssetAdministrationShell} 
 	 * @return

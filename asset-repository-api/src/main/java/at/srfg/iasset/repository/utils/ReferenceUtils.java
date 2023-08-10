@@ -6,9 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
@@ -73,12 +71,12 @@ public class ReferenceUtils {
 	}
 	public static Reference[] asGlobalReferences(String ... values) {
 		ArrayList<Reference> ref = new ArrayList<>();
-		for (String value : values) {
-			ref.add(asGlobalReference(KeyTypes.GLOBAL_REFERENCE, value));
+		if ( values != null ) {
+			for (String value : values) {
+				ref.add(asGlobalReference(KeyTypes.GLOBAL_REFERENCE, value));
+			}
 		}
-		Reference [] refArray = new Reference[ref.size()];
-		ref.toArray(refArray);
-		return refArray;
+		return ref.toArray(new Reference[0]);
 		
 	}
 	public static Reference asGlobalReference(KeyTypes type, String identifier) {
@@ -95,15 +93,6 @@ public class ReferenceUtils {
 				.build();
 			
 	}
-	/**
-	 * 
-	 * @param identifiable
-	 * @return
-	 * @deprecated use {@link #toReference(Identifiable)} instead!
-	 */
-	public static Reference fromIdentifiable(Identifiable identifiable) {
-		return toReference(identifiable);
-	}
     /**
      * Creates a reference for an Identifiable instance using provided
      * implementation types for reference and key
@@ -116,6 +105,7 @@ public class ReferenceUtils {
     public static Reference toReference(Identifiable identifiable, Class<? extends Reference> referenceType, Class<? extends Key> keyType) {
         try {
             Reference reference = referenceType.getConstructor().newInstance();
+            reference.setType(ReferenceTypes.MODEL_REFERENCE);
             Key key = keyType.getConstructor().newInstance();
             key.setType(referableToKeyType(identifiable));
             key.setValue(identifiable.getId());

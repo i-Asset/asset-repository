@@ -36,7 +36,7 @@ public interface EventProducer<T> {
 	 * @param subjectId
 	 */
 	void sendEvent(T payload, Reference subjectId) throws MessagingException;
-	<U> void sendEvent(T payload, Reference subjectId, EventHandler<U> updateHandler) throws MessagingException;
+	<U> void sendEvent(T payload, String subjectId) throws MessagingException;
 
 	/**
 	 * Explicitly stop the underlying messaging infrastructure

@@ -95,6 +95,8 @@ public class ConceptDescriptionLoader {
     	
     	
     	submodelRepository.save(AASFaultSubmodel.SUBMODEL_FAULT1);
+    	
+    	submodelRepository.save(AASFaultSubmodel.SUBMODEL_FAULT_OPERATIONS);
 	}
 
 

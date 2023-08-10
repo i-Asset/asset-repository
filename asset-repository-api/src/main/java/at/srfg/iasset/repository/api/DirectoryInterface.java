@@ -18,7 +18,7 @@ import jakarta.ws.rs.Path;
 
 @Path("")
 @RequestMapping(path = "")
-public interface IAssetDirectory {
+public interface DirectoryInterface {
 	/**
 	 * Retrieve the {@link AssetAdministrationShellDescriptor} by its identifier
 	 * @param aasIdentifier The identifier

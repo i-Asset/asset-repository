@@ -37,8 +37,8 @@ public class AASJacksonMapperProvider implements ContextResolver<ObjectMapper>{
 	private void buildMapper() {
 		mapper = JsonMapper.builder()
 				.enable(SerializationFeature.INDENT_OUTPUT)
-				.enable(SerializationFeature.INDENT_OUTPUT)
 				.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 				.serializationInclusion(JsonInclude.Include.NON_EMPTY)
 				.addModule(buildCustomSerializerModule())
 				.addModule(buildImplementationModule())

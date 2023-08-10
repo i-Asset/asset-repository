@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import at.srfg.iasset.repository.api.exception.RepositoryException;
-import at.srfg.iasset.repository.model.OperationRequest;
-import at.srfg.iasset.repository.model.OperationResult;
-import at.srfg.iasset.repository.model.Result;
+import at.srfg.iasset.repository.api.model.Result;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

@@ -10,7 +10,10 @@ import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
 import at.srfg.iasset.connector.component.endpoint.rest.RepositoryRestConnector;
-import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationRequestValue;
+import at.srfg.iasset.repository.model.operation.OperationResult;
+import at.srfg.iasset.repository.model.operation.OperationResultValue;
 
 public interface RepositoryConnection {
 	/**
@@ -55,9 +58,18 @@ public interface RepositoryConnection {
 	 * @param submodelIdentifier The {@link Submodel} 
 	 * @param path The path pointing to the Operation
 	 * @param parameter The Operations parameters
+	 * @return The AAS modelled result of the invocation.
+	 */
+	OperationResult invokeOperation(String aasIdentifier, String submodelIdentifier, String path, OperationRequest parameter);
+	/**
+	 * Invoke an {@link Operation}
+	 * @param aasIdentifier The (active) {@link AssetAdministrationShell} referencing the {@link Submodel}
+	 * @param submodelIdentifier The {@link Submodel} 
+	 * @param path The path pointing to the Operation
+	 * @param parameter The Operations parameters
 	 * @return The result of the invocation.
 	 */
-	Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter);
+	OperationResultValue invokeOperation(String aasIdentifier, String submodelIdentifier, String path, OperationRequestValue parameter);
 	/**
 	 * Obtain a connection to the repository service. The required URI denotes the base URI. The {@link RepositoryConnection}
 	 * acts as s shortcut to

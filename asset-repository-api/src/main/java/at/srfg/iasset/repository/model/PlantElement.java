@@ -1,12 +1,13 @@
 package at.srfg.iasset.repository.model;
 
+import java.util.Collections;
 import java.util.List;
 
 public class PlantElement {
 
-    String name;
-    String description;
-    List<String> identifiers;
+    String name = "defaultName";
+    String description = "defaultDescription";
+    List<String> identifiers = Collections.singletonList("defaultIdentifier");
     PlantElement parent;
 
     public String getName() {
