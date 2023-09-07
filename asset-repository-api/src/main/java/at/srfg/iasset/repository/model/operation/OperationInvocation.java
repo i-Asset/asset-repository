@@ -68,11 +68,11 @@ public interface OperationInvocation {
 	 * @return 
 	 */
 	<T> OperationInvocation setOutput(String idShort, T value);
-	/**
-	 * Execute the operation with the remote asset administration shell
-	 * @return
-	 */
-	OperationInvocationResult invoke();
+//	/**
+//	 * Execute the operation with the remote asset administration shell
+//	 * @return
+//	 */
+//	OperationInvocationResult invoke();
 	/**
 	 * Execute the operation with the identified shell, submodel and path
 	 * @param aasIdentifier

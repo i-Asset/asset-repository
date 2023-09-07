@@ -2,7 +2,6 @@ package at.srfg.iasset.connector.environment;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +27,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.connector.api.OperationInvocationHandler;
 import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
+import at.srfg.iasset.repository.api.exception.NotFoundException;
+import at.srfg.iasset.repository.api.model.ExecutionState;
+import at.srfg.iasset.repository.api.model.Message;
+import at.srfg.iasset.repository.api.model.MessageType;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
@@ -36,6 +39,7 @@ import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticLookupVisitor;
+import at.srfg.iasset.repository.model.operation.OperationInvocationExecption;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
@@ -323,7 +327,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		if ( submodel.isPresent()) {
 			return SubmodelUtils.getSubmodelElementAt(submodel.get(), path);
 		}
-		return Optional.empty();
+		throw new NotFoundException(aasIdentifier, submodelIdentifier, path);
 	}
 	public <T extends SubmodelElement> Optional<T> getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path, Class<T> clazz) {
 		Optional<SubmodelElement> element = getSubmodelElement(aasIdentifier,  submodelIdentifier, path);
@@ -502,15 +506,29 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 					// apply the incoming parameters
 					invocation.applyOperationRequest(parameterMap);
 					// invoke the operation
-					instanceOperation.callback().execute(invocation);
-					// create the OperationResultValue object
-					return invocation.getOperationResult();
-					
+					try {
+						if ( instanceOperation.callback().execute(invocation) ) {
+							// create the OperationResultValue object
+							return invocation.getOperationResult(true);
+						}
+						else {
+							return invocation.getOperationResult(false);
+						}
+					} catch (OperationInvocationExecption e) {
+						OperationResult res = invocation.getOperationResult(false);
+						res.setExecutionState(ExecutionState.FAILED);
+						res.setSuccess(false);
+						res.addMessagesItem(new Message()
+									.messageType(MessageType.EXCEPTION)
+									.text(e.getLocalizedMessage()));
+						return res;
+					}
 				}
 			}
 		}
 		return null;
 	}
+	
 	@Override
 	public OperationResultValue invokeOperationValue(String aasIdentifier, String submodelIdentifier,
 			String path, OperationRequestValue parameterMap) {
@@ -524,9 +542,24 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 				// apply the incoming parameters
 				invocation.applyOperationRequestValue(parameterMap);
 				// invoke the operation
-				instanceOperation.callback().execute(invocation);
-				// create the OperationResultValue object
-				return invocation.getOperationResultValue();
+				try {
+					if ( instanceOperation.callback().execute(invocation) ) {
+						// create the OperationResultValue object with success true
+						return invocation.getOperationResultValue(true);
+					}
+					else {
+						return invocation.getOperationResultValue(false);
+					}
+				} catch (OperationInvocationExecption e) {
+					OperationResultValue res = invocation.getOperationResultValue(false);
+					res.setExecutionState(ExecutionState.FAILED);
+					res.setSuccess(false);
+					res.addMessagesItem(new Message()
+								.messageType(MessageType.EXCEPTION)
+								.text(e.getLocalizedMessage()));
+					return res;
+				}
+
 			}
 		}
 		// the operation is not actively supported 

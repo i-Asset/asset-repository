@@ -6,6 +6,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import at.srfg.iasset.connector.component.endpoint.config.exception.mapper.AccessDeniedExceptionMapper;
 import at.srfg.iasset.connector.component.endpoint.config.exception.mapper.AuthenticationExceptionMapper;
 import at.srfg.iasset.connector.component.endpoint.config.exception.mapper.AuthenticationTokenRefreshmentExceptionMapper;
+import at.srfg.iasset.connector.component.endpoint.config.exception.mapper.BadRequestExceptionMapper;
+import at.srfg.iasset.connector.component.endpoint.config.exception.mapper.NotFoundExceptionMapper;
 import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministrationRepositoryController;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
@@ -30,6 +32,9 @@ public class ShellsConfig extends ResourceConfig {
         register(AccessDeniedExceptionMapper.class);
         register(AuthenticationExceptionMapper.class);
         register(AuthenticationTokenRefreshmentExceptionMapper.class);
+        register(NotFoundExceptionMapper.class);
+        register(BadRequestExceptionMapper.class);
+        
         register(new AbstractBinder() {
 			
 			@Override

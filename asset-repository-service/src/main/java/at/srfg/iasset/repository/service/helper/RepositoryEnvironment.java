@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
+import at.srfg.iasset.repository.api.exception.NotFoundException;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
@@ -514,8 +515,8 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 				return shellConnector.invokeOperation(submodelIdentifier, path, parameterMap);
 			}
 		}
-		// TODO: report the absence of the shell!
-		return null;
+		// TODO: Test this is reported to the caller!
+		throw new NotFoundException( aasIdentifier, submodelIdentifier, path);
 	}
 
 

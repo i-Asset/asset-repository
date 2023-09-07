@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
+import at.srfg.iasset.repository.model.operation.OperationInvocationExecption;
 
 public class InstanceOperation extends DefaultOperation implements Operation {
 	public InstanceOperation() {
@@ -42,7 +43,7 @@ public class InstanceOperation extends DefaultOperation implements Operation {
 		return this.callback;
 	}
 
-	public void invokeOperation(OperationInvocation invocation) {
+	public void invokeOperation(OperationInvocation invocation) throws OperationInvocationExecption {
 		if ( callback != null) {
 			callback.execute(invocation);
 		}

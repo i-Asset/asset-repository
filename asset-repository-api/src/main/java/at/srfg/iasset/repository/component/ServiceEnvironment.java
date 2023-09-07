@@ -14,6 +14,7 @@ import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.operation.OperationInvocationExecption;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
@@ -283,6 +284,7 @@ public interface ServiceEnvironment {
 	 * @param path The path to the operation
 	 * @param parameterMap
 	 * @return
+	 * @throws OperationInvocationExecption 
 	 */
 	public OperationResult invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
 			OperationRequest parameterMap);

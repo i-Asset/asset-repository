@@ -89,7 +89,7 @@ public class ConnectorWithCDI {
 				new OperationCallback() {
 					
 					@Override
-					public void execute(OperationInvocation invocation) {
+					public boolean execute(OperationInvocation invocation) {
 						try {
 							invocation.getInput(Double.class);
 						} catch (Exception e) {
@@ -112,7 +112,8 @@ public class ConnectorWithCDI {
 						structure.add(plant2);
 						invocation.setOutput("plantStructure", structure );
 						invocation.setOutput("doubleValue", 654321.0);
-						// done
+						// success
+						return true;
 					}
 				});
 

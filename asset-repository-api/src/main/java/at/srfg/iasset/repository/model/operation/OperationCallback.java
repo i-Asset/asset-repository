@@ -17,8 +17,11 @@ public interface OperationCallback {
 	 * <li>{@link OperationInvocation#setOutput(Object)} for setting the named result variable
 	 * <li>{@link OperationInvocation#setOutput(String, Object)} for setting the named result variable
 	 * </ul>
+	 * Implementors may first access the input parameters, execute the requested tasks and should 
+	 * then update the output parameters. 
 	 * @param invocation The {@link OperationInvocation} object
+	 * @return <code>true</code> if operation execution was successful, <code>false</code> otherwise
 	 */
-	public void execute(OperationInvocation invocation);
+	public boolean execute(OperationInvocation invocation) throws OperationInvocationExecption;
 
 }

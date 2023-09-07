@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
-import at.srfg.iasset.repository.model.helper.ValueHelper;
 
 public enum ValueType {
 	STRING(		StringValue.class, 		DataTypeDefXsd.STRING, DataTypeDefXsd.ANY_URI),
@@ -26,17 +25,17 @@ public enum ValueType {
 	;
 	
 	private List<DataTypeDefXsd> xsdTypes;
-	private Class<? extends Value> valueClass;
+	private Class<? extends Value<?>> valueClass;
 	private Type reflectionType;
 	
 	
 	
-	private ValueType(Class<? extends Value> value, DataTypeDefXsd ... xsd) {
+	private ValueType(Class<? extends Value<?>> value, DataTypeDefXsd ... xsd) {
 		this.valueClass = value;
 		this.xsdTypes = Arrays.asList(xsd);
 		this.reflectionType = extractType(valueClass);
 	}
-	private Type extractType(Class<? extends Value> valueClass) {
+	private Type extractType(Class<? extends Value<?>> valueClass) {
 		// we 
 		ParameterizedType superClass = (ParameterizedType) valueClass.getGenericSuperclass();
 //		ParameterizedType aType = (ParameterizedType) superClass.getGenericInterfaces()[0];
@@ -88,10 +87,10 @@ public enum ValueType {
 		Type type = value.getClass();
 		ValueType valueType = fromDataType(type);
 		try {
-			@SuppressWarnings("rawtypes")
-			Constructor<? extends Value> constructor = valueType.valueClass.getConstructor();
+			Constructor<? extends Value<?>> constructor = valueType.valueClass.getConstructor();
 			constructor.setAccessible(true);
-			Value<T> val = constructor.newInstance();
+			@SuppressWarnings("unchecked")
+			Value<T> val = (Value<T>) constructor.newInstance();
 			val.setValue(value);
 			return val.toString();
 		
@@ -103,11 +102,11 @@ public enum ValueType {
 	public static  <T> T toValue(Type type, String value) {
 		ValueType valueType = fromDataType(type);
 		try {
-			@SuppressWarnings("rawtypes")
-			Constructor<? extends Value> constructor = valueType.valueClass.getConstructor();
+			Constructor<? extends Value<?>> constructor = valueType.valueClass.getConstructor();
 			constructor.setAccessible(true);
-			Value<T> val = constructor.newInstance().fromValue(value);
-			return val.getValue();
+			@SuppressWarnings("unchecked")
+			Value<T> newVal = (Value<T>) constructor.newInstance();
+			return newVal.getValue();
 		
 		} catch (InvocationTargetException | InstantiationException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException e ){
 			// TODO: report transformation errors

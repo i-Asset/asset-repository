@@ -84,7 +84,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		}
 		return resultValue;
 	}
-	public OperationResultValue getOperationResultValue() {
+	public OperationResultValue getOperationResultValue(boolean success) {
 		OperationResultValue resultValue = new OperationResultValue();
 		for (OperationVariable variable : operation.getInoutputVariables()) {
 			SubmodelElement modelElement = variable.getValue();
@@ -94,12 +94,14 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			SubmodelElement modelElement = variable.getValue();
 			resultValue.outputArgument(ValueHelper.toValue(modelElement));
 		}
+		resultValue.setSuccess(success);
 		return resultValue;
 	}
-	public OperationResult getOperationResult() {
+	public OperationResult getOperationResult(boolean success) {
 		OperationResult resultValue = new OperationResult();
 		resultValue.setInoutputArguments(operation.getInoutputVariables());
 		resultValue.setOutputArguments(operation.getOutputVariables());
+		resultValue.setSuccess(success);
 		return resultValue;
 	}
 	public <T> void setInput(T param) {
@@ -334,16 +336,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		}
 		return new ArrayList<>(); 
 	}
-	@Override
-	public OperationInvocationResult invoke() {
-		// 
-		OperationResultValue result = serviceEnvironment.invokeOperationValue(null, null, null, getOperationRequestValue());
-		applyOperationResultValue(result);
 
-		
-		return this;
-//		serviceEnvironment.invokeOperation(null, null, null, objectMapper)
-	}
 	@Override
 	public OperationInvocationResult invoke(String aasIdentifier, String submodelIdentifier, String path) {
 		OperationResultValue result = serviceEnvironment.invokeOperationValue(aasIdentifier, submodelIdentifier, path, getOperationRequestValue());

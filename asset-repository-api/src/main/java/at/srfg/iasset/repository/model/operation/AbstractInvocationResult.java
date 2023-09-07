@@ -5,9 +5,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import at.srfg.iasset.repository.api.model.BaseOperationResult;
 import at.srfg.iasset.repository.model.InvocationResult;
 
-public abstract class AbstractInvocationResult<T> implements InvocationResult<T> {
+public abstract class AbstractInvocationResult<T> extends BaseOperationResult implements InvocationResult<T> {
 	@JsonProperty("outpuArguments")
 	private List<T> outputArguments = new ArrayList<>();
 	@JsonProperty("inoutputArguments")
@@ -29,6 +30,4 @@ public abstract class AbstractInvocationResult<T> implements InvocationResult<T>
 	public List<T> getInoutputArguments() {
 		return inoutputArguments;
 	}
-	
-
 }

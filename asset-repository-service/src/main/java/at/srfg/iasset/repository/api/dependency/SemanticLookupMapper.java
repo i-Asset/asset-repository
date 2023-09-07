@@ -5,25 +5,33 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.eclipse.aas4j.v3.model.DataSpecificationContent;
-import org.eclipse.aas4j.v3.model.DataSpecificationIEC61360;
 import org.eclipse.aas4j.v3.model.DataSpecificationPhysicalUnit;
+import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
 import org.eclipse.aas4j.v3.model.DataTypeIEC61360;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.LangString;
+import org.eclipse.aas4j.v3.model.ModelingKind;
+import org.eclipse.aas4j.v3.model.Property;
+import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.aas4j.v3.model.ValueList;
 import org.eclipse.aas4j.v3.model.ValueReferencePair;
 import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationIEC61360;
 import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationPhysicalUnit;
 import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.aas4j.v3.model.impl.DefaultMultiLanguageProperty;
+import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
 import org.eclipse.aas4j.v3.model.impl.DefaultValueList;
 import org.eclipse.aas4j.v3.model.impl.DefaultValueReferencePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.semantic.model.ConceptBase;
 import at.srfg.iasset.semantic.model.ConceptClass;
@@ -44,10 +52,10 @@ public class SemanticLookupMapper {
 		Optional<ConceptBase> concept = lookup.getConcept(identifier);
 		if ( concept.isPresent()) {
 			if ( ConceptClass.class.isInstance(concept.get())) {
-				
+				return Optional.of((T) fromConceptClass(ConceptClass.class.cast(concept.get())));
 			}
 			else if ( ConceptProperty.class.isInstance(concept.get())) {
-				
+				return Optional.of((T) fromConceptProperty(ConceptProperty.class.cast(concept.get())));
 			}
 			else if ( ConceptPropertyValue.class.isInstance(concept.get())) {
 				
@@ -59,7 +67,7 @@ public class SemanticLookupMapper {
 		}
 		return Optional.empty();
 	}
-	private DataSpecificationIEC61360 fromConceptClass(ConceptClass conceptClass) {
+	private DataSpecificationContent fromConceptClass(ConceptClass conceptClass) {
 		return new DefaultDataSpecificationIEC61360.Builder()
 			// shortName
 			.shortName(new DefaultLangString.Builder()
@@ -72,7 +80,7 @@ public class SemanticLookupMapper {
 			.definitions(mapLabel(conceptClass.getDefinition()))
 			.build();
 	}
-	private DataSpecificationIEC61360 fromConceptProperty(ConceptProperty conceptClass) {
+	private DataSpecificationContent fromConceptProperty(ConceptProperty conceptClass) {
 		return new DefaultDataSpecificationIEC61360.Builder()
 			// shortName
 			.shortName(new DefaultLangString.Builder()
@@ -83,7 +91,8 @@ public class SemanticLookupMapper {
 			.preferredNames(mapLabel(conceptClass.getPreferredLabel()))
 			// definition
 			.definitions(mapLabel(conceptClass.getDefinition()))
-			.dataType(DataTypeIEC61360.fromValue(conceptClass.getDataType().name()))
+			.dataType(DataTypeIEC61360.valueOf(conceptClass.getDataType().name()))
+			// usage of valueId 
 			.valueList(valueList(conceptClass.getConceptId()))
 			.build();
 	}
@@ -127,5 +136,94 @@ public class SemanticLookupMapper {
 				}
 			})
 			.collect(Collectors.toList());
+	}
+
+	
+	public <T extends SubmodelElement>  Optional<T> getTemplate(String identifier) {
+		Optional<ConceptBase> concept = lookup.getConcept(identifier);
+		if ( concept.isPresent()) {
+			if ( ConceptClass.class.isInstance(concept.get())) {
+				ConceptClass conceptClass = ConceptClass.class.cast(concept.get());
+				// mapping concept class to aas
+				SubmodelElementCollection collection = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
+				collection.setDisplayNames(mapLabel(conceptClass.getPreferredLabel()));
+				collection.setDescriptions(mapLabel(conceptClass.getDefinition()));
+				collection.setIdShort(conceptClass.getShortName());
+				collection.setSemanticId(ReferenceUtils.asGlobalReference(identifier));
+				collection.setKind(ModelingKind.TEMPLATE);
+				// check the properties
+				processConceptClassProperties(collection, conceptClass);
+				
+			}
+			else if ( ConceptProperty.class.isInstance(concept.get())) {
+				return Optional.of((T) fromConceptProperty(ConceptProperty.class.cast(concept.get())));
+			}
+			else if ( ConceptPropertyValue.class.isInstance(concept.get())) {
+				
+			}
+			else if ( ConceptPropertyUnit.class.isInstance(concept.get())) {
+				
+			}
+
+		}
+		return Optional.empty();
+		
+	
+	}
+	private void processConceptClassProperties(SubmodelElementCollection collection, ConceptClass conceptClass) {
+		Collection<ConceptProperty> properties = lookup.getPropertiesForConceptClass(conceptClass.getConceptId(), true);
+		properties.forEach(new Consumer<ConceptProperty>() {
+
+			@Override
+			public void accept(ConceptProperty t) {
+				Property property = new DefaultProperty.Builder()
+						.idShort(t.getShortName())
+						.displayNames(mapLabel(t.getPreferredLabel()))
+						.descriptions(mapLabel(t.getDefinition()))
+						.valueType(DataTypeDefXsd.STRING)
+						.kind(ModelingKind.TEMPLATE)
+						.embeddedDataSpecification(null)
+						.build();
+				
+			}
+		});
+		
+	}
+	private SubmodelElement acceptConceptProperty(ConceptProperty conceptProperty) {
+		//
+		switch(conceptProperty.getDataType()) {
+		case STRING_TRANSLATABLE:
+			// create a multilanguageproperty
+			return new DefaultMultiLanguageProperty.Builder()
+				.idShort(conceptProperty.getShortName())
+				.displayNames(mapLabel(conceptProperty.getPreferredLabel()))
+				.build();
+		case STRING:
+		case INTEGER_COUNT:
+		case INTEGER_CURRENCY:
+		case REAL_COUNT:
+		case REAL_CURRENCY:
+		case RATIONAL:
+		case TIME:
+		case TIMESTAMP:
+		case BOOLEAN:
+		case DATE:
+			// create a property with the corresponding data type
+			return new DefaultProperty.Builder()
+					.idShort(conceptProperty.getShortName())
+					.valueType(DataTypeDefXsd.STRING)
+					.displayNames(mapLabel(conceptProperty.getPreferredLabel()))
+					.build();
+		case INTEGER_MEASURE:
+		case REAL_MEASURE:
+		case RATIONAL_MEASURE:
+			// create a property with the corresponding data type
+			return new DefaultProperty.Builder()
+					.idShort(conceptProperty.getShortName())
+					.valueType(DataTypeDefXsd.DOUBLE)
+					.displayNames(mapLabel(conceptProperty.getPreferredLabel()))
+					.build();
+		}
+		return null;
 	}
 }
