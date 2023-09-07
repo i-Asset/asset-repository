@@ -18,9 +18,11 @@ import org.eclipse.aas4j.v3.model.HasSemantics;
 import org.eclipse.aas4j.v3.model.Referable;
 import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.StateOfEvent;
+import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.messaging.ConnectorMessaging;
@@ -33,8 +35,10 @@ import at.srfg.iasset.messaging.impl.helper.EventHandlerWrapped;
 import at.srfg.iasset.messaging.impl.helper.EventProducerImpl;
 import at.srfg.iasset.messaging.impl.helper.MessageBroker;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
+import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.payload.EventPayloadValue;
 import at.srfg.iasset.repository.model.helper.payload.ReferenceValue;
+import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 /**
  * Class providing the mediation from/to the external
@@ -274,27 +278,7 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 
 	@Override
 	public <T> void registerHandler(EventHandler<T> handler, Reference ... references ) throws MessagingException {
-		if ( Direction.INPUT.equals(source.getDirection())) {
-			if (consumer == null ) {
-				consumer = BrokerHelper.createConsumer(broker, clientId);
-				// register a shutdown hook, so that the consumer is closed
-				// when the VM is stopped
-				Runtime.getRuntime().addShutdownHook(new Thread() {
-					@Override
-					public void run() {
-						// close the listeners
-						consumer.close();
-					}
-				});
-			}
-			// subscribe the current handler for the configured topic!
-			consumer.subscribe(topic, this);
-			
-			EventHandlerWrapped<T> wrapped = new EventHandlerWrapped<>(handler, references);
-			eventHandler.add(wrapped);
-			
-		}
-	
+		registerHandler(handler, topic, references);	
 	}
 	@Override
 	public <T> void registerHandler(EventHandler<T> handler, String topic, Reference ... references ) throws MessagingException {
@@ -313,8 +297,7 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 			});
 			// subscribe the current handler for the provided topic!
 			consumer.subscribe(topic, this);
-			
-			EventHandlerWrapped<T> wapped = new EventHandlerWrapped<>(handler, references);
+			EventHandlerWrapped<T> wapped = new EventHandlerWrapped<>(objectMapper, handler, observed, references);
 			eventHandler.add(wapped);
 			
 		}
@@ -378,6 +361,14 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 	public void sendEvent(Object eventPayload, Reference subjectReference) throws MessagingException {
 		byte[] bytes;
 		try {
+			// when observed is a SubmodelElement - perform validation
+			if ( SubmodelElement.class.isInstance(observed)) {
+				SubmodelElement observedElement = SubmodelElement.class.cast(observed);
+				JsonNode valueAsNode = objectMapper.convertValue(eventPayload, JsonNode.class);
+				ValueHelper.applyValue(observedElement, valueAsNode);
+				eventPayload = ValueHelper.toValue(observedElement);
+				
+			}
 			bytes = objectMapper.writeValueAsBytes(eventPayload);
 			EventPayload p = asPayload(subjectReference, topic, bytes);
 			bytes = objectMapper.writeValueAsBytes(p);

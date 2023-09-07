@@ -207,12 +207,6 @@ public class ConnectorWithCDI {
 					System.out.println(payload.getFaultId() + " " + payload.getShortText()) ;
 					
 				}
-
-				@Override
-				public Class<Fault> getPayloadType() {
-					return Fault.class;
-				}
-			
 			});
 			
 			EventProducer<Fault> faultProducer = i40Component.getEventProducer("http://iasset.salzburgresearch.at/semantic/fault", Fault.class);
