@@ -53,9 +53,9 @@ public class SubmodelElementListMapper implements ValueMapper<SubmodelElementLis
 	@Override
 	public SubmodelElementList mapValueToTemplate(ServiceEnvironment environment, SubmodelElementList modelElement, JsonNode valueNode) {
 		// is the list element a template?
+		//
 		modelElement.getValues().clear();
 		Optional<SubmodelElement> listElementTemplate = environment.resolve(modelElement.getSemanticIdListElement(), SubmodelElement.class);
-
 		if ( valueNode.isArray() ) {
 			for ( int i = 0; i < valueNode.size(); i++) {
 				
@@ -69,11 +69,49 @@ public class SubmodelElementListMapper implements ValueMapper<SubmodelElementLis
 						ValueHelper.applyValue(environment, listElement, value);
 						
 					}
-					else if ( value.isObject()) {
+					else if ( value.isObject() && listElementTemplate.isPresent()) {
 						SubmodelElementCollection collection = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
 						modelElement.getValues().add(collection);
 						collection.setIdShort(String.format("%s(%s)", modelElement.getIdShort(), i+1));
 						ValueHelper.applyValue(environment, collection, listElementTemplate.get(), value);
+					}
+					else if ( value.isArray()) {
+						SubmodelElementList collection = AASModelHelper.newElementInstance(SubmodelElementList.class);
+						modelElement.getValues().add(collection);
+						collection.setIdShort(String.format("%s(%s)", modelElement.getIdShort(), i+1));
+						ValueHelper.applyValue(environment, collection, value);
+					}
+				}
+			}
+		}
+		return modelElement;
+	}
+
+	@Override
+	public SubmodelElementList mapValueToTemplate(ServiceEnvironment environment,
+			SubmodelElementList modelElement, SubmodelElementList templateElement, JsonNode valueNode) {
+		modelElement.getValues().clear();
+		if ( valueNode.isArray()) {
+			for ( int i = 0; i < valueNode.size(); i++) {
+				
+				JsonNode value = valueNode.get(i);
+				if (value != null ) {
+					if ( value.isValueNode() ) {
+						Property listElement = AASModelHelper.newElementInstance(Property.class);
+						modelElement.getValues().add(listElement);
+						listElement.setValueType(templateElement.getValueTypeListElement());
+						listElement.setIdShort(String.format("%s(%s)", modelElement.getIdShort(), i+1));
+						ValueHelper.applyValue(environment, listElement, value);
+						
+					}
+					else if ( value.isObject() ) {
+						Optional<SubmodelElement> listElementTemplate = environment.resolve(modelElement.getSemanticIdListElement(), SubmodelElement.class);
+						if ( listElementTemplate.isPresent()) {
+							SubmodelElementCollection collection = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
+							modelElement.getValues().add(collection);
+							collection.setIdShort(String.format("%s(%s)", modelElement.getIdShort(), i+1));
+							ValueHelper.applyValue(environment, collection, listElementTemplate.get(), value);
+						}
 					}
 					else if ( value.isArray()) {
 						SubmodelElementList collection = AASModelHelper.newElementInstance(SubmodelElementList.class);
