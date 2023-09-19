@@ -8,6 +8,7 @@ import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
 import org.eclipse.aas4j.v3.model.DataTypeIEC61360;
 import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.ModelingKind;
+import org.eclipse.aas4j.v3.model.QualifierKind;
 import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.impl.DefaultAdministrativeInformation;
@@ -21,6 +22,7 @@ import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
 import org.eclipse.aas4j.v3.model.impl.DefaultOperation;
 import org.eclipse.aas4j.v3.model.impl.DefaultOperationVariable;
 import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.aas4j.v3.model.impl.DefaultQualifier;
 import org.eclipse.aas4j.v3.model.impl.DefaultReference;
 import org.eclipse.aas4j.v3.model.impl.DefaultReferenceElement;
 import org.eclipse.aas4j.v3.model.impl.DefaultSubmodel;
@@ -269,10 +271,14 @@ public class AASPlantStructureSubmodel {
 												.build())
 										.typeValueListElement(AasSubmodelElements.SUBMODEL_ELEMENT_COLLECTION)
 										.semanticIdListElement(new DefaultReference.Builder()
-												.type(ReferenceTypes.GLOBAL_REFERENCE)
+												.type(ReferenceTypes.MODEL_REFERENCE)
 												.key(new DefaultKey.Builder()
-														.type(KeyTypes.GLOBAL_REFERENCE)
-														.value("http://iasset.salzburgresearch.at/common/plantElement")
+														.type(KeyTypes.SUBMODEL)
+														.value("http://iasset.salzburgresearch.at/common/plantStuctureRequestOperation")
+														.build())
+												.key(new DefaultKey.Builder()
+														.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)
+														.value("plantElement")
 														.build())
 												.build())
 										.value(new DefaultSubmodelElementCollection.Builder()
@@ -363,6 +369,12 @@ public class AASPlantStructureSubmodel {
 								.idShort("name")
 								.kind(ModelingKind.TEMPLATE)
 								.valueType(DataTypeDefXsd.STRING)
+								.qualifier(new DefaultQualifier.Builder()
+										.kind(QualifierKind.VALUE_QUALIFIER)
+										.type("mandatory")
+										.valueType(DataTypeDefXsd.BOOLEAN)
+										.value("true")
+										.build())
 								.displayName(new DefaultLangString.Builder()
 										.language(LANGUAGE)
 										.text("Name").build()

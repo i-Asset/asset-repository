@@ -113,7 +113,7 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 					.findFirst();
 				
 				if ( element.isPresent()) {
-					SubmodelElement instance = instantiate(element.get(), valueNode);
+					SubmodelElement instance = instantiate(element.get(), fieldNode.getValue());
 					modelElement.getValues().add(instance);
 					ValueHelper.applyValue(serviceEnvironment, instance, element.get(), fieldNode.getValue());
 				}
