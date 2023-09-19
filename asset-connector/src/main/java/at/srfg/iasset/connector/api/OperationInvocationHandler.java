@@ -140,6 +140,13 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			throw new IllegalStateException("Multiple InputVariables present, use setParameter(key, value)");
 		}
 	}
+	public OperationInvocation setInput(Object ...params) {
+		for ( int i = 0; i< Math.min(params.length, countInputVariables()); i++) {
+			OperationVariable v = inputVariables().get(i);
+			applyParameter(v.getValue(), params[i]);
+		}
+		return this;
+	}
 	public <T> OperationInvocation setInput(String key, T param) {
 		switch (countInputVariables()) {
 		case 0: // no input variables 

@@ -158,7 +158,7 @@ public class TestOperations {
 			OperationRequestValue value2 = objectMapper.readValue(valueOutput, OperationRequestValue.class);
 			
 			for (int i = 0; i < value2.getInputArguments().size(); i++) {
-				JsonNode fromObject = objectMapper.convertValue(value2.inputArgument(i), JsonNode.class);
+				JsonNode fromObject = objectMapper.convertValue(value2.getInputArgument(i), JsonNode.class);
 				OperationVariable element = operation.getInputVariables().get(i);
 				
 				ValueHelper.applyValue(element.getValue(), fromObject);
