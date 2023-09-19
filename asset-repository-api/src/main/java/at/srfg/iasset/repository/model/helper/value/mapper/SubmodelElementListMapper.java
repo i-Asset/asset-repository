@@ -1,5 +1,7 @@
 package at.srfg.iasset.repository.model.helper.value.mapper;
 
+import java.util.Optional;
+
 import org.eclipse.aas4j.v3.model.Property;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
@@ -50,7 +52,10 @@ public class SubmodelElementListMapper implements ValueMapper<SubmodelElementLis
 
 	@Override
 	public SubmodelElementList mapValueToTemplate(ServiceEnvironment environment, SubmodelElementList modelElement, JsonNode valueNode) {
+		// is the list element a template?
 		modelElement.getValues().clear();
+		Optional<SubmodelElement> listElementTemplate = environment.resolve(modelElement.getSemanticIdListElement(), SubmodelElement.class);
+
 		if ( valueNode.isArray() ) {
 			for ( int i = 0; i < valueNode.size(); i++) {
 				
@@ -68,7 +73,7 @@ public class SubmodelElementListMapper implements ValueMapper<SubmodelElementLis
 						SubmodelElementCollection collection = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
 						modelElement.getValues().add(collection);
 						collection.setIdShort(String.format("%s(%s)", modelElement.getIdShort(), i+1));
-						ValueHelper.applyValue(environment, collection, value);
+						ValueHelper.applyValue(environment, collection, listElementTemplate.get(), value);
 					}
 					else if ( value.isArray()) {
 						SubmodelElementList collection = AASModelHelper.newElementInstance(SubmodelElementList.class);

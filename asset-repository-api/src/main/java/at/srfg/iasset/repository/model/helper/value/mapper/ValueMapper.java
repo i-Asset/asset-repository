@@ -34,6 +34,9 @@ public interface ValueMapper<M extends SubmodelElement, V extends SubmodelElemen
 	default M mapValueToTemplate(ServiceEnvironment serviceEnvironment, M modelElement, JsonNode valueNode) {
 		return mapValueToElement(modelElement, valueNode);
 	}
+	default M mapValueToTemplate(ServiceEnvironment serviceEnvironment, M modelElement, M templateElement, JsonNode valueNode) {
+		return mapValueToTemplate(serviceEnvironment, modelElement, valueNode);
+	}
 	default M applyValues(M modelElement, V valueObject) {
 		return modelElement;
 	}

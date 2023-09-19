@@ -362,6 +362,8 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		//
 		Optional<Operation> operation = serviceEnvironment.getSubmodelElement(reference, Operation.class);
 		if ( operation.isPresent()) {
+			// TODO: obtain the reference to the resolved operation ...
+			// 
 			return new OperationInvocationHandler(operation.get(), serviceEnvironment, objectMapper);
 		}
 		// operation must not return null!

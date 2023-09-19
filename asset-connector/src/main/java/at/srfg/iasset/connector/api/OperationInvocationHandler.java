@@ -5,16 +5,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.eclipse.aas4j.v3.model.HasKind;
+import org.eclipse.aas4j.v3.model.ModelingKind;
 import org.eclipse.aas4j.v3.model.Operation;
 import org.eclipse.aas4j.v3.model.OperationVariable;
+import org.eclipse.aas4j.v3.model.Reference;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
@@ -27,15 +29,31 @@ import at.srfg.iasset.repository.model.operation.OperationResultValue;
 public class OperationInvocationHandler implements OperationInvocation, OperationInvocationResult {
 	
 	private final Operation operation;
+	private final Reference operationReference;
 	private final ServiceEnvironment serviceEnvironment;
 	private ObjectMapper objectMapper;
 	
-	
+	public OperationInvocationHandler(
+			Operation operation, 
+			Reference operationReference,
+			ServiceEnvironment environment,
+			ObjectMapper mapper) {
+		this(operation, environment, mapper);
+		environment.resolve(operationReference, Operation.class);
+	}
 	public OperationInvocationHandler(Operation operation, ServiceEnvironment environment, ObjectMapper mapper) {
 		this.operation = operation;
 		this.serviceEnvironment = environment;
 		this.objectMapper = mapper;
+		this.operationReference = null;
+		// TODO: resolve template/instance here!
+		// when operation is instance, then check for template (semanticId)
+		// when operation is template, then instantiate operation and use template
+		// 
 		
+	}
+	private boolean isTemplate(HasKind hasKind) {
+		return ModelingKind.TEMPLATE.equals(hasKind.getKind());
 	}
 	/**
 	 * Apply the incoming request to the operation!
@@ -59,7 +77,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		operation.setInputVariables(request.getInputArguments());
 		operation.setInoutputVariables(request.getInoutputArguments());
 	}
-	public void applyOperationResultValue(OperationResultValue result) {
+	private void applyOperationResultValue(OperationResultValue result) {
 		int inputSize = Math.min(operation.getOutputVariables().size(), result.getOutputArguments().size());
 		for (int i = 0; i < inputSize;i++) {
 			// map the current request to the operation's settings
@@ -152,19 +170,10 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	 * @return the result of the invocation
 	 */
 	
-//	public MethodInvocationResult invoke(String assetIdentifier) {
-//		OperationRequestValue valueRequest = new OperationRequestValue(operation, objectMapper);
-//		Optional<AssetAdministrationShell> shell = serviceEnvironment.getAssetAdministrationShell(assetIdentifier);
-//		if ( shell.isPresent()) {
-//			// execute the request with the identified asset!
-//			Object result = serviceEnvironment.invokeOperation(assetIdentifier, assetIdentifier, assetIdentifier, valueRequest);
-//		}
-//		return null;
-//	}
 	private <T> void applyParameter(SubmodelElement submodelElement, T value) {
-		// a standard object mapper is sufficient for this conversion!
+		// 
 		JsonNode valueAsNode = objectMapper.convertValue(value, JsonNode.class);
-		// need to validate the input value with the model 
+		// need to validate the input value with the model
 		ValueHelper.applyValue(serviceEnvironment, submodelElement, valueAsNode);
 	}
 
@@ -344,6 +353,12 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 
 		
 		return this;
+	}
+	@Override
+	public OperationInvocationResult invoke() {
+		// TODO Auto-generated method stub
+		return this;
+//		throw new UnsupportedOperationException("Not yet implemented!");
 	}
 	
 }

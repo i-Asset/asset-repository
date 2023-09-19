@@ -106,6 +106,7 @@ public enum ValueType {
 			constructor.setAccessible(true);
 			@SuppressWarnings("unchecked")
 			Value<T> newVal = (Value<T>) constructor.newInstance();
+			newVal.fromValue(value);
 			return newVal.getValue();
 		
 		} catch (InvocationTargetException | InstantiationException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException e ){

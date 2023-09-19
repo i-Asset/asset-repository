@@ -17,8 +17,10 @@ import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.model.AASFaultSubmodel;
 import at.srfg.iasset.repository.model.AASPlantStructureSubmodel;
+import at.srfg.iasset.repository.model.AASZenonAlarm;
 import at.srfg.iasset.repository.model.Fault;
 import at.srfg.iasset.repository.model.PlantElement;
+import at.srfg.iasset.repository.model.ZenonAlarm;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.OperationInvocationResult;
@@ -32,12 +34,15 @@ public class ConnectorWithCDI {
 		loadData(i40Component);
 		// start the endpoint
 		startEndpoint(i40Component);
+		// @Jonas Demon für Zenon-Alarme
+		demoZenonAlarm(i40Component);
+		
 		// demonstrate operations
-		showOperation(i40Component);
+		operationInvocation(i40Component);
 		// demonstrate ValueSupplier & ValueConsumer
-		showConsumer(i40Component);
+		registerValueCallback(i40Component);
 		// demonstrate Messaging
-		showEventHandling(i40Component);
+		eventHandling(i40Component);
 		//
 		// wait for a keystroke 
 		try {
@@ -76,9 +81,17 @@ public class ConnectorWithCDI {
 		// add the OPERATIONS Submodel to the I40 Component's AAS
 		i40Component.add(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
 		i40Component.add(AASFull.AAS_BELT_INSTANCE.getId(), AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
+		
+		
+		
+		
+		// @JONAS BEISPIEL
+		// @Jonas: load AAS for Zenon including the submodel
+		i40Component.add(AASZenonAlarm.ZENON_AAS);
+		i40Component.add(AASZenonAlarm.ZENON_AAS.getId(), AASZenonAlarm.ZENON_SUBMODEL);
 
 	}
-	private static void showOperation(AASComponent i40Component) {
+	private static void operationInvocation(AASComponent i40Component) {
 		/*
 		 * Test/Check the execution of operations
 		 */
@@ -93,7 +106,7 @@ public class ConnectorWithCDI {
 						try {
 							invocation.getInput(Double.class);
 						} catch (Exception e) {
-					
+							e.printStackTrace();
 						}
 						Double d = invocation.getInput("doubleValue", Double.class);
 						
@@ -128,14 +141,67 @@ public class ConnectorWithCDI {
 						AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION.getId(),
 						"getPlantStructure"
 					);
-		// 
+//  
+// 		List<PlantElement> plantStructure = i40Component.getOperationResultList("http://iasset.salzburgresarch.at/common/plantStructure", Instant.now(), PlantElement.class);
+ 		
 		Object objectResult = invocation.getResult("plantStructure");
 		Double d = invocation.getResult("doubleValue", Double.class);
 		List<PlantElement> plantList = invocation.getResultList("plantStructure", PlantElement.class);
 		System.out.println(plantList.size());
 
 	}
-	private static void showConsumer(AASComponent i40Component) {
+
+	private static void demoZenonAlarm(AASComponent i40Component) {
+		/*
+		 * Test/Check the execution of operations
+		 */
+		i40Component.registerCallback(
+				AASZenonAlarm.ZENON_AAS.getId(), 
+				AASZenonAlarm.ZENON_SUBMODEL.getId(),
+				"zenonAlarm",
+				new OperationCallback() {
+					
+					@Override
+					public boolean execute(OperationInvocation invocation) {
+						Instant timeFrom = invocation.getInput("timeFrom", Instant.class);
+						Instant timeTo = invocation.getInput("timeTo", Instant.class);
+						
+						List<ZenonAlarm> alarme = new ArrayList<>();
+						// ZENON Abfrage Beginn
+						ZenonAlarm a1 = new ZenonAlarm();
+						a1.setVariable("variable");
+						a1.setAlarmClass("zenon Class A");
+						a1.setAlarmGroup("zenob Group 1");
+						a1.setAlarmText("Demo Alarm, to be replaced");
+						a1.setTimeComes(Instant.now().minusMillis(20000));
+						a1.setTimeGoes(Instant.now());
+						// success
+						alarme.add(a1);
+						// ZENON ABFRAGE End
+						invocation.setOutput("result", alarme);
+						return true;
+					}
+				});
+
+		OperationInvocationResult invocation = i40Component
+				.getOperationRequest("http://iasset.salzburgresearch.at/zenon/alarm")
+				.setInput("timeFrom", Instant.now().minusMillis(30000))
+				.setInput("timeTo", Instant.now())
+				// invoke the operation
+				.invoke(
+						AASZenonAlarm.ZENON_AAS.getId(), 
+						AASZenonAlarm.ZENON_SUBMODEL.getId(),
+						"zenonAlarm"
+					);
+//  
+// 		List<PlantElement> plantStructure = i40Component.getOperationResultList("http://iasset.salzburgresarch.at/common/plantStructure", Instant.now(), PlantElement.class);
+ 		
+		Object objectResult = invocation.getResult("result");
+		List<ZenonAlarm> plantList = invocation.getResultList("result", ZenonAlarm.class);
+		System.out.println(plantList.size());
+
+	}
+	private static void registerValueCallback(AASComponent i40Component) {
 		
 		i40Component.registerCallback(
 				// name the AAS
@@ -167,7 +233,6 @@ public class ConnectorWithCDI {
 			@Override
 			public void accept(Double newValue) {
 				i40Component.info("New Value for {}: {}", "beltData.distance", newValue);
-				System.out.println("New value for beltData.distance: " + newValue);
 				
 			}
 		});
@@ -195,7 +260,7 @@ public class ConnectorWithCDI {
 		System.out.println(String.format("Initial: %s, Returned: %s", random, value));
 		
 	}
-	private static void showEventHandling(AASComponent i40Component) {
+	private static void eventHandling(AASComponent i40Component) {
 		/*
 		 * demonstrate the event handling
 		 */
@@ -218,7 +283,7 @@ public class ConnectorWithCDI {
 			faultProducer.sendEvent(theFault);
 		
 		} catch (MessagingException | InterruptedException e) {
-			// TODO Auto-generated catch block
+			// show error messages
 			e.printStackTrace();
 		}
 

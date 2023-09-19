@@ -81,5 +81,13 @@ public class ValueHelper {
 		}
 		return null;
 	}
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(ServiceEnvironment environment, M instanceElement, M templateElement, JsonNode node) {
+		Class<?> propertyInterface = AASModelHelper.getAasInterface(templateElement.getClass());
+		
+		if ( mapper.containsKey(propertyInterface)) {
+			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapValueToTemplate(environment, instanceElement, templateElement, node);
+		}
+		return null;
+	}
 
 }

@@ -1,5 +1,7 @@
 package at.srfg.iasset.connector.component;
 
+import java.util.List;
+
 import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.jboss.weld.environment.se.Weld;
@@ -16,6 +18,7 @@ import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
+import at.srfg.iasset.repository.model.operation.OperationInvocationResult;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Priority;
@@ -135,6 +138,16 @@ public class AASComponent {
 		// search environment for operation with semantic id
 		return environment.getOperation(semanticId);
 		
+	}
+	public <R, I> R getOperationResult(String semanticId, I parameter, Class<R> clazz) {
+		OperationInvocation invocation = environment.getOperation(semanticId);
+		OperationInvocationResult result = invocation.invoke();
+		return result.getResult(clazz);
+	}
+	public <R, I> List<R> getOperationResultList(String semanticId, I parameter, Class<R> clazz) {
+		OperationInvocation invocation = environment.getOperation(semanticId);
+		OperationInvocationResult result = invocation.invoke();
+		return result.getResultList(clazz);
 	}
 	public <T> void setElementValue(String aasIdentifier, String submodelIdentifier, String path, T value) {
 		environment.setElementValue(aasIdentifier, submodelIdentifier, path, value);

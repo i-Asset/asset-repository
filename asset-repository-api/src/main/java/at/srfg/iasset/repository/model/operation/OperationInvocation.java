@@ -81,4 +81,10 @@ public interface OperationInvocation {
 	 * @return
 	 */
 	OperationInvocationResult invoke(String aasIdentifier, String submodelIdentifier, String path);
+	/**
+	 * Execute the operation, it is up to the semantic middleware to 
+	 * identify the responsible AAS instance.
+	 * @return
+	 */
+	OperationInvocationResult invoke();
 }

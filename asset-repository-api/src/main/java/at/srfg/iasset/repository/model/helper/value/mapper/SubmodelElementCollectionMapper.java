@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import org.eclipse.aas4j.v3.model.KeyTypes;
 import org.eclipse.aas4j.v3.model.ModelingKind;
 import org.eclipse.aas4j.v3.model.Property;
 import org.eclipse.aas4j.v3.model.SubmodelElement;
@@ -19,7 +20,7 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementCollectionValue;
-import at.srfg.iasset.repository.model.helper.value.type.ValueType;
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElementCollection, SubmodelElementCollectionValue>{
 
@@ -51,6 +52,20 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 	@Override
 	public SubmodelElementCollection mapValueToTemplate(ServiceEnvironment serviceEnvironment,
 			SubmodelElementCollection modelElement, JsonNode valueNode) {
+		if ( ModelingKind.TEMPLATE.equals(modelElement.getKind())) {
+			// need to create the instance
+			// do we have a MODEL_REFERENCE
+			// --> if yes, the reference must point to a SubmodelElementCollection.TEMPLATE
+			// --> resolve the TEMPLATE
+			// --> the semanticId's values are to be used
+			// 
+			KeyTypes referenceType = ReferenceUtils.lastKeyType(modelElement.getSemanticId());
+			SubmodelElementCollection instanceElement = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
+		}
+		else {
+			// default: ModelingKind.INSTANCE
+			
+		}
 		// TODO Auto-generated method stub
 		if ( valueNode.isObject()) {
 			Iterator<Entry<String,JsonNode>> fieldIterator = valueNode.fields();
@@ -64,7 +79,7 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 					}})
 					.findFirst()
 					.orElseGet(new Supplier<SubmodelElement>() {
-
+						// 
 						@Override
 						public SubmodelElement get() {
 							SubmodelElement newElement = cloneElement(fieldNode.getKey(), fieldNode.getValue());
@@ -78,6 +93,55 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 		}
 		return modelElement;
 //		return ValueMapper.super.mapValueToTemplate(serviceEnvironment, modelElement, valueNode);
+	}
+	
+	@Override
+	public SubmodelElementCollection mapValueToTemplate(ServiceEnvironment serviceEnvironment,
+			SubmodelElementCollection modelElement, SubmodelElementCollection templateElement, JsonNode valueNode) {
+		// TODO Auto-generated method stub
+		modelElement.getValues().clear();
+		if ( valueNode.isObject()) {
+			Iterator<Entry<String,JsonNode>> fieldIterator = valueNode.fields();
+			while( fieldIterator.hasNext()) {
+				Entry<String, JsonNode> fieldNode = fieldIterator.next();
+				Optional<SubmodelElement> element = templateElement.getValues().stream().filter(new Predicate<SubmodelElement>() {
+
+					@Override
+					public boolean test(SubmodelElement t) {
+						return fieldNode.getKey().equals(t.getIdShort());
+					}})
+					.findFirst();
+				
+				if ( element.isPresent()) {
+					SubmodelElement instance = instantiate(element.get(), valueNode);
+					modelElement.getValues().add(instance);
+					ValueHelper.applyValue(serviceEnvironment, instance, element.get(), fieldNode.getValue());
+				}
+			}
+		}
+		return modelElement;
+	}
+	private SubmodelElement instantiate(SubmodelElement template, JsonNode valueNode) {
+		if ( valueNode.isArray() && valueNode.has(0) && valueNode.get(0).isValueNode() && template instanceof SubmodelElementList) {
+			SubmodelElement listElement = AASModelHelper.newElementInstance(SubmodelElementList.class);
+			listElement.setIdShort(template.getIdShort());
+			listElement.setKind(ModelingKind.INSTANCE);
+			return listElement;
+		}
+		else if ( valueNode.isObject() && template instanceof SubmodelElementCollection) {
+			SubmodelElement listElement = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
+			listElement.setIdShort(template.getIdShort());
+			listElement.setKind(ModelingKind.INSTANCE);
+			return listElement;
+		}
+		else if (template instanceof Property){
+			Property listElement = AASModelHelper.newElementInstance(Property.class);
+			listElement.setIdShort(template.getIdShort());
+			listElement.setKind(ModelingKind.INSTANCE);
+			listElement.setValueType(((Property)template).getValueType());
+			return listElement;
+		}
+		return null;
 	}
 	private SubmodelElement cloneElement(String idShort, JsonNode valueNode) {
 		if ( valueNode.isArray() && valueNode.has(0) && valueNode.get(0).isValueNode()) {
