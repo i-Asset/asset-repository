@@ -8,6 +8,7 @@ public class Fault {
 	public String faultId;
 	public Date timestampCreated;
 	public Date timestampFinished;
+	public ErrorCode errorCode;
 	public String faultCode;
 	public String shortText;
 	public String longText;
@@ -16,6 +17,18 @@ public class Fault {
 	public String maintencanceUserId;
 	public String status;
 	
+	/**
+	 * @return the errorCode
+	 */
+	public ErrorCode getErrorCode() {
+		return errorCode;
+	}
+	/**
+	 * @param errorCode the errorCode to set
+	 */
+	public void setErrorCode(ErrorCode errorCode) {
+		this.errorCode = errorCode;
+	}
 	
 	public String getAssetId() {
 		return assetId;

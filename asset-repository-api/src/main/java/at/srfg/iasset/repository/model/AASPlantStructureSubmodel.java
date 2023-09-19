@@ -1,6 +1,7 @@
 package at.srfg.iasset.repository.model;
 
 import org.eclipse.aas4j.v3.model.AasSubmodelElements;
+import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.ConceptDescription;
 import org.eclipse.aas4j.v3.model.DataSpecification;
 import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
@@ -10,6 +11,7 @@ import org.eclipse.aas4j.v3.model.ModelingKind;
 import org.eclipse.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.aas4j.v3.model.Submodel;
 import org.eclipse.aas4j.v3.model.impl.DefaultAdministrativeInformation;
+import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
 import org.eclipse.aas4j.v3.model.impl.DefaultConceptDescription;
 import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecification;
 import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationIEC61360;
@@ -37,8 +39,6 @@ public class AASPlantStructureSubmodel {
 	public static final Submodel SUBMODEL_PLANT_STRUCTURE = createSubmodelForPlantStructure();
 	public static final Submodel SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION = createSubmodelForPlantStructureRequestOperation();
 	public static final ConceptDescription CONCEPT_DESCRIPTION_PLANT_STRUCTURE = plantStructureConcept();
-	
-
 	private static Submodel createSubmodelForPlantStructure() {
 		return new DefaultSubmodel.Builder()
 				.idShort("properties")
