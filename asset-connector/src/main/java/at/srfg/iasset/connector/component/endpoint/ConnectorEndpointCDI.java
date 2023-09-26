@@ -1,5 +1,6 @@
 package at.srfg.iasset.connector.component.endpoint;
 
+import java.net.InetAddress;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 	private int port = defaultPort;
 	@Inject
 	ServiceEnvironment environment;
-	
+	private URI endpointAddress;
 	@Inject
 	private EndpointSettings settings;
 	/**
@@ -41,29 +42,6 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 		stop();
 	}
 
-	@Override
-	public void start(String contextPath, ResourceConfig rootConfig) {
-		
-		GrizzlyHttpContainer handler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, new ShellsConfig(environment));
-
-		httpServer = GrizzlyHttpServerFactory.createHttpServer(
-				// always create with localhost
-				URI.create(String.format("http://%s:%s/%s", "0.0.0.0", defaultPort, contextPath))
-			);
-		
-//		serverConfiguration = httpServer.getServerConfiguration();
-		httpServer.getServerConfiguration().addHttpHandler(handler, contextPath);
-		
-
-		
-		try {
-			httpServer.start();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
 	public void start(int port, String contextRoot) {
 		this.port = port;
 		GrizzlyHttpContainer handler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, new ShellsConfig(environment));
@@ -76,9 +54,9 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 //		serverConfiguration = httpServer.getServerConfiguration();
 		httpServer.getServerConfiguration().addHttpHandler(handler, contextRoot);
 		
-
-		
 		try {
+			String host = InetAddress.getLocalHost().getHostAddress();
+			endpointAddress = URI.create(String.format("http://%s:%s%s", host, this.port, contextRoot));
 			httpServer.start();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -149,5 +127,26 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 		
 	}
 
+	@Override
+	public URI getServiceAddress() {
+		if ( endpointAddress == null) {
+			throw new IllegalStateException("Adress not available, please start endpoint first!");
+		}
+		return endpointAddress;
+	}
+	
+//	@Override
+//	public Endpoint getEndpoint(String aasIdentifier) {
+//		Optional<AssetAdministrationShell> shell = environment.getAssetAdministrationShell(aasIdentifier);
+//		if ( shell.isPresent()) {
+//			Endpoint ep = new DefaultEndpoint.Builder()
+//					.type("http")
+//					.address(String.format("%s", endpointAddress.toString(), "shells/", Base64.getEncoder().encode(aasIdentifier.getBytes())))
+//					.build();
+//			return ep;
+//		}
+//		return null;
+//	}
+	
 
 }

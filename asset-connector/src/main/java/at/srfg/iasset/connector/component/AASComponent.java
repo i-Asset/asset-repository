@@ -75,6 +75,10 @@ public class AASComponent {
 	public void stopEndpoint() {
 		environment.shutdownEndpoint();
 	}
+	public ConnectorEndpoint getEndpoint() {
+		return environment.getEndpoint();
+	}
+	
 	@PostConstruct
 	protected void postConstruct() {
 		initializeComponent();
@@ -103,9 +107,13 @@ public class AASComponent {
 
 	}
 	/**
-	 * Stop the AASComponent
+	 * Stop the AASComponent's container functionality. 
+	 * <p>This will stop the service endpoint and close all event 
+	 * subscribers and producers.
+	 * </p>
+	 * 
 	 */
-	public static void destroy() {
+	public static void close() {
 		if (weldContainer!=null && weldContainer.isRunning()) {
 			weldContainer.close();
 		}

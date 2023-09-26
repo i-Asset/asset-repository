@@ -38,6 +38,7 @@ public interface LocalEnvironment {
 	 * Start the HTTP REST endpoint
 	 */
 	public void startEndpoint();
+	public ConnectorEndpoint getEndpoint();
 	/**
 	 * Add a new {@link AssetAdministrationShell} to the local environment
 	 * @param shell
@@ -225,7 +226,7 @@ public interface LocalEnvironment {
 	<T> void registerValueCallback(String aasIdentifier, String submodelIdentifier, String path,
 			ValueConsumer<T> consumer);
 	/**
-	 * Register a type safe {@link ValueConsumer} function for {@link Property} element. The callback function is 
+	 * Register a type safe {@link ValueSupplier} function for {@link Property} element. The callback function is 
 	 * invoked whenever the REST endpoint is about to process the contents of the {@link Property}
 	 * @param <T>
 	 * @param aasIdentifier The id of the {@link AssetAdministrationShell}

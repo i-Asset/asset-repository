@@ -83,6 +83,9 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		endpoint.start();
 
 	}
+	public ConnectorEndpoint getEndpoint() {
+		return endpoint; 
+	}
 
 	@Override
 	public void addAdministrationShell(AssetAdministrationShell shell) {

@@ -51,7 +51,7 @@ public class ConnectorWithCDI {
 			e.printStackTrace();
 		}
 		// shutdown the component
-		AASComponent.destroy();
+		AASComponent.close();
 	}
 	
 	private static void startEndpoint(AASComponent i40Component) {
@@ -193,8 +193,6 @@ public class ConnectorWithCDI {
 						AASZenonAlarm.ZENON_SUBMODEL.getId(),
 						"zenonAlarm"
 					);
-//  
-// 		List<PlantElement> plantStructure = i40Component.getOperationResultList("http://iasset.salzburgresarch.at/common/plantStructure", Instant.now(), PlantElement.class);
  		
 		Object objectResult = invocation.getResult("result");
 		List<ZenonAlarm> plantList = invocation.getResultList("result", ZenonAlarm.class);
