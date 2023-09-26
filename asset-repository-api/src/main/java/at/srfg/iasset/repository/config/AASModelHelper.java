@@ -30,7 +30,12 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
-
+/** 
+ * Class replacing the ReflectionHelper from the core package. This is required 
+ * to avoid loading the original class when collecting the classes for the AAS model
+ * 
+ * @implNote inspired from aas4j, (c) by Fraunhofer, ReflectionHelper class
+ */
 public class AASModelHelper {
     private static final Logger logger = LoggerFactory.getLogger(AASModelHelper.class);
     private static final String ROOT_PACKAGE_NAME = "org.eclipse.aas4j.v3";
