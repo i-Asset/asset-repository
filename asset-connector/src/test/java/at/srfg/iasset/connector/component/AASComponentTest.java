@@ -5,13 +5,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
@@ -44,7 +46,7 @@ public class AASComponentTest {
 		aas.add(shell.getId(), AASFull.SUBMODEL_BELT_EVENT_TEMPLATE);
 		aas.add(shell.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE);
 		aas.add(shell.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_TEMPLATE);
-		List<Reference> submodels = client.getSubmodels(shell.getId());
+		List<ModelReference> submodels = client.getSubmodels(shell.getId());
 		assertTrue(submodels.size() == 3 );
 		Submodel submodel = client.getSubmodel(shell.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE.getId());
 		assertTrue(submodel != null && submodel.getId().equals(AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE.getId()));
@@ -55,6 +57,15 @@ public class AASComponentTest {
 //		aas.get
 	}
 	
+	@Test
+	public void testObjectMapper() throws Exception {
+		ObjectMapper mapper = ClientFactory.getObjectMapper();
+		String aas = mapper.writeValueAsString(AASFull.SUBMODEL_BELT_PROPERTIES_INSTANCE);
+		System.out.println(aas);
+		aas = mapper.writeValueAsString(AASFull.SUBMODEL_BELT_PROPERTIES_TEMPLATE);
+		System.out.println(aas);
+		
+	}
 	@AfterClass
 	public static void shutDown() {
 		aas.stopEndpoint();

@@ -7,12 +7,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.ModelingKind;
-import org.eclipse.aas4j.v3.model.Property;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
-import org.eclipse.aas4j.v3.model.SubmodelElementList;
+import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -20,7 +18,6 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementCollectionValue;
-import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElementCollection, SubmodelElementCollectionValue>{
 
@@ -52,21 +49,7 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 	@Override
 	public SubmodelElementCollection mapValueToTemplate(ServiceEnvironment serviceEnvironment,
 			SubmodelElementCollection modelElement, JsonNode valueNode) {
-		if ( ModelingKind.TEMPLATE.equals(modelElement.getKind())) {
-			// need to create the instance
-			// do we have a MODEL_REFERENCE
-			// --> if yes, the reference must point to a SubmodelElementCollection.TEMPLATE
-			// --> resolve the TEMPLATE
-			// --> the semanticId's values are to be used
-			// 
-			KeyTypes referenceType = ReferenceUtils.lastKeyType(modelElement.getSemanticId());
-			SubmodelElementCollection instanceElement = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
-		}
-		else {
-			// default: ModelingKind.INSTANCE
-			
-		}
-		// TODO Auto-generated method stub
+
 		if ( valueNode.isObject()) {
 			Iterator<Entry<String,JsonNode>> fieldIterator = valueNode.fields();
 			while( fieldIterator.hasNext()) {
@@ -125,19 +108,19 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 		if ( valueNode.isArray() && valueNode.has(0) && valueNode.get(0).isValueNode() && template instanceof SubmodelElementList) {
 			SubmodelElement listElement = AASModelHelper.newElementInstance(SubmodelElementList.class);
 			listElement.setIdShort(template.getIdShort());
-			listElement.setKind(ModelingKind.INSTANCE);
+//			listElement.setKind(ModelingKind.INSTANCE);
 			return listElement;
 		}
 		else if ( valueNode.isObject() && template instanceof SubmodelElementCollection) {
 			SubmodelElement listElement = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
 			listElement.setIdShort(template.getIdShort());
-			listElement.setKind(ModelingKind.INSTANCE);
+//			listElement.setKind(ModelingKind.INSTANCE);
 			return listElement;
 		}
 		else if (template instanceof Property){
 			Property listElement = AASModelHelper.newElementInstance(Property.class);
 			listElement.setIdShort(template.getIdShort());
-			listElement.setKind(ModelingKind.INSTANCE);
+//			listElement.setKind(ModelingKind.INSTANCE);
 			listElement.setValueType(((Property)template).getValueType());
 			return listElement;
 		}
@@ -147,19 +130,19 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 		if ( valueNode.isArray() && valueNode.has(0) && valueNode.get(0).isValueNode()) {
 			SubmodelElement listElement = AASModelHelper.newElementInstance(SubmodelElementList.class);
 			listElement.setIdShort(idShort);
-			listElement.setKind(ModelingKind.INSTANCE);
+//			listElement.setKind(ModelingKind.INSTANCE);
 			return listElement;
 		}
 		else if ( valueNode.isObject()) {
 			SubmodelElement listElement = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
 			listElement.setIdShort(idShort);
-			listElement.setKind(ModelingKind.INSTANCE);
+//			listElement.setKind(ModellingKind.INSTANCE);
 			return listElement;
 		}
 		else {
 			Property listElement = AASModelHelper.newElementInstance(Property.class);
 			listElement.setIdShort(idShort);
-			listElement.setKind(ModelingKind.INSTANCE);
+//			listElement.setKind(ModellingKind.INSTANCE);
 			return listElement;
 		}
 	}

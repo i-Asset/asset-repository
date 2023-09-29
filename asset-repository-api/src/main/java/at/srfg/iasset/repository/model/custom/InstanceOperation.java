@@ -1,7 +1,7 @@
 package at.srfg.iasset.repository.model.custom;
 
-import org.eclipse.aas4j.v3.model.Operation;
-import org.eclipse.aas4j.v3.model.impl.DefaultOperation;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,14 +14,12 @@ public class InstanceOperation extends DefaultOperation implements Operation {
 		
 	}
 	public InstanceOperation(Operation other) {
-		setChecksum(other.getChecksum());
-		setDataSpecifications(other.getDataSpecifications());
+		setEmbeddedDataSpecifications(other.getEmbeddedDataSpecifications());
 		setDescriptions(other.getDescriptions());
 		setDisplayNames(other.getDisplayNames());
 		setEmbeddedDataSpecifications(other.getEmbeddedDataSpecifications());
 		setExtensions(other.getExtensions());
 		setIdShort(other.getIdShort());
-		setKind(other.getKind());
 		setQualifiers(other.getQualifiers());
 		setSemanticId(other.getSemanticId());
 		setSupplementalSemanticIds(other.getSupplementalSemanticIds());

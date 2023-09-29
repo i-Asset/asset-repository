@@ -10,16 +10,17 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-import org.eclipse.aas4j.v3.model.BasicEventElement;
-import org.eclipse.aas4j.v3.model.Direction;
-import org.eclipse.aas4j.v3.model.EventElement;
-import org.eclipse.aas4j.v3.model.EventPayload;
-import org.eclipse.aas4j.v3.model.HasSemantics;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.StateOfEvent;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultEventPayload;
+import org.eclipse.digitaltwin.aas4j.v3.model.BasicEventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.Direction;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
+import org.eclipse.digitaltwin.aas4j.v3.model.HasSemantics;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.StateOfEvent;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEventPayload;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,7 +39,6 @@ import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.payload.EventPayloadValue;
 import at.srfg.iasset.repository.model.helper.payload.ReferenceValue;
-import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 /**
  * Class providing the mediation from/to the external
@@ -50,7 +50,7 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 	/**
 	 * Reference to the source element
 	 */
-	Reference sourceReference;
+	ModelReference sourceReference;
 	/**
 	 * The source element, provides access to observedReference
 	 * 
@@ -63,7 +63,7 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 	/**
 	 * The reference to the observed element
 	 */
-	Reference observedReference;
+	ModelReference observedReference;
 	/**
 	 * The semantic id of the observed element (ModelReference)
 	 */
@@ -115,9 +115,9 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 	public EventElementHandlerImpl(
 					ConnectorMessaging parent,
 					BasicEventElement source,			// The "resolved" element
-					Reference sourceReference,			// The reference to the source Element
+					ModelReference sourceReference,		// The reference to the source Element
 					Referable observed,					// the "resolved" observed element
-					Reference observedReference,		// the reference to the observed element
+					ModelReference observedReference,	// the reference to the observed element
 					MessageBroker messageBroker			// broker settings (host, type)
 			) {
 		this.source = source;

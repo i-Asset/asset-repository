@@ -2,13 +2,14 @@ package at.srfg.iasset.repository.api;
 
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Identifiable;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -188,7 +189,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS)
-	public List<Reference> getSubmodels(
+	public List<ModelReference> getSubmodels(
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 
@@ -206,7 +207,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS)
-	public List<Reference> setSubmodels(
+	public List<ModelReference> setSubmodels(
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 
@@ -216,7 +217,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 			@PathVariable("aasIdentifier") 
 			String aasIdentifier,
 			@RequestBody
-			List<Reference> submodels
+			List<ModelReference> submodels
 			);
 
 	/**
@@ -228,7 +229,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	@RequestMapping(
 			method = RequestMethod.DELETE,
 			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER)
-	public List<Reference> removeSubmodelReference(
+	public List<ModelReference> removeSubmodelReference(
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 

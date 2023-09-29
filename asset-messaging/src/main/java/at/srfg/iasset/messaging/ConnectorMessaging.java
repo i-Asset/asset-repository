@@ -2,10 +2,11 @@ package at.srfg.iasset.messaging;
 
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.BasicEventElement;
-import org.eclipse.aas4j.v3.model.EventElement;
-import org.eclipse.aas4j.v3.model.EventPayload;
-import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.BasicEventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 
 import at.srfg.iasset.messaging.exception.MessagingException;
 
@@ -109,7 +110,7 @@ public interface ConnectorMessaging {
 	 * Register an event element
 	 * @param elementRef
 	 */
-	void registerEventElement(Reference elementRef) throws MessagingException;
+	void registerEventElement(ModelReference elementRef) throws MessagingException;
 	
 	
 }

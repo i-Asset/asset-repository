@@ -5,21 +5,18 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelDescriptor;
-import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.impl.DefaultAssetInformation;
-import org.eclipse.aas4j.v3.model.impl.DefaultSubmodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetInformation;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import at.srfg.iasset.repository.component.DirectoryService;
 import at.srfg.iasset.repository.component.Persistence;
-import at.srfg.iasset.repository.persistence.service.AssetAdministrationShellDescriptorRepository;
-import at.srfg.iasset.repository.persistence.service.AssetAdministrationShellRepository;
-import at.srfg.iasset.repository.persistence.service.SubmodelRepository;
 
 @Component
 public class RepositoryDirectory implements DirectoryService {
@@ -90,7 +87,7 @@ public class RepositoryDirectory implements DirectoryService {
 				.displayNames(descriptor.getDisplayNames())
 				.assetInformation(new DefaultAssetInformation.Builder()
 						.globalAssetId(descriptor.getGlobalAssetId())
-						.specificAssetId(descriptor.getSpecificAssetId())
+						.specificAssetIds(descriptor.getSpecificAssetIds())
 						.build())
 				.build();
 		

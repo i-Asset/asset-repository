@@ -1,6 +1,6 @@
 package at.srfg.iasset.repository.utils;
 
-import org.eclipse.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
 
 public enum GloballyIdentifiables {
 	GlobalReference(KeyTypes.GLOBAL_REFERENCE),

@@ -2,11 +2,11 @@ package at.srfg.iasset.messaging;
 
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.Direction;
-import org.eclipse.aas4j.v3.model.EventElement;
-import org.eclipse.aas4j.v3.model.EventPayload;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Direction;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 
 import at.srfg.iasset.messaging.exception.MessagingException;
 

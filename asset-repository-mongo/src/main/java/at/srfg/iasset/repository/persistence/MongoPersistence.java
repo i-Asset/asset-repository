@@ -3,11 +3,10 @@ package at.srfg.iasset.repository.persistence;
 import java.util.List;
 import java.util.Optional;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.DataSpecification;
-import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -126,16 +125,5 @@ public class MongoPersistence implements Persistence {
 		return submodelRepo.findAll();
 	}
 
-	@Override
-	public List<DataSpecification> getDataSpecifications() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDataSpecifications(List<DataSpecification> dataSpecifications) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

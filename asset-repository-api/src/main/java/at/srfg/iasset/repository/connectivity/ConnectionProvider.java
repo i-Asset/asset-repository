@@ -3,12 +3,12 @@ package at.srfg.iasset.repository.connectivity;
 import java.net.URI;
 import java.net.URL;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
+import at.srfg.iasset.repository.api.DirectoryInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
-import at.srfg.iasset.repository.api.DirectoryInterface;
 import at.srfg.iasset.repository.api.SemanticLookupService;
 import at.srfg.iasset.repository.api.SubmodelRepositoryInterface;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;

@@ -3,8 +3,8 @@ package at.srfg.iasset.repository.model.custom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.eclipse.aas4j.v3.model.Property;
-import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -15,14 +15,12 @@ public class InstanceProperty extends DefaultProperty implements Property {
 	public InstanceProperty(Property other) {
 		
 		setCategory(other.getCategory());
-		setChecksum(other.getChecksum());
-		setDataSpecifications(other.getDataSpecifications());
+		setEmbeddedDataSpecifications(other.getEmbeddedDataSpecifications());
 		setDescriptions(other.getDescriptions());
 		setDisplayNames(other.getDisplayNames());
 		setEmbeddedDataSpecifications(other.getEmbeddedDataSpecifications());
 		setExtensions(other.getExtensions());
 		setIdShort(other.getIdShort());
-		setKind(other.getKind());
 		setQualifiers(other.getQualifiers());
 		setSemanticId(other.getSemanticId());
 		setSupplementalSemanticIds(other.getSupplementalSemanticIds());

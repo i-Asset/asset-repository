@@ -3,7 +3,7 @@ package at.srfg.iasset.repository.model.helper.value;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.Key;
+import org.eclipse.digitaltwin.aas4j.v3.model.Key;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

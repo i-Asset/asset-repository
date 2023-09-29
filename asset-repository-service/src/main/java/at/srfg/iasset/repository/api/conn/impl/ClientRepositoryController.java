@@ -3,14 +3,15 @@ package at.srfg.iasset.repository.api.conn.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Endpoint;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,7 +67,7 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 	}
 
 	@Override
-	public List<Reference> getSubmodels(String aasIdentifier) {
+	public List<ModelReference> getSubmodels(String aasIdentifier) {
 		
 		return server.getSubmodelReferences(ApiUtils.base64Decode(aasIdentifier));
 	}
@@ -176,12 +177,12 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 	}
 
 	@Override
-	public List<Reference> setSubmodels(String aasIdentifier, List<Reference> submodels) {
+	public List<ModelReference> setSubmodels(String aasIdentifier, List<ModelReference> submodels) {
 		return server.setSubmodelReferences(aasIdentifier, submodels);
 	}
 
 	@Override
-	public List<Reference> removeSubmodelReference(String aasIdentifier, String submodelIdentifier) {
+	public List<ModelReference> removeSubmodelReference(String aasIdentifier, String submodelIdentifier) {
 		return server.deleteSubmodelReference(aasIdentifier, submodelIdentifier);
 	}
 

@@ -2,23 +2,23 @@ package at.srfg.iasset.repository.model;
 
 import java.time.Instant;
 
-import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
-import org.eclipse.aas4j.v3.model.Direction;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.ModelingKind;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.StateOfEvent;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.impl.DefaultBasicEventElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
-import org.eclipse.aas4j.v3.model.impl.DefaultOperation;
-import org.eclipse.aas4j.v3.model.impl.DefaultOperationVariable;
-import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
-import org.eclipse.aas4j.v3.model.impl.DefaultReference;
-import org.eclipse.aas4j.v3.model.impl.DefaultSubmodel;
-import org.eclipse.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
-import org.eclipse.aas4j.v3.model.impl.DefaultSubmodelElementList;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.digitaltwin.aas4j.v3.model.Direction;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.StateOfEvent;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultBasicEventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultExternalReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperation;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationVariable;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementList;
 
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
@@ -44,15 +44,13 @@ public class AASFaultSubmodel {
     					.language(LANGUAGE)
     					.text("i-Asset OEE Fault Submodel")
     					.build())
-    			.kind(ModelingKind.TEMPLATE)
+    			.kind(ModellingKind.TEMPLATE)
     			.submodelElement(new DefaultBasicEventElement.Builder()
     					.idShort("createFault")
     					.direction(Direction.OUTPUT)
     					.state(StateOfEvent.ON)
-    					.kind(ModelingKind.INSTANCE)
     					.messageTopic("faultTopic")
-    					.observed(new DefaultReference.Builder()
-    							.type(ReferenceTypes.MODEL_REFERENCE)
+    					.observed(new DefaultModelReference.Builder()
     							.key(new DefaultKey.Builder()
     									.type(KeyTypes.SUBMODEL)
     									.value("http://iasset.salzburgresearch.at/common/fault")
@@ -62,8 +60,7 @@ public class AASFaultSubmodel {
     									.value("fault")
     									.build())
     							.build())
-    					.semanticId(new DefaultReference.Builder()
-    							.type(ReferenceTypes.GLOBAL_REFERENCE)
+    					.semanticId(new DefaultExternalReference.Builder()
     							.key(new DefaultKey.Builder()
     									.type(KeyTypes.GLOBAL_REFERENCE)
     									.value("http://iasset.salzburgresearch.at/semantic/fault")
@@ -75,10 +72,8 @@ public class AASFaultSubmodel {
     					.idShort("updateFault")
     					.direction(Direction.INPUT)
     					.state(StateOfEvent.ON)
-    					.kind(ModelingKind.INSTANCE)
     					.messageTopic("faultTopic")
-    					.observed(new DefaultReference.Builder()
-    							.type(ReferenceTypes.MODEL_REFERENCE)
+    					.observed(new DefaultModelReference.Builder()
     							.key(new DefaultKey.Builder()
     									.type(KeyTypes.SUBMODEL)
     									.value("http://iasset.salzburgresearch.at/common/fault")
@@ -88,8 +83,7 @@ public class AASFaultSubmodel {
     									.value("fault")
     									.build())
     							.build())
-    					.semanticId(new DefaultReference.Builder()
-    							.type(ReferenceTypes.GLOBAL_REFERENCE)
+    					.semanticId(new DefaultExternalReference.Builder()
     							.key(new DefaultKey.Builder()
     									.type(KeyTypes.GLOBAL_REFERENCE)
     									.value("http://iasset.salzburgresearch.at/semantic/fault")
@@ -218,10 +212,9 @@ public class AASFaultSubmodel {
     					.language(LANGUAGE)
     					.text("i-Asset Fault Operation Submodel")
     					.build())
-    			.kind(ModelingKind.TEMPLATE)
+    			.kind(ModellingKind.TEMPLATE)
     			.submodelElement(new DefaultOperation.Builder()
     					.idShort("reportFault")
-    					.kind(ModelingKind.TEMPLATE)
     	    			.displayName(new DefaultLangString.Builder()
     	    					.language(LANGUAGE)
     	    					.text("Report Fault").build()
@@ -229,9 +222,7 @@ public class AASFaultSubmodel {
     	    			.inputVariable(new DefaultOperationVariable.Builder()
     	    					.value(new DefaultSubmodelElementCollection.Builder()
     	    							.idShort("fault")
-    	    							.kind(ModelingKind.TEMPLATE)
-    	    							.semanticId(new DefaultReference.Builder()
-    	    									.type(ReferenceTypes.MODEL_REFERENCE)
+    	    							.semanticId(new DefaultModelReference.Builder()
     	    									.key(new DefaultKey.Builder()
     	    											.type(KeyTypes.SUBMODEL)
     	    											.value("http://iasset.salzburgresearch.at/common/faultOperation")
@@ -246,7 +237,6 @@ public class AASFaultSubmodel {
     	    			.outputVariable(new DefaultOperationVariable.Builder()
     	    					.value(new DefaultProperty.Builder()
     	    							.idShort("faultId")
-    	    							.kind(ModelingKind.TEMPLATE)
     	    							.semanticId(ReferenceUtils.asGlobalReference("http://cmms.org/fault/id"))
     	    	    	    			.displayName(new DefaultLangString.Builder()
     	    	    	    					.language(LANGUAGE)
@@ -259,14 +249,12 @@ public class AASFaultSubmodel {
     			.submodelElement(new DefaultSubmodelElementCollection.Builder()
     					.idShort("fault")
     					.semanticId(null)
-    					.kind(ModelingKind.TEMPLATE)
     	    			.displayName(new DefaultLangString.Builder()
     	    					.language(LANGUAGE)
     	    					.text("i-Asset Störmeldung Daten").build()
     	    					)
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("assetId")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Asset Identifier").build()
@@ -275,7 +263,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("subElementPath")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Path Subelement").build()
@@ -284,7 +271,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("faultId")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Fault Identifier").build()
@@ -294,7 +280,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("timestampCreated")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Timestamp Created").build()
@@ -304,7 +289,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("timestampFinished")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Timestamp Finished").build()
@@ -313,7 +297,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("faultCode")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Fault Code").build()
@@ -322,7 +305,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("shortText")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Messagetext").build()
@@ -331,7 +313,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("longText")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Message Description").build()
@@ -340,7 +321,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("priority")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Priority").build()
@@ -349,7 +329,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("senderUserId")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Benutzer ID Melder").build()
@@ -358,7 +337,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("maintencanceUserId")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Benutzer ID Sender").build()
@@ -367,7 +345,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("status")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("Fault status").build()
@@ -380,9 +357,7 @@ public class AASFaultSubmodel {
     	    					// note: a GlobalReference would not work!!
     	    					// the
     	    					.idShort("errorCode")
-    	    					.kind(ModelingKind.TEMPLATE)
-    							.semanticId(new DefaultReference.Builder()
-    									.type(ReferenceTypes.MODEL_REFERENCE)
+    							.semanticId(new DefaultModelReference.Builder()
     									.key(new DefaultKey.Builder()
     											.type(KeyTypes.SUBMODEL)
     											.value("http://iasset.salzburgresearch.at/common/faultOperation")
@@ -405,7 +380,6 @@ public class AASFaultSubmodel {
     	    			.inputVariable(new DefaultOperationVariable.Builder()
     	    					.value(new DefaultProperty.Builder()
     	    							.idShort("assetIdentifier")
-    	    							.kind(ModelingKind.TEMPLATE)
     	    	    					.valueType(DataTypeDefXsd.STRING)
     	    	    	    			.displayName(new DefaultLangString.Builder()
     	    	    	    					.language(LANGUAGE)
@@ -417,14 +391,12 @@ public class AASFaultSubmodel {
     	    					.value(new DefaultSubmodelElementList.Builder()
     	    							.category("result")
     	    							.idShort("errorCodes")
-    	    							.kind(ModelingKind.TEMPLATE)
     	    	    	    			.displayName(new DefaultLangString.Builder()
     	    	    	    					.language(LANGUAGE)
     	    	    	    					.text("Error Codes for Asset Result").build()
     	    	    	    			)
     	    	    	    			//
-    	    	    	    			.semanticIdListElement(new DefaultReference.Builder()
-    	    	    	    					.type(ReferenceTypes.MODEL_REFERENCE)
+    	    	    	    			.semanticIdListElement(new DefaultModelReference.Builder()
     	    	    	    					.key(new DefaultKey.Builder()
     	    	    	    							.type(KeyTypes.SUBMODEL)
     	    	    	    							.value("http://iasset.salzburgresearch.at/common/faultOperation")
@@ -445,7 +417,6 @@ public class AASFaultSubmodel {
     	    			)
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("code")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    					.valueType(DataTypeDefXsd.STRING)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
@@ -454,7 +425,6 @@ public class AASFaultSubmodel {
     	    					.build())
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("label")
-    	    					.kind(ModelingKind.TEMPLATE)
     	    					.valueType(DataTypeDefXsd.STRING)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)

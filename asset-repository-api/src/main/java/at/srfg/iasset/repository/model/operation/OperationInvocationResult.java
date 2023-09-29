@@ -2,7 +2,7 @@ package at.srfg.iasset.repository.model.operation;
 
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 
 public interface OperationInvocationResult {
 	

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.EventPayload;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
 
 import at.srfg.iasset.connector.api.ValueConsumer;
 import at.srfg.iasset.connector.api.ValueSupplier;
@@ -65,10 +65,6 @@ public class ConnectorWithCDI {
 	}
 	private static void loadData(AASComponent i40Component) {
 		i40Component.addListener(new ModelChangeLogger());
-		// load the semantic integration pattern for reporting faults (from the repository
-		i40Component.loadPattern(AASFaultSubmodel.SUBMODEL_FAULT1.getId());
-		// load the semantic integration pattern for exchanging plat structure requests
-		i40Component.loadPattern(AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
 		// obtain a method invocation request object and apply parameters
 
 		
@@ -83,6 +79,10 @@ public class ConnectorWithCDI {
 		i40Component.add(AASFull.AAS_BELT_INSTANCE.getId(), AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
 		
 		
+		// load the semantic integration pattern for reporting faults (from the repository
+		i40Component.loadPattern(AASFaultSubmodel.SUBMODEL_FAULT1.getId());
+		// load the semantic integration pattern for exchanging plat structure requests
+		i40Component.loadPattern(AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
 		
 		
 		// @JONAS BEISPIEL

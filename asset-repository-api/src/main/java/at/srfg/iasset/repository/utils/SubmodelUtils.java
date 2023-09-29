@@ -1,21 +1,21 @@
 package at.srfg.iasset.repository.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.eclipse.aas4j.v3.model.Entity;
-import org.eclipse.aas4j.v3.model.Key;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
-import org.eclipse.aas4j.v3.model.SubmodelElementList;
+import org.eclipse.digitaltwin.aas4j.v3.model.Entity;
+import org.eclipse.digitaltwin.aas4j.v3.model.Key;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -133,8 +133,8 @@ public class SubmodelUtils {
 	 * @param path
 	 * @return
 	 */
-	public static Reference getReference(Submodel submodel, String path) {
-		Reference modelRef = ReferenceUtils.toReference(submodel);
+	public static ModelReference getReference(Submodel submodel, String path) {
+		ModelReference modelRef = ReferenceUtils.toReference(submodel);
 		Path thePath = new Path(path);
 		Iterator<String> tokenIterator = thePath.iterator();
 		Referable parent = submodel;

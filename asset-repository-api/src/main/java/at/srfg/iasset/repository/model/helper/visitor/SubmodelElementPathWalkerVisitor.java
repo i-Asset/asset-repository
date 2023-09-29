@@ -1,9 +1,9 @@
 package at.srfg.iasset.repository.model.helper.visitor;
 
-import org.eclipse.aas4j.v3.model.Entity;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
-import org.eclipse.aas4j.v3.model.SubmodelElementList;
+import org.eclipse.digitaltwin.aas4j.v3.model.Entity;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
 
 public interface SubmodelElementPathWalkerVisitor extends SubmodelElementPathVisitor {
 

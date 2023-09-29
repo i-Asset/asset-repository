@@ -16,51 +16,38 @@
 package at.srfg.iasset.repository.persistence.startup;
 
 import java.util.Arrays;
-import java.util.Base64;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetKind;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
-import org.eclipse.aas4j.v3.model.DataTypeIEC61360;
-import org.eclipse.aas4j.v3.model.Direction;
-import org.eclipse.aas4j.v3.model.EntityType;
-import org.eclipse.aas4j.v3.model.Environment;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.LevelType;
-import org.eclipse.aas4j.v3.model.ModelingKind;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.StateOfEvent;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.impl.DefaultAdministrativeInformation;
-import org.eclipse.aas4j.v3.model.impl.DefaultAnnotatedRelationshipElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.impl.DefaultAssetInformation;
-import org.eclipse.aas4j.v3.model.impl.DefaultBasicEventElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultBlob;
-import org.eclipse.aas4j.v3.model.impl.DefaultCapability;
-import org.eclipse.aas4j.v3.model.impl.DefaultConceptDescription;
-import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecification;
-import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationIEC61360;
-import org.eclipse.aas4j.v3.model.impl.DefaultEntity;
-import org.eclipse.aas4j.v3.model.impl.DefaultEnvironment;
-import org.eclipse.aas4j.v3.model.impl.DefaultFile;
-import org.eclipse.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
-import org.eclipse.aas4j.v3.model.impl.DefaultMultiLanguageProperty;
-import org.eclipse.aas4j.v3.model.impl.DefaultOperation;
-import org.eclipse.aas4j.v3.model.impl.DefaultOperationVariable;
-import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
-import org.eclipse.aas4j.v3.model.impl.DefaultQualifier;
-import org.eclipse.aas4j.v3.model.impl.DefaultRange;
-import org.eclipse.aas4j.v3.model.impl.DefaultReference;
-import org.eclipse.aas4j.v3.model.impl.DefaultReferenceElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultRelationshipElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultSpecificAssetId;
-import org.eclipse.aas4j.v3.model.impl.DefaultSubmodel;
-import org.eclipse.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
-import org.eclipse.aas4j.v3.model.impl.DefaultValueList;
-import org.eclipse.aas4j.v3.model.impl.DefaultValueReferencePair;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.Direction;
+import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.LevelType;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAdministrativeInformation;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetInformation;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultBasicEventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultBlob;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEmbeddedDataSpecification;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEnvironment;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultExternalReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperation;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationVariable;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSpecificAssetId;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
 
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
@@ -101,7 +88,7 @@ public class ApplicationTypes {
     			.idShort("belt")
     			.assetInformation(new DefaultAssetInformation.Builder()
     					.assetKind(AssetKind.TYPE)
-    					.globalAssetId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://iasset.salzburgresearch.at/labor/belt"))
+    					.globalAssetId("http://iasset.salzburgresearch.at/labor/belt")
     					.specificAssetId(new DefaultSpecificAssetId.Builder()
     							.semanticId(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "http://specificAssetId.belt.com"))
     							.build() )
@@ -128,20 +115,18 @@ public class ApplicationTypes {
     					.language(LANGUAGE)
     					.text("i-Asset Information Submodel")
     					.build())
-    			.kind(ModelingKind.TEMPLATE)
+    			.kind(ModellingKind.TEMPLATE)
     			// the belt-info-Type refers to it's parent type
     			.semanticId(ReferenceUtils.toReference(createSubmodelForInfoModel()))
     			.submodelElement(new DefaultProperty.Builder()
     					.idShort("manufacturer")
     					.category("constant")
-    					.kind(ModelingKind.INSTANCE)
     					.value("Hersteller Förderband")
     					.valueType(DataTypeDefXsd.STRING)
     					.semanticId(ReferenceUtils.toReference(createConceptDescriptionForManufacturerName()))
     					.build())
     			.submodelElement(new DefaultBlob.Builder()
     					.idShort("logo")
-    					.kind(ModelingKind.INSTANCE)
     					.contentType("text/plain")
     					.value("An dieser Stelle kommt ein Logo".getBytes())
     					.build()
@@ -160,7 +145,7 @@ public class ApplicationTypes {
     					.language(LANGUAGE)
     					.text("i-Asset Belt Properties Submodel")
     					.build())
-    			.kind(ModelingKind.TEMPLATE)
+    			.kind(ModellingKind.TEMPLATE)
     			// the belt-info-Type refers to it's parent type
     			.semanticId(ReferenceUtils.toReference(createSubmodelForInfoModel()))
     			.submodelElement(new DefaultSubmodelElementCollection.Builder()
@@ -169,7 +154,6 @@ public class ApplicationTypes {
     	    					.language(LANGUAGE)
     	    					.text("i-Asset Belt-Data Contaoner").build()
     	    					)
-    	    			.kind(ModelingKind.TEMPLATE)
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("state")
     	    	    			.displayName(new DefaultLangString.Builder()
@@ -219,7 +203,6 @@ public class ApplicationTypes {
     	return new DefaultSubmodel.Builder()
     			.id("http://iasset.salzburgresearch.at/labor/belt#operations")
     			.idShort("operations")
-    			.kind(ModelingKind.TEMPLATE)
     			.displayName(new DefaultLangString.Builder()
     					.language(LANGUAGE)
     					.text("Förderband Funktionen").build()
@@ -231,7 +214,6 @@ public class ApplicationTypes {
     	    					.language(LANGUAGE)
     	    					.text("Kontroll-Lampe ein/ausschalten").build()
     	    					)
-    	    			.kind(ModelingKind.TEMPLATE)
     	    			.inoutputVariable(new DefaultOperationVariable.Builder()
     	    					.value(new DefaultProperty.Builder()
     	    							.idShort("state")
@@ -251,7 +233,6 @@ public class ApplicationTypes {
     	    					.language(LANGUAGE)
     	    					.text("Band vor/zurück bewegen").build()
     	    					)
-    	    			.kind(ModelingKind.TEMPLATE)
     	    			.inputVariable(new DefaultOperationVariable.Builder()
     	    					.value(new DefaultProperty.Builder()
     	    	    					.idShort("direction")
@@ -279,16 +260,13 @@ public class ApplicationTypes {
     	return new DefaultSubmodel.Builder()
     			.id("http://iasset.salzburgresearch.at/labor/belt#events")
     			.idShort("events")
-    			.kind(ModelingKind.TEMPLATE)
     			.displayName(new DefaultLangString.Builder()
     					.language(LANGUAGE)
     					.text("Förderband Ereignisse").build()
     					)
     			.submodelElement(new DefaultBasicEventElement.Builder()
     					.idShort("beltEvent")
-    					.kind(ModelingKind.TEMPLATE)
-    					.observed(new DefaultReference.Builder()
-    							.type(ReferenceTypes.MODEL_REFERENCE)
+    					.observed(new DefaultModelReference.Builder()
     							.key(new DefaultKey.Builder()
     									.type(KeyTypes.SUBMODEL)
     									.value(createSubmodelForBeltProperties().getId())
@@ -310,9 +288,15 @@ public class ApplicationTypes {
     					.language(LANGUAGE)
     					.text("Hersteller").build()
     					)
-    			.embeddedDataSpecification(new DefaultDataSpecification.Builder()
-    					.dataSpecificationContent(new DefaultDataSpecificationIEC61360.Builder()
-    							.levelType(LevelType.NOM)
+    			.embeddedDataSpecification(new DefaultEmbeddedDataSpecification.Builder()
+    					.dataSpecification(new DefaultExternalReference.Builder()
+    							.key(new DefaultKey.Builder()
+    									.type(KeyTypes.GLOBAL_REFERENCE)
+    									.value("0173-1#02-AAO677#002")
+    									.build())
+    							.build())
+    					.dataSpecificationContent(new DefaultDataSpecificationIec61360.Builder()
+//    							.levelType(LevelType.NOM)
     							.preferredName(new DefaultLangString.Builder()
 			    					.language(LANGUAGE)
 			    					.text("Hersteller").build()
@@ -320,9 +304,8 @@ public class ApplicationTypes {
     							.shortName(new DefaultLangString.Builder()
 			    					.language(LANGUAGE)
 			    					.text("manufactuerer").build())
-    							.dataType(DataTypeIEC61360.STRING)
+    							.dataType(DataTypeIec61360.STRING)
     							.build())
-    					.id("0173-1#02-AAO677#002")
     					.build())
     			.isCaseOf(ReferenceUtils.asGlobalReference(KeyTypes.GLOBAL_REFERENCE, "0173-1#02-AAO677#002"))
     			.build();
@@ -339,7 +322,7 @@ public class ApplicationTypes {
     					.language(LANGUAGE)
     					.text("i-Asset Information Submodel")
     					.build())
-    			.kind(ModelingKind.TEMPLATE)
+    			.kind(ModellingKind.TEMPLATE)
     			.semanticId(ReferenceUtils.asGlobalReference(KeyTypes.CONCEPT_DESCRIPTION, "http://iasset.salzburgresearch.at/concept/nameplate"))
     			.submodelElement(new DefaultProperty.Builder()
     					.idShort("owner")
@@ -429,13 +412,13 @@ public class ApplicationTypes {
     					.text("i-Asset Event Configuration Submodel defining Message Broker config")
     					.build()
     				)
-    			.kind(ModelingKind.TEMPLATE)
+    			.kind(ModellingKind.TEMPLATE)
     			.semanticId(ReferenceUtils.asGlobalReference(KeyTypes.CONCEPT_DESCRIPTION, "http://iasset.salzburgresearch.at/concept/eventConfig"))
     			.submodelElement(
     					// SubmodelElementCollection holding hosts & broker type
     					new DefaultSubmodelElementCollection.Builder()
     					.idShort("messageBroker")
-    					.kind(ModelingKind.TEMPLATE)
+//    					.kind(ModelingKind.TEMPLATE)
     	    			.displayName(new DefaultLangString.Builder()
     	    					.language(LANGUAGE)
     	    					.text("i-Asset Message Broker Config").build()
@@ -443,7 +426,7 @@ public class ApplicationTypes {
     	    			.semanticId(ReferenceUtils.asGlobalReference(KeyTypes.CONCEPT_DESCRIPTION, "http://iasset.salzburgresearch.at/data/messageBroker"))
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("hosts")
-    	    					.kind(ModelingKind.TEMPLATE)
+//    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("i-Asset Message Broker Hosts").build()
@@ -455,7 +438,7 @@ public class ApplicationTypes {
     	    				)
     	    			.value(new DefaultProperty.Builder()
     	    					.idShort("brokerType")
-    	    					.kind(ModelingKind.TEMPLATE)
+//    	    					.kind(ModelingKind.TEMPLATE)
     	    	    			.displayName(new DefaultLangString.Builder()
     	    	    					.language(LANGUAGE)
     	    	    					.text("i-Asset Message Broker Type").build()
@@ -469,7 +452,7 @@ public class ApplicationTypes {
     				)
     			.submodelElement(new DefaultBasicEventElement.Builder()
     					.idShort("sensorData")
-    					.kind(ModelingKind.TEMPLATE)
+//    					.kind(ModellingKind.TEMPLATE)
     					.direction(Direction.OUTPUT)
     					.messageBroker(ReferenceUtils.toReference(createConceptDescriptionForMessageBroker()))
     					.messageTopic("sensorData")

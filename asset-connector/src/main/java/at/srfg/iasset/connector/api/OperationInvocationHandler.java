@@ -5,18 +5,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.eclipse.aas4j.v3.model.HasKind;
-import org.eclipse.aas4j.v3.model.ModelingKind;
-import org.eclipse.aas4j.v3.model.Operation;
-import org.eclipse.aas4j.v3.model.OperationVariable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.HasKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.repository.component.ServiceEnvironment;
-import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
@@ -53,7 +52,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		
 	}
 	private boolean isTemplate(HasKind hasKind) {
-		return ModelingKind.TEMPLATE.equals(hasKind.getKind());
+		return ModellingKind.TEMPLATE.equals(hasKind.getKind());
 	}
 	/**
 	 * Apply the incoming request to the operation!

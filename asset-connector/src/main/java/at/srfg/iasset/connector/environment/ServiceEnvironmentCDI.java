@@ -11,16 +11,17 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Key;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Operation;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Key;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -352,9 +353,9 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		Optional<AssetAdministrationShell> shell = getAssetAdministrationShell(aasIdentifier);
 		if ( shell.isPresent()) {
 			AssetAdministrationShell theShell = shell.get();
-			Optional<Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
+			Optional<? extends Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
 			if (ref.isEmpty()) {
-				Reference newRef = ReferenceUtils.toReference(submodel);
+				ModelReference newRef = ReferenceUtils.toReference(submodel);
 				theShell.getSubmodels().add(newRef);
 			}
 			Optional<Submodel> existing = storage.findSubmodelById(submodelIdentifier);
@@ -452,7 +453,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	}
 
 	@Override
-	public List<Reference> getSubmodelReferences(String aasIdentifier) {
+	public List<ModelReference> getSubmodelReferences(String aasIdentifier) {
 		Optional<AssetAdministrationShell> optShell = getAssetAdministrationShell(aasIdentifier);
 		if (optShell.isPresent()) {
 			return optShell.get().getSubmodels();
@@ -461,7 +462,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	}
 
 	@Override
-	public List<Reference> setSubmodelReferences(String aasIdentifier, List<Reference> submodels) {
+	public List<ModelReference> setSubmodelReferences(String aasIdentifier, List<ModelReference> submodels) {
 		// TODO: check all references point to submodel
 		Optional<AssetAdministrationShell> optShell = getAssetAdministrationShell(aasIdentifier);
 		if (optShell.isPresent()) {
@@ -472,11 +473,11 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	}
 
 	@Override
-	public List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier) {
+	public List<ModelReference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier) {
 		Optional<AssetAdministrationShell> shell = getAssetAdministrationShell(aasIdentifier);
 		if ( shell.isPresent()) {
 			AssetAdministrationShell theShell = shell.get();
-			Optional<Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
+			Optional<? extends Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
 			if (ref.isPresent()) {
 				theShell.getSubmodels().remove(ref.get());
 				return theShell.getSubmodels();
@@ -622,8 +623,9 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	@Override
 	public <T extends SubmodelElement> Optional<T> getSubmodelElement(Reference reference, Class<T> clazz) {
 		// only model references are allowed
-		if (reference.getType()==null || ReferenceTypes.MODEL_REFERENCE.equals(reference.getType())) {
+		if ( ModelReference.class.isInstance(reference)) {
 			return resolve(reference, clazz);		
+			
 		}
 		// TODO: in case it is a global reference, we will need to search the storage 
 		// for an element !!

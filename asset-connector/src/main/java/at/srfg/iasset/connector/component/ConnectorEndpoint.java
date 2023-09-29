@@ -2,7 +2,7 @@ package at.srfg.iasset.connector.component;
 
 import java.net.URI;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.jersey.server.ResourceConfig;
 

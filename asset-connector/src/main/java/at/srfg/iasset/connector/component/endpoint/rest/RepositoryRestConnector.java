@@ -3,14 +3,14 @@ package at.srfg.iasset.connector.component.endpoint.rest;
 import java.net.URI;
 import java.util.Optional;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.impl.DefaultEndpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEndpoint;
 
 import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
 import at.srfg.iasset.repository.api.DirectoryInterface;
@@ -100,10 +100,10 @@ public class RepositoryRestConnector implements RepositoryConnection {
 				.id(theShell.getId())
 				.displayNames(theShell.getDisplayNames())
 				.descriptions(theShell.getDescriptions())
-				.endpoint(new DefaultEndpoint.Builder()
-						.address(uri.toString())
-						.type("shell")
-						.build())
+//				.endpoint(new DefaultEndpoint.Builder()
+//						.address(uri.toString())
+//						.type("shell")
+//						.build())
 				.build();
 		// @formatter:on
 		//

@@ -6,21 +6,18 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetKind;
-import org.eclipse.aas4j.v3.model.BasicEventElement;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.DataSpecification;
-import org.eclipse.aas4j.v3.model.Environment;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.repository.component.ModelChangeProvider;
 import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.model.InMemoryStorage;
-import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class InstanceEnvironment implements Environment {
@@ -136,17 +133,7 @@ public class InstanceEnvironment implements Environment {
 		
 	}
 
-	@Override
-	public List<DataSpecification> getDataSpecifications() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public void setDataSpecifications(List<DataSpecification> dataSpecifications) {
-		// TODO Auto-generated method stub
-		
-	}
 	public Optional<ConceptDescription> getConceptDescription(String identifier) {
 		Optional<ConceptDescription> conceptDescription = storage.findConceptDescriptionById(identifier);
 		return conceptDescription;
