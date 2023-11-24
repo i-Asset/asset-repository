@@ -134,4 +134,10 @@ public class InMemoryStorage implements Persistence {
 		return submodel.values().stream().collect(Collectors.toList());
 	}
 
+	@Override
+	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticId(
+			String supplemental) {
+		throw new UnsupportedOperationException();
+	}
+
 }

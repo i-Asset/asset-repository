@@ -137,7 +137,9 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 			// 
 			Optional<Endpoint> endpoint = descriptor.get().getEndpoints().stream().findFirst();
 			if ( endpoint.isPresent() ) {
-				ConnectionProvider conn = ConnectionProvider.getConnection(endpoint.get().getAddress());
+				endpoint.get().getProtocolInformation().getHref();
+		
+				ConnectionProvider conn = ConnectionProvider.getConnection(endpoint.get().getProtocolInformation().getHref());
 				// execute the operation with the endpoint!
 				return conn.getRepositoryInterface().invokeOperation(aasIdentifier, submodelIdentifier, path, parameterMap);
 			}
@@ -154,7 +156,7 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 			// 
 			Optional<Endpoint> endpoint = descriptor.get().getEndpoints().stream().findFirst();
 			if ( endpoint.isPresent() ) {
-				ConnectionProvider conn = ConnectionProvider.getConnection(endpoint.get().getAddress());
+				ConnectionProvider conn = ConnectionProvider.getConnection(endpoint.get().getProtocolInformation().getHref());
 				// execute the operation with the endpoint!
 				return conn.getRepositoryInterface().invokeOperation(aasIdentifier, submodelIdentifier, path, parameterMap);
 			}

@@ -96,7 +96,11 @@ public class AASComponent {
 		
 	}
 	private void initializeComponent() {
-		// intentionally empty
+		// do the following:
+		// - loadData
+		startEndpoint();
+		// - startEndpoint
+		// - register AAS'es with Directory-Service!
 	}
 
 	public static AASComponent create() {
@@ -144,16 +148,16 @@ public class AASComponent {
 	 */
 	public OperationInvocation getOperationRequest(String semanticId) {
 		// search environment for operation with semantic id
-		return environment.getOperation(semanticId);
+		return environment.getOperationInvocation(semanticId);
 		
 	}
 	public <R, I> R getOperationResult(String semanticId, I parameter, Class<R> clazz) {
-		OperationInvocation invocation = environment.getOperation(semanticId);
+		OperationInvocation invocation = environment.getOperationInvocation(semanticId);
 		OperationInvocationResult result = invocation.invoke();
 		return result.getResult(clazz);
 	}
 	public <R, I> List<R> getOperationResultList(String semanticId, I parameter, Class<R> clazz) {
-		OperationInvocation invocation = environment.getOperation(semanticId);
+		OperationInvocation invocation = environment.getOperationInvocation(semanticId);
 		OperationInvocationResult result = invocation.invoke();
 		return result.getResultList(clazz);
 	}
@@ -167,5 +171,9 @@ public class AASComponent {
 	public void info(String message, Object ...parameters) {
 		logger.info(message, parameters);
 	}
-
+	public void register(String aasIdentifier) {
+		
+		environment.registerAssetAdministrationShell(aasIdentifier);
+		// add the current component 
+	}
 }

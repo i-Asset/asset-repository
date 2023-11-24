@@ -37,7 +37,7 @@ public interface ConnectionProvider {
 	 * The final service path is combine with the provided <code>host address</code> and the suffix <code>/repository</code>
 	 * </p>
 	 * 
-	 * @return A proxy-object connected with the r
+	 * @return A proxy-object connected with the remote asset repository
 	 */
 	IAssetAdministrationShellRepositoryInterface getRepositoryInterface();
 	/**

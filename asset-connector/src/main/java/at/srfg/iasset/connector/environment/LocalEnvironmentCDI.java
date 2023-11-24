@@ -5,25 +5,33 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelDescriptor;
 import org.jboss.weld.exceptions.IllegalStateException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,12 +44,15 @@ import at.srfg.iasset.messaging.ConnectorMessaging;
 import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.messaging.exception.MessagingException;
+import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
 import at.srfg.iasset.repository.model.helper.value.type.ValueType;
+import at.srfg.iasset.repository.model.helper.visitor.SemanticIdCollector;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
+import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
 import jakarta.annotation.PreDestroy;
@@ -63,10 +74,21 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	
 	@Inject
 	private ObjectMapper objectMapper;
+	
+	private final Set<String> registeredAssetIdentifier = new HashSet<>();
 
 	
 	@PreDestroy
 	protected void destroyLocalEnvironment() {
+		List<String> work = new ArrayList<>(registeredAssetIdentifier);
+		work.forEach(new Consumer<String>() {
+
+			@Override
+			public void accept(String t) {
+				unregisterAssetAdministrationShell(t);
+				
+			}
+		});
 		endpoint.stop();
 		messaging.stopEventProcessing();
 	}
@@ -117,7 +139,13 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 
 	@Override
 	public void addHandler(String aasIdentifier) {
-		// TODO Auto-generated method stub
+		serviceEnvironment.getAssetAdministrationShell(aasIdentifier).ifPresent(new Consumer<AssetAdministrationShell>() {
+
+			@Override
+			public void accept(AssetAdministrationShell t) {
+				endpoint.startAlias(ApiUtils.base64Encode(aasIdentifier), t);
+			}
+		});
 
 	}
 
@@ -360,15 +388,21 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		serviceEnvironment.removeModelListener(listener);
 	}
 	@Override
-	public OperationInvocationHandler getOperation(String semanticId) {
+	public OperationInvocation getOperationInvocation(String semanticId) {
 		Reference reference = ReferenceUtils.asGlobalReference(semanticId);
-		//
-		Optional<Operation> operation = serviceEnvironment.getSubmodelElement(reference, Operation.class);
-		if ( operation.isPresent()) {
-			// TODO: obtain the reference to the resolved operation ...
-			// 
-			return new OperationInvocationHandler(operation.get(), serviceEnvironment, objectMapper);
+		
+		// search for the asset implementing a requested semantic id
+		Optional<OperationInvocation> implementation = serviceEnvironment.getImplementation(semanticId);
+		if ( implementation.isPresent()) {
+			return implementation.get();
 		}
+		//
+//		Optional<Operation> operation = serviceEnvironment.getSubmodelElement(reference, Operation.class);
+//		if ( operation.isPresent()) {
+//			// TODO: obtain the reference to the resolved operation ...
+//			// 
+//			return new OperationInvocationHandler(operation.get(), serviceEnvironment, objectMapper);
+//		}
 		// operation must not return null!
 		throw new IllegalStateException(String.format("Operation with semantic id %s not found!", semanticId) );
 	}
@@ -406,5 +440,61 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		return serviceEnvironment.getElementValue(aasIdentifier, submodelIdentifier, path, value);
 		
 	}
-
+	@Override
+	public void registerAssetAdministrationShell(String aasIdentifier) {
+		Optional<AssetAdministrationShell> optShell = serviceEnvironment.getAssetAdministrationShell(aasIdentifier);
+		if ( optShell.isPresent()) {
+			
+			createDescriptor(optShell.get());
+			registeredAssetIdentifier.add(aasIdentifier);
+		}
+		
+	}
+	public void unregisterAssetAdministrationShell(String aasIdentifier) {
+		serviceEnvironment.unregisterAssetAdministrationShell(aasIdentifier);
+		registeredAssetIdentifier.remove(aasIdentifier);
+		
+	}
+	private void createDescriptor(AssetAdministrationShell theShell) {
+		AssetAdministrationShellDescriptor descriptor = new DefaultAssetAdministrationShellDescriptor.Builder()
+				.id(theShell.getId())
+				.idShort(theShell.getIdShort())
+				.displayNames(theShell.getDisplayNames())
+				.descriptions(theShell.getDescriptions())
+				//
+				.globalAssetId(theShell.getAssetInformation().getGlobalAssetId())
+				.specificAssetIds(theShell.getAssetInformation().getSpecificAssetIds())
+				.endpoint(endpoint.getEndpoint())
+				// @TODO: decide for the endpoint ... could be available only with alias
+				.endpoint(endpoint.getEndpoint(theShell.getId()))
+				.submodelDescriptors(createSubmodelDescriptor(theShell))
+				.build();
+		
+		serviceEnvironment.registerAssetAdministrationShell(descriptor);
+	}
+	private List<SubmodelDescriptor> createSubmodelDescriptor(AssetAdministrationShell theShell) {
+		List<SubmodelDescriptor> descriptor = new ArrayList<>();
+	
+		for ( ModelReference subRef : serviceEnvironment.getSubmodelReferences(theShell.getId())) {
+			Optional<Submodel> sub = serviceEnvironment.resolve(subRef, Submodel.class);
+			if (sub.isPresent()) {
+				SubmodelDescriptor subDescriptor = new DefaultSubmodelDescriptor.Builder()
+						.id(sub.get().getId())
+						.idShort(sub.get().getIdShort())
+						.descriptions(sub.get().getDescriptions())
+						.displayNames(sub.get().getDisplayNames())
+						.semanticId(sub.get().getSemanticId())
+						.supplementalSemanticIds(supplementalSemantics(sub.get()))
+						.endpoint(endpoint.getEndpoint(theShell.getId(), sub.get().getId()))
+						.build();
+				
+				descriptor.add(subDescriptor);
+			}
+		}
+		return descriptor;
+		
+	}
+	private List<Reference> supplementalSemantics(Submodel submodel) {
+		return new SemanticIdCollector(submodel).findSemanticIdentifier(EventElement.class, Operation.class);
+	}
 }

@@ -38,6 +38,20 @@ public interface DirectoryInterface {
 					required = true, 
 					schema = @Schema()) @PathVariable("aasIdentifier") 
 			String aasIdentifier);
+	
+	@Operation(summary = "Obtain the descriptor of an Asset containing any of the requested semantic identifiers")
+	@RequestMapping(
+			method = RequestMethod.GET,
+			path="/lookup/{supplementalSemanticId}")
+	AssetAdministrationShellDescriptor lookupBySemanticId(
+			@Base64Encoded
+			@Parameter(
+					in = ParameterIn.PATH,
+					description = "A semantic identifer",
+					required = true,
+					schema = @Schema()) @PathVariable("supplementalSemanticId") 
+			String supplementalSemanticId);
+	
 	@Operation(summary = "Obtain the descriptor of an Asset based on it's identifier",
 			tags = "Asset Administration Shell Directory Interface (for Connector)")
 	@RequestMapping(

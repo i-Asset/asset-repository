@@ -9,13 +9,14 @@ import org.eclipse.digitaltwin.aas4j.v3.model.HasKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
@@ -28,28 +29,33 @@ import at.srfg.iasset.repository.model.operation.OperationResultValue;
 public class OperationInvocationHandler implements OperationInvocation, OperationInvocationResult {
 	
 	private final Operation operation;
-	private final Reference operationReference;
 	private final ServiceEnvironment serviceEnvironment;
+	private final IAssetAdministrationShellInterface shellInterface;
+	private final String submodelIdentifier;
+	private final String pathToOperation;
+	
 	private ObjectMapper objectMapper;
 	
 	public OperationInvocationHandler(
-			Operation operation, 
-			Reference operationReference,
-			ServiceEnvironment environment,
-			ObjectMapper mapper) {
-		this(operation, environment, mapper);
-		environment.resolve(operationReference, Operation.class);
+		InstanceOperation operation,
+		ServiceEnvironment environment, 
+		ObjectMapper mapper) {
+		this(null, null, null, operation, environment, mapper);
 	}
-	public OperationInvocationHandler(Operation operation, ServiceEnvironment environment, ObjectMapper mapper) {
+
+	public OperationInvocationHandler(
+			IAssetAdministrationShellInterface shellConnection,
+			String submodelIdentifier, 
+			String pathToOperation,
+			Operation operation,
+			ServiceEnvironment environment, 
+			ObjectMapper mapper) {
+		this.shellInterface = shellConnection;
+		this.submodelIdentifier = submodelIdentifier;
+		this.pathToOperation = pathToOperation;
 		this.operation = operation;
 		this.serviceEnvironment = environment;
 		this.objectMapper = mapper;
-		this.operationReference = null;
-		// TODO: resolve template/instance here!
-		// when operation is instance, then check for template (semanticId)
-		// when operation is template, then instantiate operation and use template
-		// 
-		
 	}
 	private boolean isTemplate(HasKind hasKind) {
 		return ModellingKind.TEMPLATE.equals(hasKind.getKind());
@@ -362,7 +368,13 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	}
 	@Override
 	public OperationInvocationResult invoke() {
-		// TODO Auto-generated method stub
+		if ( shellInterface == null) {
+			throw new IllegalStateException("Wrong usage! Use full constructor!");
+		}
+		OperationResultValue result = shellInterface.invokeOperation(submodelIdentifier, pathToOperation, getOperationRequestValue());
+		applyOperationResultValue(result);
+
+		
 		return this;
 //		throw new UnsupportedOperationException("Not yet implemented!");
 	}

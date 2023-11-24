@@ -77,5 +77,9 @@ public interface Persistence extends Environment {
 	 * @return the {@link AssetAdministrationShellDescriptor} or {@link Optional#empty()} when not found
 	 */
 	Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorById(String id);
+	/**
+	 * Retrieve an AssetAdministrationShellDes
+	 */
+	Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticId(String supplemental);
 
 }

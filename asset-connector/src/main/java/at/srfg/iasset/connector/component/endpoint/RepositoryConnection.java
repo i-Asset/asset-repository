@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
@@ -22,7 +23,14 @@ public interface RepositoryConnection {
 	 * @param uri The service endpoint for this particular {@link AssetAdministrationShell}
 	 * @return <code>true</code> when successfully registered, <code>false</code> otherwise
 	 */
-	boolean register(AssetAdministrationShell shellToRegister, URI uri);
+	boolean register(AssetAdministrationShellDescriptor shellToRegister);
+	/**
+	 * Search the Asset Registry for the asset implementing a particular functionality
+	 * represented by the semantic id
+	 * @param semanticId The external semantic id
+	 * @return
+	 */
+	Optional<AssetAdministrationShellDescriptor> findImplementation(String semanticId);
 	/**
 	 * Unregister the {@link AssetAdministrationShell} from the Asset Directory.
 	 * @param aasIdentifier

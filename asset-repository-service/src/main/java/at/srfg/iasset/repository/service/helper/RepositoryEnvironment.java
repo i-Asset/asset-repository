@@ -18,7 +18,6 @@ import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,7 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticLookupVisitor;
+import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
@@ -505,12 +505,30 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 			Optional<Endpoint> endpoint = descriptor.get().getEndpoints().stream().findFirst();
 			if (endpoint.isPresent()) {
 				
-				IAssetAdministrationShellInterface shellConnector = ConnectionProvider.getConnection(endpoint.get().getAddress()).getShellInterface();
+				IAssetAdministrationShellInterface shellConnector = ConnectionProvider.getConnection(endpoint.get().getProtocolInformation().getHref()).getShellInterface();
 				return shellConnector.invokeOperation(submodelIdentifier, path, parameterMap);
 			}
 		}
 		// TODO: Test this is reported to the caller!
 		throw new NotFoundException( aasIdentifier, submodelIdentifier, path);
+	}
+
+	@Override
+	public void registerAssetAdministrationShell(AssetAdministrationShellDescriptor aasIdentifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unregisterAssetAdministrationShell(String aasIdentifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Optional<OperationInvocation> getImplementation(String semanticId) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
 	}
 
 

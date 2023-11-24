@@ -111,6 +111,12 @@ public class InMemoryStorage implements Persistence {
 	}
 
 	@Override
+	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticId(
+			String supplemental) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public List<AssetAdministrationShell> getAssetAdministrationShells() {
 		return assetAdministrationShell.values().stream().collect(Collectors.toList());
 	}

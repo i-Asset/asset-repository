@@ -21,6 +21,7 @@ public interface DirectoryService {
 	void removeSubmodelDescriptors(String aasIdentifier, String submodelIdentifier);
 
 	Optional<AssetAdministrationShellDescriptor> getShellDescriptor(String aasIdentifier);
+	Optional<AssetAdministrationShellDescriptor> getShellDescriptorBySupplementalSemanticId(String supplementalSemanticId);
 
 	Optional<SubmodelDescriptor> getSubmodelDescriptor(String aasDescriptor, String submodelIdentifier);
 

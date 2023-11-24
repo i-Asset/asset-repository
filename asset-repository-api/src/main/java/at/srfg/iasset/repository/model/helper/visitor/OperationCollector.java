@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.visitor.AssetAdministrationShellElementWalkerVisitor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
@@ -45,6 +46,12 @@ public class OperationCollector {
 		public void visit(Operation operation) {
 			if ( semanticId.equals(operation.getSemanticId())) {
 				element.add(operation);
+			}
+			else if (operation.getSemanticId() instanceof ModelReference) {
+				ModelReference operationSemantic = (ModelReference) operation.getSemanticId();
+				if ( semanticId.equals(operationSemantic.getReferredSemanticId())) {
+					element.add(operation);
+				}
 			}
 			else {
 				if ( operation.getSupplementalSemanticIds()!= null ) {

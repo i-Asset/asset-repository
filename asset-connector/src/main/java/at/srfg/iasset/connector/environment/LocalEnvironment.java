@@ -203,7 +203,7 @@ public interface LocalEnvironment {
 	 * @param semanticId
 	 * @return
 	 */
-	public OperationInvocation getOperation(String semanticId);
+	public OperationInvocation getOperationInvocation(String semanticId);
 	/**
 	 * Register an {@link OperationCallback} method which is to be executed
 	 * @param aasIdentifier
@@ -248,6 +248,11 @@ public interface LocalEnvironment {
 	 * @return
 	 */
 	public <T> T getElementValue(String aasIdentifier, String submodelIdentifier, String path, Class<T> clazz);
+	/**
+	 * Register the {@link AssetAdministrationShell} with the configured directory service
+	 * @param aasIdentifier
+	 */
+	public void registerAssetAdministrationShell(String aasIdentifier);
 	
 	
 

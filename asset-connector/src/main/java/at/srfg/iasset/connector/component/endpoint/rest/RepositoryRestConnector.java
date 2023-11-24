@@ -94,21 +94,10 @@ public class RepositoryRestConnector implements RepositoryConnection {
 	}
 
 	@Override
-	public boolean register(AssetAdministrationShell theShell, URI uri) {
-		// @formatter:off
-		AssetAdministrationShellDescriptor descriptor = new DefaultAssetAdministrationShellDescriptor.Builder()
-				.id(theShell.getId())
-				.displayNames(theShell.getDisplayNames())
-				.descriptions(theShell.getDescriptions())
-//				.endpoint(new DefaultEndpoint.Builder()
-//						.address(uri.toString())
-//						.type("shell")
-//						.build())
-				.build();
-		// @formatter:on
+	public boolean register(AssetAdministrationShellDescriptor descriptor) {
 		//
 		try {
-			getDirectoryService().register(theShell.getId(), descriptor);
+			getDirectoryService().register(descriptor.getId(), descriptor);
 			return true;
 		} catch (ServiceUnavailableException e) {
 			return false;
@@ -145,6 +134,11 @@ public class RepositoryRestConnector implements RepositoryConnection {
 		} catch (ServiceUnavailableException e) {
 			return null;
 		}
+	}
+
+	@Override
+	public Optional<AssetAdministrationShellDescriptor> findImplementation(String semanticId) {
+		return Optional.ofNullable( getDirectoryService().lookupBySemanticId(semanticId));
 	}
 
 }

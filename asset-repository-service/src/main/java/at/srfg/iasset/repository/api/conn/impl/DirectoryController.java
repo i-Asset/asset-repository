@@ -59,4 +59,10 @@ public class DirectoryController implements DirectoryInterface {
 				model);
 	}
 
+	@Override
+	public AssetAdministrationShellDescriptor lookupBySemanticId(String supplementalSemanticId) {
+		return service.getShellDescriptorBySupplementalSemanticId(
+				ApiUtils.base64Decode(supplementalSemanticId)).orElse(null);
+	}
+
 }

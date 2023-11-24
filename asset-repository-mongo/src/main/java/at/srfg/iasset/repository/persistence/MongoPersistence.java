@@ -8,6 +8,9 @@ import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import at.srfg.iasset.repository.component.Persistence;
@@ -26,6 +29,9 @@ public class MongoPersistence implements Persistence {
 	private SubmodelRepository submodelRepo;
 	@Autowired
 	private AssetAdministrationShellDescriptorRepository descriptorRepo;
+	
+	@Autowired
+	private MongoTemplate template;
 	
 
 	@Override
@@ -71,6 +77,11 @@ public class MongoPersistence implements Persistence {
 		descriptorRepo.deleteById(descriptorIdentifier);
 
 	}
+//	public List<AssetAdministrationShellDescriptor> findDescriptorBySemanticId(String semanticId) {
+//		Query query = new Query();
+//		query.addCriteria(Criteria.where("submodel").is("value"));
+//		template.find(query,AssetAdministrationShellDescriptor.class );
+//	}
 
 	@Override
 	public Optional<ConceptDescription> findConceptDescriptionById(String cdIdentifier) {
@@ -90,6 +101,23 @@ public class MongoPersistence implements Persistence {
 	@Override
 	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorById(String id) {
 		return descriptorRepo.findById(id);
+	}
+
+	@Override
+	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticId(
+			String supplemental) {
+		Query query = Query.query(Criteria.where("submodelDescriptors.supplementalSemanticIds.keys.value").is(supplemental));
+		List<AssetAdministrationShellDescriptor> result = template.find(query, AssetAdministrationShellDescriptor.class);
+		if ( result.isEmpty() ) {
+			return Optional.empty();
+		}
+		else if ( result.size() == 1) {
+			return Optional.of(result.get(0));
+		}
+		else {
+			throw new IllegalStateException("Multiple descriptors present!");
+		}
+		
 	}
 
 	@Override

@@ -27,6 +27,8 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementList;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueList;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueReferencePair;
 
+import at.srfg.iasset.repository.utils.ReferenceUtils;
+
 
 
 
@@ -141,6 +143,7 @@ public class AASPlantStructureSubmodel {
 						.text("Abfrage Operation für eine i-Asset Anlagenstruktur")
 						.build())
 				.kind(ModellingKind.TEMPLATE)
+				.semanticId(ReferenceUtils.asGlobalReference("http://iassset.salzburgresearch.at/common/plantStructureRequest"))
 				.submodelElement(new DefaultOperation.Builder()
 						.idShort("getPlantStructure")
 						.displayName(new DefaultLangString.Builder()

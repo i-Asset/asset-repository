@@ -11,13 +11,10 @@ import at.srfg.iasset.connector.component.endpoint.config.exception.mapper.NotFo
 import at.srfg.iasset.connector.component.endpoint.controller.AssetAdministrationRepositoryController;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.ApplicationPath;
 
 @ApplicationPath("shells")
 public class ShellsConfig extends ResourceConfig {
-	@Inject
-	ServiceEnvironment environment;
 
     public ShellsConfig(ServiceEnvironment environment) {
     	

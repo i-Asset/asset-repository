@@ -4,8 +4,13 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEndpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProtocolInformation;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
@@ -16,6 +21,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
 import at.srfg.iasset.connector.component.endpoint.config.AliasConfig;
 import at.srfg.iasset.connector.component.endpoint.config.ShellsConfig;
+import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -44,7 +50,8 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 
 	public void start(int port, String contextRoot) {
 		this.port = port;
-		GrizzlyHttpContainer handler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, new ShellsConfig(environment));
+		ResourceConfig config = new ShellsConfig(environment);
+		GrizzlyHttpContainer handler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, config);
 
 		httpServer = GrizzlyHttpServerFactory.createHttpServer(
 				// always create with localhost
@@ -135,18 +142,53 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 		return endpointAddress;
 	}
 	
-//	@Override
-//	public Endpoint getEndpoint(String aasIdentifier) {
-//		Optional<AssetAdministrationShell> shell = environment.getAssetAdministrationShell(aasIdentifier);
-//		if ( shell.isPresent()) {
-//			Endpoint ep = new DefaultEndpoint.Builder()
-//					.type("http")
-//					.address(String.format("%s", endpointAddress.toString(), "shells/", Base64.getEncoder().encode(aasIdentifier.getBytes())))
-//					.build();
-//			return ep;
-//		}
-//		return null;
-//	}
+    @Override
+	public Endpoint getEndpoint() {
+    	Endpoint ep = new DefaultEndpoint.Builder()
+    			.endpointInterface("AAS-REPOSITORY-3.0_ITWIN")
+    			.protocolInformation(new DefaultProtocolInformation.Builder()
+    					.href(String.format("%s", 
+    							endpointAddress.toString()))
+    					.build())
+    			.build()
+    			;
+    	return ep;
+	}	
+    @Override
+	public Endpoint getEndpoint(String aasIdentifier) {
+		Optional<AssetAdministrationShell> shell = environment.getAssetAdministrationShell(aasIdentifier);
+		if ( shell.isPresent()) {
+			Endpoint ep = new DefaultEndpoint.Builder()
+					.endpointInterface("AAS-3.0_ITWIN")		
+					.protocolInformation(new DefaultProtocolInformation.Builder()
+							.href(String.format("%sshells/%s", 
+									endpointAddress.toString(), 
+									ApiUtils.base64Encode(aasIdentifier)))
+							.build())
+					.build()
+					;
+			return ep;
+		}
+		return null;
+	}
+    public Endpoint getEndpoint(String aasIdentifier, String submodelIdentifier) {
+    	Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
+    	if ( sub.isPresent()) {
+    		Endpoint ep = new DefaultEndpoint.Builder()
+    				.endpointInterface("SUBMODEL-3.0_ITWIN")
+    				.protocolInformation(new DefaultProtocolInformation.Builder()
+    						.href(String.format("%s/shells/%s/submodels/%s", 
+    								endpointAddress.toString(), 
+    								ApiUtils.base64Encode(aasIdentifier),
+    								ApiUtils.base64Encode(submodelIdentifier)))
+    						.build())
+    				.build()
+    				;
+    		return ep;
+    	}
+		return null;
+    	
+    }
 	
 
 }

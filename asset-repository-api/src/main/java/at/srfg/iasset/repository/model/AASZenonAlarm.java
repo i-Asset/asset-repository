@@ -1,13 +1,15 @@
 package at.srfg.iasset.repository.model;
 
+import java.util.UUID;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.AasSubmodelElements;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
-import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetInformation;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultExternalReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangString;
@@ -15,6 +17,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperation;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationVariable;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSpecificAssetId;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementList;
@@ -37,6 +40,13 @@ public static final AssetAdministrationShell ZENON_AAS = createAASforZenonAlarm(
 						.text("Zenon AAS")
 						.build()
 				)
+				.assetInformation(new DefaultAssetInformation.Builder()
+						.globalAssetId("urn:zenon:jonas")
+						.specificAssetId(new DefaultSpecificAssetId.Builder()
+								.name("zenonIdentifier")
+								.value(UUID.randomUUID().toString())
+								.build())
+						.build())
 				.description(new DefaultLangString.Builder()
 						.language(LANGUAGE)
 						.text("Zenon Alarme")
