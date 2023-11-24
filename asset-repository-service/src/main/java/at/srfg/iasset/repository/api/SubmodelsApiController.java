@@ -3,8 +3,8 @@ package at.srfg.iasset.repository.api;
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;

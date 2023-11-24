@@ -2,7 +2,8 @@ package at.srfg.iasset.connector.component;
 
 import java.net.URI;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -57,6 +58,8 @@ public interface ConnectorEndpoint {
 	 * @return
 	 */
 	public URI getServiceAddress();
-//	public Endpoint getEndpoint(String aasIdentifier);
+	public Endpoint getEndpoint();
+	public Endpoint getEndpoint(String aasIdentifier);
+	public Endpoint getEndpoint(String aasIdentifier, String submodelIdentifier);
 
 }

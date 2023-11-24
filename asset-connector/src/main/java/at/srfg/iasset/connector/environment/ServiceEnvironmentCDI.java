@@ -1,26 +1,31 @@
 package at.srfg.iasset.connector.environment;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Key;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Operation;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.Key;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,11 +39,16 @@ import at.srfg.iasset.repository.api.model.MessageType;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.connectivity.ConnectionProvider;
+import at.srfg.iasset.repository.connectivity.ConnectionProvider.Connection;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
+import at.srfg.iasset.repository.model.helper.visitor.OperationCollector;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticLookupVisitor;
+import at.srfg.iasset.repository.model.helper.visitor.SubmodelElementCollector;
+import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.OperationInvocationExecption;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
@@ -352,9 +362,9 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		Optional<AssetAdministrationShell> shell = getAssetAdministrationShell(aasIdentifier);
 		if ( shell.isPresent()) {
 			AssetAdministrationShell theShell = shell.get();
-			Optional<Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
+			Optional<? extends Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
 			if (ref.isEmpty()) {
-				Reference newRef = ReferenceUtils.toReference(submodel);
+				ModelReference newRef = ReferenceUtils.toReference(submodel);
 				theShell.getSubmodels().add(newRef);
 			}
 			Optional<Submodel> existing = storage.findSubmodelById(submodelIdentifier);
@@ -452,7 +462,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	}
 
 	@Override
-	public List<Reference> getSubmodelReferences(String aasIdentifier) {
+	public List<ModelReference> getSubmodelReferences(String aasIdentifier) {
 		Optional<AssetAdministrationShell> optShell = getAssetAdministrationShell(aasIdentifier);
 		if (optShell.isPresent()) {
 			return optShell.get().getSubmodels();
@@ -461,7 +471,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	}
 
 	@Override
-	public List<Reference> setSubmodelReferences(String aasIdentifier, List<Reference> submodels) {
+	public List<ModelReference> setSubmodelReferences(String aasIdentifier, List<ModelReference> submodels) {
 		// TODO: check all references point to submodel
 		Optional<AssetAdministrationShell> optShell = getAssetAdministrationShell(aasIdentifier);
 		if (optShell.isPresent()) {
@@ -472,11 +482,11 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	}
 
 	@Override
-	public List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier) {
+	public List<ModelReference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier) {
 		Optional<AssetAdministrationShell> shell = getAssetAdministrationShell(aasIdentifier);
 		if ( shell.isPresent()) {
 			AssetAdministrationShell theShell = shell.get();
-			Optional<Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
+			Optional<? extends Reference> ref = ReferenceUtils.extractReferenceFromList(theShell.getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL);
 			if (ref.isPresent()) {
 				theShell.getSubmodels().remove(ref.get());
 				return theShell.getSubmodels();
@@ -587,6 +597,18 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 
 					@Override
 					public boolean test(SubmodelElement t) {
+						if ( t.getSupplementalSemanticIds() != null && !(t.getSupplementalSemanticIds().isEmpty())) {
+							if (t.getSupplementalSemanticIds().contains(semanticId)) {
+								return true;
+							} 
+						}
+						// 
+						if (t.getSemanticId() != null && t.getSemanticId() instanceof ModelReference) {
+							ModelReference modelReference = (ModelReference) t.getSemanticId();
+							if ( semanticId.equals(modelReference.getReferredSemanticId())) {
+								return true;
+							}
+						}
 						return t.getSemanticId().equals(semanticId);
 					}
 				})
@@ -622,11 +644,13 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	@Override
 	public <T extends SubmodelElement> Optional<T> getSubmodelElement(Reference reference, Class<T> clazz) {
 		// only model references are allowed
-		if (reference.getType()==null || ReferenceTypes.MODEL_REFERENCE.equals(reference.getType())) {
+		if ( ModelReference.class.isInstance(reference)) {
 			return resolve(reference, clazz);		
+			
 		}
 		// TODO: in case it is a global reference, we will need to search the storage 
 		// for an element !!
+		Optional<AssetAdministrationShellDescriptor> descriport = repository.findImplementation(ReferenceUtils.firstKeyValue(reference));
 		for ( Submodel submodel : storage.getSubmodels() ) {
 			//
 			Optional<T> elemWithRef = new SemanticLookupVisitor(submodel).findElement(reference, clazz);
@@ -634,6 +658,84 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 				return elemWithRef;
 			}
 			// not found in this submodel, continue ... 
+		}
+		return Optional.empty();
+	}
+	@Override
+	public void registerAssetAdministrationShell(AssetAdministrationShellDescriptor aasDescriptor) {
+		repository.register(aasDescriptor);
+	}
+	@Override
+	public void unregisterAssetAdministrationShell(String aasIdentifier) {
+		repository.unregister(aasIdentifier);
+	}
+	@Override
+	public Optional<OperationInvocation> getImplementation(String semanticId) {
+		Optional<AssetAdministrationShellDescriptor> implementor = repository.findImplementation(semanticId);
+		if ( implementor.isPresent() ) {
+			//
+			// extract endpoint
+			Reference semanticReference = ReferenceUtils.asGlobalReference(semanticId);
+			
+			AssetAdministrationShellDescriptor aasDescriptor = implementor.get();
+			Optional<Endpoint> endpoint = aasDescriptor.getEndpoints().stream().filter(new Predicate<Endpoint>() {
+				@Override
+				public boolean test(Endpoint t) {
+					// check for proper endpoint interface
+					if ( t.getEndpointInterface().equals("AAS-3.0_ITWIN")) {
+						if ( t.getProtocolInformation().getHref()!= null) {
+							return true;
+						}
+					}
+					// not a valid endpoint
+					return false;
+				}
+			}).findFirst();
+			// OK with the endpoint for registry interface
+			if ( endpoint.isPresent() ) {
+				
+			
+				Optional<SubmodelDescriptor> submodelImplementing = aasDescriptor.getSubmodelDescriptors().stream().filter(new Predicate<SubmodelDescriptor>() {
+	
+					@Override
+					public boolean test(SubmodelDescriptor t) {
+						// check for proper interface!
+						// 
+						return t.getSupplementalSemanticIds().stream().anyMatch(new Predicate<Reference>() {
+	
+							@Override
+							public boolean test(Reference t) {
+								return semanticReference.equals(t);
+							}
+						});
+					}
+	
+					}).findFirst();
+			
+				if ( submodelImplementing.isPresent() ) {
+					SubmodelDescriptor submodelDescriptor = (SubmodelDescriptor) submodelImplementing.get();
+					
+						ConnectionProvider connection = ConnectionProvider.getConnection(endpoint.get().getProtocolInformation().getHref());
+						
+						
+						Submodel remoteSubmodel = connection.getShellInterface().getSubmodel(submodelDescriptor.getId());
+						if ( remoteSubmodel != null) {
+							Set<Operation> operations = new OperationCollector().collect(remoteSubmodel, semanticReference);
+							// 
+							for ( Operation operation : operations) {
+								if (! operations.isEmpty()) {
+									String path = new SubmodelElementCollector().getPath("", remoteSubmodel, operation);
+									return Optional.of(new OperationInvocationHandler(connection.getShellInterface(), submodelDescriptor.getId(), path, operation, this, objectMapper));
+								}
+							}
+						}							
+					}
+				}
+			
+			// search for operation / event equipped with the semanticId
+			// extract the reference from the endpoint
+			// 
+//			AssetAdministrationShellDescriptor descriptor 
 		}
 		return Optional.empty();
 	}

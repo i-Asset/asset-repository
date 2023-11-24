@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.model.Operation;
-import org.eclipse.aas4j.v3.model.OperationVariable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -7,7 +7,7 @@ package at.srfg.iasset.repository.api;
 
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -6,11 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.DataSpecification;
-import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.repository.component.Persistence;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -112,6 +111,12 @@ public class InMemoryStorage implements Persistence {
 	}
 
 	@Override
+	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticId(
+			String supplemental) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public List<AssetAdministrationShell> getAssetAdministrationShells() {
 		return assetAdministrationShell.values().stream().collect(Collectors.toList());
 	}
@@ -150,16 +155,5 @@ public class InMemoryStorage implements Persistence {
 		return submodel.values().stream().collect(Collectors.toList());
 	}
 
-	@Override
-	public List<DataSpecification> getDataSpecifications() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDataSpecifications(List<DataSpecification> dataSpecifications) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

@@ -1,6 +1,6 @@
 package at.srfg.iasset.repository.model.helper.value.mapper;
 
-import org.eclipse.aas4j.v3.model.Range;
+import org.eclipse.digitaltwin.aas4j.v3.model.Range;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

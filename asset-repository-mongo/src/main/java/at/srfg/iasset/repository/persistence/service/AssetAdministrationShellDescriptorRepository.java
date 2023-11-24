@@ -1,6 +1,6 @@
 package at.srfg.iasset.repository.persistence.service;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

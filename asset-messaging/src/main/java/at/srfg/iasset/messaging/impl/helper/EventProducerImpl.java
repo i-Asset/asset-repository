@@ -1,6 +1,6 @@
 package at.srfg.iasset.messaging.impl.helper;
 
-import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 
 import at.srfg.iasset.messaging.EventElementHandler;
 import at.srfg.iasset.messaging.EventProducer;

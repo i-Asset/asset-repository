@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import org.eclipse.aas4j.v3.model.LangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.LangString;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

@@ -9,25 +9,22 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.model.DataSpecificationContent;
-import org.eclipse.aas4j.v3.model.DataSpecificationPhysicalUnit;
-import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
-import org.eclipse.aas4j.v3.model.DataTypeIEC61360;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.LangString;
-import org.eclipse.aas4j.v3.model.ModelingKind;
-import org.eclipse.aas4j.v3.model.Property;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
-import org.eclipse.aas4j.v3.model.ValueList;
-import org.eclipse.aas4j.v3.model.ValueReferencePair;
-import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationIEC61360;
-import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationPhysicalUnit;
-import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
-import org.eclipse.aas4j.v3.model.impl.DefaultMultiLanguageProperty;
-import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
-import org.eclipse.aas4j.v3.model.impl.DefaultValueList;
-import org.eclipse.aas4j.v3.model.impl.DefaultValueReferencePair;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContent;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.LangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
+import org.eclipse.digitaltwin.aas4j.v3.model.ValueList;
+import org.eclipse.digitaltwin.aas4j.v3.model.ValueReferencePair;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultMultiLanguageProperty;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueList;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueReferencePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +65,7 @@ public class SemanticLookupMapper {
 		return Optional.empty();
 	}
 	private DataSpecificationContent fromConceptClass(ConceptClass conceptClass) {
-		return new DefaultDataSpecificationIEC61360.Builder()
+		return new DefaultDataSpecificationIec61360.Builder()
 			// shortName
 			.shortName(new DefaultLangString.Builder()
 					.text(conceptClass.getShortName())
@@ -81,7 +78,7 @@ public class SemanticLookupMapper {
 			.build();
 	}
 	private DataSpecificationContent fromConceptProperty(ConceptProperty conceptClass) {
-		return new DefaultDataSpecificationIEC61360.Builder()
+		return new DefaultDataSpecificationIec61360.Builder()
 			// shortName
 			.shortName(new DefaultLangString.Builder()
 					.text(conceptClass.getShortName())
@@ -91,22 +88,22 @@ public class SemanticLookupMapper {
 			.preferredNames(mapLabel(conceptClass.getPreferredLabel()))
 			// definition
 			.definitions(mapLabel(conceptClass.getDefinition()))
-			.dataType(DataTypeIEC61360.valueOf(conceptClass.getDataType().name()))
+			.dataType(DataTypeIec61360.valueOf(conceptClass.getDataType().name()))
 			// usage of valueId 
 			.valueList(valueList(conceptClass.getConceptId()))
 			.build();
 	}
-	private DataSpecificationPhysicalUnit fromConceptPropertyUnit(ConceptPropertyUnit unit) {
-		return new DefaultDataSpecificationPhysicalUnit.Builder()
-				.eceCode(unit.getEceCode())
-				.eceName(unit.getEceName())
-				.definitions(mapLabel(unit.getDefinition()))
-				.siName(unit.getSiName())
-				.siNotation(unit.getSiNotation())
-				.dinNotation(unit.getDinNotation())
-				.build();
-				
-	}
+//	private DataSpecificationPhysicalUnit fromConceptPropertyUnit(ConceptPropertyUnit unit) {
+//		return new DefaultDataSpecificationPhysicalUnit.Builder()
+//				.eceCode(unit.getEceCode())
+//				.eceName(unit.getEceName())
+//				.definitions(mapLabel(unit.getDefinition()))
+//				.siName(unit.getSiName())
+//				.siNotation(unit.getSiNotation())
+//				.dinNotation(unit.getDinNotation())
+//				.build();
+//				
+//	}
 	private ValueList valueList(String property) {
 		return new DefaultValueList.Builder().valueReferencePairs(mapValues(property)).build();
 	}
@@ -150,7 +147,6 @@ public class SemanticLookupMapper {
 				collection.setDescriptions(mapLabel(conceptClass.getDefinition()));
 				collection.setIdShort(conceptClass.getShortName());
 				collection.setSemanticId(ReferenceUtils.asGlobalReference(identifier));
-				collection.setKind(ModelingKind.TEMPLATE);
 				// check the properties
 				processConceptClassProperties(collection, conceptClass);
 				
@@ -181,7 +177,6 @@ public class SemanticLookupMapper {
 						.displayNames(mapLabel(t.getPreferredLabel()))
 						.descriptions(mapLabel(t.getDefinition()))
 						.valueType(DataTypeDefXsd.STRING)
-						.kind(ModelingKind.TEMPLATE)
 						.embeddedDataSpecification(null)
 						.build();
 				

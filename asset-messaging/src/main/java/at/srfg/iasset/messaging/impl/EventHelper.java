@@ -1,6 +1,6 @@
 package at.srfg.iasset.messaging.impl;
 
-import org.eclipse.aas4j.v3.model.EventPayload;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
 
 import at.srfg.iasset.messaging.impl.helper.MessageBroker;
 

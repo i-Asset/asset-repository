@@ -15,12 +15,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.eclipse.aas4j.v3.dataformat.core.util.MostSpecificTypeTokenComparator;
-import org.eclipse.aas4j.v3.model.AasSubmodelElements;
-import org.eclipse.aas4j.v3.model.DataSpecificationContent;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.util.MostSpecificTypeTokenComparator;
+import org.eclipse.digitaltwin.aas4j.v3.model.AasSubmodelElements;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContent;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ import io.github.classgraph.ScanResult;
  */
 public class AASModelHelper {
     private static final Logger logger = LoggerFactory.getLogger(AASModelHelper.class);
-    private static final String ROOT_PACKAGE_NAME = "org.eclipse.aas4j.v3";
+    private static final String ROOT_PACKAGE_NAME = "org.eclipse.digitaltwin.aas4j.v3";
     /**
      * Name of package where the generated model classes are defined
      */

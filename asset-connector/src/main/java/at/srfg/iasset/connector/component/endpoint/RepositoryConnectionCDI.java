@@ -3,13 +3,14 @@ package at.srfg.iasset.connector.component.endpoint;
 import java.net.URI;
 import java.util.Optional;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.impl.DefaultEndpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEndpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProtocolInformation;
 
 import at.srfg.iasset.connector.component.config.ServiceProvider;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
@@ -20,6 +21,7 @@ import at.srfg.iasset.repository.model.operation.OperationResult;
 import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.ServiceUnavailableException;
 
 @Dependent
 public class RepositoryConnectionCDI implements RepositoryConnection {
@@ -29,29 +31,20 @@ public class RepositoryConnectionCDI implements RepositoryConnection {
 	
 	
 	@Override
-	public boolean register(AssetAdministrationShell theShell, URI uri) {
-		// @formatter:off
-		AssetAdministrationShellDescriptor descriptor = new DefaultAssetAdministrationShellDescriptor.Builder()
-				.id(theShell.getId())
-				.displayNames(theShell.getDisplayNames())
-				.descriptions(theShell.getDescriptions())
-				.endpoint(new DefaultEndpoint.Builder()
-						.address(uri.toString())
-						.type("shell")
-						.build())
-				.build();
-		// @formatter:on
-		//
+	public boolean register(AssetAdministrationShellDescriptor descriptor) {
 		
-		
-		serviceProvider.getDirectoryInterface().register(theShell.getId(), descriptor);
+		serviceProvider.getDirectoryInterface().register(descriptor.getId(), descriptor);
 		return true;
 	}
 
 	@Override
 	public boolean unregister(String aasIdentifier) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			serviceProvider.getDirectoryInterface().unregister(aasIdentifier);
+			return true;
+		} catch (ServiceUnavailableException e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -102,5 +95,10 @@ public class RepositoryConnectionCDI implements RepositoryConnection {
 	public OperationInvocationResult invoke(OperationInvocation invocation) {
 //		serviceProvider.getRepositoryInterface().ino
 		return null;
+	}
+
+	@Override
+	public Optional<AssetAdministrationShellDescriptor> findImplementation(String semanticId) {
+		return Optional.ofNullable( serviceProvider.getDirectoryInterface().lookupBySemanticId(semanticId));	
 	}
 }

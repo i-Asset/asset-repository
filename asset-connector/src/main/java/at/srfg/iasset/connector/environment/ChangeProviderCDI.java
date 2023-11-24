@@ -5,15 +5,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import org.eclipse.aas4j.v3.model.BasicEventElement;
-import org.eclipse.aas4j.v3.model.DataElement;
-import org.eclipse.aas4j.v3.model.Operation;
-import org.eclipse.aas4j.v3.model.Property;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.StateOfEvent;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.BasicEventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.StateOfEvent;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.slf4j.Logger;
 
 import at.srfg.iasset.messaging.ConnectorMessaging;
@@ -124,7 +125,7 @@ public class ChangeProviderCDI implements ChangeProvider {
 			public void accept(String pathToElement, SubmodelElement u) {
 				if ( BasicEventElement.class.isInstance(u)) {
 					BasicEventElement basicEvent = (BasicEventElement)u;
-					Reference elementRef = SubmodelUtils.getReference(submodel, pathToElement);
+					ModelReference elementRef = SubmodelUtils.getReference(submodel, pathToElement);
 					try {
 						messaging.registerEventElement(elementRef);
 						eventElementCreated(submodel.getId(), pathToElement, BasicEventElement.class.cast(u));

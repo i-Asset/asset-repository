@@ -1,6 +1,6 @@
 package at.srfg.iasset.repository.model.helper.value.mapper;
 
-import org.eclipse.aas4j.v3.model.ReferenceElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceElement;
 
 import at.srfg.iasset.repository.model.helper.value.ReferenceElementValue;
 

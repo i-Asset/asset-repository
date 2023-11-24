@@ -7,12 +7,13 @@ package at.srfg.iasset.repository.api;
 
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetInformation;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.SpecificAssetId;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetInformation;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.SpecificAssetId;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -297,7 +298,7 @@ public interface ShellsApi {
 			value = "/shells/{aasIdentifier}/submodels", 
 			produces = { "application/json" }, 
 			method = RequestMethod.GET)
-	List<Reference> getAllSubmodelReferences(
+	List<ModelReference> getAllSubmodelReferences(
 			@Parameter(
 					in = ParameterIn.PATH, 
 					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
@@ -975,7 +976,7 @@ public interface ShellsApi {
 			produces = { "application/json" }, 
 			consumes = { "application/json" }, 
 			method = RequestMethod.POST)
-	ResponseEntity<Reference> postSubmodelReference(
+	ResponseEntity<ModelReference> postSubmodelReference(
 			@Parameter(
 					in = ParameterIn.PATH, 
 					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
@@ -988,7 +989,7 @@ public interface ShellsApi {
 					required = true, schema = @Schema())
 			@Valid
 			@RequestBody
-			Reference body) throws RepositoryException;
+			ModelReference body) throws RepositoryException;
 
 	@Operation(
 			summary = "Updates an existing Asset Administration Shell", 

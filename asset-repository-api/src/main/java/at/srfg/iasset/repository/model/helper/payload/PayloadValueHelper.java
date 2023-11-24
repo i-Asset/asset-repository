@@ -7,15 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.reflect.TypeToken;
 
 import at.srfg.iasset.repository.config.AASModelHelper;
-import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.value.mapper.ValueMapper;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;

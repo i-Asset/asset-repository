@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.EventPayload;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
 
 import at.srfg.iasset.connector.api.ValueConsumer;
 import at.srfg.iasset.connector.api.ValueSupplier;
@@ -33,7 +33,7 @@ public class ConnectorWithCDI {
 		// load
 		loadData(i40Component);
 		// start the endpoint
-		startEndpoint(i40Component);
+//		startEndpoint(i40Component);
 		// @Jonas Demon für Zenon-Alarme
 		demoZenonAlarm(i40Component);
 		
@@ -65,10 +65,6 @@ public class ConnectorWithCDI {
 	}
 	private static void loadData(AASComponent i40Component) {
 		i40Component.addListener(new ModelChangeLogger());
-		// load the semantic integration pattern for reporting faults (from the repository
-		i40Component.loadPattern(AASFaultSubmodel.SUBMODEL_FAULT1.getId());
-		// load the semantic integration pattern for exchanging plat structure requests
-		i40Component.loadPattern(AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
 		// obtain a method invocation request object and apply parameters
 
 		
@@ -83,15 +79,21 @@ public class ConnectorWithCDI {
 		i40Component.add(AASFull.AAS_BELT_INSTANCE.getId(), AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
 		
 		
+		// load the semantic integration pattern for reporting faults (from the repository
+		i40Component.loadPattern(AASFaultSubmodel.SUBMODEL_FAULT1.getId());
+		// load the semantic integration pattern for exchanging plat structure requests
+		i40Component.loadPattern(AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
 		
 		
 		// @JONAS BEISPIEL
 		// @Jonas: load AAS for Zenon including the submodel
 		i40Component.add(AASZenonAlarm.ZENON_AAS);
 		i40Component.add(AASZenonAlarm.ZENON_AAS.getId(), AASZenonAlarm.ZENON_SUBMODEL);
+		// 
 
 	}
 	private static void operationInvocation(AASComponent i40Component) {
+		i40Component.register(AASFull.AAS_BELT_INSTANCE.getId());
 		/*
 		 * Test/Check the execution of operations
 		 */
@@ -103,11 +105,7 @@ public class ConnectorWithCDI {
 					
 					@Override
 					public boolean execute(OperationInvocation invocation) {
-						try {
-							invocation.getInput(Double.class);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+
 						Double d = invocation.getInput("doubleValue", Double.class);
 						
 						PlantElement plant = invocation.getInput("plantElement", PlantElement.class);
@@ -136,11 +134,7 @@ public class ConnectorWithCDI {
 				.setInput("doubleValue", 12345.6)
 				.setInput("plantElement", new PlantElement())
 				// invoke the operation
-				.invoke(
-						AASFull.AAS_BELT_INSTANCE.getId(), 
-						AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION.getId(),
-						"getPlantStructure"
-					);
+				.invoke();
 //  
 // 		List<PlantElement> plantStructure = i40Component.getOperationResultList("http://iasset.salzburgresarch.at/common/plantStructure", Instant.now(), PlantElement.class);
  		
@@ -152,6 +146,7 @@ public class ConnectorWithCDI {
 	}
 
 	private static void demoZenonAlarm(AASComponent i40Component) {
+		i40Component.register(AASZenonAlarm.ZENON_AAS.getId());
 		/*
 		 * Test/Check the execution of operations
 		 */
@@ -188,12 +183,8 @@ public class ConnectorWithCDI {
 				.setInput("timeFrom", Instant.now().minusMillis(30000))
 				.setInput("timeTo", Instant.now())
 				// invoke the operation
-				.invoke(
-						AASZenonAlarm.ZENON_AAS.getId(), 
-						AASZenonAlarm.ZENON_SUBMODEL.getId(),
-						"zenonAlarm"
-					);
- 		
+				.invoke();
+
 		Object objectResult = invocation.getResult("result");
 		List<ZenonAlarm> plantList = invocation.getResultList("result", ZenonAlarm.class);
 		System.out.println(plantList.size());

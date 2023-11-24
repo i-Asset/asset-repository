@@ -1,35 +1,33 @@
 package at.srfg.iasset.repository.model;
 
-import org.eclipse.aas4j.v3.model.AasSubmodelElements;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.DataSpecification;
-import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
-import org.eclipse.aas4j.v3.model.DataTypeIEC61360;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.ModelingKind;
-import org.eclipse.aas4j.v3.model.QualifierKind;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.impl.DefaultAdministrativeInformation;
-import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.impl.DefaultConceptDescription;
-import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecification;
-import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationIEC61360;
-import org.eclipse.aas4j.v3.model.impl.DefaultExtension;
-import org.eclipse.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
-import org.eclipse.aas4j.v3.model.impl.DefaultOperation;
-import org.eclipse.aas4j.v3.model.impl.DefaultOperationVariable;
-import org.eclipse.aas4j.v3.model.impl.DefaultProperty;
-import org.eclipse.aas4j.v3.model.impl.DefaultQualifier;
-import org.eclipse.aas4j.v3.model.impl.DefaultReference;
-import org.eclipse.aas4j.v3.model.impl.DefaultReferenceElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultSubmodel;
-import org.eclipse.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
-import org.eclipse.aas4j.v3.model.impl.DefaultSubmodelElementList;
-import org.eclipse.aas4j.v3.model.impl.DefaultValueList;
-import org.eclipse.aas4j.v3.model.impl.DefaultValueReferencePair;
+import org.eclipse.digitaltwin.aas4j.v3.model.AasSubmodelElements;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.EmbeddedDataSpecification;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.QualifierKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEmbeddedDataSpecification;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultExternalReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperation;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationVariable;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultQualifier;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReferenceElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementList;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueList;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueReferencePair;
+
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 
 
@@ -53,7 +51,7 @@ public class AASPlantStructureSubmodel {
 						.language(LANGUAGE)
 						.text("Element einer Anlagenstruktur Teilmodell")
 						.build())
-				.kind(ModelingKind.TEMPLATE)
+				.kind(ModellingKind.TEMPLATE)
 				.build();
 
 	}
@@ -62,8 +60,7 @@ public class AASPlantStructureSubmodel {
 				.id("http://iasset.salzburgresarch.at/common/plantStructure")
 				.idShort("plantStructure")
 				//
-				.isCaseOf(new DefaultReference.Builder()
-						.type(ReferenceTypes.GLOBAL_REFERENCE)
+				.isCaseOf(new DefaultExternalReference.Builder()
 						.key(new DefaultKey.Builder()
 								.type(KeyTypes.GLOBAL_REFERENCE)
 								.value("http://plantStrucutreFromSemanticLookup")
@@ -74,24 +71,20 @@ public class AASPlantStructureSubmodel {
 				.embeddedDataSpecification(createDataSpecificationPlantDescription())
 				.build();
 	}
-	private static DataSpecification createDataSpecificationPlantIdentifier() {
-		return new DefaultDataSpecification.Builder()
-				.id("http://iasset.salzburgresearch.at/common/dataSpecification/plantIdenifier")				
-				.description(new DefaultLangString.Builder()
-						.language(LANGUAGE)
-						.text("Data Specification for plant identifier")
-						.build())
-				.dataSpecificationContent(new DefaultDataSpecificationIEC61360.Builder()
+	private static EmbeddedDataSpecification createDataSpecificationPlantIdentifier() {
+		return new DefaultEmbeddedDataSpecification.Builder()
+//				.id("http://iasset.salzburgresearch.at/common/dataSpecification/plantIdenifier")				
+				.dataSpecificationContent(new DefaultDataSpecificationIec61360.Builder()
 						.preferredName(new DefaultLangString.Builder()
 								.language(LANGUAGE)
 								.text("Plant Identifier")
 								.build())
-						.dataType(DataTypeIEC61360.STRING)
+						.dataType(DataTypeIec61360.STRING)
 						.valueList(new DefaultValueList.Builder()
-								.valueReferencePairs(new DefaultValueReferencePair.Builder()
+								.valueReferencePair(new DefaultValueReferencePair.Builder()
 										.value("identifier1")
-										.valueId(new DefaultReference.Builder()
-												.type(ReferenceTypes.GLOBAL_REFERENCE)
+										.valueId(new DefaultExternalReference.Builder()
+//												.type(ReferenceTypes.GLOBAL_REFERENCE)
 												.key(new DefaultKey.Builder()
 														.type(KeyTypes.GLOBAL_REFERENCE)
 														.value("http://somewhere.definition.org/identifier1")
@@ -106,19 +99,14 @@ public class AASPlantStructureSubmodel {
 						.build())
 				.build();
 	}
-	private static DataSpecification createDataSpecificationPlantName() {
-		return new DefaultDataSpecification.Builder()
-				.id("http://iasset.salzburgresearch.at/common/dataSpecification/plantName")
-				.description(new DefaultLangString.Builder()
-						.language(LANGUAGE)
-						.text("Data Specification for plant name")
-						.build())
-				.dataSpecificationContent(new DefaultDataSpecificationIEC61360.Builder()
+	private static EmbeddedDataSpecification createDataSpecificationPlantName() {
+		return new DefaultEmbeddedDataSpecification.Builder()
+				.dataSpecificationContent(new DefaultDataSpecificationIec61360.Builder()
 						.preferredName(new DefaultLangString.Builder()
 								.language(LANGUAGE)
 								.text("Plant Name")
 								.build())
-						.dataType(DataTypeIEC61360.STRING_TRANSLATABLE)
+						.dataType(DataTypeIec61360.STRING_TRANSLATABLE)
 						.shortName(new DefaultLangString.Builder()
 								.language(LANGUAGE)
 								.text("name")
@@ -126,19 +114,14 @@ public class AASPlantStructureSubmodel {
 						.build())
 				.build();
 	}
-	private static DataSpecification createDataSpecificationPlantDescription() {
-		return new DefaultDataSpecification.Builder()
-				.id("http://iasset.salzburgresearch.at/common/dataSpecification/plantDescription")
-				.description(new DefaultLangString.Builder()
-						.language(LANGUAGE)
-						.text("Data Specification for plant description")
-						.build())
-				.dataSpecificationContent(new DefaultDataSpecificationIEC61360.Builder()
+	private static EmbeddedDataSpecification createDataSpecificationPlantDescription() {
+		return new DefaultEmbeddedDataSpecification.Builder()
+				.dataSpecificationContent(new DefaultDataSpecificationIec61360.Builder()
 						.preferredName(new DefaultLangString.Builder()
 								.language(LANGUAGE)
 								.text("Plant Description")
 								.build())
-						.dataType(DataTypeIEC61360.STRING_TRANSLATABLE)
+						.dataType(DataTypeIec61360.STRING_TRANSLATABLE)
 						.shortName(new DefaultLangString.Builder()
 								.language(LANGUAGE)
 								.text("description")
@@ -159,14 +142,14 @@ public class AASPlantStructureSubmodel {
 						.language(LANGUAGE)
 						.text("Abfrage Operation für eine i-Asset Anlagenstruktur")
 						.build())
-				.kind(ModelingKind.TEMPLATE)
+				.kind(ModellingKind.TEMPLATE)
+				.semanticId(ReferenceUtils.asGlobalReference("http://iassset.salzburgresearch.at/common/plantStructureRequest"))
 				.submodelElement(new DefaultOperation.Builder()
 						.idShort("getPlantStructure")
 						.displayName(new DefaultLangString.Builder()
 								.language(LANGUAGE)
 								.text("Anlagenstruktur abrufen").build())
-						.semanticId(new DefaultReference.Builder()
-								.type(ReferenceTypes.GLOBAL_REFERENCE)
+						.semanticId(new DefaultExternalReference.Builder()
 								.key(new DefaultKey.Builder()
 										.type(KeyTypes.GLOBAL_REFERENCE)
 										.value("http://iasset.salzburgresarch.at/common/plantStructure")
@@ -199,8 +182,7 @@ public class AASPlantStructureSubmodel {
 												.language(LANGUAGE)
 												.text("AnlagenStrukturElement").build()
 										)
-										.semanticId(new DefaultReference.Builder()
-												.type(ReferenceTypes.GLOBAL_REFERENCE)
+										.semanticId(new DefaultExternalReference.Builder()
 												.key(new DefaultKey.Builder()
 														.type(KeyTypes.GLOBAL_REFERENCE)
 														.value("http://iasset.salzburgresearch.at/common/plantElement")
@@ -208,7 +190,9 @@ public class AASPlantStructureSubmodel {
 												.build())
 										.value(new DefaultProperty.Builder()
 												.idShort("name")
-												.kind(ModelingKind.TEMPLATE)
+												.qualifier(new DefaultQualifier.Builder()
+														.kind(QualifierKind.TEMPLATE_QUALIFIER)
+														.build())
 												.valueType(DataTypeDefXsd.STRING)
 												.embeddedDataSpecification(createDataSpecificationPlantName())
 												.displayName(new DefaultLangString.Builder()
@@ -218,7 +202,6 @@ public class AASPlantStructureSubmodel {
 												.build())
 										.value(new DefaultProperty.Builder()
 												.idShort("description")
-												.kind(ModelingKind.TEMPLATE)
 												.valueType(DataTypeDefXsd.STRING)
 												.displayName(new DefaultLangString.Builder()
 														.language(LANGUAGE)
@@ -270,8 +253,7 @@ public class AASPlantStructureSubmodel {
 												.text("Liste von Anlagen")
 												.build())
 										.typeValueListElement(AasSubmodelElements.SUBMODEL_ELEMENT_COLLECTION)
-										.semanticIdListElement(new DefaultReference.Builder()
-												.type(ReferenceTypes.MODEL_REFERENCE)
+										.semanticIdListElement(new DefaultModelReference.Builder()
 												.key(new DefaultKey.Builder()
 														.type(KeyTypes.SUBMODEL)
 														.value("http://iasset.salzburgresearch.at/common/plantStuctureRequestOperation")
@@ -287,27 +269,21 @@ public class AASPlantStructureSubmodel {
 														.language(LANGUAGE)
 														.text("AnlagenStrukturElement").build()
 												)
-												.semanticId(new DefaultReference.Builder()
-														.type(ReferenceTypes.GLOBAL_REFERENCE)
+												.semanticId(new DefaultExternalReference.Builder()
 														.key(new DefaultKey.Builder()
 																.type(KeyTypes.GLOBAL_REFERENCE)
 																.value("http://iasset.salzburgresearch.at/common/plantElement")
 																.build())
 														.build())
-												.embeddedDataSpecification(new DefaultDataSpecification.Builder()
+												.embeddedDataSpecification(new DefaultEmbeddedDataSpecification.Builder()
 														// 
-														.description(new DefaultLangString.Builder()
-																.language(LANGUAGE)
-																.text("Plant Structure Data Specification")
-																.build())
-														.dataSpecificationContent(new DefaultDataSpecificationIEC61360.Builder()
+														.dataSpecificationContent(new DefaultDataSpecificationIec61360.Builder()
 																.build()
 														)	
 														.build())
 													
 												.value(new DefaultProperty.Builder()
 														.idShort("name")
-														.kind(ModelingKind.TEMPLATE)
 														.valueType(DataTypeDefXsd.STRING)
 														.displayName(new DefaultLangString.Builder()
 																.language(LANGUAGE)
@@ -316,7 +292,6 @@ public class AASPlantStructureSubmodel {
 														.build())
 												.value(new DefaultProperty.Builder()
 														.idShort("description")
-														.kind(ModelingKind.TEMPLATE)
 														.valueType(DataTypeDefXsd.STRING)
 														.displayName(new DefaultLangString.Builder()
 																.language(LANGUAGE)
@@ -357,9 +332,7 @@ public class AASPlantStructureSubmodel {
 								.language(LANGUAGE)
 								.text("AnlagenStrukturElement").build()
 						)
-						.kind(ModelingKind.TEMPLATE)
-						.semanticId(new DefaultReference.Builder()
-								.type(ReferenceTypes.GLOBAL_REFERENCE)
+						.semanticId(new DefaultExternalReference.Builder()
 								.key(new DefaultKey.Builder()
 										.type(KeyTypes.GLOBAL_REFERENCE)
 										.value("http://iasset.salzburgresearch.at/common/plantElement")
@@ -367,7 +340,6 @@ public class AASPlantStructureSubmodel {
 								.build())
 						.value(new DefaultProperty.Builder()
 								.idShort("name")
-								.kind(ModelingKind.TEMPLATE)
 								.valueType(DataTypeDefXsd.STRING)
 								.qualifier(new DefaultQualifier.Builder()
 										.kind(QualifierKind.VALUE_QUALIFIER)
@@ -382,7 +354,6 @@ public class AASPlantStructureSubmodel {
 								.build())
 						.value(new DefaultProperty.Builder()
 								.idShort("description")
-								.kind(ModelingKind.TEMPLATE)
 								.valueType(DataTypeDefXsd.STRING)
 								.displayName(new DefaultLangString.Builder()
 										.language(LANGUAGE)
@@ -395,7 +366,6 @@ public class AASPlantStructureSubmodel {
 										.language(LANGUAGE)
 										.text("ID-Liste")
 										.build())
-								.kind(ModelingKind.TEMPLATE)
 								.valueTypeListElement(DataTypeDefXsd.STRING)
 								.embeddedDataSpecification(createDataSpecificationPlantIdentifier())
 								.description(new DefaultLangString.Builder()

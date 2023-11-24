@@ -8,19 +8,18 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Endpoint;
-import org.eclipse.aas4j.v3.model.Key;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Property;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.Key;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +33,7 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticLookupVisitor;
+import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
@@ -62,10 +62,10 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	}
 
 	private boolean hasSubmodelReference(AssetAdministrationShell theShell, String submodelIdentifier) {
-		Optional<Reference> submodelRef = theShell.getSubmodels().stream()
-				.filter(new Predicate<Reference>() {
+		Optional<ModelReference> submodelRef = theShell.getSubmodels().stream()
+				.filter(new Predicate<ModelReference>() {
 					@Override
-					public boolean test(Reference t) {
+					public boolean test(ModelReference t) {
 						if (t.getKeys().size() > 0 ) {
 							Key first = t.getKeys().get(0);
 							if (KeyTypes.SUBMODEL.equals(first.getType()) 
@@ -160,14 +160,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		return Optional.empty();
 	}
 	public Optional<Referable> resolve(Reference reference) {
-		switch(reference.getType()) {
-		case GLOBAL_REFERENCE:
-			KeyTypes type = ReferenceUtils.firstKeyType(reference);
-			break;
-		case MODEL_REFERENCE:
-			break;
-		}
-		return Optional.empty();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -241,18 +234,18 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		Optional<AssetAdministrationShell> shell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( shell.isPresent()) {
 			AssetAdministrationShell theShell = shell.get();
-			Optional<Reference> submodelReference =  theShell.getSubmodels().stream()
-					.filter(new Predicate<Reference>() {
+			Optional<ModelReference> submodelReference =  theShell.getSubmodels().stream()
+					.filter(new Predicate<ModelReference>() {
 
 						@Override
-						public boolean test(Reference t) {
+						public boolean test(ModelReference t) {
 							return ReferenceUtils.lastKeyType(t).equals(KeyTypes.SUBMODEL)
 									&& ReferenceUtils.lastKeyValue(t).equalsIgnoreCase(submodelIdentifier);
 						}
 					})
 					.findAny();
 			if (submodelReference.isEmpty()) {
-				theShell.getSubmodels().add(AasUtils.toReference(submodel));
+				theShell.getSubmodels().add(ReferenceUtils.toReference(submodel));
 				storage.persist(theShell);
 			}
 			submodel.setId(submodelIdentifier);
@@ -320,15 +313,15 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		return storage.persist(conceptDescription);
 	}
 	@Override
-	public List<Reference> getSubmodelReferences(String aasIdentifier) {
+	public List<ModelReference> getSubmodelReferences(String aasIdentifier) {
 		Optional<AssetAdministrationShell> shell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( shell.isPresent()) {
 			return shell.get().getSubmodels();
 		}
-		return new ArrayList<Reference>();
+		return new ArrayList<ModelReference>();
 	}
 	@Override
-	public List<Reference> setSubmodelReferences(String aasIdentifier, List<Reference> submodels) {
+	public List<ModelReference> setSubmodelReferences(String aasIdentifier, List<ModelReference> submodels) {
 		Optional<AssetAdministrationShell> theShell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( theShell.isPresent()) {
 			theShell.get().setSubmodels(submodels);
@@ -336,14 +329,14 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		return null;
 	}
 	@Override
-	public List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier) {
+	public List<ModelReference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier) {
 		Optional<AssetAdministrationShell> theShell = storage.findAssetAdministrationShellById(aasIdentifier);
 		if ( theShell.isPresent()) {
 			AssetAdministrationShell shell = theShell.get();
-			List<Reference> remaining = shell.getSubmodels().stream().filter(new Predicate<Reference>() {
+			List<ModelReference> remaining = shell.getSubmodels().stream().filter(new Predicate<ModelReference>() {
 
 				@Override
-				public boolean test(Reference t) {
+				public boolean test(ModelReference t) {
 					return ! submodelIdentifier.equalsIgnoreCase(ReferenceUtils.firstKeyValue(t));
 				}
 			}).collect(Collectors.toList());
@@ -450,10 +443,11 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	@Override
 	public <T extends SubmodelElement> Optional<T> getSubmodelElement(Reference reference, Class<T> clazz) {
 		// only model references are allowed
-		if (reference.getType()==null || ReferenceTypes.MODEL_REFERENCE.equals(reference.getType())) {
+		if ( ModelReference.class.isInstance(reference) ) {
 			return resolve(reference, clazz);		
+			
 		}
-		// TODO: in case it is a global reference, we will need to search the storage 
+		// TODO: in case it is a external reference, we will need to search the storage 
 		// for an element !!
 		for ( Submodel submodel : storage.getSubmodels() ) {
 			//
@@ -511,12 +505,30 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 			Optional<Endpoint> endpoint = descriptor.get().getEndpoints().stream().findFirst();
 			if (endpoint.isPresent()) {
 				
-				IAssetAdministrationShellInterface shellConnector = ConnectionProvider.getConnection(endpoint.get().getAddress()).getShellInterface();
+				IAssetAdministrationShellInterface shellConnector = ConnectionProvider.getConnection(endpoint.get().getProtocolInformation().getHref()).getShellInterface();
 				return shellConnector.invokeOperation(submodelIdentifier, path, parameterMap);
 			}
 		}
 		// TODO: Test this is reported to the caller!
 		throw new NotFoundException( aasIdentifier, submodelIdentifier, path);
+	}
+
+	@Override
+	public void registerAssetAdministrationShell(AssetAdministrationShellDescriptor aasIdentifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unregisterAssetAdministrationShell(String aasIdentifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Optional<OperationInvocation> getImplementation(String semanticId) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
 	}
 
 

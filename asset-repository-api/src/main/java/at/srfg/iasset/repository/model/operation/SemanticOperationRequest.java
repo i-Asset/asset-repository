@@ -1,6 +1,6 @@
 package at.srfg.iasset.repository.model.operation;
 
-import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 
 
 public class SemanticOperationRequest<T> {

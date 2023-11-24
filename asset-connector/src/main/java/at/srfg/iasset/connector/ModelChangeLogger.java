@@ -1,10 +1,10 @@
 package at.srfg.iasset.connector;
 
-import org.eclipse.aas4j.v3.model.BasicEventElement;
-import org.eclipse.aas4j.v3.model.DataElement;
-import org.eclipse.aas4j.v3.model.Operation;
-import org.eclipse.aas4j.v3.model.Property;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.BasicEventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 import at.srfg.iasset.repository.component.ModelListener;
 

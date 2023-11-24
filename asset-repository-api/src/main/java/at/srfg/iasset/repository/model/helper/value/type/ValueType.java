@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.eclipse.aas4j.v3.model.DataTypeDefXsd;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 
 public enum ValueType {

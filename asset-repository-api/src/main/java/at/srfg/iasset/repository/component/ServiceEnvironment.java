@@ -3,17 +3,20 @@ package at.srfg.iasset.repository.component;
 import java.util.List;
 import java.util.Optional;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Identifiable;
-import org.eclipse.aas4j.v3.model.Operation;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.OperationInvocationExecption;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
@@ -224,14 +227,14 @@ public interface ServiceEnvironment {
 	 * @param aasIdentifier
 	 * @return
 	 */
-	List<Reference> getSubmodelReferences(String aasIdentifier);
+	List<ModelReference> getSubmodelReferences(String aasIdentifier);
 	/**
 	 * Update the submodel reference list of the {@link AssetAdministrationShell}
 	 * @param aasIdentifier
 	 * @param submodels
 	 * @return
 	 */
-	List<Reference> setSubmodelReferences(String aasIdentifier, List<Reference> submodels);
+	List<ModelReference> setSubmodelReferences(String aasIdentifier, List<ModelReference> submodels);
 	/**
 	 * Remove a submodel reference from the {@link AssetAdministrationShell}. The {@link Submodel} itsel
 	 * is not affected by this operation!
@@ -239,7 +242,7 @@ public interface ServiceEnvironment {
 	 * @param submodelIdentifier
 	 * @return
 	 */
-	List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier);
+	List<ModelReference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier);
 	/**
 	 * Add a new {@link SubmodelElement} to the identified {@link Submodel}
 	 * @param aasIdentifier
@@ -298,6 +301,22 @@ public interface ServiceEnvironment {
 	 */
 	public OperationResultValue invokeOperationValue(String aasIdentifier, String submodelIdentifier, String path,
 			OperationRequestValue parameterMap);
+	/**
+	 * Register an asset described with it's {@link AssetAdministrationShellDescriptor} in the directory service
+	 * @param aasDescriptor
+	 */
+	public void registerAssetAdministrationShell(AssetAdministrationShellDescriptor aasDescriptor);
+	/**
+	 * Deregister a previously registered {@link AssetAdministrationShellDescriptor} from the directory service
+	 * @param aasIdentifier
+	 */
+	void unregisterAssetAdministrationShell(String aasIdentifier);
+	/**
+	 * Try to findd the implementation for the given semantic id 
+	 * @param semanticId
+	 * @return
+	 */
+	public Optional<OperationInvocation> getImplementation(String semanticId);
 	
 //	/**
 //	 * Execute the identified operation

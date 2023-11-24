@@ -1,9 +1,9 @@
 package at.srfg.iasset.repository.api.conn.impl;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +57,12 @@ public class DirectoryController implements DirectoryInterface {
 				ApiUtils.base64Decode(aasIdentifier),
 				ApiUtils.base64Decode(submodelIdentifier),
 				model);
+	}
+
+	@Override
+	public AssetAdministrationShellDescriptor lookupBySemanticId(String supplementalSemanticId) {
+		return service.getShellDescriptorBySupplementalSemanticId(
+				ApiUtils.base64Decode(supplementalSemanticId)).orElse(null);
 	}
 
 }

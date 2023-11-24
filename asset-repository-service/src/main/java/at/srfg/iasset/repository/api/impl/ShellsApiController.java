@@ -2,28 +2,27 @@ package at.srfg.iasset.repository.api.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.eclipse.aas4j.v3.dataformat.core.util.AasUtils;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetInformation;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.SpecificAssetId;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.aas4j.v3.model.impl.DefaultReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetInformation;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.SpecificAssetId;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +36,7 @@ import at.srfg.iasset.repository.api.exception.RepositoryNotFoundException;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationResult;
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -87,17 +87,12 @@ public class ShellsApiController implements ShellsApi {
 
 	public ResponseEntity<Void> deleteSubmodelReferenceById(String aasIdentifier, String submodelIdentifier)
 			throws RepositoryException {
-		Reference ref = new DefaultReference.Builder()
+		Reference ref = new DefaultModelReference.Builder()
 				.key(new DefaultKey.Builder()
 						.type(KeyTypes.SUBMODEL)
 						.value(ApiUtils.base64Decode(submodelIdentifier)).build())
-				.type(ReferenceTypes.GLOBAL_REFERENCE).build();
+				.build();
 		// delete
-		Reference ref2 = AasUtils.parseReference(submodelIdentifier, DefaultReference.class, DefaultKey.class);
-		if ( AasUtils.sameAs(ref, ref2)) {
-			// 
-			System.out.println("cool");
-		}
 		service.deleteSubmodelReference(ApiUtils.base64Decode(aasIdentifier), ref);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
@@ -113,9 +108,12 @@ public class ShellsApiController implements ShellsApi {
 		String submodelId = ApiUtils.base64Decode(submodelIdentifier);
 		// obtain the shell
 		AssetAdministrationShell theShell = getAssetAdministrationShell(aasIdentifier);
-		Reference ref = new DefaultReference.Builder()
-				.key(new DefaultKey.Builder().type(KeyTypes.SUBMODEL).value(submodelId).build())
-				.type(ReferenceTypes.GLOBAL_REFERENCE).build();
+		Reference ref = new DefaultModelReference.Builder()
+				.key(new DefaultKey.Builder()
+						.type(KeyTypes.SUBMODEL)
+						.value(submodelId)
+						.build())
+				.build();
 		// check the shell is contained in AAS
 		if (theShell.getSubmodels().contains(ref)) {
 			// obtain the shell
@@ -129,11 +127,11 @@ public class ShellsApiController implements ShellsApi {
 		return new ArrayList<SubmodelElement>();
 	}
 
-	public List<Reference> getAllSubmodelReferences(String aasIdentifier) throws RepositoryException {
+	public List<ModelReference> getAllSubmodelReferences(String aasIdentifier) throws RepositoryException {
 		String id = ApiUtils.base64Decode(aasIdentifier);
 		Optional<AssetAdministrationShell> aas = service.getAssetAdministrationShell(id);
 		if (!aas.isPresent()) {
-			return new ArrayList<Reference>();
+			return new ArrayList<ModelReference>();
 		} else {
 			return aas.get().getSubmodels();
 		}
@@ -145,7 +143,7 @@ public class ShellsApiController implements ShellsApi {
 		String accept = request.getHeader("Accept");
 		if (accept != null && accept.contains("application/json")) {
 //            try {
-			byte[] id = Base64Utils.decodeFromString(aasIdentifier);
+			byte[] id = Base64.getDecoder().decode(aasIdentifier);
 			String idString = new String(id);
 			Optional<AssetAdministrationShell> theShell = service.getAssetAdministrationShell(idString);
 			if (theShell.isPresent()) {
@@ -216,9 +214,12 @@ public class ShellsApiController implements ShellsApi {
 		String submodelId = ApiUtils.base64Decode(submodelIdentifier);
 		// obtain the shell
 		AssetAdministrationShell theShell = getAssetAdministrationShell(aasIdentifier);
-		Reference ref = new DefaultReference.Builder()
-				.key(new DefaultKey.Builder().type(KeyTypes.SUBMODEL).value(submodelId).build())
-				.type(ReferenceTypes.GLOBAL_REFERENCE).build();
+		Reference ref = new DefaultModelReference.Builder()
+				.key(new DefaultKey.Builder()
+						.type(KeyTypes.SUBMODEL)
+						.value(submodelId)
+						.build())
+				.build();
 		// check the shell is contained in AAS
 		if (theShell.getSubmodels().contains(ref)) {
 			// obtain the shell
@@ -284,18 +285,18 @@ public class ShellsApiController implements ShellsApi {
 		return new ResponseEntity<SubmodelElement>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
-	public ResponseEntity<Reference> postSubmodelReference(
+	public ResponseEntity<ModelReference> postSubmodelReference(
 			String aasIdentifier,
-			Reference body) throws RepositoryException {
+			ModelReference body) throws RepositoryException {
 		AssetAdministrationShell theShell = getAssetAdministrationShell(aasIdentifier);
 		Optional<Submodel> submodel  = service.getSubmodel(theShell.getId(), body.getKeys().get(0).getValue());
 		if ( submodel.isPresent()) {
 			theShell.getSubmodels().add(body);
 			// save
 			service.setAssetAdministrationShell(theShell.getId(), theShell);
-			return new ResponseEntity<Reference>(body, HttpStatus.CREATED);
+			return new ResponseEntity<ModelReference>(body, HttpStatus.CREATED);
 		}
-		return new ResponseEntity<Reference>(HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<ModelReference>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	public ResponseEntity<Void> putAssetAdministrationShellById(String aasIdentifier,	AssetAdministrationShell body) throws RepositoryException {
@@ -332,7 +333,7 @@ public class ShellsApiController implements ShellsApi {
 		AssetAdministrationShell theShell = getAssetAdministrationShell(ApiUtils.base64Decode(aasIdentifier));
 		
 //		Optional<Submodel> theSubmodel = service.getSubmodel(ApiUtils.base64Decode(submodelIdentifier));
-		Reference ref = AasUtils.toReference(body);
+		ModelReference ref = ReferenceUtils.toReference(body);
 		if (! theShell.getSubmodels().contains(ref)) {
 			theShell.getSubmodels().add(ref);
 			service.setAssetAdministrationShell(theShell.getId(), theShell);
