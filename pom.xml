@@ -27,4 +27,11 @@
 		<module>asset-repository-mongo</module>
 		<module>asset-repository-service</module>
 	</modules>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+			<scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
