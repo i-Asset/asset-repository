@@ -54,6 +54,8 @@ public class IsproNGConnector {
         return serviceEnvironment;
     }
 
+    ///TODO: Autorization Problem, check API KEY
+    ///TODO: Merge IAsset branch into ispro develop
     public static void main(String [] args) {
 
         try {
