@@ -22,7 +22,6 @@ $ mvn clean package -P i-Asset
 ```bash
 # to be done in a separate folder
 $ git clone git@github.com:i-Asset/aas4j
-$ git checkout development
 $ mvn clean install -DskipTests
 ```
 
@@ -41,5 +40,24 @@ $ git checkout development
 $ mvn clean install -DskipTests
 # run app (mongodb config required!)
 $ cd asset-repository-service
+$ mvn spring-boot:run
+```
+
+### Build and run the asset-connector
+
+The connector depends on a running asset repository and a messaging system, which can be configured in the application.properties of the asset connector
+```properties
+# asset-connector/src/main/resources/application.properties
+repository.baseUri=https://iasset.sensornet.salzburgresearch.at/repository-service/
+connector.network.id=
+connector.network.name=SRFG Lab System
+connector.network.broker.hosts=il061.salzburgresearch.at:9092,il062.salzburgresearch.at:9092,il063.salzburgresearch.at:9092
+connector.network.broker.type=KAFKA
+```
+
+
+```bash
+# run the connector
+$ cd ../asset-connector
 $ mvn spring-boot:run
 ```
