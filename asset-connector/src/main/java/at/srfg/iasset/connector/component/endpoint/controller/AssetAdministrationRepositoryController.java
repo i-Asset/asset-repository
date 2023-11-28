@@ -2,16 +2,21 @@ package at.srfg.iasset.connector.component.endpoint.controller;
 
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationRequestValue;
+import at.srfg.iasset.repository.model.operation.OperationResult;
+import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -31,7 +36,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Context
 	private SecurityContext securityContext;
 	/**
-	 * Injected IAssetProvider
+	 * Injected Service Environment
 	 */
 	@Inject
 	private ServiceEnvironment environment;
@@ -105,7 +110,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS )
-	public List<Reference> getSubmodels(
+	public List<ModelReference> getSubmodels(
 			@PathParam("aasIdentifier")
 			String aasIdentifier) {
 		return environment.getSubmodelReferences(ApiUtils.base64Decode(aasIdentifier));
@@ -236,20 +241,53 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
-	public Object invokeOperation(
+	public OperationResult invokeOperation(
 			@PathParam("aasIdentifier")
 			String aasIdentifier, 
 			@PathParam("submodelIdentifier")
 			String submodelIdentifier, 
 			@PathParam("path")
 			String path,
-			Object parameterMap) {
+			OperationRequest parameterMap) {
 		return environment.invokeOperation(					
 					ApiUtils.base64Decode(aasIdentifier), 
 					ApiUtils.base64Decode(submodelIdentifier), 
 					path, 
 					parameterMap);
 	}
+	@Override
+	@POST
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke/$value")
+	public OperationResultValue invokeOperation(
+			@PathParam("aasIdentifier")
+			String aasIdentifier, 
+			@PathParam("submodelIdentifier")
+			String submodelIdentifier, 
+			@PathParam("path")
+			String path,
+			OperationRequestValue parameterMap) {
+		return environment.invokeOperationValue(					
+					ApiUtils.base64Decode(aasIdentifier), 
+					ApiUtils.base64Decode(submodelIdentifier), 
+					path, 
+					parameterMap);
+	}
+//	@POST
+//	@Produces(value = MediaType.APPLICATION_JSON)
+//	@Consumes(value = MediaType.APPLICATION_JSON)
+//	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
+//	public OperationResult invoke(
+//			@PathParam("aasIdentifier")
+//			String aasIdentifier, 
+//			@PathParam("submodelIdentifier")
+//			String submodelIdentifier, 
+//			@PathParam("path")
+//			String path,
+//	OperationRequest parameterMap) {
+//		return environment.invokeOperation(aasIdentifier, submodelIdentifier, path, parameterMap);
+//	}
 
 	@Override
 	@GET
@@ -291,7 +329,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS)
-	public List<Reference> setSubmodels(@PathParam("aasIdentifier") String aasIdentifier, List<Reference> submodels) {
+	public List<ModelReference> setSubmodels(@PathParam("aasIdentifier") String aasIdentifier, List<ModelReference> submodels) {
 		return environment.setSubmodelReferences(ApiUtils.base64Decode(aasIdentifier), submodels);
 	}
 
@@ -300,7 +338,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER)
-	public List<Reference> removeSubmodelReference(@PathParam("aasIdentifier") String aasIdentifier, String submodelIdentifier) {
+	public List<ModelReference> removeSubmodelReference(@PathParam("aasIdentifier") String aasIdentifier, String submodelIdentifier) {
 		return environment.deleteSubmodelReference(	
 					ApiUtils.base64Decode(aasIdentifier), 
 					ApiUtils.base64Decode(submodelIdentifier)

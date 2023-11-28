@@ -3,11 +3,12 @@ package at.srfg.iasset.repository.model.helper.payload.mapper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.aas4j.v3.model.impl.DefaultReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultExternalReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
 
 import at.srfg.iasset.repository.model.helper.payload.PayloadValueMapper;
 import at.srfg.iasset.repository.model.helper.payload.ReferenceValue;
@@ -41,8 +42,7 @@ public class ReferenceValueMapper implements PayloadValueMapper<Reference, Refer
 	@Override
 	public Reference mapFromValue(ReferenceValue valueElement) {
 		if (isExternalReference(valueElement.getValue())) {
-			return new DefaultReference.Builder()
-					.type(ReferenceTypes.GLOBAL_REFERENCE)
+			return new DefaultExternalReference.Builder()
 					.key(new DefaultKey.Builder()
 							.type(KeyTypes.GLOBAL_REFERENCE)
 							.value(valueElement.getValue())
@@ -50,8 +50,7 @@ public class ReferenceValueMapper implements PayloadValueMapper<Reference, Refer
 					.build();
 		}
 		else {
-			DefaultReference.Builder builder = new DefaultReference.Builder();
-			builder.type(ReferenceTypes.MODEL_REFERENCE);
+			DefaultModelReference.Builder builder = new DefaultModelReference.Builder();
 			Matcher matcher = PATTERN.matcher(valueElement.getValue());
 			while (matcher.find()) {
 				builder.key(new DefaultKey.Builder()

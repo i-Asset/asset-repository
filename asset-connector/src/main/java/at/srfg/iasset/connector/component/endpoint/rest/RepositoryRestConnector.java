@@ -3,20 +3,24 @@ package at.srfg.iasset.connector.component.endpoint.rest;
 import java.net.URI;
 import java.util.Optional;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.eclipse.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.impl.DefaultEndpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEndpoint;
 
 import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
+import at.srfg.iasset.repository.api.DirectoryInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
-import at.srfg.iasset.repository.api.IAssetDirectory;
 import at.srfg.iasset.repository.api.SubmodelRepositoryInterface;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationRequestValue;
+import at.srfg.iasset.repository.model.operation.OperationResult;
+import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import jakarta.ws.rs.ServiceUnavailableException;
 
 public class RepositoryRestConnector implements RepositoryConnection {
@@ -31,7 +35,7 @@ public class RepositoryRestConnector implements RepositoryConnection {
 		return connection.getRepositoryInterface();
 	}
 
-	private IAssetDirectory getDirectoryService() {
+	private DirectoryInterface getDirectoryService() {
 		return connection.getIAssetDirectory();
 	}
 	private SubmodelRepositoryInterface getSubmodelRepositoryInterface() {
@@ -90,21 +94,10 @@ public class RepositoryRestConnector implements RepositoryConnection {
 	}
 
 	@Override
-	public boolean register(AssetAdministrationShell theShell, URI uri) {
-		// @formatter:off
-		AssetAdministrationShellDescriptor descriptor = new DefaultAssetAdministrationShellDescriptor.Builder()
-				.id(theShell.getId())
-				.displayNames(theShell.getDisplayNames())
-				.descriptions(theShell.getDescriptions())
-				.endpoint(new DefaultEndpoint.Builder()
-						.address(uri.toString())
-						.type("shell")
-						.build())
-				.build();
-		// @formatter:on
+	public boolean register(AssetAdministrationShellDescriptor descriptor) {
 		//
 		try {
-			getDirectoryService().register(theShell.getId(), descriptor);
+			getDirectoryService().register(descriptor.getId(), descriptor);
 			return true;
 		} catch (ServiceUnavailableException e) {
 			return false;
@@ -124,13 +117,28 @@ public class RepositoryRestConnector implements RepositoryConnection {
 	}
 
 	@Override
-	public Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameter) {
+	public OperationResult invokeOperation(String aasIdentifier, String submodelIdentifier, String path, OperationRequest parameter) {
 		try {
 			return getRepositoryService().invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
 		} catch (ServiceUnavailableException e) {
 			return null;
 		}
 		
+	}
+
+	@Override
+	public OperationResultValue invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
+			OperationRequestValue parameter) {
+		try {
+			return getRepositoryService().invokeOperation(aasIdentifier, submodelIdentifier, path, parameter);
+		} catch (ServiceUnavailableException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public Optional<AssetAdministrationShellDescriptor> findImplementation(String semanticId) {
+		return Optional.ofNullable( getDirectoryService().lookupBySemanticId(semanticId));
 	}
 
 }

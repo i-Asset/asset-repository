@@ -1,21 +1,21 @@
 package at.srfg.iasset.repository.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.eclipse.aas4j.v3.model.Entity;
-import org.eclipse.aas4j.v3.model.Key;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
-import org.eclipse.aas4j.v3.model.SubmodelElementCollection;
-import org.eclipse.aas4j.v3.model.SubmodelElementList;
+import org.eclipse.digitaltwin.aas4j.v3.model.Entity;
+import org.eclipse.digitaltwin.aas4j.v3.model.Key;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -133,8 +133,8 @@ public class SubmodelUtils {
 	 * @param path
 	 * @return
 	 */
-	public static Reference getReference(Submodel submodel, String path) {
-		Reference modelRef = ReferenceUtils.toReference(submodel);
+	public static ModelReference getReference(Submodel submodel, String path) {
+		ModelReference modelRef = ReferenceUtils.toReference(submodel);
 		Path thePath = new Path(path);
 		Iterator<String> tokenIterator = thePath.iterator();
 		Referable parent = submodel;
@@ -194,14 +194,14 @@ public class SubmodelUtils {
 	 * @param path The path pointing to the element
 	 * @return
 	 */
-	public static Object getValueAt(Submodel submodel, String path) {
+	public static SubmodelElementValue getValueAt(Submodel submodel, String path) {
 		
 		Optional<SubmodelElement> elem = getSubmodelElementAt(submodel, path);
 		if ( elem.isPresent()) {
 			return getValueOnly(elem.get());
 			
 		}
-		return new HashMap<String, Object>();
+		return null;
 	}
 	/**
 	 * Update the value of a {@link SubmodelElement}
@@ -229,7 +229,7 @@ public class SubmodelUtils {
 	 * @param type
 	 * @return
 	 */
-	private static <T extends Referable> Optional<T> getChild(Referable parent, String idShort, Class<T> type) {
+	private static <T extends SubmodelElement> Optional<T> getChild(Referable parent, String idShort, Class<T> type) {
 		if ( SubmodelElementList.class.isInstance(parent)) {
 			List<SubmodelElement> children = getChildren(parent);
 			int index = Integer.valueOf(idShort);
@@ -281,7 +281,7 @@ public class SubmodelUtils {
 		
 	}
 	private static boolean removeChild(Referable parent, String idShort) {
-		Optional<Referable> element = getChild(parent, idShort, Referable.class);
+		Optional<SubmodelElement> element = getChild(parent, idShort, SubmodelElement.class);
 		if ( element.isPresent() ) {
 			return getChildren(parent).remove(element.get());
 		}
@@ -351,17 +351,17 @@ public class SubmodelUtils {
 //		}
 //		return null;
 //	}
-	public static Optional<Referable> resolveKeyPath(Submodel submodel, Iterator<Key> keyIterator ) {
+	public static Optional<SubmodelElement> resolveKeyPath(Submodel submodel, Iterator<Key> keyIterator ) {
 		return resolveReferableKeyPath(submodel, keyIterator);
 		
 			
 		
 	}
-	private static Optional<Referable> resolveReferableKeyPath(Referable container, Iterator<Key> iterator  ) {
+	private static Optional<SubmodelElement> resolveReferableKeyPath(Referable container, Iterator<Key> iterator  ) {
 		if ( iterator.hasNext()) {
 			Key elementKey = iterator.next();
 			
-			Optional<Referable>  element = getChild(container, elementKey.getValue(), Referable.class);
+			Optional<SubmodelElement>  element = getChild(container, elementKey.getValue(), SubmodelElement.class);
 			if ( element.isPresent() && iterator.hasNext()) {
 				return resolveReferableKeyPath(element.get(), iterator);
 			}
@@ -398,7 +398,7 @@ public class SubmodelUtils {
 				}
 				throw new IllegalStateException("Reference is invalid!");
 			}
-			Optional<Referable> referable = getChild(referenced, key.getValue(), Referable.class);
+			Optional<SubmodelElement> referable = getChild(referenced, key.getValue(), SubmodelElement.class);
 			if (referable.isPresent()) {
 				referenced = referable.get();
 			}

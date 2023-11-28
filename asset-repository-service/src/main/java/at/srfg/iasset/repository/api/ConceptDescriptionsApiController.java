@@ -5,20 +5,20 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.DataSpecificationContent;
-import org.eclipse.aas4j.v3.model.DataTypeIEC61360;
-import org.eclipse.aas4j.v3.model.KeyTypes;
-import org.eclipse.aas4j.v3.model.LevelType;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.impl.DefaultConceptDescription;
-import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecification;
-import org.eclipse.aas4j.v3.model.impl.DefaultDataSpecificationIEC61360;
-import org.eclipse.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.aas4j.v3.model.impl.DefaultLangString;
-import org.eclipse.aas4j.v3.model.impl.DefaultReference;
-import org.eclipse.aas4j.v3.model.impl.DefaultValueList;
-import org.eclipse.aas4j.v3.model.impl.DefaultValueReferencePair;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContent;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.LevelType;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEmbeddedDataSpecification;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultExternalReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueList;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueReferencePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.srfg.iasset.repository.model.Result;
+import at.srfg.iasset.repository.api.model.Result;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -74,23 +74,22 @@ public class ConceptDescriptionsApiController implements ConceptDescriptionsApi 
 					.category("PARAMETER").id("http://myConceptIdentifier.org/id").idShort(idShort)
 					.displayName(new DefaultLangString.Builder().language("de").text("ConceptDescription").build())
 					.isCaseOf(
-							new DefaultReference.Builder()
+							new DefaultExternalReference.Builder()
 									.key(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE)
 											.value("0173-1#01-AFW236#003").build())
-									.type(ReferenceTypes.GLOBAL_REFERENCE).build())
-					.dataSpecification(new DefaultReference.Builder()
-							.key(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE)
-									.value("http://semanticLookup/classification").build())
-							.type(ReferenceTypes.GLOBAL_REFERENCE).build())
-					.embeddedDataSpecification(new DefaultDataSpecification.Builder()
-							.id("http://acplt.org/DataSpecifciations/Example/Identification")
-							.dataSpecificationContent(new DefaultDataSpecificationIEC61360.Builder()
+									.build())
+					.embeddedDataSpecification(new DefaultEmbeddedDataSpecification.Builder()
+							.dataSpecification(new DefaultExternalReference.Builder()
+									.key(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE)
+											.value("http://semanticLookup/classification").build())
+									.build())
+							.dataSpecificationContent(new DefaultDataSpecificationIec61360.Builder()
 									.preferredNames(Arrays.asList(
 											new DefaultLangString.Builder().text("Test Specification").language("de")
 													.build(),
 											new DefaultLangString.Builder()
 													.text("TestSpecification").language("en-us").build()))
-									.dataType(DataTypeIEC61360.REAL_MEASURE)
+									.dataType(DataTypeIec61360.REAL_MEASURE)
 									.definition(new DefaultLangString.Builder()
 											.text("Dies ist eine Data Specification für Testzwecke").language("de")
 											.build())
@@ -101,33 +100,33 @@ public class ConceptDescriptionsApiController implements ConceptDescriptionsApi 
 									.shortName(
 											new DefaultLangString.Builder().text("TestSpec").language("en-us").build())
 									.unit("SpaceUnit")
-									.unitId(new DefaultReference.Builder()
-											.key(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE)
-
+									.unitId(new DefaultExternalReference.Builder()
+											.key(new DefaultKey.Builder()
+													.type(KeyTypes.GLOBAL_REFERENCE)
 													.value("http://acplt.org/Units/SpaceUnit").build())
-											.type(ReferenceTypes.GLOBAL_REFERENCE).build())
+											.build())
 									.sourceOfDefinition("http://acplt.org/DataSpec/ExampleDef").symbol("SU")
 									.valueFormat("string").value("TEST").levelType(LevelType.MIN)
 //                                    .levelType(LevelType.MAX)
 									.valueList(new DefaultValueList.Builder()
-											.valueReferencePairs(new DefaultValueReferencePair.Builder()
+											.valueReferencePair(new DefaultValueReferencePair.Builder()
 													.value("http://acplt.org/ValueId/ExampleValueId")
-													.valueId(new DefaultReference.Builder()
+													.valueId(new DefaultExternalReference.Builder()
 															.key(new DefaultKey.Builder()
 																	.type(KeyTypes.GLOBAL_REFERENCE)
 																	.value("http://acplt.org/ValueId/ExampleValueId")
 																	.build())
-															.type(ReferenceTypes.GLOBAL_REFERENCE).build())
+															.build())
 													// TODO valueType
 													.build())
-											.valueReferencePairs(new DefaultValueReferencePair.Builder()
+											.valueReferencePair(new DefaultValueReferencePair.Builder()
 													.value("http://acplt.org/ValueId/ExampleValueId2")
-													.valueId(new DefaultReference.Builder()
+													.valueId(new DefaultExternalReference.Builder()
 															.key(new DefaultKey.Builder()
 																	.type(KeyTypes.GLOBAL_REFERENCE)
 																	.value("http://acplt.org/ValueId/ExampleValueId2")
 																	.build())
-															.type(ReferenceTypes.GLOBAL_REFERENCE).build())
+															.build())
 													// TODO valueType
 													.build())
 											.build())

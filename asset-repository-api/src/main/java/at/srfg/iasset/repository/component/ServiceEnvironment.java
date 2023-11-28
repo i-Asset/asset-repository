@@ -3,20 +3,42 @@ package at.srfg.iasset.repository.component;
 import java.util.List;
 import java.util.Optional;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Identifiable;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+
+import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.operation.OperationInvocation;
+import at.srfg.iasset.repository.model.operation.OperationInvocationExecption;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationRequestValue;
+import at.srfg.iasset.repository.model.operation.OperationResult;
+import at.srfg.iasset.repository.model.operation.OperationResultValue;
 /**
- * 
+ * Defines functionality for managing the AAS Service Model. 
  * @author dglachs
  *
  */
 public interface ServiceEnvironment {
+	/**
+	 * Add a {@link ModelListener} to the current service environment
+	 * @param listener
+	 */
+	public void addModelListener(ModelListener listener);
+	/**
+	 * Remove a {@link ModelListener} from the service environment
+	 * @param listener
+	 */
+	public void removeModelListener(ModelListener listener);
+
 	/**
 	 * Obtain a {@link Submodel}. The {@link Submodel} is only returned when it exists and is assigned to the {@link AssetAdministrationShell}
 	 * @param aasIdentifier The {@link AssetAdministrationShell} containing/referencing the {@link Submodel}
@@ -132,13 +154,21 @@ public interface ServiceEnvironment {
 	Optional<SubmodelElement> getSubmodelElement(String submodelIdentifier, String path);
 
 	/**
-	 * Update a submodel in the repository. Maintain the list of assigned repositories with the AAS
+	 * Update a {@link Submodel} in the repository. Maintain the list of assigned repositories with the AAS
 	 * @param aasIdentifier
 	 * @param submodelIdentifier
 	 * @param submodel
 	 * @return
 	 */
 	Submodel setSubmodel(String aasIdentifier, String submodelIdentifier, Submodel submodel);
+	/**
+	 * Update a {@link Submodel} in the service environment. 
+	 * @param submodelIdentifier The identifier of the Submodel
+	 * @param submodel The Submodel including all contained {@link SubmodelElement}'s
+	 * @return The updated submodel
+	 */
+	Submodel setSubmodel(String submodelIdentifier, Submodel submodel);
+	
 	/**
 	 * 
 	 * @param aasIdentifier
@@ -153,7 +183,7 @@ public interface ServiceEnvironment {
 	 * @param path
 	 * @return
 	 */
-	Object getElementValue(String aasIdentifier, String submodelIdentifier, String path);
+	SubmodelElementValue getElementValue(String aasIdentifier, String submodelIdentifier, String path);
 	/**
 	 * Obtain the ValueOnly representation of a SubmodelElement
 	 * @param aasIdentifier
@@ -161,18 +191,21 @@ public interface ServiceEnvironment {
 	 * @param path
 	 * @return
 	 */
-	Object getElementValue(String submodelIdentifier, String path);
+	SubmodelElementValue getElementValue(String submodelIdentifier, String path);
 	/**
 	 * Obtain the ValueOnly representation of a {@link Reference} of type {@link ReferenceTypes#MODEL_REFERENCE}
 	 * @param reference
 	 * @return The value only serialization of the referenced element
 	 */
-	Object getElementValue(Reference reference);
+	SubmodelElementValue getElementValue(Reference reference);
 	/**
-	 * Obtain the full representation of a {@link Referable} element. 
+	 * Obtain the full representation of a {@link Referable} element.
+	 * <T> 
 	 * @param reference The {@link Referable} of type {@link ReferenceTypes#MODEL_REFERENCE}
+	 * @param clazz The (expected) type of the referenced SubmodelElement
 	 * @return The {@link Referable} element or <code>null</code> when not found
 	 */
+	<T extends SubmodelElement> Optional<T> getSubmodelElement(Reference reference, Class<T> clazz);
 	Optional<Referable> getSubmodelElement(Reference reference);
 	/**
 	 * Update a {@link SubmodelElement} based on it's ValueOnly representation
@@ -194,14 +227,14 @@ public interface ServiceEnvironment {
 	 * @param aasIdentifier
 	 * @return
 	 */
-	List<Reference> getSubmodelReferences(String aasIdentifier);
+	List<ModelReference> getSubmodelReferences(String aasIdentifier);
 	/**
 	 * Update the submodel reference list of the {@link AssetAdministrationShell}
 	 * @param aasIdentifier
 	 * @param submodels
 	 * @return
 	 */
-	List<Reference> setSubmodelReferences(String aasIdentifier, List<Reference> submodels);
+	List<ModelReference> setSubmodelReferences(String aasIdentifier, List<ModelReference> submodels);
 	/**
 	 * Remove a submodel reference from the {@link AssetAdministrationShell}. The {@link Submodel} itsel
 	 * is not affected by this operation!
@@ -209,7 +242,7 @@ public interface ServiceEnvironment {
 	 * @param submodelIdentifier
 	 * @return
 	 */
-	List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier);
+	List<ModelReference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier);
 	/**
 	 * Add a new {@link SubmodelElement} to the identified {@link Submodel}
 	 * @param aasIdentifier
@@ -217,22 +250,7 @@ public interface ServiceEnvironment {
 	 * @param element
 	 */
 	SubmodelElement setSubmodelElement(String aasIdentifier, String submodelIdentifier, SubmodelElement element);
-	/**
-	 * Execute the identified operation
-	 * @param aasIdentifier
-	 * @param submodelIdentifier
-	 * @param path
-	 * @param parameterMap
-	 * @return
-	 */
-	Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameterMap);
-	/**
-	 * Execute the identified operation
-	 * @param operation
-	 * @param parameter
-	 * @return
-	 */
-	Object invokeOperation(Reference operation, Object parameter);
+
 	/**
 	 * Find all {@link SubmodelElement} of the requested type and with the required semanticId 
 	 * @param <T>
@@ -242,7 +260,7 @@ public interface ServiceEnvironment {
 	 */
 	<T extends SubmodelElement> List<T> getSubmodelElements(String aasIdentifier, String submodelIdentifier, Reference semanticId, Class<T> clazz);
 	/**
-	 * Obtain the value only representation of the {@link SubmodelElement} and convert it to the provided type!
+	 * Obtain the value only representation of the {@link SubmodelElement} and convert it to the requested type!
 	 * @param <T>
 	 * @param submodelIdentifier
 	 * @param path
@@ -250,8 +268,70 @@ public interface ServiceEnvironment {
 	 * @return
 	 */
 	<T> T getElementValue(String submodelIdentifier, String path, Class<T> clazz);
-
-	String getConfigProperty(String key);
+	/**
+	 * Obtain the value only representation of the {@link SubmodelElement} and convert it to the requested type!
+	 * @param <T>
+	 * @param submodelIdentifier
+	 * @param path
+	 * @param clazz
+	 * @return
+	 */
+	public <T> T getElementValue(String aasIdentifier, String submodelIdentifier, String path, Class<T> clazz);
 	
-
+	@Deprecated
+	String getConfigProperty(String key);
+	/**
+	 * Execute the identified {@link Operation} and pass the appropriate {@link OperationRequest} as payload
+	 * @param aasIdentifier
+	 * @param submodelIdentifier The submodel
+	 * @param path The path to the operation
+	 * @param parameterMap
+	 * @return
+	 * @throws OperationInvocationExecption 
+	 */
+	public OperationResult invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
+			OperationRequest parameterMap);
+	/**
+	 * Execute the identified {@link Operation} and pass the appropriate {@link OperationRequestValue} as payload
+	 * @param aasIdentifier
+	 * @param submodelIdentifier The submodel
+	 * @param path The path to the operation
+	 * @param parameterMap
+	 * @return
+	 */
+	public OperationResultValue invokeOperationValue(String aasIdentifier, String submodelIdentifier, String path,
+			OperationRequestValue parameterMap);
+	/**
+	 * Register an asset described with it's {@link AssetAdministrationShellDescriptor} in the directory service
+	 * @param aasDescriptor
+	 */
+	public void registerAssetAdministrationShell(AssetAdministrationShellDescriptor aasDescriptor);
+	/**
+	 * Deregister a previously registered {@link AssetAdministrationShellDescriptor} from the directory service
+	 * @param aasIdentifier
+	 */
+	void unregisterAssetAdministrationShell(String aasIdentifier);
+	/**
+	 * Try to findd the implementation for the given semantic id 
+	 * @param semanticId
+	 * @return
+	 */
+	public Optional<OperationInvocation> getImplementation(String semanticId);
+	
+//	/**
+//	 * Execute the identified operation
+//	 * @param aasIdentifier
+//	 * @param submodelIdentifier
+//	 * @param path
+//	 * @param parameterMap
+//	 * @return
+//	 */
+//	Object invokeOperation(String aasIdentifier, String submodelIdentifier, String path, Object parameterMap);
+//	/**
+//	 * Execute the identified operation
+//	 * @param operation
+//	 * @param parameter
+//	 * @return
+//	 */
+//	Object invokeOperation(Reference operation, Object parameter);
 }

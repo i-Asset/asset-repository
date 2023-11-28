@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.Identifiable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.springframework.data.annotation.Id;
 
 public abstract class Document<T extends Identifiable> {

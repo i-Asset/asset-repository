@@ -3,12 +3,12 @@ package at.srfg.iasset.repository.connectivity;
 import java.net.URI;
 import java.net.URL;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
+import at.srfg.iasset.repository.api.DirectoryInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
-import at.srfg.iasset.repository.api.IAssetDirectory;
 import at.srfg.iasset.repository.api.SemanticLookupService;
 import at.srfg.iasset.repository.api.SubmodelRepositoryInterface;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
@@ -37,7 +37,7 @@ public interface ConnectionProvider {
 	 * The final service path is combine with the provided <code>host address</code> and the suffix <code>/repository</code>
 	 * </p>
 	 * 
-	 * @return A proxy-object connected with the r
+	 * @return A proxy-object connected with the remote asset repository
 	 */
 	IAssetAdministrationShellRepositoryInterface getRepositoryInterface();
 	/**
@@ -64,11 +64,11 @@ public interface ConnectionProvider {
 	 * Obtain a service interface connected with the central repository service
 	 * @return
 	 */
-	IAssetDirectory getIAssetDirectory();
+	DirectoryInterface getIAssetDirectory();
 
 	class Connection implements ConnectionProvider {
 		private IAssetAdministrationShellRepositoryInterface repositoryInterface;
-		private IAssetDirectory directoryInterface;
+		private DirectoryInterface directoryInterface;
 		private SubmodelRepositoryInterface submodelRepository;
 		private SemanticLookupService lookupService;
 		final String host;
@@ -99,7 +99,7 @@ public interface ConnectionProvider {
 						IAssetAdministrationShellInterface.class);	
 		}
 		@Override
-		public IAssetDirectory getIAssetDirectory() {
+		public DirectoryInterface getIAssetDirectory() {
 			if ( directoryInterface == null) {
 				directoryInterface = ConsumerFactory.createConsumer(
 						// construct the URL
@@ -107,7 +107,7 @@ public interface ConnectionProvider {
 						// the Client Factory creates a client configured with the AAS Model (default implementations & mixins)
 						ClientFactory.getInstance().getClient(), 
 						// the interface class
-						IAssetDirectory.class);	
+						DirectoryInterface.class);	
 			}
 			return directoryInterface;
 		}

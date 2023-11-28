@@ -1,6 +1,6 @@
 package at.srfg.iasset.repository.persistence.model;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 
 public class AssetAdministrationShellData extends Document<AssetAdministrationShell> {
 	public AssetAdministrationShellData() {

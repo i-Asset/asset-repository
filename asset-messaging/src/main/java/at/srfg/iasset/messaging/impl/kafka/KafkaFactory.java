@@ -1,7 +1,5 @@
 package at.srfg.iasset.messaging.impl.kafka;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-
 import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.messaging.impl.BrokerFactory;
 import at.srfg.iasset.messaging.impl.MessageConsumer;

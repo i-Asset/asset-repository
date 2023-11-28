@@ -9,7 +9,9 @@ public class IntegerValue extends Value<Integer>{
 
 	@Override
 	public Value<Integer> fromValue(String stringValue) {
-		setValue(Integer.parseInt(stringValue));
+		if ( stringValue != null) {
+			setValue(Integer.parseInt(stringValue));
+		}
 		return this;
 	}
 

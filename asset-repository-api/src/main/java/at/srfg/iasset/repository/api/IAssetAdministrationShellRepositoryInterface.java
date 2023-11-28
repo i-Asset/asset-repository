@@ -2,13 +2,14 @@ package at.srfg.iasset.repository.api;
 
 import java.util.List;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.Identifiable;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
-import org.eclipse.aas4j.v3.model.Submodel;
-import org.eclipse.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import at.srfg.iasset.repository.api.annotation.Base64Encoded;
+import at.srfg.iasset.repository.model.operation.OperationRequest;
+import at.srfg.iasset.repository.model.operation.OperationRequestValue;
+import at.srfg.iasset.repository.model.operation.OperationResult;
+import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -184,7 +189,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS)
-	public List<Reference> getSubmodels(
+	public List<ModelReference> getSubmodels(
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 
@@ -202,7 +207,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS)
-	public List<Reference> setSubmodels(
+	public List<ModelReference> setSubmodels(
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 
@@ -212,7 +217,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 			@PathVariable("aasIdentifier") 
 			String aasIdentifier,
 			@RequestBody
-			List<Reference> submodels
+			List<ModelReference> submodels
 			);
 
 	/**
@@ -224,7 +229,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	@RequestMapping(
 			method = RequestMethod.DELETE,
 			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER)
-	public List<Reference> removeSubmodelReference(
+	public List<ModelReference> removeSubmodelReference(
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 
@@ -466,12 +471,12 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	 * @param parameterMap
 	 * @return
 	 */
-	@Operation(summary =  "Obtain the identifiable element",
+	@Operation(summary =  "Invoke the operation",
 			tags = "Asset Administration Shell Repository Interface (for Connector)")
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
-	public Object invokeOperation(
+	public OperationResult invokeOperation(
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 
@@ -492,7 +497,40 @@ public interface IAssetAdministrationShellRepositoryInterface {
 			@PathVariable("path")
 			String path,
 			@RequestBody
-			Object parameterMap);
+			OperationRequest parameterMap);
+	/**
+	 * Invoke the operation named with the path
+	 * @param path
+	 * @param parameterMap
+	 * @return
+	 */
+	@Operation(summary =  "Invoke the operation",
+			tags = "Asset Administration Shell Repository Interface (for Connector)")
+	@RequestMapping(
+			method = RequestMethod.POST,
+			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke/$value")
+	public OperationResultValue invokeOperation(
+			@Base64Encoded
+			@Parameter(
+					in = ParameterIn.PATH, 
+					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
+					required = true, 
+					schema = @Schema()) 
+			@PathVariable("aasIdentifier")
+			String aasIdentifier,
+			@Base64Encoded
+			@Parameter(
+					in = ParameterIn.PATH, 
+					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
+					required = true, 
+					schema = @Schema()) 
+			@PathVariable("submodelIdentifier")
+			String submodelIdentifier,
+			@Parameter(description = "The path to the container")
+			@PathVariable("path")
+			String path,
+			@RequestBody
+			OperationRequestValue parameterMap);
 	
 	/**
 	 * Obtain the {@link AssetAdministrationShell} 

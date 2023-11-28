@@ -1,6 +1,6 @@
 package at.srfg.iasset.repository.model.helper.value.mapper;
 
-import org.eclipse.aas4j.v3.model.Blob;
+import org.eclipse.digitaltwin.aas4j.v3.model.Blob;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

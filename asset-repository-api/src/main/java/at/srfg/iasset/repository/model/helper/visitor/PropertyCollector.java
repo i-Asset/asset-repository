@@ -3,9 +3,9 @@ package at.srfg.iasset.repository.model.helper.visitor;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.aas4j.v3.dataformat.core.visitor.AssetAdministrationShellElementWalkerVisitor;
-import org.eclipse.aas4j.v3.model.Property;
-import org.eclipse.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.visitor.AssetAdministrationShellElementWalkerVisitor;
+import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 
 public class PropertyCollector {
 	public PropertyCollector() {

@@ -1,6 +1,6 @@
 package at.srfg.iasset.repository.model.helper.value.mapper;
 
-import org.eclipse.aas4j.v3.model.ReferenceElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceElement;
 
 import at.srfg.iasset.repository.model.helper.value.ReferenceElementValue;
 
@@ -8,7 +8,10 @@ public class ReferenceElementValueMapper implements ValueMapper<ReferenceElement
 
 	@Override
 	public ReferenceElementValue mapToValue(ReferenceElement modelElement) {
-		return new ReferenceElementValue(modelElement.getValue().getKeys());
+		if ( modelElement.getValue() != null ) {
+			return new ReferenceElementValue(modelElement.getValue().getKeys());
+		}
+		return null;
 	}
 
 }

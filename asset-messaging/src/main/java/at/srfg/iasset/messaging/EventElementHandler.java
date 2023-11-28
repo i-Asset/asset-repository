@@ -1,10 +1,12 @@
 package at.srfg.iasset.messaging;
 
-import org.eclipse.aas4j.v3.model.Direction;
-import org.eclipse.aas4j.v3.model.EventElement;
-import org.eclipse.aas4j.v3.model.EventPayload;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
+import java.util.List;
+
+import org.eclipse.digitaltwin.aas4j.v3.model.Direction;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 
 import at.srfg.iasset.messaging.exception.MessagingException;
 
@@ -35,6 +37,13 @@ public interface EventElementHandler {
 	 * @return
 	 */
 	boolean handlesReferences(Reference ... references);
+	/**
+	 * Check whether the actual element handler has all the references
+	 * assigned. 
+	 * @param references The list of references
+	 * @return
+	 */
+	boolean handlesReferences(List<Reference> references);
 	/**
 	 * Is the event handling currently active or not
 	 * @return
@@ -72,7 +81,7 @@ public interface EventElementHandler {
 //	 */
 //	<T> EventProducer<T> getProducer(Class<T> payloadType, Reference ...reference);
 	
-	<T> void registerHandler(EventHandler<T> handler) throws MessagingException;
+	
 	/**
 	 * Registers an event handler to be notified when the payload matches all the provided 
 	 * references!
@@ -82,6 +91,7 @@ public interface EventElementHandler {
 	 * @throws MessagingException 
 	 */
 	<T> void registerHandler(EventHandler<T> handler, Reference ... references) throws MessagingException;
+	<T> void registerHandler(EventHandler<T> handler, String topic, Reference... references) throws MessagingException;
 	<T> void removeHandler(EventHandler<T> handler) throws MessagingException;
 	
 	void sendEvent(Object eventPayload) throws MessagingException;

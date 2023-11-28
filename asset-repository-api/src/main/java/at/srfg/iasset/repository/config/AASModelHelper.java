@@ -1,5 +1,6 @@
 package at.srfg.iasset.repository.config;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,10 +15,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.eclipse.aas4j.v3.dataformat.core.util.MostSpecificTypeTokenComparator;
-import org.eclipse.aas4j.v3.model.DataSpecificationContent;
-import org.eclipse.aas4j.v3.model.Referable;
-import org.eclipse.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.util.MostSpecificTypeTokenComparator;
+import org.eclipse.digitaltwin.aas4j.v3.model.AasSubmodelElements;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContent;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +30,15 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
-
+/** 
+ * Class replacing the ReflectionHelper from the core package. This is required 
+ * to avoid loading the original class when collecting the classes for the AAS model
+ * 
+ * @implNote inspired from aas4j, (c) by Fraunhofer, ReflectionHelper class
+ */
 public class AASModelHelper {
     private static final Logger logger = LoggerFactory.getLogger(AASModelHelper.class);
-    private static final String ROOT_PACKAGE_NAME = "org.eclipse.aas4j.v3";
+    private static final String ROOT_PACKAGE_NAME = "org.eclipse.digitaltwin.aas4j.v3";
     /**
      * Name of package where the generated model classes are defined
      */
@@ -198,7 +206,29 @@ public class AASModelHelper {
     public static boolean isModelInterfaceOrDefaultImplementation(Class<?> type) {
         return isModelInterface(type) || isDefaultImplementation(type);
     }
-
+    public static <T extends SubmodelElement> T newElementInstance(Class<T> interfaceClass) {
+    	Class<?> defaultImpl = getDefaultImplementation(interfaceClass);
+    	try {
+			return (T) defaultImpl.getConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			return null;
+		}
+    	
+    }
+    public static SubmodelElement newSubmodelElement(AasSubmodelElements elementType) {
+    	String interfaceClass = MODEL_PACKAGE_NAME +"."+ elementType.toString();
+    	try {
+    		Class<?> clazz = Class.forName(interfaceClass);
+    		Class<?> defaultImpl = getDefaultImplementation(clazz);
+    		if ( SubmodelElement.class.isAssignableFrom(defaultImpl)) {
+    			return (SubmodelElement) defaultImpl.getConstructor().newInstance();
+    		}
+    		return null;
+    	} catch(Exception e) {
+    		return null;
+    	}
+    }
     public static Class<?> getAasInterface(Class<?> type) {
         Set<Class<?>> implementedAasInterfaces = getAasInterfaces(type);
         if (implementedAasInterfaces.isEmpty()) {

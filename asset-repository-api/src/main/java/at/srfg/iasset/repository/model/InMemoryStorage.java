@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.eclipse.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.aas4j.v3.model.ConceptDescription;
-import org.eclipse.aas4j.v3.model.DataSpecification;
-import org.eclipse.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 import at.srfg.iasset.repository.component.Persistence;
 
@@ -137,15 +135,9 @@ public class InMemoryStorage implements Persistence {
 	}
 
 	@Override
-	public List<DataSpecification> getDataSpecifications() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDataSpecifications(List<DataSpecification> dataSpecifications) {
-		// TODO Auto-generated method stub
-		
+	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticId(
+			String supplemental) {
+		throw new UnsupportedOperationException();
 	}
 
 }

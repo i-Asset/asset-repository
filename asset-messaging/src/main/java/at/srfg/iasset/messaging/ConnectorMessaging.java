@@ -1,14 +1,14 @@
 package at.srfg.iasset.messaging;
 
-import org.eclipse.aas4j.v3.model.BasicEventElement;
-import org.eclipse.aas4j.v3.model.EventPayload;
-import org.eclipse.aas4j.v3.model.Reference;
+import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.digitaltwin.aas4j.v3.model.BasicEventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
+import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 
 import at.srfg.iasset.messaging.exception.MessagingException;
-import at.srfg.iasset.messaging.impl.MessagingComponent;
-import at.srfg.iasset.repository.component.ServiceEnvironment;
 
 /**
  * The EventProcessor is the mediator between the Asset/Application Connector
@@ -29,10 +29,6 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
  *
  */
 public interface ConnectorMessaging {
-	static ConnectorMessaging create(ObjectMapper objectMapper, ServiceEnvironment environment) {
-		return new MessagingComponent(objectMapper, environment);
-	}
-
 	/**
 	 * Registers an {@link EventHandler} with the messaging infrastructure.
 	 * The {@link EventHandler#onEventMessage(org.eclipse.aas4j.v3.model.EventPayload, Object)}
@@ -44,7 +40,8 @@ public interface ConnectorMessaging {
 	 * @param semanticReference The global reference identifier
 	 * @see #registerHandler(EventHandler, Reference...)
 	 */
-	<T> void registerHandler(EventHandler<T> handler, String ... globalReferences) throws MessagingException;
+	<T> void registerHandler(EventHandler<T> handler, String semanticId, String ... globalReferences) throws MessagingException;
+	<T> void registerHandler(EventHandler<T> handler, String semanticId, String topic, String ... globalReferences) throws MessagingException;
 	/**
 	 * Registers an {@link EventHandler} with the messaging infrastructure.
 	 * The {@link EventHandler#onEventMessage(org.eclipse.aas4j.v3.model.EventPayload, Object)}
@@ -54,9 +51,27 @@ public interface ConnectorMessaging {
 	 * @param handler The respective {@link EventHandler} implementing the {@link EventHandler#onEventMessage(EventPayload, Object)}
 	 *                method
 	 * @param references Global References for matching incoming messages. Only events with <b>ALL</b> requested references 
-	 *                   will be propagated to {@link EventHandler#onEventMessage(EventPayload, Object)}
+	 *                   will be propagated to {@link EventHandler#onEventMessage(EventPayload, Object)}.
+	 *                   
 	 */
-	<T> void registerHandler(EventHandler<T> handler, Reference ... references) throws MessagingException;
+	<T> void registerHandler(EventHandler<T> handler, Reference semanticReference, Reference ... additionalReferences) throws MessagingException;
+	<T> void registerHandler(EventHandler<T> handler, Reference semanticReference, String topic, Reference ... references) throws MessagingException;
+	<T> void registerHandler(EventHandler<T> handler, Reference semanticReference, List<Reference> references) throws MessagingException;
+	/**
+	 * Registers an {@link EventHandler} with the messaging infrastructure. 
+	 * The {@link EventHandler#onEventMessage(EventPayload, Object)}
+	 * is invoked on every incoming message which is (somehow) connected with the provided
+	 * identifier.
+	 * @param <T> The type of the Payload Object
+	 * @param handler The respective {@link EventHandler} implementing the {@link EventHandler#onEventMessage(EventPayload, Object)}
+	 *                method
+	 * @param topic The topic to subscribe
+	 * @param references The references for matching incoming reference. The first reference points to the 
+	 *                   {@link EventElement}'s semantic id. The remaining references are use for filtering 
+	 *                   incoming messages.
+	 * @throws MessagingException
+	 */
+	<T> void registerHandler(EventHandler<T> handler, Reference semanticReference, String topic, List<Reference> references) throws MessagingException;
 	/**
 	 * Creates an {@link EventProducer} used to send typed data objects to the 
 	 * outer messaging infrastructure.
@@ -95,7 +110,7 @@ public interface ConnectorMessaging {
 	 * Register an event element
 	 * @param elementRef
 	 */
-	void registerEventElement(Reference elementRef);
+	void registerEventElement(ModelReference elementRef) throws MessagingException;
 	
 	
 }

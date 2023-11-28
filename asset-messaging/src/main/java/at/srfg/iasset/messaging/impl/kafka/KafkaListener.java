@@ -42,18 +42,6 @@ public class KafkaListener implements MessageConsumer {
 
 	@Override
 	public void subscribe(String topic, MessageHandler handler) throws MessagingException {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                consumer.wakeup();
-
-//                // join the main thread to allow the execution of the code in the main thread
-//                try {
-//                    mainThread.join();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-            }
-        });
 		
 		Thread runner = new Thread(new Runnable() {
 			
@@ -95,7 +83,7 @@ public class KafkaListener implements MessageConsumer {
 				}
 				
 			}
-		});
+		}, topic);
 		runner.start();
 
 	}
