@@ -16,7 +16,7 @@ node('iasset-jenkins-slave') {
             sh 'rm -rf aas4j'
             sh 'git clone git@github.com:i-Asset/aas4j'
             dir('aas4j') {
-                sh 'git checkout ' + env.BRANCH_NAME
+                // sh 'git checkout ' + env.BRANCH_NAME
                 sh 'mvn clean install -DskipTests'
             }
         }
