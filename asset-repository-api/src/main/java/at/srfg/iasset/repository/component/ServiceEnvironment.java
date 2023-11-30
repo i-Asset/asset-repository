@@ -17,7 +17,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationInvocationExecption;
+import at.srfg.iasset.repository.model.operation.OperationInvocationException;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
@@ -83,7 +83,7 @@ public interface ServiceEnvironment {
 	 */
 	boolean deleteSubmodelReference(String aasIdentifier, Reference ref);
 	/**
-	 * Resolve a reference from the Environment
+	 * Resolve a reference from the Environment. 
 	 * @param <T>
 	 * @param reference The reference pointing to the model element
 	 * @param type The expected type of the referenced model element 
@@ -287,7 +287,7 @@ public interface ServiceEnvironment {
 	 * @param path The path to the operation
 	 * @param parameterMap
 	 * @return
-	 * @throws OperationInvocationExecption 
+	 * @throws OperationInvocationException 
 	 */
 	public OperationResult invokeOperation(String aasIdentifier, String submodelIdentifier, String path,
 			OperationRequest parameterMap);

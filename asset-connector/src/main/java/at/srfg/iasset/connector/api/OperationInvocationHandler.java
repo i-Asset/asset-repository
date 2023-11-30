@@ -11,6 +11,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,7 +26,9 @@ import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
 import at.srfg.iasset.repository.model.operation.OperationResultValue;
-
+/**
+ * Handler covering the execution of operations
+ */
 public class OperationInvocationHandler implements OperationInvocation, OperationInvocationResult {
 	
 	private final Operation operation;
@@ -168,20 +171,12 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		}
 		return this;
 	}
-//	/**
-//	 * Map the collected data to an {@link OperationRequest}
-//	 */
-//	public OperationResultValue getValueResult() {
-//		//
-//		return getOperationResultValue();
-//	}
-
 	/**
-	 * Invoke the Operation with the provided asset identifier!
-	 * @param assetIdentifier The identifier of the AAS responsible for execution
-	 * @return the result of the invocation
+	 * Apply the provided parameter to the {@link SubmodelElement}
+	 * @param <T>
+	 * @param submodelElement The element reflecting the provided object
+	 * @param value The (typed) value object
 	 */
-	
 	private <T> void applyParameter(SubmodelElement submodelElement, T value) {
 		// 
 		JsonNode valueAsNode = objectMapper.convertValue(value, JsonNode.class);

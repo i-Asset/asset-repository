@@ -32,11 +32,9 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShe
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelDescriptor;
-import org.jboss.weld.exceptions.IllegalStateException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.srfg.iasset.connector.api.OperationInvocationHandler;
 import at.srfg.iasset.connector.api.ValueConsumer;
 import at.srfg.iasset.connector.api.ValueSupplier;
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
@@ -47,12 +45,14 @@ import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.exception.ShellNotFoundException;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
 import at.srfg.iasset.repository.model.helper.value.type.ValueType;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticIdCollector;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
+import at.srfg.iasset.repository.model.operation.OperationInvocationException;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
 import jakarta.annotation.PreDestroy;
@@ -116,7 +116,7 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	}
 
 	@Override
-	public void addSubmodel(String aasIdentifer, Submodel submodel) {
+	public void addSubmodel(String aasIdentifer, Submodel submodel) throws ShellNotFoundException {
 		serviceEnvironment.setSubmodel(aasIdentifer, submodel.getId(), submodel);
 
 	}
@@ -173,19 +173,6 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	@Override
 	public <T> EventProducer<T> getEventProducer(String semanticId, Class<T> clazz) {
 		return messaging.getProducer(semanticId, clazz);
-	}
-
-	@Override
-	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path,
-			Consumer<String> consumer) {
-
-	}
-
-	@Override
-	public void setValueSupplier(String aasIdentifier, String submodelIdentifier, String path,
-			Supplier<String> consumer) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -388,23 +375,14 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		serviceEnvironment.removeModelListener(listener);
 	}
 	@Override
-	public OperationInvocation getOperationInvocation(String semanticId) {
-		Reference reference = ReferenceUtils.asGlobalReference(semanticId);
-		
+	public OperationInvocation getOperationInvocation(String semanticId) throws OperationInvocationException {
 		// search for the asset implementing a requested semantic id
 		Optional<OperationInvocation> implementation = serviceEnvironment.getImplementation(semanticId);
 		if ( implementation.isPresent()) {
 			return implementation.get();
 		}
-		//
-//		Optional<Operation> operation = serviceEnvironment.getSubmodelElement(reference, Operation.class);
-//		if ( operation.isPresent()) {
-//			// TODO: obtain the reference to the resolved operation ...
-//			// 
-//			return new OperationInvocationHandler(operation.get(), serviceEnvironment, objectMapper);
-//		}
 		// operation must not return null!
-		throw new IllegalStateException(String.format("Operation with semantic id %s not found!", semanticId) );
+		throw new OperationInvocationException(String.format("Operation with semantic id %s not found!", semanticId) );
 	}
 	@Override
 	public boolean loadIntegrationPattern(String patternIdentifier) {
@@ -497,4 +475,5 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	private List<Reference> supplementalSemantics(Submodel submodel) {
 		return new SemanticIdCollector(submodel).findSemanticIdentifier(EventElement.class, Operation.class);
 	}
+
 }

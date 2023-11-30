@@ -49,7 +49,7 @@ import at.srfg.iasset.repository.model.helper.visitor.OperationCollector;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticLookupVisitor;
 import at.srfg.iasset.repository.model.helper.visitor.SubmodelElementCollector;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationInvocationExecption;
+import at.srfg.iasset.repository.model.operation.OperationInvocationException;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
@@ -368,12 +368,11 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 				theShell.getSubmodels().add(newRef);
 			}
 			Optional<Submodel> existing = storage.findSubmodelById(submodelIdentifier);
-
 			existing.ifPresent(new Consumer<Submodel>() {
+				// submodel is to be replaced. trigger a deletion message to listeners
 				
 				@Override
 				public void accept(Submodel t) {
-					// TODO: handle event
 					 changeProvider.notifyDeletion(submodel, "", t);
 				}
 			});
@@ -524,7 +523,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 						else {
 							return invocation.getOperationResult(false);
 						}
-					} catch (OperationInvocationExecption e) {
+					} catch (OperationInvocationException e) {
 						OperationResult res = invocation.getOperationResult(false);
 						res.setExecutionState(ExecutionState.FAILED);
 						res.setSuccess(false);
@@ -560,7 +559,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 					else {
 						return invocation.getOperationResultValue(false);
 					}
-				} catch (OperationInvocationExecption e) {
+				} catch (OperationInvocationException e) {
 					OperationResultValue res = invocation.getOperationResultValue(false);
 					res.setExecutionState(ExecutionState.FAILED);
 					res.setSuccess(false);

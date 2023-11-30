@@ -16,8 +16,10 @@ import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.component.ModelListener;
+import at.srfg.iasset.repository.exception.ShellNotFoundException;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
+import at.srfg.iasset.repository.model.operation.OperationInvocationException;
 import at.srfg.iasset.repository.model.operation.OperationInvocationResult;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -42,13 +44,19 @@ public class AASComponent {
 	private Logger logger;
 	
 	/**
-	 * 
+	 * Add an existing {@link AssetAdministrationShell} to the current component
 	 * @param shell
 	 */
 	public void add(AssetAdministrationShell shell) {
 		environment.addAdministrationShell(shell);
 	}
-	public void add(String aasIdentifier, Submodel submodel) {
+	/**
+	 * Add an existing {@link Submodel} to an existing {@link AssetAdministrationShell} 
+	 * @param aasIdentifier The identifier of the existing {@link AssetAdministrationShell}
+	 * @param submodel The {@link Submodel} to add
+	 * @throws ShellNotFoundException 
+	 */
+	public void add(String aasIdentifier, Submodel submodel) throws ShellNotFoundException {
 		environment.addSubmodel(aasIdentifier, submodel);
 	}
 	public void alias(String aasIdentifier, String alias) {
@@ -145,18 +153,19 @@ public class AASComponent {
 	 * Obtain a method based on a semantic identifier 
 	 * @param semanticId
 	 * @return
+	 * @throws OperationInvocationException 
 	 */
-	public OperationInvocation getOperationRequest(String semanticId) {
+	public OperationInvocation getOperationRequest(String semanticId) throws OperationInvocationException {
 		// search environment for operation with semantic id
 		return environment.getOperationInvocation(semanticId);
 		
 	}
-	public <R, I> R getOperationResult(String semanticId, I parameter, Class<R> clazz) {
+	public <R, I> R getOperationResult(String semanticId, I parameter, Class<R> clazz) throws OperationInvocationException {
 		OperationInvocation invocation = environment.getOperationInvocation(semanticId);
 		OperationInvocationResult result = invocation.invoke();
 		return result.getResult(clazz);
 	}
-	public <R, I> List<R> getOperationResultList(String semanticId, I parameter, Class<R> clazz) {
+	public <R, I> List<R> getOperationResultList(String semanticId, I parameter, Class<R> clazz) throws OperationInvocationException {
 		OperationInvocation invocation = environment.getOperationInvocation(semanticId);
 		OperationInvocationResult result = invocation.invoke();
 		return result.getResultList(clazz);

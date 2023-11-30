@@ -94,7 +94,7 @@ public class AASFull {
     }
     public static AssetAdministrationShell createInstanceAasForBelt() {
     	return new DefaultAssetAdministrationShell.Builder()
-    			.id("http://iasset.salzburgresearch.at/labor/beltInstance")
+    			.id("http://iasset.salzburgresearch.at/labor/beltInstanceX")
     			.idShort("beltInstance")
     			.assetInformation(new DefaultAssetInformation.Builder()
     					.assetKind(AssetKind.TYPE)

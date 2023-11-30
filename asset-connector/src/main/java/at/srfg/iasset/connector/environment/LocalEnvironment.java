@@ -1,9 +1,7 @@
 package at.srfg.iasset.connector.environment;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
@@ -21,8 +19,10 @@ import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.component.ModelListener;
+import at.srfg.iasset.repository.exception.ShellNotFoundException;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
+import at.srfg.iasset.repository.model.operation.OperationInvocationException;
 
 public interface LocalEnvironment {
 	/**
@@ -48,8 +48,9 @@ public interface LocalEnvironment {
 	 * with the identified {@link AssetAdministrationShell} 
 	 * @param aasIdentifer
 	 * @param submodel
+	 * @throws ShellNotFoundException 
 	 */
-	public void addSubmodel(String aasIdentifer, Submodel submodel);
+	public void addSubmodel(String aasIdentifer, Submodel submodel) throws ShellNotFoundException;
 	/**
 	 * Resolve a pattern by it's identifier. The pattern is searched in 
 	 * <ul>
@@ -141,26 +142,6 @@ public interface LocalEnvironment {
 	 */
 	public <T> EventProducer<T> getEventProducer(String semanticId, Class<T> clazz);
 	/**
-	 * Inject a {@link Consumer} function to the local environment. This function's {@link Consumer#accept(Object)} 
-	 * method is called whenever a new value for the identified element is provided
-	 * @param aasIdentifier
-	 * @param submodelIdentifier
-	 * @param path
-	 * @param consumer
-	 */
-	@Deprecated
-	public void setValueConsumer(String aasIdentifier, String submodelIdentifier, String path, Consumer<String> consumer);
-	/**
-	 * Inject a {@link Supplier} function to the local environment. This function's {@link Supplier#get()} method is
-	 * called whenever element is serialized.
-	 * @param aasIdentifier
-	 * @param submodelIdentifier
-	 * @param path
-	 * @param consumer
-	 */
-	@Deprecated
-	public void setValueSupplier(String aasIdentifier, String submodelIdentifier, String path, Supplier<String> consumer);
-	/**
 	 * Inject a {@link Function} to the {@link Operation} in the local environment. 
 	 * The {@link Function#apply(Object)} method is called whenever the {@link Operation} is invoked.
 	 * @param aasIdentifier
@@ -203,7 +184,7 @@ public interface LocalEnvironment {
 	 * @param semanticId
 	 * @return
 	 */
-	public OperationInvocation getOperationInvocation(String semanticId);
+	public OperationInvocation getOperationInvocation(String semanticId) throws OperationInvocationException;
 	/**
 	 * Register an {@link OperationCallback} method which is to be executed
 	 * @param aasIdentifier

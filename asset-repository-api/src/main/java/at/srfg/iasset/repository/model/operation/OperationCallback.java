@@ -22,6 +22,6 @@ public interface OperationCallback {
 	 * @param invocation The {@link OperationInvocation} object
 	 * @return <code>true</code> if operation execution was successful, <code>false</code> otherwise
 	 */
-	public boolean execute(OperationInvocation invocation) throws OperationInvocationExecption;
+	public boolean execute(OperationInvocation invocation) throws OperationInvocationException;
 
 }

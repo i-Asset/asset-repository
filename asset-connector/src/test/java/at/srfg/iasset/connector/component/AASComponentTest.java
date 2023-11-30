@@ -19,6 +19,7 @@ import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.connectivity.rest.ConsumerFactory;
+import at.srfg.iasset.repository.exception.ShellNotFoundException;
 
 public class AASComponentTest {
 	
@@ -41,11 +42,16 @@ public class AASComponentTest {
 	@Test
 	public void testDataLoaded() {
 		List<AssetAdministrationShell> shells = client.getAssetAdministrationShells();
-		assertTrue(shells.size() == 1);
 		AssetAdministrationShell shell = shells.get(0);
-		aas.add(shell.getId(), AASFull.SUBMODEL_BELT_EVENT_TEMPLATE);
-		aas.add(shell.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE);
-		aas.add(shell.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_TEMPLATE);
+		try {
+			aas.add(shell.getId(), AASFull.SUBMODEL_BELT_EVENT_TEMPLATE);
+			aas.add(shell.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE);
+			aas.add(shell.getId(), AASFull.SUBMODEL_BELT_PROPERTIES_TEMPLATE);
+			
+		} catch (ShellNotFoundException snf ) {
+			
+		}
+		assertTrue(shells.size() == 1);
 		List<ModelReference> submodels = client.getSubmodels(shell.getId());
 		assertTrue(submodels.size() == 3 );
 		Submodel submodel = client.getSubmodel(shell.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE.getId());
