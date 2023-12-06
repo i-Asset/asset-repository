@@ -31,6 +31,7 @@ import at.srfg.iasset.repository.model.InvocationRequest;
 import at.srfg.iasset.repository.model.InvocationResult;
 import at.srfg.iasset.repository.model.PlantElement;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResultValue;
@@ -41,7 +42,7 @@ public class TestOperations {
 	private ObjectMapper objectMapper = ClientFactory.getObjectMapper();
 
 	@Test
-	public void testOperationRequest() throws JsonProcessingException {
+	public void testOperationRequest() throws JsonProcessingException, ValueMappingException {
 		Submodel submodel = AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION;
 		Optional<Operation> op = SubmodelUtils.getSubmodelElementAt(submodel, "getPlantStructure",Operation.class);
 		if ( op.isPresent()) {

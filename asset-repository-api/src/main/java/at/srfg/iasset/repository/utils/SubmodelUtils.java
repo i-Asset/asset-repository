@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import at.srfg.iasset.repository.model.helper.Path;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 /**
  * Support Class for manipulating, traversing {@link Submodel} and contained {@link SubmodelElement}.
@@ -212,12 +213,16 @@ public class SubmodelUtils {
 	public static Optional<SubmodelElement> setValueAt(Submodel submodel, String path, JsonNode value) {
 		Optional<SubmodelElement> elem = getSubmodelElementAt(submodel, path);
 		if ( elem.isPresent()) {
-			setValueOnly(elem.get(), value);
+			try {
+				setValueOnly(elem.get(), value);
+			} catch (ValueMappingException e) {
+				return Optional.empty();
+			}
 			
 		}
 		return elem;
 	}
-	private static void setValueOnly(SubmodelElement submodelElement, JsonNode value) {
+	private static void setValueOnly(SubmodelElement submodelElement, JsonNode value) throws ValueMappingException {
 		ValueHelper.applyValue(submodelElement, value);
 		
 	}
@@ -343,7 +348,12 @@ public class SubmodelUtils {
 	
 
 	public static SubmodelElementValue getValueOnly(SubmodelElement referable) {
-		return ValueHelper.toValue(referable);
+		try {
+			return ValueHelper.toValue(referable);
+		} catch (ValueMappingException e) {
+			// return null, when no mapping possible
+			return null;
+		}
 	}
 //	public static <T extends SubmodelElement>  T resolveElement(Referable container, Reference semanticId, Class<T> clazz) {
 //		if (Submodel.class.isInstance(container)) {

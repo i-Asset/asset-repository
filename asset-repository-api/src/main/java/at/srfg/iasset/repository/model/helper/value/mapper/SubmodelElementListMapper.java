@@ -13,11 +13,12 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementListValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 public class SubmodelElementListMapper implements ValueMapper<SubmodelElementList, SubmodelElementListValue>{
 
 	@Override
-	public SubmodelElementListValue mapToValue(SubmodelElementList modelElement) {
+	public SubmodelElementListValue mapToValue(SubmodelElementList modelElement) throws ValueMappingException {
 		SubmodelElementListValue value = new SubmodelElementListValue();
 
 		for ( SubmodelElement element : modelElement.getValues()) {
@@ -27,7 +28,7 @@ public class SubmodelElementListMapper implements ValueMapper<SubmodelElementLis
 	}
 
 	@Override
-	public SubmodelElementList mapValueToElement(SubmodelElementList modelElement, JsonNode valueNode) {
+	public SubmodelElementList mapValueToElement(SubmodelElementList modelElement, JsonNode valueNode) throws ValueMappingException {
 		modelElement.getValues().clear();
 		if ( modelElement.getValueTypeListElement() != null ) {
 			if ( valueNode.isArray() ) {
@@ -51,7 +52,7 @@ public class SubmodelElementListMapper implements ValueMapper<SubmodelElementLis
 	}
 
 	@Override
-	public SubmodelElementList mapValueToTemplate(ServiceEnvironment environment, SubmodelElementList modelElement, JsonNode valueNode) {
+	public SubmodelElementList mapValueToTemplate(ServiceEnvironment environment, SubmodelElementList modelElement, JsonNode valueNode) throws ValueMappingException {
 		// is the list element a template?
 		//
 		modelElement.getValues().clear();
@@ -89,7 +90,7 @@ public class SubmodelElementListMapper implements ValueMapper<SubmodelElementLis
 
 	@Override
 	public SubmodelElementList mapValueToTemplate(ServiceEnvironment environment,
-			SubmodelElementList modelElement, SubmodelElementList templateElement, JsonNode valueNode) {
+			SubmodelElementList modelElement, SubmodelElementList templateElement, JsonNode valueNode) throws ValueMappingException {
 		modelElement.getValues().clear();
 		if ( valueNode.isArray()) {
 			for ( int i = 0; i < valueNode.size(); i++) {

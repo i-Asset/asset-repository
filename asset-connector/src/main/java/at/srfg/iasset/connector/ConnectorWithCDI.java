@@ -3,7 +3,6 @@ package at.srfg.iasset.connector;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
@@ -208,7 +207,7 @@ public class ConnectorWithCDI {
 			List<ZenonAlarm> plantList = invocation.getResultList("result", ZenonAlarm.class);
 			System.out.println(plantList.size());
 
-		} catch (OperationInvocationException ex) {
+		} catch (OperationInvocationException  ex) {
 			
 		}
 

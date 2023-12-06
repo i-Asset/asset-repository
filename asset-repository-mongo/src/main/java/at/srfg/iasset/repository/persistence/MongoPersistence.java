@@ -115,7 +115,7 @@ public class MongoPersistence implements Persistence {
 			return Optional.of(result.get(0));
 		}
 		else {
-			throw new IllegalStateException("Multiple descriptors present!");
+			throw new IllegalStateException(String.format("Multiple descriptors for semantic ID \"%s\" present!", supplemental));
 		}
 		
 	}

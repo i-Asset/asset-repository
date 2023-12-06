@@ -1,7 +1,10 @@
 package at.srfg.iasset.repository.model.operation;
 
+import org.eclipse.digitaltwin.aas4j.v3.model.ExternalReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
+
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 /**
  * Interface for operation handling!
  * @author dglachs
@@ -21,6 +24,7 @@ public interface OperationInvocation {
 	 * 
 	 * @param <T>
 	 * @param value The new value
+	 * @throws ValueMappingException 
 	 */
 	<T> void setInput(T value);
 	/**
@@ -87,4 +91,11 @@ public interface OperationInvocation {
 	 * @return
 	 */
 	OperationInvocationResult invoke();
+	/**
+	 * Execute the operation with the named aasIdentifier 
+	 * @param aasIdentifier
+	 * @param reference
+	 * @return
+	 */
+	OperationInvocationResult invoke(String aasIdentifier, ExternalReference reference);
 }

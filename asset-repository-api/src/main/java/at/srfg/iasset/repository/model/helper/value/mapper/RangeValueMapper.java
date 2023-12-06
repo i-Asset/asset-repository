@@ -5,29 +5,30 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Range;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import at.srfg.iasset.repository.model.helper.value.RangeValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 import at.srfg.iasset.repository.model.helper.value.type.Value;
-import at.srfg.iasset.repository.model.helper.value.type.ValueType;
 
-public class RangeValueMapper implements ValueMapper<Range, RangeValue> {
+public class RangeValueMapper implements ValueMapper<Range, RangeValue<?>> {
 
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public RangeValue<?> mapToValue(Range modelElement) {
+	public RangeValue<?> mapToValue(Range modelElement) throws ValueMappingException {
 		return  new RangeValue(
-				ValueType.getValue(modelElement.getValueType(), modelElement.getMin()),
-				ValueType.getValue(modelElement.getValueType(), modelElement.getMax()));
+				Value.getValue(modelElement.getValueType(), modelElement.getMin()),
+				Value.getValue(modelElement.getValueType(), modelElement.getMax()));
 	}
 
 	@Override
-	public Range mapValueToElement(Range modelElement, JsonNode valueNode) {
+	public Range mapValueToElement(Range modelElement, JsonNode valueNode) throws ValueMappingException {
 		
 		if (valueNode.hasNonNull("min")) {
-			Value<?> typedValue = ValueType.getValue(modelElement.getValueType(), valueNode.get("min").asText());
+			Value<?> typedValue = Value.getValue(modelElement.getValueType(), valueNode.get("min").asText());
 			
 			modelElement.setMin(typedValue.toString());
 		}
 		if ( valueNode.hasNonNull("max")) {
-			Value<?> typedValue = ValueType.getValue(modelElement.getValueType(), valueNode.get("max").asText());
+			Value<?> typedValue = Value.getValue(modelElement.getValueType(), valueNode.get("max").asText());
 			
 			modelElement.setMax(typedValue.toString());
 		}

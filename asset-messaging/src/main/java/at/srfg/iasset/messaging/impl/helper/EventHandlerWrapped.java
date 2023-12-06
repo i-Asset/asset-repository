@@ -21,6 +21,7 @@ import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 /**
  * Helper class managing the transformation of the
  * individual payload objects 
@@ -92,6 +93,8 @@ public class EventHandlerWrapped<T> {
 			}
 		} catch (IOException e) {
 			throw new MessagingException("Message not readable!");
+		} catch (ValueMappingException e) {
+			throw new MessagingException(e);
 		}
 	}
 	/**
@@ -99,9 +102,11 @@ public class EventHandlerWrapped<T> {
 	 * @param incoming
 	 * @return The {@link SubmodelElementValue} of the observed element.
 	 * @throws IOException
+	 * @throws ValueMappingException 
 	 */
-	private SubmodelElementValue toValue(byte[] incoming) throws IOException {
+	private SubmodelElementValue toValue(byte[] incoming) throws IOException, ValueMappingException {
 		JsonNode valueAsNode = objectMapper.readTree(incoming);
+		// apply value conversion 
 		ValueHelper.applyValue(observed, valueAsNode);
 		return ValueHelper.toValue(observed);
 	}

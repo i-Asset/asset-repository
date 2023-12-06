@@ -10,7 +10,12 @@ public class DoubleValue extends Value<Double>{
 
 	@Override
 	public Value<Double> fromValue(String stringValue) {
-		setValue(Double.parseDouble(stringValue));
+		if ( stringValue == null ) {
+			setValue(null);
+		}
+		else {
+			setValue(Double.parseDouble(stringValue));
+		}
 		return this;
 	}
 

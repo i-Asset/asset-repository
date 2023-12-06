@@ -1,5 +1,7 @@
 package at.srfg.iasset.repository.model.helper.value.mapper;
 
+import java.io.IOException;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.Blob;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,7 +17,13 @@ public class BlobValueMapper implements ValueMapper<Blob, BlobValue> {
 
 	@Override
 	public Blob mapValueToElement(Blob modelElement, JsonNode valueNode) {
-		valueNode.get("value");
+		if (valueNode.isBinary()) {
+			try {
+				modelElement.setValue(valueNode.binaryValue());
+			} catch (IOException e) {
+				modelElement.setValue(null);
+			}
+		}
 		return modelElement;
 	}
 

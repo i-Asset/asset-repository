@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 public interface ValueMapper<M extends SubmodelElement, V extends SubmodelElementValue> {
 	/**
@@ -15,7 +16,7 @@ public interface ValueMapper<M extends SubmodelElement, V extends SubmodelElemen
 	 * @param modelElement The SubmodelElement
 	 * @return
 	 */
-	V mapToValue(M modelElement);
+	V mapToValue(M modelElement) throws ValueMappingException;
 	/**
 	 * Update the pre-existing model element with the provided valueNode
 	 * <p>
@@ -27,17 +28,18 @@ public interface ValueMapper<M extends SubmodelElement, V extends SubmodelElemen
 	 * @param modelElement The model element to modify with the values
 	 * @param valueNode
 	 * @return
+	 * @throws ValueMappingException 
 	 */
-	default M mapValueToElement(M modelElement, JsonNode valueNode) {
+	default M mapValueToElement(M modelElement, JsonNode valueNode) throws ValueMappingException {
 		return modelElement;
 	}
-	default M mapValueToTemplate(ServiceEnvironment serviceEnvironment, M modelElement, JsonNode valueNode) {
+	default M mapValueToTemplate(ServiceEnvironment serviceEnvironment, M modelElement, JsonNode valueNode) throws ValueMappingException {
 		return mapValueToElement(modelElement, valueNode);
 	}
-	default M mapValueToTemplate(ServiceEnvironment serviceEnvironment, M modelElement, M templateElement, JsonNode valueNode) {
+	default M mapValueToTemplate(ServiceEnvironment serviceEnvironment, M modelElement, M templateElement, JsonNode valueNode) throws ValueMappingException {
 		return mapValueToTemplate(serviceEnvironment, modelElement, valueNode);
 	}
-	default M applyValues(M modelElement, V valueObject) {
+	default M applyValues(M modelElement, V valueObject) throws ValueMappingException {
 		return modelElement;
 	}
 }

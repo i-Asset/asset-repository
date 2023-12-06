@@ -15,6 +15,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
+import at.srfg.iasset.repository.api.exception.NotFoundException;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.OperationInvocationException;
@@ -191,7 +192,7 @@ public interface ServiceEnvironment {
 	 * @param path
 	 * @return
 	 */
-	SubmodelElementValue getElementValue(String submodelIdentifier, String path);
+	SubmodelElementValue getElementValue(String submodelIdentifier, String path) throws NotFoundException;
 	/**
 	 * Obtain the ValueOnly representation of a {@link Reference} of type {@link ReferenceTypes#MODEL_REFERENCE}
 	 * @param reference

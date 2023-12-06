@@ -39,6 +39,7 @@ import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.payload.EventPayloadValue;
 import at.srfg.iasset.repository.model.helper.payload.ReferenceValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 /**
  * Class providing the mediation from/to the external
@@ -365,8 +366,14 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 			if ( SubmodelElement.class.isInstance(observed)) {
 				SubmodelElement observedElement = SubmodelElement.class.cast(observed);
 				JsonNode valueAsNode = objectMapper.convertValue(eventPayload, JsonNode.class);
-				ValueHelper.applyValue(observedElement, valueAsNode);
-				eventPayload = ValueHelper.toValue(observedElement);
+				try {
+					// apply value conversion from object to template element 
+					ValueHelper.applyValue(observedElement, valueAsNode);
+					// apply value conversion from template element to finally sent object
+					eventPayload = ValueHelper.toValue(observedElement);
+				} catch (ValueMappingException e) {
+					throw new MessagingException(e);
+				}
 				
 			}
 			bytes = objectMapper.writeValueAsBytes(eventPayload);

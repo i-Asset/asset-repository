@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import at.srfg.iasset.repository.model.InvocationRequest;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 public class OperationRequestValue extends AbstractInvocationRequest<Object> 
 	implements InvocationRequest<Object> {
@@ -27,9 +28,15 @@ public class OperationRequestValue extends AbstractInvocationRequest<Object>
 
 						@Override
 						public Object apply(OperationVariable t) {
-							SubmodelElementValue value = ValueHelper.toValue(t.getValue());
+							SubmodelElementValue value;
+							try {
+								value = ValueHelper.toValue(t.getValue());
+								return mapper.convertValue(value, Object.class);
+							} catch (ValueMappingException e) {
+								// when mapping not possible - return null
+								return null;
+							}
 							// convert value
-							return mapper.convertValue(value, Object.class);
 						}})
 					.collect(Collectors.toList());
 			

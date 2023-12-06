@@ -2,7 +2,6 @@ package at.srfg.iasset.repository.model.helper.value.type;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -10,7 +9,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 
 public enum ValueType {
@@ -28,7 +28,9 @@ public enum ValueType {
 	private Class<? extends Value<?>> valueClass;
 	private Type reflectionType;
 	
-	
+	Class<? extends Value<?>> getValueClass() {
+		return valueClass;
+	}
 	
 	private ValueType(Class<? extends Value<?>> value, DataTypeDefXsd ... xsd) {
 		this.valueClass = value;
@@ -41,34 +43,40 @@ public enum ValueType {
 //		ParameterizedType aType = (ParameterizedType) superClass.getGenericInterfaces()[0];
 		return superClass.getActualTypeArguments()[0];
 	}
-	public static <T extends SubmodelElement> Value<?> getValue(T clazz) {
-		try {
-			Method valueMethod = clazz.getClass().getMethod("getValue");
-			Object value = valueMethod.invoke(clazz);
-			Method valueTypeMethod = clazz.getClass().getMethod("getValueType");
-			Object valueType = valueTypeMethod.invoke(clazz);
-			
-			return getValue((DataTypeDefXsd) valueType, value.toString());
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
+//	/**
+//	 * Obtain the typed Value representation from a given {@link SubmodelElement}.
+//	 * <p>For successful operationb, the provided {@link SubmodelElement} must 
+//	 * provide the methods
+//	 * <ul>
+//	 * <li>String getValue()
+//	 * <li>DataTypeXsd getValueType()
+//	 * </ul>
+//	 * 
+//	 * </p>
+//	 * @param <T>
+//	 * @param clazz
+//	 * @return
+//	 */
+//	public static <T extends DataElement> Value<?> getValue(T clazz) {
+//		try {
+//			Method valueMethod = clazz.getClass().getMethod("getValue");
+//			Object value = valueMethod.invoke(clazz);
+//			Method valueTypeMethod = clazz.getClass().getMethod("getValueType");
+//			Object valueType = valueTypeMethod.invoke(clazz);
+//			
+//			return getValue((DataTypeDefXsd) valueType, value.toString());
+//		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 
-	public static Value<?> getValue(DataTypeDefXsd xsd, String value) {
-		ValueType type = fromDataType(xsd);
-		try {
-			@SuppressWarnings("rawtypes")
-			Constructor<? extends Value> constructor = type.valueClass.getConstructor();
-			constructor.setAccessible(true);
-			return constructor.newInstance().fromValue(value);
-		
-		} catch (InvocationTargetException | InstantiationException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException e ){
-			
-		}
-		return null;
-	}
+	/**
+	 * Identify the {@link ValueType} based on given {@link DataTypeDefXsd} enumeration
+	 * @param xsd The AAS {@link DataTypeDefXsd}
+	 * @return The {@link ValueType}
+	 */
 	public static ValueType fromDataType(DataTypeDefXsd xsd) {
 		return Stream.of(values())
 				.filter(x -> x.xsdTypes.contains(xsd))
@@ -99,7 +107,7 @@ public enum ValueType {
 			return null;
 		}		
 	}
-	public static  <T> T toValue(Type type, String value) {
+	public static  <T> T toValue(Type type, String value) throws ValueMappingException {
 		ValueType valueType = fromDataType(type);
 		try {
 			Constructor<? extends Value<?>> constructor = valueType.valueClass.getConstructor();
@@ -111,8 +119,7 @@ public enum ValueType {
 		
 		} catch (InvocationTargetException | InstantiationException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException e ){
 			// TODO: report transformation errors
-			e.printStackTrace();
-			return null;
+			throw new ValueMappingException(e);
 		}		
 	}
 }

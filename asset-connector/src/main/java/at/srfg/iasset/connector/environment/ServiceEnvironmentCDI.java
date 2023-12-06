@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import at.srfg.iasset.connector.api.OperationInvocationHandler;
 import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
 import at.srfg.iasset.repository.api.exception.NotFoundException;
+import at.srfg.iasset.repository.api.exception.RepositoryException;
 import at.srfg.iasset.repository.api.model.ExecutionState;
 import at.srfg.iasset.repository.api.model.Message;
 import at.srfg.iasset.repository.api.model.MessageType;
@@ -43,7 +44,12 @@ import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider.Connection;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
+import at.srfg.iasset.repository.model.helper.payload.PayloadValueHelper;
+import at.srfg.iasset.repository.model.helper.payload.ReferenceValue;
+import at.srfg.iasset.repository.model.helper.payload.mapper.ReferenceValueMapper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
+import at.srfg.iasset.repository.model.helper.value.mapper.ReferenceElementValueMapper;
 import at.srfg.iasset.repository.model.helper.visitor.EventElementCollector;
 import at.srfg.iasset.repository.model.helper.visitor.OperationCollector;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticLookupVisitor;
@@ -59,6 +65,7 @@ import at.srfg.iasset.repository.utils.SubmodelUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.InternalServerErrorException;
 
 @ApplicationScoped
 public class ServiceEnvironmentCDI implements ServiceEnvironment {
@@ -416,22 +423,32 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	public SubmodelElementValue getElementValue(String submodelIdentifier, String path) {
 		Optional<SubmodelElement> element = getSubmodelElement(submodelIdentifier, path);
 		if ( element.isPresent()) {
-			return ValueHelper.toValue(element.get());
+			try {
+				return ValueHelper.toValue(element.get());
+			} catch (ValueMappingException e) {
+				throw new InternalServerErrorException(e);
+			}
 		}
 //		Optional<Submodel> submodel = getSubmodel(submodelIdentifier);
 //		if ( submodel.isPresent()) {
 //			return SubmodelUtils.getValueAt(submodel.get(),path);
 //		}
-		return null;
+		throw new NotFoundException(submodelIdentifier, path);
 	}
 
 	@Override
 	public SubmodelElementValue getElementValue(Reference reference) {
 		Optional<SubmodelElement> referenced = resolve(reference, SubmodelElement.class);
 		if ( referenced.isPresent() ) {
-			return ValueHelper.toValue(referenced.get());
+			try {
+				return ValueHelper.toValue(referenced.get());
+			} catch (ValueMappingException e) {
+				throw new InternalServerErrorException(e);
+
+			}
 		}
-		return null;
+		throw new NotFoundException(String.format("Referenced Element (%s) not found!", 
+				PayloadValueHelper.toValue(reference)));
 	}
 
 	@Override

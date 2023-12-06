@@ -17,6 +17,7 @@ import com.google.common.reflect.TypeToken;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 import at.srfg.iasset.repository.model.helper.value.mapper.ValueMapper;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
@@ -54,7 +55,7 @@ public class ValueHelper {
 		}
 	}
 	@SuppressWarnings("unchecked")
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> V toValue(M submodelElement) {
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> V toValue(M submodelElement) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
 			return (V) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapToValue(submodelElement);
@@ -66,7 +67,7 @@ public class ValueHelper {
 		return modelElement;
 	}
 	@SuppressWarnings("unchecked")
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, JsonNode node) {
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(M modelElement, JsonNode node) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(modelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
 			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapValueToElement(modelElement, node);
@@ -74,14 +75,14 @@ public class ValueHelper {
 		return null;
 	}
 	@SuppressWarnings("unchecked")
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(ServiceEnvironment environment, M modelElement, JsonNode node) {
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(ServiceEnvironment environment, M modelElement, JsonNode node) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(modelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
 			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapValueToTemplate(environment, modelElement, node);
 		}
 		return null;
 	}
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(ServiceEnvironment environment, M instanceElement, M templateElement, JsonNode node) {
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(ServiceEnvironment environment, M instanceElement, M templateElement, JsonNode node) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(templateElement.getClass());
 		
 		if ( mapper.containsKey(propertyInterface)) {

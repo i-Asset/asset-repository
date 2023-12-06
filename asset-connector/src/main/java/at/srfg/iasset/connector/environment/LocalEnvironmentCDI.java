@@ -48,6 +48,8 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.exception.ShellNotFoundException;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
+import at.srfg.iasset.repository.model.helper.value.type.Value;
 import at.srfg.iasset.repository.model.helper.value.type.ValueType;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticIdCollector;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
@@ -258,7 +260,12 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 						@Override
 						public void accept(String t) {
 							// perform type safe conversion
-							consumer.accept(ValueType.toValue(p,  t));
+							try {
+								consumer.accept(Value.toValue(p, t));
+							} catch (ValueMappingException e) {
+								// silently exit
+								// new value is not stored!
+							}
 						}
 					});
 				}
@@ -291,8 +298,11 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 
 						@Override
 						public String get() {
-							// perform type safe conversion
-							return ValueType.fromValue(supplier.get()).toString();
+							try {
+								return Value.fromValue(supplier.get());
+							} catch (ValueMappingException e) {
+								return null;
+							}
 						}
 					});
 				}

@@ -18,11 +18,12 @@ import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementCollectionValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElementCollection, SubmodelElementCollectionValue>{
 
 	@Override
-	public SubmodelElementCollectionValue mapToValue(SubmodelElementCollection modelElement) {
+	public SubmodelElementCollectionValue mapToValue(SubmodelElementCollection modelElement) throws ValueMappingException {
 		SubmodelElementCollectionValue value = new SubmodelElementCollectionValue();
 		for ( SubmodelElement element : modelElement.getValues()) {
 			value.getValues().put(element.getIdShort(), ValueHelper.toValue(element));
@@ -31,24 +32,32 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 	}
 
 	@Override
-	public SubmodelElementCollection mapValueToElement(SubmodelElementCollection modelElement, JsonNode valueNode) {
-		modelElement.getValues().stream().forEach(new Consumer<SubmodelElement>() {
-
-			@Override
-			public void accept(SubmodelElement t) {
-				JsonNode elementValue = valueNode.get(t.getIdShort());
-				if ( elementValue != null) {
-					ValueHelper.applyValue(t, elementValue);
-				}
-				
+	public SubmodelElementCollection mapValueToElement(SubmodelElementCollection modelElement, JsonNode valueNode) throws ValueMappingException {
+		for (SubmodelElement element : modelElement.getValues()) {
+			JsonNode elementValue = valueNode.get(element.getIdShort());
+			if ( elementValue != null) {
+				ValueHelper.applyValue(element, elementValue);
 			}
-		});
+			
+		}
+//		}
+//		modelElement.getValues().stream().forEach(new Consumer<SubmodelElement>() {
+//
+//			@Override
+//			public void accept(SubmodelElement t) {
+//				JsonNode elementValue = valueNode.get(t.getIdShort());
+//				if ( elementValue != null) {
+//					ValueHelper.applyValue(t, elementValue);
+//				}
+//				
+//			}
+//		});
 		return modelElement;
 	}
 
 	@Override
 	public SubmodelElementCollection mapValueToTemplate(ServiceEnvironment serviceEnvironment,
-			SubmodelElementCollection modelElement, JsonNode valueNode) {
+			SubmodelElementCollection modelElement, JsonNode valueNode) throws ValueMappingException {
 
 		if ( valueNode.isObject()) {
 			Iterator<Entry<String,JsonNode>> fieldIterator = valueNode.fields();
@@ -80,7 +89,7 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 	
 	@Override
 	public SubmodelElementCollection mapValueToTemplate(ServiceEnvironment serviceEnvironment,
-			SubmodelElementCollection modelElement, SubmodelElementCollection templateElement, JsonNode valueNode) {
+			SubmodelElementCollection modelElement, SubmodelElementCollection templateElement, JsonNode valueNode) throws ValueMappingException {
 		// TODO Auto-generated method stub
 		modelElement.getValues().clear();
 		if ( valueNode.isObject()) {

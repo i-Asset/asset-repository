@@ -1,26 +1,31 @@
 package at.srfg.iasset.connector.api;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.eclipse.digitaltwin.aas4j.v3.model.ExternalReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.HasKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
+import at.srfg.iasset.repository.api.model.Message;
+import at.srfg.iasset.repository.api.model.MessageType;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
+import at.srfg.iasset.repository.model.operation.OperationInvocationException;
 import at.srfg.iasset.repository.model.operation.OperationInvocationResult;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
@@ -66,6 +71,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	/**
 	 * Apply the incoming request to the operation!
 	 * @param request
+	 * @throws ValueMappingException 
 	 */
 	public void applyOperationRequestValue(OperationRequestValue request) {
 		// map all requested input arguments
@@ -98,7 +104,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			applyParameter(operation.getInoutputVariables().get(i).getValue(), result.getInputArgument(i));
 		}
 	}
-	private OperationRequestValue getOperationRequestValue() {
+	private OperationRequestValue getOperationRequestValue() throws ValueMappingException {
 		OperationRequestValue resultValue = new OperationRequestValue();
 		for (OperationVariable variable : operation.getInoutputVariables()) {
 			SubmodelElement modelElement = variable.getValue();
@@ -112,16 +118,28 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	}
 	public OperationResultValue getOperationResultValue(boolean success) {
 		OperationResultValue resultValue = new OperationResultValue();
-		for (OperationVariable variable : operation.getInoutputVariables()) {
-			SubmodelElement modelElement = variable.getValue();
-			resultValue.inoutputArgument(ValueHelper.toValue(modelElement));
+		try {
+			for (OperationVariable variable : operation.getInoutputVariables()) {
+				SubmodelElement modelElement = variable.getValue();
+				resultValue.inoutputArgument(ValueHelper.toValue(modelElement));
+			}
+			for (OperationVariable variable : operation.getOutputVariables()) {
+				SubmodelElement modelElement = variable.getValue();
+				resultValue.outputArgument(ValueHelper.toValue(modelElement));
+			}
+			resultValue.setSuccess(success);
+			return resultValue;
+			
+		} catch (ValueMappingException e) {
+			// create the result with success false
+			resultValue.setSuccess(false);
+			Message message = new Message();
+			message.setMessageType(MessageType.ERROR);
+			message.setText(e.getLocalizedMessage());
+			message.setTimestamp(Instant.now().toString());
+			resultValue.addMessagesItem(message);
+			return resultValue;
 		}
-		for (OperationVariable variable : operation.getOutputVariables()) {
-			SubmodelElement modelElement = variable.getValue();
-			resultValue.outputArgument(ValueHelper.toValue(modelElement));
-		}
-		resultValue.setSuccess(success);
-		return resultValue;
 	}
 	public OperationResult getOperationResult(boolean success) {
 		OperationResult resultValue = new OperationResult();
@@ -148,7 +166,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			throw new IllegalStateException("Multiple InputVariables present, use setParameter(key, value)");
 		}
 	}
-	public OperationInvocation setInput(Object ...params) {
+	public OperationInvocation setInput(Object ...params) throws ValueMappingException {
 		for ( int i = 0; i< Math.min(params.length, countInputVariables()); i++) {
 			OperationVariable v = inputVariables().get(i);
 			applyParameter(v.getValue(), params[i]);
@@ -176,12 +194,17 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	 * @param <T>
 	 * @param submodelElement The element reflecting the provided object
 	 * @param value The (typed) value object
+	 * @throws ValueMappingException 
 	 */
 	private <T> void applyParameter(SubmodelElement submodelElement, T value) {
 		// 
+		try {
 		JsonNode valueAsNode = objectMapper.convertValue(value, JsonNode.class);
 		// need to validate the input value with the model
 		ValueHelper.applyValue(serviceEnvironment, submodelElement, valueAsNode);
+		} catch (ValueMappingException e) {
+//			throw new OperationInvocationException(e.getMessage());
+		}
 	}
 
 	private List<OperationVariable> inputVariables() {
@@ -266,8 +289,12 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			// apply value 
 			if ( iv.isPresent()) {
 				// 
-				SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
-				return objectMapper.convertValue(paramterValue, clazz);
+				try {
+					SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
+					return objectMapper.convertValue(paramterValue, clazz);
+				} catch (ValueMappingException e) {
+					
+				}
 			}
 			break;
 			// multiple input parameters are present
@@ -283,9 +310,13 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			Optional<OperationVariable> iv = findInputVariable(null);
 			// apply value 
 			if ( iv.isPresent()) {
+				try {
+					SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
+					return objectMapper.convertValue(paramterValue, clazz);
+				} catch (ValueMappingException e) {
+					
+				}
 				// 
-				SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
-				return objectMapper.convertValue(paramterValue, clazz);
 			}
 			break;
 		default:
@@ -299,13 +330,18 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		return getResult(null, clazz);
 	}
 	@Override
-	public <T> T getResult(String key, Class<T> clazz) {
+	public <T> T getResult(String key, Class<T> clazz){
 		Optional<OperationVariable> iv = findOutputVariable(key);
 		// apply value 
 		if ( iv.isPresent()) {
 			// 
-			SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
-			return objectMapper.convertValue(paramterValue, clazz);
+			try {
+				SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
+				return objectMapper.convertValue(paramterValue, clazz);
+			} catch (ValueMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null; 
 	}
@@ -316,7 +352,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		setOutput(null, param);
 	}
 	@Override
-	public <T> OperationInvocation setOutput(String key, T param) {
+	public <T> OperationInvocation setOutput(String key, T param)  {
 		Optional<OperationVariable> iv = findOutputVariable(key);
 		// apply value 
 		if ( iv.isPresent()) {
@@ -327,7 +363,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		return this;
 	}	
 	@Override
-	public Object getResult() {
+	public Object getResult()  {
 		return getResult(null, Object.class);
 	}
 	@Override
@@ -344,20 +380,35 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		// apply value 
 		if ( iv.isPresent()) {
 			//			
-			SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
-			return objectMapper.convertValue(
-					paramterValue, 
-					objectMapper.getTypeFactory().constructCollectionLikeType(List.class, clazz)
-				);
+			try {
+				SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
+				return objectMapper.convertValue(
+						paramterValue, 
+						objectMapper.getTypeFactory().constructCollectionLikeType(List.class, clazz)
+						);
+				
+			} catch (ValueMappingException e) {
+				
+			}
 		}
 		return new ArrayList<>(); 
 	}
 
 	@Override
 	public OperationInvocationResult invoke(String aasIdentifier, String submodelIdentifier, String path) {
-		OperationResultValue result = serviceEnvironment.invokeOperationValue(aasIdentifier, submodelIdentifier, path, getOperationRequestValue());
-		applyOperationResultValue(result);
+		try {
+			OperationResultValue result = serviceEnvironment.invokeOperationValue(aasIdentifier, submodelIdentifier, path, getOperationRequestValue());
+			applyOperationResultValue(result);
+		} catch (ValueMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+		
+		return this;
+	}
+	@Override
+	public OperationInvocationResult invoke(String aasIdentifier, ExternalReference reference) {
 		
 		return this;
 	}
@@ -366,8 +417,13 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		if ( shellInterface == null) {
 			throw new IllegalStateException("Wrong usage! Use full constructor!");
 		}
-		OperationResultValue result = shellInterface.invokeOperation(submodelIdentifier, pathToOperation, getOperationRequestValue());
-		applyOperationResultValue(result);
+		try {
+			OperationResultValue result = shellInterface.invokeOperation(submodelIdentifier, pathToOperation, getOperationRequestValue());
+			applyOperationResultValue(result);
+		} catch (ValueMappingException e) {
+			OperationResultValue result = new OperationResultValue();
+			result.setSuccess(false);
+		}
 
 		
 		return this;
