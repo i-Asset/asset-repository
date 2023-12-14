@@ -1,5 +1,7 @@
 package at.srfg.iasset.repository.model.operation;
 
+import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
+
 /**
  * Simple Interface for providing callback implementations
  * 

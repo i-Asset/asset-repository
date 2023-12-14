@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationInvocationException;
+import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 
 public class InstanceOperation extends DefaultOperation implements Operation {
 	public InstanceOperation() {

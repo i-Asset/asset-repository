@@ -23,8 +23,8 @@ import at.srfg.iasset.repository.model.PlantElement;
 import at.srfg.iasset.repository.model.ZenonAlarm;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationInvocationException;
 import at.srfg.iasset.repository.model.operation.OperationInvocationResult;
+import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 
 
 public class ConnectorWithCDI {

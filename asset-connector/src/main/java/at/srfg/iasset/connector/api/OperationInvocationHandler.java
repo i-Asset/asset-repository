@@ -25,12 +25,12 @@ import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationInvocationException;
 import at.srfg.iasset.repository.model.operation.OperationInvocationResult;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
 import at.srfg.iasset.repository.model.operation.OperationResultValue;
+import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 /**
  * Handler covering the execution of operations
  */

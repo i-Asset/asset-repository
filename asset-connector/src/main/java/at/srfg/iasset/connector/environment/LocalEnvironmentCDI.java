@@ -54,7 +54,7 @@ import at.srfg.iasset.repository.model.helper.value.type.ValueType;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticIdCollector;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationInvocationException;
+import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
 import jakarta.annotation.PreDestroy;

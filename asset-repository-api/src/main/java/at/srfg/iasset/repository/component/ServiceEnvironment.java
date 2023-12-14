@@ -18,11 +18,11 @@ import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import at.srfg.iasset.repository.api.exception.NotFoundException;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationInvocationException;
 import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
 import at.srfg.iasset.repository.model.operation.OperationResultValue;
+import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 /**
  * Defines functionality for managing the AAS Service Model. 
  * @author dglachs

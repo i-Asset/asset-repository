@@ -22,7 +22,7 @@ import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.exception.ShellNotFoundException;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationInvocationException;
+import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 
 public interface LocalEnvironment {
 	/**
