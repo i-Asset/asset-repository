@@ -1,24 +1,27 @@
 package at.srfg.iasset.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 
 public class ZenonAlarm {
-	private String variable;
+	private Variable variable;
 	private String alarmText;
-	private String alarmGroup;
-	private String alarmClass;
+	private AlarmGroup alarmGroup;
+	private AlarmClass alarmClass;
 	private Instant timeComes;
 	private Instant timeGoes;
+
 	/**
 	 * @return the variable
 	 */
-	public String getVariable() {
+	public Variable getVariable() {
 		return variable;
 	}
+
 	/**
 	 * @param variable the variable to set
 	 */
-	public void setVariable(String variable) {
+	public void setVariable(Variable variable) {
 		this.variable = variable;
 	}
 	/**
@@ -36,25 +39,25 @@ public class ZenonAlarm {
 	/**
 	 * @return the alarmGroup
 	 */
-	public String getAlarmGroup() {
+	public AlarmGroup getAlarmGroup() {
 		return alarmGroup;
 	}
 	/**
 	 * @param alarmGroup the alarmGroup to set
 	 */
-	public void setAlarmGroup(String alarmGroup) {
+	public void setAlarmGroup(AlarmGroup alarmGroup) {
 		this.alarmGroup = alarmGroup;
 	}
 	/**
 	 * @return the alarmClass
 	 */
-	public String getAlarmClass() {
+	public AlarmClass getAlarmClass() {
 		return alarmClass;
 	}
 	/**
 	 * @param alarmClass the alarmClass to set
 	 */
-	public void setAlarmClass(String alarmClass) {
+	public void setAlarmClass(AlarmClass alarmClass) {
 		this.alarmClass = alarmClass;
 	}
 	/**
@@ -80,5 +83,48 @@ public class ZenonAlarm {
 	 */
 	public void setTimeGoes(Instant timeGoes) {
 		this.timeGoes = timeGoes;
+	}
+
+	// Inner Variable class
+	public static class Variable {
+		@JsonProperty("variableName")
+		private String variableName;
+
+		// Getters and setters
+		public String getVariableName() {
+			return variableName;
+		}
+
+		public void setVariableName(String variableName) {
+			this.variableName = variableName;
+		}
+	}
+
+	// Inner AlarmClass class
+	public static class AlarmClass {
+		private String name;
+
+		// Getters and setters
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
+
+	// Inner AlarmGroup class
+	public static class AlarmGroup {
+		private String name;
+
+		// Getters and setters
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
 	}
 }

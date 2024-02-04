@@ -1,11 +1,19 @@
 package at.srfg.iasset.connector;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import at.srfg.iasset.repository.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
 
 import at.srfg.iasset.connector.api.ValueConsumer;
@@ -15,12 +23,6 @@ import at.srfg.iasset.connector.component.impl.AASFull;
 import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.messaging.exception.MessagingException;
-import at.srfg.iasset.repository.model.AASFaultSubmodel;
-import at.srfg.iasset.repository.model.AASPlantStructureSubmodel;
-import at.srfg.iasset.repository.model.AASZenonAlarm;
-import at.srfg.iasset.repository.model.Fault;
-import at.srfg.iasset.repository.model.PlantElement;
-import at.srfg.iasset.repository.model.ZenonAlarm;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.OperationInvocationResult;
@@ -35,8 +37,9 @@ public class ConnectorWithCDI {
 		// start the endpoint
 //		startEndpoint(i40Component);
 		// @Jonas Demon für Zenon-Alarme
+		demoZenonVariable(i40Component);
 		demoZenonAlarm(i40Component);
-		
+
 		// demonstrate operations
 		operationInvocation(i40Component);
 		// demonstrate ValueSupplier & ValueConsumer
@@ -83,13 +86,16 @@ public class ConnectorWithCDI {
 		i40Component.loadPattern(AASFaultSubmodel.SUBMODEL_FAULT1.getId());
 		// load the semantic integration pattern for exchanging plat structure requests
 		i40Component.loadPattern(AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
-		
+
 		
 		// @JONAS BEISPIEL
 		// @Jonas: load AAS for Zenon including the submodel
 		i40Component.add(AASZenonAlarm.ZENON_AAS);
 		i40Component.add(AASZenonAlarm.ZENON_AAS.getId(), AASZenonAlarm.ZENON_SUBMODEL);
-		// 
+
+		i40Component.add(AASZenonVariable.ZENON_AAS_VARS);
+		i40Component.add(AASZenonVariable.ZENON_AAS_VARS.getId(), AASZenonVariable.ZENON_SUBMODEL_VARS);
+		//
 
 	}
 	private static void operationInvocation(AASComponent i40Component) {
@@ -145,35 +151,393 @@ public class ConnectorWithCDI {
 
 	}
 
+
+	private static void demoZenonVariable(AASComponent i40Component) {
+		i40Component.register(AASZenonVariable.ZENON_AAS_VARS.getId());
+		/*
+		 * Test/Check the execution of operations
+		 */
+		i40Component.registerCallback(
+				AASZenonVariable.ZENON_AAS_VARS.getId(),
+				AASZenonVariable.ZENON_SUBMODEL_VARS.getId(),
+				"zenonVariable",
+				new OperationCallback() {
+
+					@Override
+					public boolean execute(OperationInvocation invocation) {
+						System.out.println("execute invoked (zenonDemoVariable)");
+
+
+						try {
+							System.out.println("Getting zenon variables data...");
+
+							URL webtoolBackend = new URL("http://localhost:5046/variables");
+							HttpURLConnection con = (HttpURLConnection) webtoolBackend.openConnection();
+							con.setRequestMethod("GET");
+							System.out.println("backend response status-code: " + con.getResponseCode());
+
+							BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+							String inputLine;
+							StringBuffer response = new StringBuffer();
+							while ((inputLine = in.readLine()) != null) {
+								System.out.println(inputLine);
+								response.append(inputLine);
+							}
+							in.close();
+							System.out.println(response);
+
+							/* Json String to Object */
+							String jsonString = response.toString();
+							ObjectMapper mapper = new ObjectMapper();
+							mapper.registerModule(new JavaTimeModule());
+							GraphQLResponse_variables zenonResponse = mapper.readValue(jsonString, GraphQLResponse_variables.class);
+
+							System.out.println(zenonResponse);
+
+
+							// Extracted alarms to objects
+//							List<ZenonAlarm> alarme = new ArrayList<>();
+//
+//							for(int i = 0; i < zenonResponse.getData().getAlarmData().size(); ++i){
+//								ZenonAlarm response_AlarmData  = zenonResponse.getData().getAlarmData().get(i);
+//
+//								ZenonAlarm.Variable alarmData_Variable = response_AlarmData.getVariable();
+//								String alarmData_AlarmText = response_AlarmData.getAlarmText();
+//								ZenonAlarm.AlarmGroup alarmData_AlarmGroup = response_AlarmData.getAlarmGroup();
+//								ZenonAlarm.AlarmClass alarmData_AlarmClass  = response_AlarmData.getAlarmClass();
+//								Instant alarmData_TimeComes = response_AlarmData.getTimeComes();
+//								Instant alarmData_TimeGoes = response_AlarmData.getTimeGoes();
+//								//System.out.println("Alarm " + i + ": " + zenonResponse.getData().getAlarmData().get(i).getAlarmText());
+//
+//								ZenonAlarm alarmObj = new ZenonAlarm();
+//								//a1.setVariable("variable");
+//								//a1.setAlarmClass("zenon Class A");
+//								//a1.setAlarmGroup("zenob Group 1");
+//
+//								// Set alarm variable
+//								ZenonAlarm.Variable variable = new ZenonAlarm.Variable();
+//								if(alarmData_Variable.getVariableName() != null){
+//									variable.setVariableName(alarmData_Variable.getVariableName());
+//								}
+//								else {
+//									variable.setVariableName("");
+//								}
+//								alarmObj.setVariable(variable);
+//
+//								// Set alarm class
+//								ZenonAlarm.AlarmClass alarmClass = new ZenonAlarm.AlarmClass();
+//								if(alarmClass.getName() != null){
+//									alarmClass.setName(alarmData_AlarmClass.getName());
+//								}
+//								else {
+//									alarmClass.setName("");
+//								}
+//								alarmObj.setAlarmClass(alarmClass);
+//
+//								// Set alarm group
+//								ZenonAlarm.AlarmGroup alarmGroup = new ZenonAlarm.AlarmGroup();
+//								if(alarmGroup.getName() != null){
+//									alarmGroup.setName(alarmData_AlarmGroup.getName());
+//								}
+//								else{
+//									alarmGroup.setName("");
+//								}
+//								alarmObj.setAlarmGroup(alarmGroup);
+//
+//								// Set alarm text
+//								if (alarmData_AlarmText == null){
+//									alarmData_AlarmText = "";
+//								}
+//								alarmObj.setAlarmText(alarmData_AlarmText);
+//
+//								alarmObj.setTimeComes(alarmData_TimeComes);
+//
+//								alarmObj.setTimeGoes(alarmData_TimeGoes);
+//
+//								// success
+//								alarme.add(alarmObj);
+//
+//								// ZENON ABFRAGE End
+//								invocation.setOutput("result", alarme);
+//							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						return true;
+					}
+				});
+
+		OperationInvocationResult invocation = i40Component
+				.getOperationRequest("http://iasset.salzburgresearch.at/zenon/variable")
+				// invoke the operation
+				.invoke();
+
+
+		Object objectResult = invocation.getResult("result");
+		List<ZenonVariable> varList = invocation.getResultList("result", ZenonVariable.class);
+		System.out.println(varList.size());
+
+	}
+
+//	private static void demoZenonArchives(AASComponent i40Component) {
+//		i40Component.register(AASZenonAlarm.ZENON_AAS.getId());
+//		/*
+//		 * Test/Check the execution of operations
+//		 */
+//		i40Component.registerCallback(
+//				AASZenonAlarm.ZENON_AAS.getId(),
+//				AASZenonAlarm.ZENON_SUBMODEL.getId(),
+//				"zenonArchive",
+//				new OperationCallback() {
+//
+//					@Override
+//					public boolean execute(OperationInvocation invocation) {
+//						System.out.println("execute invoked");
+//
+//
+//						try {
+//							System.out.println("Getting zenon variables data...");
+//
+//							String archive = invocation.getInput("archive", String.class);
+//							String startTime = invocation.getInput("startTime", String.class);
+//							String endTime = invocation.getInput("endTime", String.class);
+//
+//							URL webtoolBackend = new URL("http://localhost:5046/archive?archive=" + archive + "&startTime=" + startTime + "&endtime=" + endTime );
+//							HttpURLConnection con = (HttpURLConnection) webtoolBackend.openConnection();
+//							con.setRequestMethod("GET");
+//							System.out.println("backend response status-code: " + con.getResponseCode());
+//
+//							BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//							String inputLine;
+//							StringBuffer response = new StringBuffer();
+//							while ((inputLine = in.readLine()) != null) {
+//								System.out.println(inputLine);
+//								response.append(inputLine);
+//							}
+//							in.close();
+//							System.out.println(response);
+//
+//							/* Json String to Object */
+//							String jsonString = response.toString();
+//							ObjectMapper mapper = new ObjectMapper();
+//							mapper.registerModule(new JavaTimeModule());
+//							GraphQLResponse zenonResponse = mapper.readValue(jsonString, GraphQLResponse.class);
+//
+//							System.out.println(zenonResponse);
+//
+//
+//							// Extracted alarms to objects
+//							List<ZenonAlarm> alarme = new ArrayList<>();
+//
+//							for(int i = 0; i < zenonResponse.getData().getAlarmData().size(); ++i){
+//								ZenonAlarm response_AlarmData  = zenonResponse.getData().getAlarmData().get(i);
+//
+//								ZenonAlarm.Variable alarmData_Variable = response_AlarmData.getVariable();
+//								String alarmData_AlarmText = response_AlarmData.getAlarmText();
+//								ZenonAlarm.AlarmGroup alarmData_AlarmGroup = response_AlarmData.getAlarmGroup();
+//								ZenonAlarm.AlarmClass alarmData_AlarmClass  = response_AlarmData.getAlarmClass();
+//								Instant alarmData_TimeComes = response_AlarmData.getTimeComes();
+//								Instant alarmData_TimeGoes = response_AlarmData.getTimeGoes();
+//								//System.out.println("Alarm " + i + ": " + zenonResponse.getData().getAlarmData().get(i).getAlarmText());
+//
+//								ZenonAlarm alarmObj = new ZenonAlarm();
+//								//a1.setVariable("variable");
+//								//a1.setAlarmClass("zenon Class A");
+//								//a1.setAlarmGroup("zenob Group 1");
+//
+//								// Set alarm variable
+//								ZenonAlarm.Variable variable = new ZenonAlarm.Variable();
+//								if(alarmData_Variable.getVariableName() != null){
+//									variable.setVariableName(alarmData_Variable.getVariableName());
+//								}
+//								else {
+//									variable.setVariableName("");
+//								}
+//								alarmObj.setVariable(variable);
+//
+//								// Set alarm class
+//								ZenonAlarm.AlarmClass alarmClass = new ZenonAlarm.AlarmClass();
+//								if(alarmClass.getName() != null){
+//									alarmClass.setName(alarmData_AlarmClass.getName());
+//								}
+//								else {
+//									alarmClass.setName("");
+//								}
+//								alarmObj.setAlarmClass(alarmClass);
+//
+//								// Set alarm group
+//								ZenonAlarm.AlarmGroup alarmGroup = new ZenonAlarm.AlarmGroup();
+//								if(alarmGroup.getName() != null){
+//									alarmGroup.setName(alarmData_AlarmGroup.getName());
+//								}
+//								else{
+//									alarmGroup.setName("");
+//								}
+//								alarmObj.setAlarmGroup(alarmGroup);
+//
+//								// Set alarm text
+//								if (alarmData_AlarmText == null){
+//									alarmData_AlarmText = "";
+//								}
+//								alarmObj.setAlarmText(alarmData_AlarmText);
+//
+//								alarmObj.setTimeComes(alarmData_TimeComes);
+//
+//								alarmObj.setTimeGoes(alarmData_TimeGoes);
+//
+//								// success
+//								alarme.add(alarmObj);
+//
+//								// ZENON ABFRAGE End
+//								invocation.setOutput("result", alarme);
+//							}
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//
+//						return true;
+//					}
+//				});
+//
+//		OperationInvocationResult invocation = i40Component
+//				.getOperationRequest("http://iasset.salzburgresearch.at/zenon/alarm")
+//				.setInput("timeFrom", Instant.now().minusMillis(30000))
+//				.setInput("timeTo", Instant.now())
+//				// invoke the operation
+//				.invoke();
+//
+//
+//		Object objectResult = invocation.getResult("result");
+//		List<ZenonAlarm> plantList = invocation.getResultList("result", ZenonAlarm.class);
+//		System.out.println(plantList.size());
+//
+//	}
+
 	private static void demoZenonAlarm(AASComponent i40Component) {
 		i40Component.register(AASZenonAlarm.ZENON_AAS.getId());
 		/*
 		 * Test/Check the execution of operations
 		 */
 		i40Component.registerCallback(
-				AASZenonAlarm.ZENON_AAS.getId(), 
+				AASZenonAlarm.ZENON_AAS.getId(),
 				AASZenonAlarm.ZENON_SUBMODEL.getId(),
 				"zenonAlarm",
 				new OperationCallback() {
-					
+
 					@Override
 					public boolean execute(OperationInvocation invocation) {
-						Instant timeFrom = invocation.getInput("timeFrom", Instant.class);
-						Instant timeTo = invocation.getInput("timeTo", Instant.class);
-						
-						List<ZenonAlarm> alarme = new ArrayList<>();
-						// ZENON Abfrage Beginn
-						ZenonAlarm a1 = new ZenonAlarm();
-						a1.setVariable("variable");
-						a1.setAlarmClass("zenon Class A");
-						a1.setAlarmGroup("zenob Group 1");
-						a1.setAlarmText("Demo Alarm, to be replaced");
-						a1.setTimeComes(Instant.now().minusMillis(20000));
-						a1.setTimeGoes(Instant.now());
-						// success
-						alarme.add(a1);
-						// ZENON ABFRAGE End
-						invocation.setOutput("result", alarme);
+						System.out.println("execute invoked (demoZenonAlarm)");
+
+
+						try {
+							System.out.println("Getting zenon alarm data...");
+
+							String timeString = invocation.getInput("timeTo", String.class);
+
+							// Right now, can pass seconds in 'timeTo' parameter.
+							// Alarms will be extracted between time of request and 'timeTo'.
+							Instant timeToTime = Instant.parse(timeString);
+							Instant currentTime = Instant.now();
+							long secondsDifference = ChronoUnit.SECONDS.between(timeToTime, currentTime);
+							int fromSeconds = Math.toIntExact(secondsDifference);  // use when not testing
+							//System.out.println("Time difference in seconds: " + fromSeconds);
+
+							//int fromSeconds = 15;  // zenon alarms from last 15 seconds extracted from backend / GraphQL for now --- now only used for testing purposes anymore
+							URL webtoolBackend = new URL("http://localhost:5046/alarmdata?fromSeconds=" + fromSeconds);
+							HttpURLConnection con = (HttpURLConnection) webtoolBackend.openConnection();
+							con.setRequestMethod("GET");
+							System.out.println("backend response status-code: " + con.getResponseCode());
+
+							BufferedReader in = new BufferedReader(
+									new InputStreamReader(con.getInputStream()));
+							String inputLine;
+							StringBuffer response = new StringBuffer();
+							while ((inputLine = in.readLine()) != null) {
+								System.out.println(inputLine);
+								response.append(inputLine);
+							}
+							in.close();
+							System.out.println(response);
+
+							/* Json String to Object */
+							String jsonString = response.toString();
+							ObjectMapper mapper = new ObjectMapper();
+							mapper.registerModule(new JavaTimeModule());
+							GraphQLResponse_alarmData zenonResponse = mapper.readValue(jsonString, GraphQLResponse_alarmData.class);
+							//System.out.println(zenonResponse);
+
+
+
+							// Extracted alarms to objects
+							List<ZenonAlarm> alarme = new ArrayList<>();
+
+							for(int i = 0; i < zenonResponse.getData().getAlarmData().size(); ++i){
+								ZenonAlarm response_AlarmData  = zenonResponse.getData().getAlarmData().get(i);
+
+								ZenonAlarm.Variable alarmData_Variable = response_AlarmData.getVariable();
+								String alarmData_AlarmText = response_AlarmData.getAlarmText();
+								ZenonAlarm.AlarmGroup alarmData_AlarmGroup = response_AlarmData.getAlarmGroup();
+								ZenonAlarm.AlarmClass alarmData_AlarmClass  = response_AlarmData.getAlarmClass();
+								Instant alarmData_TimeComes = response_AlarmData.getTimeComes();
+								Instant alarmData_TimeGoes = response_AlarmData.getTimeGoes();
+								//System.out.println("Alarm " + i + ": " + zenonResponse.getData().getAlarmData().get(i).getAlarmText());
+
+								ZenonAlarm alarmObj = new ZenonAlarm();
+								//a1.setVariable("variable");
+								//a1.setAlarmClass("zenon Class A");
+								//a1.setAlarmGroup("zenob Group 1");
+
+								// Set alarm variable
+								ZenonAlarm.Variable variable = new ZenonAlarm.Variable();
+								if(alarmData_Variable.getVariableName() != null){
+									variable.setVariableName(alarmData_Variable.getVariableName());
+								}
+								else {
+									variable.setVariableName("");
+								}
+								alarmObj.setVariable(variable);
+
+								// Set alarm class
+								ZenonAlarm.AlarmClass alarmClass = new ZenonAlarm.AlarmClass();
+								if(alarmClass.getName() != null){
+									alarmClass.setName(alarmData_AlarmClass.getName());
+								}
+								else {
+									alarmClass.setName("");
+								}
+								alarmObj.setAlarmClass(alarmClass);
+
+								// Set alarm group
+								ZenonAlarm.AlarmGroup alarmGroup = new ZenonAlarm.AlarmGroup();
+								if(alarmGroup.getName() != null){
+									alarmGroup.setName(alarmData_AlarmGroup.getName());
+								}
+								else{
+									alarmGroup.setName("");
+								}
+								alarmObj.setAlarmGroup(alarmGroup);
+
+								// Set alarm text
+								if (alarmData_AlarmText == null){
+									alarmData_AlarmText = "";
+								}
+								alarmObj.setAlarmText(alarmData_AlarmText);
+
+								alarmObj.setTimeComes(alarmData_TimeComes);
+
+								alarmObj.setTimeGoes(alarmData_TimeGoes);
+
+								// success
+								alarme.add(alarmObj);
+
+								// ZENON ABFRAGE End
+								invocation.setOutput("result", alarme);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
 						return true;
 					}
 				});
@@ -184,6 +548,7 @@ public class ConnectorWithCDI {
 				.setInput("timeTo", Instant.now())
 				// invoke the operation
 				.invoke();
+
 
 		Object objectResult = invocation.getResult("result");
 		List<ZenonAlarm> plantList = invocation.getResultList("result", ZenonAlarm.class);

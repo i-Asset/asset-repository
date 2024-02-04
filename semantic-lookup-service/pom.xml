@@ -12,17 +12,19 @@
 	<name>Semantic Lookup Service</name>
 	<description>Service providing a IEC 61360 compatible taxonomy</description>
 
-	<properties>
-		<java.version>17</java.version>
-			<!--
-		<ch.qos.logback.version>1.2.3</ch.qos.logback.version>
+    <properties>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <!--
+    <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
 
-		<docker.plugin.version>1.2.0</docker.plugin.version>
-		<docker.image.prefix>iassetplatform</docker.image.prefix>
-		<docker.image.tag>${project.version}</docker.image.tag>
-		<springfox.version>2.9.2</springfox.version>
-			 -->
-	</properties>
+    <docker.plugin.version>1.2.0</docker.plugin.version>
+    <docker.image.prefix>iassetplatform</docker.image.prefix>
+    <docker.image.tag>${project.version}</docker.image.tag>
+    <springfox.version>2.9.2</springfox.version>
+         -->
+    </properties>
 
 	<dependencyManagement>
 		<dependencies>
@@ -141,14 +143,19 @@
 			<artifactId>semantic-lookup-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-				<!-- Swagger UI 
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!-- Swagger UI
 
 		<dependency>
 			<groupId>at.srfg.iot.common</groupId>
 			<artifactId>indexing-data-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-				-->
+		-->
 	</dependencies>
 
 

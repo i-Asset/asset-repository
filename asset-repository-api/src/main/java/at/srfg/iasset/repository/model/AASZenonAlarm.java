@@ -34,14 +34,14 @@ public static final AssetAdministrationShell ZENON_AAS = createAASforZenonAlarm(
 
 	private static AssetAdministrationShell createAASforZenonAlarm() {
 		return new DefaultAssetAdministrationShell.Builder()
-				.id("https://iasset.salzburgresearch.at/zenon/jonas")
+				.id("https://iasset.salzburgresearch.at/zenon/demo")
 				.displayName(new DefaultLangString.Builder()
 						.language(LANGUAGE)
 						.text("Zenon AAS")
 						.build()
 				)
 				.assetInformation(new DefaultAssetInformation.Builder()
-						.globalAssetId("urn:zenon:jonas")
+						.globalAssetId("urn:zenon:demo")
 						.specificAssetId(new DefaultSpecificAssetId.Builder()
 								.name("zenonIdentifier")
 								.value(UUID.randomUUID().toString())

@@ -25,6 +25,17 @@
 			<artifactId>asset-repository-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+<!--			<version>2.13.0</version> &lt;!&ndash; Use the version compatible with your Jackson library &ndash;&gt;-->
+		</dependency>
+
+
 		<!-- Weld SE -->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
