@@ -1,5 +1,7 @@
 package at.srfg.iasset.repository.api.model;
-
+/**
+ * Object holding the {@link Result} 
+ */
 public class BaseOperationResult extends Result {
 	private ExecutionState executionState;
 	

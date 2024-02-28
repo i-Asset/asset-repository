@@ -101,7 +101,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		int inoutputSize = Math.min(operation.getInoutputVariables().size(), result.getInoutputArguments().size());
 		for (int i = 0; i < inoutputSize;i++) {
 			// map the current request to the operation's settings
-			applyParameter(operation.getInoutputVariables().get(i).getValue(), result.getInputArgument(i));
+			applyParameter(operation.getInoutputVariables().get(i).getValue(), result.getInoutputArgument(i));
 		}
 	}
 	private OperationRequestValue getOperationRequestValue() throws ValueMappingException {

@@ -44,10 +44,12 @@ import jakarta.ws.rs.PathParam;
 public interface IAssetAdministrationShellRepositoryInterface {
 	final String PATH_SHELLS 					= "/shells";
 	final String AAS_IDENTIFIER					= "/{aasIdentifier}";
-	final String PATH_AAS_SUBMODELS				= "/aas/submodels";
+	final String PATH_AAS_SUBMODELS				= "/submodels";
 	final String SUBMODEL_IDENTIFIER			= "/{submodelIdentifier}";
-	final String PATH_SUBMODEL_ELEMENTS			= "/submodel/submodel-elements";
+	final String PATH_SUBMODEL_ELEMENTS			= "/submodel-elements";
 	final String IDSHORT_PATH 					= "/{path}";
+	final String VALUE_MODIFIER					= "/$value"; 
+	final String INVOKE							= "/invoke";
 	final String IDSHORT_PATH_WILDCARD			= "/{path:.+}";
 	final String PATH_CONCEPT_DESCRIPTION		= "/concept-description";
 	final String CD_IDENTIFIER					= "/{cdIdentifier}";
@@ -414,7 +416,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	@RequestMapping(
 			method = RequestMethod.GET,
 			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE},
-			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/value")
+			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + VALUE_MODIFIER)
 	public Object getValue(	
 			@Base64Encoded
 			@Parameter(
@@ -442,7 +444,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	@RequestMapping(
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
-			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/value")
+			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + VALUE_MODIFIER)
 	public void setValue(
 			@Base64Encoded
 			@Parameter(
@@ -475,7 +477,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 			tags = "Asset Administration Shell Repository Interface (for Connector)")
 	@RequestMapping(
 			method = RequestMethod.POST,
-			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
+			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + INVOKE )
 	public OperationResult invokeOperation(
 			@Base64Encoded
 			@Parameter(
@@ -508,7 +510,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 			tags = "Asset Administration Shell Repository Interface (for Connector)")
 	@RequestMapping(
 			method = RequestMethod.POST,
-			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke/$value")
+			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + INVOKE + VALUE_MODIFIER)
 	public OperationResultValue invokeOperation(
 			@Base64Encoded
 			@Parameter(

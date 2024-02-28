@@ -202,7 +202,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Override
 	@GET
 	@Produces(value = MediaType.APPLICATION_JSON)
-	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/value")
+	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + VALUE_MODIFIER)
 	public Object getValue(
 			@PathParam("aasIdentifier")
 			String aasIdentifier, 
@@ -220,7 +220,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@POST
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
-	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/value")
+	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + VALUE_MODIFIER)
 	public void setValue(
 			@PathParam("aasIdentifier")
 			String aasIdentifier, 
@@ -240,7 +240,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@POST
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
-	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
+	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + INVOKE)
 	public OperationResult invokeOperation(
 			@PathParam("aasIdentifier")
 			String aasIdentifier, 
@@ -259,7 +259,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@POST
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
-	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke/$value")
+	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + INVOKE + VALUE_MODIFIER)
 	public OperationResultValue invokeOperation(
 			@PathParam("aasIdentifier")
 			String aasIdentifier, 
@@ -274,20 +274,6 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 					path, 
 					parameterMap);
 	}
-//	@POST
-//	@Produces(value = MediaType.APPLICATION_JSON)
-//	@Consumes(value = MediaType.APPLICATION_JSON)
-//	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + "/invoke")
-//	public OperationResult invoke(
-//			@PathParam("aasIdentifier")
-//			String aasIdentifier, 
-//			@PathParam("submodelIdentifier")
-//			String submodelIdentifier, 
-//			@PathParam("path")
-//			String path,
-//	OperationRequest parameterMap) {
-//		return environment.invokeOperation(aasIdentifier, submodelIdentifier, path, parameterMap);
-//	}
 
 	@Override
 	@GET

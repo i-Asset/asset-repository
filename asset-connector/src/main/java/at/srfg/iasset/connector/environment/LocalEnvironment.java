@@ -37,6 +37,10 @@ public interface LocalEnvironment {
 	 * Start the HTTP REST endpoint
 	 */
 	public void startEndpoint();
+	/**
+	 * Convenience Method to access the HTTP endpoint
+	 * @return
+	 */
 	public ConnectorEndpoint getEndpoint();
 	/**
 	 * Add a new {@link AssetAdministrationShell} to the local environment
