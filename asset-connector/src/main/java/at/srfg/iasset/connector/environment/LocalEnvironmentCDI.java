@@ -74,8 +74,6 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	@Inject 
 	private ServiceEnvironment serviceEnvironment;
 	
-	@Inject
-	private ObjectMapper objectMapper;
 	
 	private final Set<String> registeredAssetIdentifier = new HashSet<>();
 
