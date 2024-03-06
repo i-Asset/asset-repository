@@ -2,6 +2,7 @@ package at.srfg.iasset.connector.component.endpoint.config;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import at.srfg.iasset.connector.component.endpoint.config.exception.mapper.AccessDeniedExceptionMapper;
@@ -43,5 +44,7 @@ public class AliasConfig extends ResourceConfig {
 			});
 
         register(AASJacksonMapperProvider.class);
+        register(JacksonJaxbJsonProvider.class);
+
     }
 }

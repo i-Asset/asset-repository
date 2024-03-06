@@ -1,6 +1,8 @@
 package at.srfg.iasset.connector.component.endpoint.config;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import at.srfg.iasset.connector.component.endpoint.config.exception.mapper.AccessDeniedExceptionMapper;
@@ -43,5 +45,7 @@ public class ShellsConfig extends ResourceConfig {
         
         // use the AAS configured ObjectMapper Provider
         register(AASJacksonMapperProvider.class);
+        // explicitly register the JacksonJaxbJsonProvider
+        register(JacksonJaxbJsonProvider.class);
     }
 }
