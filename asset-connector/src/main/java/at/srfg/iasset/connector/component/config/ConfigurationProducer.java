@@ -1,13 +1,18 @@
 package at.srfg.iasset.connector.component.config;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.slf4j.Logger;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.inject.Inject;
 
 /**
  * Read the <code>application.properties</code> file from the classpath and produce values that can be injected with @{@link Configurable}.
@@ -20,6 +25,9 @@ import jakarta.enterprise.inject.spi.InjectionPoint;
 public class ConfigurationProducer {
 
     private Properties properties;
+    
+    @Inject
+    private Logger logger;
 
     @PostConstruct
     public void init() {
@@ -35,6 +43,23 @@ public class ConfigurationProducer {
             this.properties.load(stream);
         } catch (final IOException e) {
             throw new RuntimeException("Configuration file cannot be loaded.");
+        }
+        // check for additional properties
+        loadAdditionalProperties();
+    }
+    private void loadAdditionalProperties() {
+        File jarFile = new File(ConfigurationProducer.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        File appProps = new File(jarFile.getParent().concat("/app.properties"));
+        if ( appProps.exists()) {
+        	try {
+                logger.info("Using configuration file: "+ appProps.getAbsolutePath());
+				this.properties.load(new FileInputStream(appProps.getAbsolutePath()));
+			} catch (IOException e) {
+                logger.error("Error loading configuration file: "+ appProps.getAbsolutePath());
+			}
+        }
+        else {
+        	logger.info("No configuration file found, please provide properties file here: " + appProps.getAbsolutePath() );
         }
     }
 
