@@ -29,19 +29,19 @@ public class AASZenonAlarm {
 
 	public static final String LANGUAGE = "de";
 
-public static final AssetAdministrationShell ZENON_AAS = createAASforZenonAlarm();
-	public static final Submodel ZENON_SUBMODEL = createSubmodelForZenonAlarmOperation();
+public static final AssetAdministrationShell ZENON_AAS_ALARMS = createAASforZenonAlarm();
+	public static final Submodel ZENON_SUBMODEL_ALARMS = createSubmodelForZenonAlarmOperation();
 
 	private static AssetAdministrationShell createAASforZenonAlarm() {
 		return new DefaultAssetAdministrationShell.Builder()
-				.id("https://iasset.salzburgresearch.at/zenon/demo")
+				.id("https://iasset.salzburgresearch.at/zenon/alarm")
 				.displayName(new DefaultLangString.Builder()
 						.language(LANGUAGE)
 						.text("Zenon AAS")
 						.build()
 				)
 				.assetInformation(new DefaultAssetInformation.Builder()
-						.globalAssetId("urn:zenon:demo")
+						.globalAssetId("urn:zenon:alarm")
 						.specificAssetId(new DefaultSpecificAssetId.Builder()
 								.name("zenonIdentifier")
 								.value(UUID.randomUUID().toString())
@@ -56,7 +56,7 @@ public static final AssetAdministrationShell ZENON_AAS = createAASforZenonAlarm(
 	private static Submodel createSubmodelForZenonAlarmOperation() {
 		return new DefaultSubmodel.Builder()
 				.idShort("zenonAlarm")
-				.id("https://iasset.salzburgresearch.at/zenon/alarm")
+				.id("https://iasset.salzburgresearch.at/zenon/alarmDemo")
 				.displayName(new DefaultLangString.Builder()
 						.language(LANGUAGE)
 						.text("Zenon Alarm")
@@ -93,7 +93,7 @@ public static final AssetAdministrationShell ZENON_AAS = createAASforZenonAlarm(
 										.build()
 								)
 								.valueType(DataTypeDefXsd.STRING)
-								.build()) 
+								.build())
 						.value(new DefaultProperty.Builder()
 								.idShort("alarmText")
 								.displayName(new DefaultLangString.Builder()
@@ -130,16 +130,15 @@ public static final AssetAdministrationShell ZENON_AAS = createAASforZenonAlarm(
 								)
 								.valueType(DataTypeDefXsd.DATE_TIME)
 								.build()) 
-//						.value(new DefaultProperty.Builder()
-//								.idShort("timeGoes")
-//								.displayName(new DefaultLangString.Builder()
-//										.language(LANGUAGE)
-//										.text("Datum des Auftretens")
-//										.build()
-//								)
-//								.kind(ModelingKind.TEMPLATE)
-//								.valueType(DataTypeDefXsd.DATE_TIME)
-//								.build()) 
+						.value(new DefaultProperty.Builder()
+								.idShort("timeGoes")
+								.displayName(new DefaultLangString.Builder()
+										.language(LANGUAGE)
+										.text("Datum des Auftretens")
+										.build()
+								)
+								.valueType(DataTypeDefXsd.DATE_TIME)
+								.build())
 						.build())
 				.submodelElement(new DefaultOperation.Builder()
 						.idShort("zenonAlarm")
@@ -181,7 +180,7 @@ public static final AssetAdministrationShell ZENON_AAS = createAASforZenonAlarm(
 										.semanticIdListElement(new DefaultModelReference.Builder()
 												.key(new DefaultKey.Builder()
 														.type(KeyTypes.SUBMODEL)
-														.value("https://iasset.salzburgresearch.at/zenon/alarm")
+														.value("https://iasset.salzburgresearch.at/zenon/alarmDemo")
 														.build())
 												.key(new DefaultKey.Builder()
 														.type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION)

@@ -4,24 +4,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 
 public class ZenonAlarm {
-	private Variable variable;
+	private String variable;
 	private String alarmText;
-	private AlarmGroup alarmGroup;
-	private AlarmClass alarmClass;
+	private String alarmGroup;
+	private String alarmClass;
 	private Instant timeComes;
 	private Instant timeGoes;
 
 	/**
 	 * @return the variable
 	 */
-	public Variable getVariable() {
+	public String getVariable() {
 		return variable;
 	}
 
 	/**
 	 * @param variable the variable to set
 	 */
-	public void setVariable(Variable variable) {
+	public void setVariable(String variable) {
 		this.variable = variable;
 	}
 	/**
@@ -39,25 +39,25 @@ public class ZenonAlarm {
 	/**
 	 * @return the alarmGroup
 	 */
-	public AlarmGroup getAlarmGroup() {
+	public String getAlarmGroup() {
 		return alarmGroup;
 	}
 	/**
 	 * @param alarmGroup the alarmGroup to set
 	 */
-	public void setAlarmGroup(AlarmGroup alarmGroup) {
+	public void setAlarmGroup(String alarmGroup) {
 		this.alarmGroup = alarmGroup;
 	}
 	/**
 	 * @return the alarmClass
 	 */
-	public AlarmClass getAlarmClass() {
+	public String getAlarmClass() {
 		return alarmClass;
 	}
 	/**
 	 * @param alarmClass the alarmClass to set
 	 */
-	public void setAlarmClass(AlarmClass alarmClass) {
+	public void setAlarmClass(String alarmClass) {
 		this.alarmClass = alarmClass;
 	}
 	/**

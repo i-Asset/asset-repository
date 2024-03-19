@@ -329,6 +329,9 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			applyParameter(iv.get().getValue(), param);
 			// 
 		}
+		else {
+			System.err.println("Output-Variable " + key + " does not exist, and couldn't be set!");
+		}
 		return this;
 	}	
 	@Override

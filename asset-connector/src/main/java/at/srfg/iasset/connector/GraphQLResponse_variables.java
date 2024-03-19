@@ -26,7 +26,7 @@ class Data_variables {
     private List<ZenonVariable> variables;
 
     // Public getters and setters for alarmData
-    public List<ZenonVariable> getAlarmData() {
+    public List<ZenonVariable> getVariablesData() {
         return variables;
     }
 

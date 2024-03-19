@@ -70,6 +70,33 @@ public class SubmodelElementListMapper implements ValueMapper<SubmodelElementLis
 						
 					}
 					else if ( value.isObject() && listElementTemplate.isPresent()) {
+
+//						for ( int j = 0; j < value.size(); j++) {
+//
+//							JsonNode inner_value = value.;
+//							if (inner_value != null ) {
+//								if ( inner_value.isValueNode() ) {
+//									Property listElement = AASModelHelper.newElementInstance(Property.class);
+//									modelElement.getValues().add(listElement);
+//									listElement.setValueType(modelElement.getValueTypeListElement());
+//									listElement.setIdShort(String.format("%s(%s)", modelElement.getIdShort(), j+1));
+//									ValueHelper.applyValue(environment, listElement, inner_value);
+//
+//								}
+//								else if ( inner_value.isObject() && listElementTemplate.isPresent()) {
+//									SubmodelElementCollection collection = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
+//									modelElement.getValues().add(collection);
+//									collection.setIdShort(String.format("%s(%s)", modelElement.getIdShort(), j+1));
+//									ValueHelper.applyValue(environment, collection, listElementTemplate.get(), inner_value);
+//								}
+//								else if ( inner_value.isArray()) {
+//									SubmodelElementList collection = AASModelHelper.newElementInstance(SubmodelElementList.class);
+//									modelElement.getValues().add(collection);
+//									collection.setIdShort(String.format("%s(%s)", modelElement.getIdShort(), j+1));
+//									ValueHelper.applyValue(environment, collection, inner_value);
+//								}
+//							}
+//						}
 						SubmodelElementCollection collection = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
 						modelElement.getValues().add(collection);
 						collection.setIdShort(String.format("%s(%s)", modelElement.getIdShort(), i+1));

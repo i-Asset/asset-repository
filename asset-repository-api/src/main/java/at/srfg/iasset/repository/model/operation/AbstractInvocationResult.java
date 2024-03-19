@@ -9,7 +9,7 @@ import at.srfg.iasset.repository.api.model.BaseOperationResult;
 import at.srfg.iasset.repository.model.InvocationResult;
 
 public abstract class AbstractInvocationResult<T> extends BaseOperationResult implements InvocationResult<T> {
-	@JsonProperty("outpuArguments")
+	@JsonProperty("outputArguments")
 	private List<T> outputArguments = new ArrayList<>();
 	@JsonProperty("inoutputArguments")
 	private List<T> inoutputArguments = new ArrayList<>();
