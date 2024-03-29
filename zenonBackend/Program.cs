@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using testRESTbackend;
 
@@ -17,7 +16,7 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "PizzaStore API", Description = "Making the Pizzas you love", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "AAS zenon middleware", Description = "Extraction of data from zenon for use in iTwin infrastructure", Version = "v1" });
 });
     
 var app = builder.Build();
@@ -26,7 +25,7 @@ app.UseCors("AngularFrontend");
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "zenon AAS WebTool API V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "zenon AAS middleware API V1");
 });
     
 
@@ -36,7 +35,7 @@ var cookie1 = $"access_token={tokenStr}; Path=/; HttpOnly;";
 var cookie2 = $"{tokenStr};path=/;secure;HttpOnly";
 
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "Zenon AAS middleware API is running. Use /swagger to access the API documentation.");
 app.MapGet("/auth_token", () => tokenStr);
 
 app.MapGet("/auth_cookie1", (HttpContext context) =>
@@ -49,7 +48,6 @@ app.MapGet("/auth_cookie2", (HttpContext context) =>
     context.Response.Cookies.Append("access_token", cookie2);
 });
 
-//app.MapGet("/equipmentquery_01", () => Backend.GraphqlEquipmentQuery()); 
 app.MapGet("/tree", () => Backend.IterateEquipmentTree(null)); // debugging purposes - prints to console
 app.MapGet("/equipment", () => Backend.EquipmentFullQuery()); 
 app.MapGet("/alarmdata", (int fromSeconds) => Backend.AlarmDataQuery(fromSeconds));

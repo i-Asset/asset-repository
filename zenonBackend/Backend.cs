@@ -1,30 +1,23 @@
-﻿using System.Configuration;
-using System.Collections.Specialized;
-// using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Security;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Net;
 using Newtonsoft.Json.Linq;
 using RestSharp;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using testRESTbackend.Classes;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+
 
 
 namespace testRESTbackend
 {
     public class Backend
     {
+        
+        /* Function OutputResponse()
+         * <summary> Prints the response of a REST request to the console.
+         *           Helper function for debugging.
+         * <param> RestResponse response: Response object to be printed
+         * <returns> None
+         */
         private static void OutputResponse(RestResponse response)
         {
             Console.WriteLine();
@@ -44,6 +37,13 @@ namespace testRESTbackend
             return;
         }
 
+        
+        /* Function GetEligibilityToken()
+         * <summary> Retrieves an eligibility token from the IIOT Services.
+         *           Used to authenticate GraphQL queries.
+         * <param> bool verbose: Whether to print the status information to the console
+         * <returns> RestResponse: Response object containing the token
+         */
         public static RestResponse GetEligibilityToken(bool verbose = false)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -71,10 +71,17 @@ namespace testRESTbackend
                     OutputResponse(response);
                 }
             }
-
             return response;
         }
         
+        
+        /* Function GetJsonParameter()
+         * <summary> Parses a JSON response and returns a specific parameter
+         *           Helper function used to extract JSON data.
+         * <param> RestResponse response: Response object containing the JSON data
+         * <param> string parameter: Parameter to be extracted from the JSON data
+         * <returns> string: Value of the parameter
+         */
         public static string GetJsonParameter(RestResponse response, string parameter)
         {
             var obj = JObject.Parse(response.Content);
@@ -86,6 +93,13 @@ namespace testRESTbackend
             return String.Empty;
         }
 
+        
+        /* Function GraphqlQuery()
+         * <summary> Queries the zenon runtime via GraphQL
+         *           Helper function for all other functions that make GraphQL queries.   
+         * <param> string query: GraphQL query string
+         * <returns> Task<RestResponse>: Response object containing the query result
+         */
         public static async Task<RestResponse> GraphqlQuery(string query)
         {
             var config = new ConfigContainer();
@@ -112,6 +126,12 @@ namespace testRESTbackend
         }
         
         
+        /* Function GraphqlEquipmentQuery()
+         * <summary> Queries the zenon runtime for equipment data via GraphQL
+         *           Helper function for other functions that need equipment data.
+         * <param> string parentGUID: GUID of the parent equipment group
+         * <returns> Task<GraphqlResponse>: JSON string containing equipment data
+         */
         public static Task<GraphqlResponse> GraphqlEquipmentQuery(string parentGUID = "")
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
@@ -134,24 +154,31 @@ namespace testRESTbackend
                 ",\"variables\":{}}";
 
             var response = GraphqlQuery(equipmentQuery).Result;
-            // GraphqlResponse graphqlResponse = JsonConvert.DeserializeObject<GraphqlResponse>(response.Content);
             GraphqlResponse graphqlResponse = JsonSerializer.Deserialize<GraphqlResponse>(response.Content);
             
             return Task.FromResult(graphqlResponse);
         }
         
 
-        //Outputs equipment tree to console and returns the depth of the deepest layer for future GraphQL queries
+        /* Function IterateEquipmentTree()
+         * <summary> Iterates recursively through the zenon equipment tree via GraphQL.
+         *           Can print the equipment tree to the console.
+         *           Used to get tree depth in GetEquipmentTreeDepth().
+         * <param> GraphqlResponse currentLayer: Current layer of the equipment tree
+         * <param> bool consoleOutput: Whether to print the equipment names to the console
+         * <param> int layerNum: Current layer number
+         * <returns> Task<int>: Depth of the equipment tree (deepest layer)
+         */
         public static async Task<int> IterateEquipmentTree(GraphqlResponse currentLayer, bool consoleOutput = true, int layerNum = 0)
         {
             var maxLayer = layerNum;
             
-            //root layer only
+            // Root layer only
             if (currentLayer == null)
             {
                 currentLayer = await GraphqlEquipmentQuery();
             }
-            //Normal non-root layer
+            // Normal non-root layer
             foreach (var equipment in currentLayer.data.equipmentGroups)
             {
                 var equipmentGUID = equipment.guid;
@@ -164,8 +191,8 @@ namespace testRESTbackend
                     Console.WriteLine(equipment.name);
                 }
                 var depth = await IterateEquipmentTree(await GraphqlEquipmentQuery(equipmentGUID), consoleOutput, layerNum + 1);
-                
-                //Count depth of deepest layer to facilitate accurate GraphQL queries if needed
+                 
+                // Count depth of deepest layer to facilitate accurate GraphQL queries if needed
                 if (depth > maxLayer)
                 {
                     maxLayer = depth;
@@ -175,12 +202,31 @@ namespace testRESTbackend
             return maxLayer;
         }
         
+        
+        /* Function GetEquipmentTreeDepth()
+         * <summary> Returns the depth of the equipment tree in the zenon runtime
+         *           by iterating through the tree and counting the layers.
+         *           Used to facilitate accurate GraphQL queries for EquipmentFullQuery().
+         * <param> None
+         * <returns> Task<int>: Depth of the equipment tree
+         */
         public static async Task<int> GetEquipmentTreeDepth()
         {
             var depth = await IterateEquipmentTree(null, false);
             return depth;
         }
         
+        
+        /* Function EquipmentFullQuery()
+         * <summary> Queries the zenon runtime for equipment data via GraphQL.
+         *           Not used by connector at the moment, but allows for extending
+         *           iTwin connector functionality to include equipment data.
+         *           Note: Data is not flattened, so adjust AAS model in connector.
+         * <param> None
+         * <returns> Task<string>: JSON string containing equipment data
+         *
+         * Example URL: https://localhost:7262/equipment
+         */
         public static async Task<string> EquipmentFullQuery()
         {
             var config = new ConfigContainer();
@@ -228,7 +274,14 @@ namespace testRESTbackend
             return response.Result.Content;
         }
 
-        // gets live alarm data from zenon runtime
+        
+        /* Function AlarmDataQuery()
+         * <summary> Queries the zenon runtime for alarm data via GraphQL
+         * <param> int seconds: Last n seconds of arriving alarms to be queried
+         * <returns> Task<string?>: JSON string containing flat list of alarm data
+         *
+         * Example URL: https://localhost:7262/alarmData?fromSeconds=5
+         */
         public static Task<string?> AlarmDataQuery(int seconds = 20)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
@@ -249,14 +302,12 @@ namespace testRESTbackend
             try
             {
                 var response = GraphqlQuery(equipmentQuery).Result;
-                //GraphqlResponse graphqlResponse = JsonConvert.DeserializeObject<GraphqlResponse>(response.Content);
                 
                 // Flatten the JSON by converting str->obj->flatten->str, so that zenonConnector can properly may values (nested values were causing stealthy issues)
                 var responseJSON_obj = JsonConvert.DeserializeObject<Root>(response.Content);
                 var Helper = new JsonHelper_Alarms();
                 var responseJSON_obj_flat = Helper.Flatten(responseJSON_obj.data.alarmData);
                 string responseJSON_string_flat = JsonSerializer.Serialize(responseJSON_obj_flat);
-                // return Task.FromResult(response.Content);
                 return Task.FromResult("{\"data\":{\"alarmData\":" + responseJSON_string_flat + "}}");
             }
             catch(Exception e)
@@ -267,9 +318,19 @@ namespace testRESTbackend
         }
         
         
-        // gets variable info from zenon runtime
+        /* Function VariablesQuery()
+         * <summary> Queries the zenon runtime for variable info via GraphQL
+         * <param> None
+         * <returns> Task<string?>: JSON string containing flat list of variables
+         *
+         * Example URL: https://localhost:7262/variables
+         */
         public static Task<string?> VariablesQuery()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+            var config = new ConfigContainer();
+            
+            /* Example Query */
             // query{
             //     variables(database: "project_DB", projects: "ZENON11_DEMO"){
             //         variableName,
@@ -277,10 +338,6 @@ namespace testRESTbackend
             //         dataType
             //     }
             // }
-            
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
-            var config = new ConfigContainer();
-
             string varsQuery =
                 "{\"query\":\"query{\\r\\n" +
                 $"variables(database: \\\"{config.GraphqlDb}\\\", projects: \\\"{config.ZenonProject}\\\"){{\\r\\n" +
@@ -308,8 +365,15 @@ namespace testRESTbackend
         }
         
         
-        // gets data of one (URL-specified) archive from zenon runtime
-        // test with http://localhost:5046/archive?archive=OS&startTime=2024-01-01T01:00:00&endTime=2024-02-02T01:00:00
+        /* Function ArchiveQuery()
+         * <summary> Queries zenon for archive data of a single archive
+         * <param> string archive: (short-)Name of the archive to be queried
+         * <param> string startTime: Start of time from which to query
+         * <param> string endTime: End time until which to query
+         * <returns> Task<string?>: JSON string containing flat list of archive data
+         *
+         * Example URL: http://localhost:5000/archive?archive=Archive_1&startTime=2021-08-01T00:00:00&endTime=2021-08-02T00:00:00
+         */
         public static Task<string?> ArchiveQuery(string archive, string startTime, string endTime)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
@@ -333,20 +397,14 @@ namespace testRESTbackend
                                   "}\"}";
 
             try
-
             {
                 var response = GraphqlQuery(archiveQuery).Result;
-                
                 // Flatten the JSON by converting str->obj->flatten->str, so that zenonConnector can properly parse values (nested values were causing stealthy issues)
                 var responseJSON_obj = JsonConvert.DeserializeObject<ArchiveRoot>(response.Content);
-                // var responseJSON_obj = JsonSerializer.Deserialize<ArchiveRoot>(response.Content);
                 var Helper = new JsonHelper_Archives();
                 var responseJSON_obj_flat = Helper.Flatten(responseJSON_obj.data.archiveData);
                 string responseJSON_string_flat = JsonSerializer.Serialize(responseJSON_obj_flat);
                 return Task.FromResult("{\"data\":{\"archiveData\":" + responseJSON_string_flat + "}}");
-                
-                // Console.WriteLine(archiveQuery);
-                // return Task.FromResult(response.Content);
             }
             catch(Exception e)
             {
@@ -354,83 +412,5 @@ namespace testRESTbackend
                 return Task.FromResult<string>(null);
             }
         }
-        
-        
-
-        // query{
-        //     archives(database: "project_DB", projects: "ZENON11_DEMO"){
-        //         longName,
-        //         shortName
-        //         aggregatedArchives{
-        //             shortName,
-        //             description,
-        //         },
-        //         variables{
-        //             variable{
-        //                 variableName
-        //             }
-        //             calculation
-        //         }
-        //     }
-        // }
-        
-        
-        // public static async Task<string> AlarmDataQuery()
-        // {
-        //     // Frontend polls /alarmdata
-        //     // /alarmdata displays null value but starts alarmdata query in background
-        //     // frontend keeps polling (maybe until 5min timeout)
-        //     // when alarmdata query is finished, /alarmdata displays data
-        //     // /alarmdata displays null value again after frontend polled again and retrieved data or after timeout
-        //     // alarmdata query is not started again until frontend polls /alarmdata again
-        //     
-        //     // OR:
-        //     
-        //     // /alarmdata refreshes every 2min or so with ALL alarmdata (..better prob. because need to query all variables anyway)
-        //     // and frontend can poll whenever
-        //     // if no data for 5min or so, /alarmdata can display nullvalue   
-        //     
-        //     var config = new ConfigContainer();
-        //     
-        //     while (true)
-        //     {
-        //         string currTimeStr = DateTime.UtcNow.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
-        //         // last 5min of alarms
-        //         string startTimeStr = DateTime.UtcNow.AddMinutes(-5).ToString("s", System.Globalization.CultureInfo.InvariantCulture);
-        //         
-        //         var query = 
-        //             "{\"query\":\"query{\\r\\n" +
-        //             $"alarmData( database: \\\"{config.GraphqlDb}\\\"){{\\r\\n" +
-        //             "name\\r\\n" +
-        //             "guid\\r\\n" +
-        //             "description\\r\\n" +
-        //             "linkedVariables{\\r\\n" +
-        //             "variableName\\r\\n" +
-        //             "variableName\\r\\n" +
-        //             "displayName\\r\\n" +
-        //             "identification\\r\\n" +
-        //             "}\\r\\n" +
-        //             "}}\",\"variables\":{}}";
-        //
-        //         
-        //         int i;
-        //         bool success = int.TryParse(config.AlarmRefreshInterval, out i);
-        //         int refreshInterval = 180 * 1000; //fallback in case configvalue is invalid integer
-        //         if (success)
-        //         {
-        //             refreshInterval = int.Parse(config.AlarmRefreshInterval) * 1000; ;
-        //         }
-        //         await Task.Delay(refreshInterval);
-        //         
-        //         var response = GraphqlQuery(query).Result;
-        //         if (response.IsSuccessful)
-        //         {
-        //             return response.Content;
-        //         }
-        //     }
-        //
-        //     return "N/A";
-        // }
-        
     }
 }
