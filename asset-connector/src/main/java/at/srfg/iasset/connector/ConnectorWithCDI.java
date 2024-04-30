@@ -1,25 +1,40 @@
 package at.srfg.iasset.connector;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.streaming.DataStreamWriter;
+import org.apache.spark.sql.streaming.StreamingQueryException;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
 
 import at.srfg.iasset.connector.api.ValueConsumer;
 import at.srfg.iasset.connector.api.ValueSupplier;
 import at.srfg.iasset.connector.component.AASComponent;
 import at.srfg.iasset.connector.component.impl.AASFull;
+import at.srfg.iasset.connector.featureStore.FeaturePipeline;
+import at.srfg.iasset.connector.featureStore.FeatureRegistry;
 import at.srfg.iasset.messaging.EventHandler;
 import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.model.AASFaultSubmodel;
 import at.srfg.iasset.repository.model.AASPlantStructureSubmodel;
+import at.srfg.iasset.repository.model.AASSensorSubmodel;
 import at.srfg.iasset.repository.model.AASZenonAlarm;
 import at.srfg.iasset.repository.model.Fault;
 import at.srfg.iasset.repository.model.PlantElement;
+import at.srfg.iasset.repository.model.Sensor;
 import at.srfg.iasset.repository.model.ZenonAlarm;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
@@ -35,15 +50,20 @@ public class ConnectorWithCDI {
 		// start the endpoint
 //		startEndpoint(i40Component);
 		// @Jonas Demon für Zenon-Alarme
-		demoZenonAlarm(i40Component);
+//		demoZenonAlarm(i40Component);
 		
 		// demonstrate operations
-		operationInvocation(i40Component);
+//		operationInvocation(i40Component);
 		// demonstrate ValueSupplier & ValueConsumer
-		registerValueCallback(i40Component);
+//		registerValueCallback(i40Component);
 		// demonstrate Messaging
-		eventHandling(i40Component);
-		//
+		//eventHandling(i40Component);
+		// demonstrate FeatureStore
+		try {
+			featureStore(i40Component);
+		} catch (MessagingException | TimeoutException | StreamingQueryException | IOException e) {
+			e.printStackTrace();
+		}
 		// wait for a keystroke 
 		try {
 			System.in.read();
@@ -78,9 +98,15 @@ public class ConnectorWithCDI {
 		i40Component.add(AASFull.AAS_BELT_INSTANCE.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_INSTANCE);
 		i40Component.add(AASFull.AAS_BELT_INSTANCE.getId(), AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
 		
+		i40Component.add(AASFull.AAS_BELT_INSTANCE.getId(), AASFaultSubmodel.SUBMODEL_FAULT1);
+		i40Component.add(AASFull.AAS_BELT_INSTANCE.getId(), AASSensorSubmodel.SUBMODEL_SENSOR);
+		
 		
 		// load the semantic integration pattern for reporting faults (from the repository
-		i40Component.loadPattern(AASFaultSubmodel.SUBMODEL_FAULT1.getId());
+		//i40Component.loadPattern(AASFaultSubmodel.SUBMODEL_FAULT1.getId());
+		// load the semantic integration pattern for sensor demo 
+//		i40Component.loadPattern(AASSensorSubmodel.SUBMODEL_SENSOR.getId());	
+		
 		// load the semantic integration pattern for exchanging plat structure requests
 		i40Component.loadPattern(AASPlantStructureSubmodel.SUBMODEL_PLANT_STRUCTURE_REQUEST_OPERATION);
 		
@@ -263,6 +289,16 @@ public class ConnectorWithCDI {
 				}
 			});
 			
+			i40Component.registerCallback("http://iasset.salzburgresearch.at/semantic/sensor", new EventHandler<Sensor>() {
+
+				@Override
+				public void onEventMessage(EventPayload eventPayload, Sensor payload) {
+					System.out.println("Measured the following value: " + payload.getFeatureableValue());
+					
+				}
+			});
+			
+			
 			EventProducer<Fault> faultProducer = i40Component.getEventProducer("http://iasset.salzburgresearch.at/semantic/fault", Fault.class);
 			Thread.sleep(5000);
 			Fault theFault = new Fault();
@@ -270,6 +306,15 @@ public class ConnectorWithCDI {
 			theFault.setFaultId(AASFull.SUBMODEL_BELT_EVENT_INSTANCE.getId());
 			theFault.setShortText("This is a short description!");
 			faultProducer.sendEvent(theFault);
+			
+			EventProducer<Sensor> sensorProducer = i40Component.getEventProducer("http://iasset.salzburgresearch.at/semantic/sensor", Sensor.class);
+			Thread.sleep(5000);
+			Sensor theSensor = new Sensor();
+			theSensor.setAssetId(AASFull.AAS_BELT_INSTANCE.getId());
+			theSensor.setMeasurement("1233456789");
+			sensorProducer.sendEvent(theSensor);
+			
+			
 		
 		} catch (MessagingException | InterruptedException e) {
 			// show error messages
@@ -277,4 +322,77 @@ public class ConnectorWithCDI {
 		}
 
 	}
+	
+	private static void featureStore(AASComponent i40Component) throws MessagingException, TimeoutException, StreamingQueryException, IOException {
+		
+		// --------- Settings --------- //
+		final String featureName = "RPeaks";
+		final String CHECKPOINT_LOCATION = "/home/sebastian/Documents/checkpoint";
+		final String HADOOP_HOME_DIR =  "/home/sebastian/hadoop";
+		final List<String> variableNames = new ArrayList<>(
+				List.of("Timestamp_str", "field1"));
+		final List<DataType> dataTypes = new ArrayList<>(
+				List.of(DataTypes.StringType, DataTypes.DoubleType));
+		
+		// --------- Feature Store setup --------- //
+		FeatureRegistry fregist = new FeatureRegistry("testapp", HADOOP_HOME_DIR, CHECKPOINT_LOCATION);
+		Dataset<Row> df = fregist.registerEventInput(i40Component, "http://iasset.salzburgresearch.at/semantic/sensor", variableNames, dataTypes);
+		 
+		// --------- Demo producer setup ---------
+		EventProducer<Sensor> sensorProducer = i40Component.getEventProducer("http://iasset.salzburgresearch.at/semantic/sensor", Sensor.class);
+		Thread senderThread = new Thread(new FeatureEventSender(sensorProducer));
+		senderThread.start();
+		
+		// --------- Demo feature and sink registration --------- //
+		FeaturePipeline pipeline = fregist.registerPipeline(df, featureName);
+		FeaturePipeline  results = pipeline;
+		DataStreamWriter<Row> writer = fregist.registerConsoleSink(results, CHECKPOINT_LOCATION);
+		
+		// --------- Test run --------- //
+		fregist.runQuery(writer);
+		fregist.awaitTermination();
+		
+	}
+	
+	
+	private static class FeatureEventSender implements Runnable{
+		EventProducer<Sensor> sensorProducer;
+		
+		public FeatureEventSender(EventProducer<Sensor> sensorProducer) {
+			this.sensorProducer = sensorProducer;
+		}
+		
+
+		@Override
+		public void run() {
+			try(BufferedReader br = new BufferedReader(new FileReader("src/main/resources/testsig_thor.csv"))){
+				String line = br.readLine(); // skip Header
+				while((line = br.readLine()) != null)
+					try {
+						String[] values = line.split(",");
+						Sensor theSensor = new Sensor();
+						theSensor.setAssetId(AASFull.AAS_BELT_INSTANCE.getId());
+						theSensor.setTimestampCreated((values[0]));
+						theSensor.setMeasurement(values[1]);
+						
+						sensorProducer.sendEvent(theSensor);				
+						
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (MessagingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			
+		}
+		
+	}
+	
 }
