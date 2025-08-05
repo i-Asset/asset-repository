@@ -1,5 +1,9 @@
 package at.srfg.iasset.repository.config;
 
+import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.deserialization.EnumDeserializer;
+import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.serialization.EnumSerializer;
+import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.util.ReflectionHelper;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,6 +46,7 @@ public class AASJacksonMapperProvider implements ContextResolver<ObjectMapper>{
 				.serializationInclusion(JsonInclude.Include.NON_EMPTY)
 				.addModule(buildCustomSerializerModule())
 				.addModule(buildImplementationModule())
+				.addModule(buildEnumModule())
 				.addModule(new JavaTimeModule())
 				//
 				.annotationIntrospector(new AASModelIntrospector())
@@ -50,6 +55,13 @@ public class AASJacksonMapperProvider implements ContextResolver<ObjectMapper>{
 		AASModelHelper.JSON_MIXINS.entrySet().forEach(x -> mapper.addMixIn(x.getKey(), x.getValue()));
 
 	}
+	  protected SimpleModule buildEnumModule() {
+		    SimpleModule module = new SimpleModule();
+		    AASModelHelper.ENUMS.forEach(x -> module.addSerializer(x, new EnumSerializer()));
+		    AASModelHelper.ENUMS.forEach(x -> module.addDeserializer(x, new EnumDeserializer<>(x)));
+		    return module;
+		  }
+
     protected SimpleModule buildImplementationModule() {
         SimpleModule module = new SimpleModule();
         module.setAbstractTypes(typeResolver);

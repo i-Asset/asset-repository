@@ -8,9 +8,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.visitor.AssetAdministrationShellElementWalkerVisitor;
-import org.eclipse.digitaltwin.aas4j.v3.model.HasSemantics;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
@@ -50,11 +49,12 @@ public class SemanticIdCollector {
         public void visit(SubmodelElement submodelElement) {
         	if ( isRelevantClass(submodelElement) ) {
         		if ( submodelElement.getSemanticId() != null ) {
-        			if (submodelElement.getSemanticId() instanceof ModelReference) {
-        				ModelReference modelRef = (ModelReference) submodelElement.getSemanticId();
-        				if ( modelRef.getReferredSemanticId() != null ) {
-        					semanticReference.add(modelRef.getReferredSemanticId());
+        			Reference semanticId = submodelElement.getSemanticId();
+        			if ( semanticId.getType() == ReferenceTypes.MODEL_REFERENCE) {
+        				if ( semanticId.getReferredSemanticId() != null ) {
+        					semanticReference.add(semanticId.getReferredSemanticId());
         				}
+        				
         			}
         			else {
         				semanticReference.add(submodelElement.getSemanticId());

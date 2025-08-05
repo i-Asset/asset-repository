@@ -84,7 +84,7 @@ public class TestOperations {
 				}
 				if (ov.getValue() instanceof SubmodelElementCollection ) {
 					SubmodelElementCollection c = (SubmodelElementCollection) ov.getValue();
-					for (SubmodelElement e : c.getValues() ) {
+					for (SubmodelElement e : c.getValue() ) {
 						if (e instanceof Property) {
 							Property p = (Property) e;
 							switch(p.getIdShort()) {
@@ -102,7 +102,7 @@ public class TestOperations {
 								listElement.setValueType(aList.getValueTypeListElement());
 								listElement.setValue("Sample");
 								listElement.setIdShort(aList.getIdShort()+"(1)");
-								aList.getValues().add(listElement);
+								aList.getValue().add(listElement);
 							}
 						}
 					}

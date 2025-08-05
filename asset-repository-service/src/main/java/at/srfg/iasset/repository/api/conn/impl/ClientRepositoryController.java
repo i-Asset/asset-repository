@@ -7,7 +7,6 @@ import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
@@ -67,7 +66,7 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 	}
 
 	@Override
-	public List<ModelReference> getSubmodels(String aasIdentifier) {
+	public List<Reference> getSubmodels(String aasIdentifier) {
 		
 		return server.getSubmodelReferences(ApiUtils.base64Decode(aasIdentifier));
 	}
@@ -179,12 +178,12 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 	}
 
 	@Override
-	public List<ModelReference> setSubmodels(String aasIdentifier, List<ModelReference> submodels) {
+	public List<Reference> setSubmodels(String aasIdentifier, List<Reference> submodels) {
 		return server.setSubmodelReferences(aasIdentifier, submodels);
 	}
 
 	@Override
-	public List<ModelReference> removeSubmodelReference(String aasIdentifier, String submodelIdentifier) {
+	public List<Reference> removeSubmodelReference(String aasIdentifier, String submodelIdentifier) {
 		return server.deleteSubmodelReference(aasIdentifier, submodelIdentifier);
 	}
 

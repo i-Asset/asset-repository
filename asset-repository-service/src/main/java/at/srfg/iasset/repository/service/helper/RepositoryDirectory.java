@@ -90,8 +90,8 @@ public class RepositoryDirectory implements DirectoryService {
 				.administration(descriptor.getAdministration())
 				.id(descriptor.getId())
 				.idShort(descriptor.getIdShort())
-				.descriptions(descriptor.getDescriptions())
-				.displayNames(descriptor.getDisplayNames())
+				.description(descriptor.getDescription())
+				.displayName(descriptor.getDisplayName())
 				.assetInformation(new DefaultAssetInformation.Builder()
 						.globalAssetId(descriptor.getGlobalAssetId())
 						.specificAssetIds(descriptor.getSpecificAssetIds())
@@ -125,12 +125,11 @@ public class RepositoryDirectory implements DirectoryService {
 			if (sub.isEmpty()) {
 				// TODO: check what to copy from descriptor
 				Submodel submodel = new DefaultSubmodel.Builder()
-						.descriptions(model.getDescriptions())
-						.displayNames(model.getDisplayNames())
+						.description(model.getDescription())
+						.displayName(model.getDisplayName())
 						.idShort(model.getIdShort())
 						.id(model.getId())
 						.administration(model.getAdministration())
-						.category(model.getCategory())
 						.build();
 				return storage.persist(submodel);
 			}

@@ -5,10 +5,10 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.visitor.AssetAdministrationShellElementWalkerVisitor;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 
 public class OperationCollector {
 	public OperationCollector() {
@@ -44,26 +44,32 @@ public class OperationCollector {
 
 		@Override
 		public void visit(Operation operation) {
+			// collect when semantic id matches
+			//      OR when referredSemanticId of model Reference matches
+			//      OR when any of the supplemental semanticId's matches
+			
 			if ( semanticId.equals(operation.getSemanticId())) {
 				element.add(operation);
 			}
-			else if (operation.getSemanticId() instanceof ModelReference) {
-				ModelReference operationSemantic = (ModelReference) operation.getSemanticId();
-				if ( semanticId.equals(operationSemantic.getReferredSemanticId())) {
-					element.add(operation);
-				}
-			}
 			else {
-				if ( operation.getSupplementalSemanticIds()!= null ) {
-					if ( operation.getSupplementalSemanticIds().stream()
-						.anyMatch(new Predicate<Reference>() {
-
-							@Override
-							public boolean test(Reference t) {
-								return semanticId.equals(t);
-							}}) ) {
-						// supplementalSemanticId matches, so add to the list
+				Reference ref = operation.getSemanticId();
+				if ( ref.getType() == ReferenceTypes.MODEL_REFERENCE) {
+					if ( semanticId.equals(ref.getReferredSemanticId())) {
 						element.add(operation);
+					}
+				}
+				else {
+					if ( operation.getSupplementalSemanticIds()!= null ) {
+						if ( operation.getSupplementalSemanticIds().stream()
+							.anyMatch(new Predicate<Reference>() {
+
+								@Override
+								public boolean test(Reference t) {
+									return semanticId.equals(t);
+								}}) ) {
+							// supplementalSemanticId matches, so add to the list
+							element.add(operation);
+						}
 					}
 				}
 			}

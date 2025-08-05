@@ -1,7 +1,6 @@
 package at.srfg.iasset.repository.model.helper.payload.mapper;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEventPayload;
 
@@ -30,9 +29,9 @@ public class EventPayloadValueMapper implements PayloadValueMapper<EventPayload,
 	@Override
 	public EventPayload mapFromValue(EventPayloadValue valueElement) {
 		EventPayload payload = new DefaultEventPayload.Builder()
-				.source(PayloadValueHelper.fromValue(valueElement.getSource(), ModelReference.class))
+				.source(PayloadValueHelper.fromValue(valueElement.getSource(), Reference.class))
 				.sourceSemanticId(PayloadValueHelper.fromValue(valueElement.getSourceSemanticId(), Reference.class))
-				.observableReference(PayloadValueHelper.fromValue(valueElement.getObservableReference(), ModelReference.class))
+				.observableReference(PayloadValueHelper.fromValue(valueElement.getObservableReference(), Reference.class))
 				.observableSemanticId(PayloadValueHelper.fromValue(valueElement.getObservableSemanticId(), Reference.class))
 				.subjectId(PayloadValueHelper.fromValue(valueElement.getSubjectId(), Reference.class))
 				.topic(valueElement.getTopic())

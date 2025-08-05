@@ -1,8 +1,8 @@
 package at.srfg.iasset.repository.model.operation;
 
-import org.eclipse.digitaltwin.aas4j.v3.model.ExternalReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 /**
@@ -97,5 +97,5 @@ public interface OperationInvocation {
 	 * @param reference
 	 * @return
 	 */
-	OperationInvocationResult invoke(String aasIdentifier, ExternalReference reference);
+	OperationInvocationResult invoke(String aasIdentifier, Reference reference);
 }

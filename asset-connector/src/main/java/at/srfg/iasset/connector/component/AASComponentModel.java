@@ -10,5 +10,8 @@ public interface AASComponentModel {
 	default void loadData(LocalEnvironment environment) {
 		
 	}
+	default void injectLogic(LocalEnvironment environment) {
+		
+	}
 	
 }

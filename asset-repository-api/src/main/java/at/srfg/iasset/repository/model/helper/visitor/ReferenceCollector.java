@@ -16,7 +16,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReference;
 
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
@@ -41,7 +41,7 @@ public class ReferenceCollector {
     	Reference modelReference; 
     	Visitor() {
     		
-    		modelReference = new DefaultModelReference.Builder()
+    		modelReference = new DefaultReference.Builder()
     				// keys are collected 
     				.build();
     		

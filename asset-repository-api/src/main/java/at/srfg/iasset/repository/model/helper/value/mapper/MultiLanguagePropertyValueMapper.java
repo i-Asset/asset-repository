@@ -5,9 +5,10 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import org.eclipse.digitaltwin.aas4j.v3.model.LangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.LangStringNameType;
+import org.eclipse.digitaltwin.aas4j.v3.model.LangStringTextType;
 import org.eclipse.digitaltwin.aas4j.v3.model.MultiLanguageProperty;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangStringTextType;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,7 +20,7 @@ public class MultiLanguagePropertyValueMapper implements ValueMapper<MultiLangua
 
 	@Override
 	public MultiLanguagePropertyValue mapToValue(MultiLanguageProperty modelElement) {
-		return new MultiLanguagePropertyValue(modelElement.getValues());
+		return new MultiLanguagePropertyValue(modelElement.getValue());
 	}
 
 	@Override
@@ -31,11 +32,11 @@ public class MultiLanguagePropertyValueMapper implements ValueMapper<MultiLangua
 
 				@Override
 				public void accept(Entry<String, JsonNode> t) {
-					Optional<LangString> langString  = modelElement.getValues().stream()
-							.filter(new Predicate<LangString>() {
+					Optional<LangStringTextType> langString  = modelElement.getValue().stream()
+							.filter(new Predicate<LangStringTextType>() {
 
 								@Override
-								public boolean test(LangString lStr) {
+								public boolean test(LangStringTextType lStr) {
 									return lStr.getLanguage().equalsIgnoreCase(t.getKey());
 								}
 							})
@@ -44,7 +45,11 @@ public class MultiLanguagePropertyValueMapper implements ValueMapper<MultiLangua
 						langString.get().setText(t.getValue().asText());
 					}
 					else {
-						modelElement.getValues().add(new DefaultLangString(t.getKey(), t.getValue().asText()));
+						modelElement.getValue().add(new DefaultLangStringTextType.Builder()
+								.language(t.getKey())
+								.text(t.getValue().asText())
+								.build());
+										
 					}
 					
 				}});

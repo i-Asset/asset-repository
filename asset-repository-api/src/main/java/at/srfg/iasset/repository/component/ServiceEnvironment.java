@@ -7,7 +7,6 @@ import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
@@ -228,14 +227,14 @@ public interface ServiceEnvironment {
 	 * @param aasIdentifier
 	 * @return
 	 */
-	List<ModelReference> getSubmodelReferences(String aasIdentifier);
+	List<Reference> getSubmodelReferences(String aasIdentifier);
 	/**
 	 * Update the submodel reference list of the {@link AssetAdministrationShell}
 	 * @param aasIdentifier
 	 * @param submodels
 	 * @return
 	 */
-	List<ModelReference> setSubmodelReferences(String aasIdentifier, List<ModelReference> submodels);
+	List<Reference> setSubmodelReferences(String aasIdentifier, List<Reference> submodels);
 	/**
 	 * Remove a submodel reference from the {@link AssetAdministrationShell}. The {@link Submodel} itsel
 	 * is not affected by this operation!
@@ -243,7 +242,7 @@ public interface ServiceEnvironment {
 	 * @param submodelIdentifier
 	 * @return
 	 */
-	List<ModelReference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier);
+	List<Reference> deleteSubmodelReference(String aasIdentifier, String submodelIdentifier);
 	/**
 	 * Add a new {@link SubmodelElement} to the identified {@link Submodel}
 	 * @param aasIdentifier

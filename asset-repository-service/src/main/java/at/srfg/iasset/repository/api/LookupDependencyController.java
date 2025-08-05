@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import at.srfg.iasset.repository.api.dependency.SemanticLookup;
-import at.srfg.iasset.repository.api.dependency.SemanticLookupMapper;
 import at.srfg.iasset.semantic.model.ConceptBase;
 import at.srfg.iasset.semantic.model.ConceptClass;
 import at.srfg.iasset.semantic.model.ConceptProperty;

@@ -9,15 +9,16 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.internal.deserialization.EnumDeserializer;
 import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Key;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultExternalReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReference;
 
 import at.srfg.iasset.repository.config.AASModelHelper;
 
@@ -80,14 +81,16 @@ public class ReferenceUtils {
 		
 	}
 	public static Reference asGlobalReference(KeyTypes type, String identifier) {
-		return new DefaultExternalReference.Builder()
-				.key(new DefaultKey.Builder().type(type).value(identifier).build())
+		return new DefaultReference.Builder()
+				.type(ReferenceTypes.EXTERNAL_REFERENCE)
+				.keys(new DefaultKey.Builder().type(type).value(identifier).build())
 				.build();
 			
 	}
 	public static Reference asGlobalReference(String identifier) {
-		return new DefaultExternalReference.Builder()
-				.key(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE).value(identifier).build())
+		return new DefaultReference.Builder()
+				.type(ReferenceTypes.EXTERNAL_REFERENCE)
+				.keys(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE).value(identifier).build())
 				.build();
 			
 	}
@@ -103,6 +106,7 @@ public class ReferenceUtils {
 	public static <T extends Reference> T toReference(Identifiable identifiable, Class<T> referenceType, Class<? extends Key> keyType) {
         try {
             T reference = referenceType.getConstructor().newInstance();
+            reference.setType(ReferenceTypes.MODEL_REFERENCE);
             Key key = keyType.getConstructor().newInstance();
             key.setType(referableToKeyType(identifiable));
             key.setValue(identifiable.getId());
@@ -119,9 +123,9 @@ public class ReferenceUtils {
      * @param identifiable the identifiable to create the reference for
      * @return a reference representing the identifiable
      */
-    public static ModelReference toReference(Identifiable identifiable) {
+    public static Reference toReference(Identifiable identifiable) {
         return toReference(identifiable, 
-        		AASModelHelper.getDefaultImplementation(ModelReference.class), 
+        		AASModelHelper.getDefaultImplementation(Reference.class), 
         		AASModelHelper.getDefaultImplementation(Key.class));
     }
     /**
@@ -222,10 +226,10 @@ public class ReferenceUtils {
      * 
      * @implNote Taken from {@link AasUtils} created by Fraunhofer, copied in order to avoid loading of "original" ReflectionHelper
      */
-    public static ModelReference toReference(Reference parent, Referable element) {
+    public static Reference toReference(Reference parent, Referable element) {
         return toReference(parent,
                 element,
-                AASModelHelper.getDefaultImplementation(ModelReference.class),
+                AASModelHelper.getDefaultImplementation(Reference.class),
                 AASModelHelper.getDefaultImplementation(Key.class));
     }
 
@@ -279,7 +283,8 @@ public class ReferenceUtils {
     public static KeyTypes referableToKeyType(Referable referable) {
         Class<?> aasInterface = AASModelHelper.getAasInterface(referable.getClass());
         if (aasInterface != null) {
-            return KeyTypes.fromValue(aasInterface.getSimpleName());
+            return KeyTypes.valueOf(EnumDeserializer.deserializeEnumName(aasInterface.getSimpleName()));
+//            return KeyTypes.fromValue(aasInterface.getSimpleName());
         }
         return null;
     }

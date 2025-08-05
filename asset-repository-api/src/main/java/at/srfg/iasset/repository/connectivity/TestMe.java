@@ -8,9 +8,8 @@ import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultExternalReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReference;
 
 import at.srfg.iasset.repository.model.helper.visitor.SemanticLookupVisitor;
 
@@ -36,15 +35,18 @@ public class TestMe {
 		
 		
 //		
-		Reference ref = new DefaultModelReference.Builder()
-				.key(new DefaultKey.Builder().type(KeyTypes.SUBMODEL).value("http://iasset.salzburgresearch.at/application#eventConfig").build())
-				.key(new DefaultKey.Builder().type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION).value("messageBroker").build())
+		Reference ref = new DefaultReference.Builder()
+				.type(ReferenceTypes.MODEL_REFERENCE)
+				.keys(new DefaultKey.Builder().type(KeyTypes.SUBMODEL).value("http://iasset.salzburgresearch.at/application#eventConfig").build())
+				.keys(new DefaultKey.Builder().type(KeyTypes.SUBMODEL_ELEMENT_COLLECTION).value("messageBroker").build())
 				.build();
-		Reference hostsRef = new DefaultExternalReference.Builder()
-				.key(new DefaultKey.Builder().type(KeyTypes.CONCEPT_DESCRIPTION).value("http://iasset.salzburgresearch.at/data/messageBroker/hosts").build())
+		Reference hostsRef = new DefaultReference.Builder()
+				.type(ReferenceTypes.EXTERNAL_REFERENCE)
+				.keys(new DefaultKey.Builder().type(KeyTypes.CONCEPT_DESCRIPTION).value("http://iasset.salzburgresearch.at/data/messageBroker/hosts").build())
 				.build();
-		Reference typeRef = new DefaultExternalReference.Builder()
-				.key(new DefaultKey.Builder().type(KeyTypes.CONCEPT_DESCRIPTION).value("http://iasset.salzburgresearch.at/data/messageBroker/brokerType").build())
+		Reference typeRef = new DefaultReference.Builder()
+				.type(ReferenceTypes.EXTERNAL_REFERENCE)
+				.keys(new DefaultKey.Builder().type(KeyTypes.CONCEPT_DESCRIPTION).value("http://iasset.salzburgresearch.at/data/messageBroker/brokerType").build())
 				.build();
 		// obtain requested submodel (taken from config??) 
 		Submodel config = c1.getSubmodelInterface().getSubmodel("http://iasset.salzburgresearch.at/application#eventConfig");

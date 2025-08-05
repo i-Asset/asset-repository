@@ -15,8 +15,8 @@ public class InstanceOperation extends DefaultOperation implements Operation {
 	}
 	public InstanceOperation(Operation other) {
 		setEmbeddedDataSpecifications(other.getEmbeddedDataSpecifications());
-		setDescriptions(other.getDescriptions());
-		setDisplayNames(other.getDisplayNames());
+		setDescription(other.getDescription());
+		setDisplayName(other.getDisplayName());
 		setEmbeddedDataSpecifications(other.getEmbeddedDataSpecifications());
 		setExtensions(other.getExtensions());
 		setIdShort(other.getIdShort());

@@ -9,14 +9,16 @@ import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContent;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeIec61360;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
-import org.eclipse.digitaltwin.aas4j.v3.model.LevelType;
 import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationIec61360;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEmbeddedDataSpecification;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultExternalReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangString;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangStringDefinitionTypeIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangStringNameType;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangStringPreferredNameTypeIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangStringShortNameTypeIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueList;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultValueReferencePair;
 import org.slf4j.Logger;
@@ -72,57 +74,61 @@ public class ConceptDescriptionsApiController implements ConceptDescriptionsApi 
 			ConceptDescription cDesk = new DefaultConceptDescription.Builder()
 
 					.category("PARAMETER").id("http://myConceptIdentifier.org/id").idShort(idShort)
-					.displayName(new DefaultLangString.Builder().language("de").text("ConceptDescription").build())
+					.displayName(new DefaultLangStringNameType.Builder().language("de").text("ConceptDescription").build())
 					.isCaseOf(
-							new DefaultExternalReference.Builder()
-									.key(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE)
+							new DefaultReference.Builder()
+									.type(ReferenceTypes.EXTERNAL_REFERENCE)
+									.keys(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE)
 											.value("0173-1#01-AFW236#003").build())
 									.build())
-					.embeddedDataSpecification(new DefaultEmbeddedDataSpecification.Builder()
-							.dataSpecification(new DefaultExternalReference.Builder()
-									.key(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE)
+					.embeddedDataSpecifications(new DefaultEmbeddedDataSpecification.Builder()
+							.dataSpecification(new DefaultReference.Builder()
+									.type(ReferenceTypes.EXTERNAL_REFERENCE)
+									.keys(new DefaultKey.Builder().type(KeyTypes.GLOBAL_REFERENCE)
 											.value("http://semanticLookup/classification").build())
 									.build())
 							.dataSpecificationContent(new DefaultDataSpecificationIec61360.Builder()
-									.preferredNames(Arrays.asList(
-											new DefaultLangString.Builder().text("Test Specification").language("de")
+									.preferredName(Arrays.asList(
+											new DefaultLangStringPreferredNameTypeIec61360.Builder().text("Test Specification").language("de")
 													.build(),
-											new DefaultLangString.Builder()
+											new DefaultLangStringPreferredNameTypeIec61360.Builder()
 													.text("TestSpecification").language("en-us").build()))
 									.dataType(DataTypeIec61360.REAL_MEASURE)
-									.definition(new DefaultLangString.Builder()
+									.definition(new DefaultLangStringDefinitionTypeIec61360.Builder()
 											.text("Dies ist eine Data Specification für Testzwecke").language("de")
 											.build())
-									.definition(new DefaultLangString.Builder()
+									.definition(new DefaultLangStringDefinitionTypeIec61360.Builder()
 											.text("This is a DataSpecification for testing purposes").language("en-us")
 											.build())
-									.shortName(new DefaultLangString.Builder().text("Test Spec").language("de").build())
+									.shortName(new DefaultLangStringShortNameTypeIec61360.Builder().text("Test Spec").language("de").build())
 									.shortName(
-											new DefaultLangString.Builder().text("TestSpec").language("en-us").build())
+											new DefaultLangStringShortNameTypeIec61360.Builder().text("TestSpec").language("en-us").build())
 									.unit("SpaceUnit")
-									.unitId(new DefaultExternalReference.Builder()
-											.key(new DefaultKey.Builder()
+									.unitId(new DefaultReference.Builder()
+											.type(ReferenceTypes.EXTERNAL_REFERENCE)
+											.keys(new DefaultKey.Builder()
 													.type(KeyTypes.GLOBAL_REFERENCE)
 													.value("http://acplt.org/Units/SpaceUnit").build())
 											.build())
 									.sourceOfDefinition("http://acplt.org/DataSpec/ExampleDef").symbol("SU")
-									.valueFormat("string").value("TEST").levelType(LevelType.MIN)
-//                                    .levelType(LevelType.MAX)
+									.valueFormat("string").value("TEST")
 									.valueList(new DefaultValueList.Builder()
-											.valueReferencePair(new DefaultValueReferencePair.Builder()
+											.valueReferencePairs(new DefaultValueReferencePair.Builder()
 													.value("http://acplt.org/ValueId/ExampleValueId")
-													.valueId(new DefaultExternalReference.Builder()
-															.key(new DefaultKey.Builder()
+													.valueId(new DefaultReference.Builder()
+															.type(ReferenceTypes.EXTERNAL_REFERENCE)
+															.keys(new DefaultKey.Builder()
 																	.type(KeyTypes.GLOBAL_REFERENCE)
 																	.value("http://acplt.org/ValueId/ExampleValueId")
 																	.build())
 															.build())
 													// TODO valueType
 													.build())
-											.valueReferencePair(new DefaultValueReferencePair.Builder()
+											.valueReferencePairs(new DefaultValueReferencePair.Builder()
 													.value("http://acplt.org/ValueId/ExampleValueId2")
-													.valueId(new DefaultExternalReference.Builder()
-															.key(new DefaultKey.Builder()
+													.valueId(new DefaultReference.Builder()
+															.type(ReferenceTypes.EXTERNAL_REFERENCE)
+															.keys(new DefaultKey.Builder()
 																	.type(KeyTypes.GLOBAL_REFERENCE)
 																	.value("http://acplt.org/ValueId/ExampleValueId2")
 																	.build())

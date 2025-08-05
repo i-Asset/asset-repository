@@ -31,7 +31,7 @@ public interface SubmodelElementPathWalkerVisitor extends SubmodelElementPathVis
         if (submodelElementCollection == null) {
             return;
         }
-        submodelElementCollection.getValues().forEach(x -> visit(String.format("%s.%s", pathToElement, x.getIdShort()), x));
+        submodelElementCollection.getValue().forEach(x -> visit(String.format("%s.%s", pathToElement, x.getIdShort()), x));
         //
 		SubmodelElementPathVisitor.super.visit(pathToElement, submodelElementCollection);
 	}
@@ -41,8 +41,8 @@ public interface SubmodelElementPathWalkerVisitor extends SubmodelElementPathVis
         if (submodelElementList == null) {
             return;
         }
-        for (int i = 0; i < submodelElementList.getValues().size(); i++) {
-        	visit(String.format("%s[%s]", pathToElement,i ), submodelElementList.getValues().get(i));
+        for (int i = 0; i < submodelElementList.getValue().size(); i++) {
+        	visit(String.format("%s[%s]", pathToElement,i ), submodelElementList.getValue().get(i));
         }
         //
         SubmodelElementPathVisitor.super.visit(pathToElement, submodelElementList);

@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
@@ -106,7 +106,7 @@ public class AssetAdministrationShellController implements IAssetAdministrationS
 	@GET
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_AAS_SUBMODELS)
-	public List<ModelReference> getSubmodels() {
+	public List<Reference> getSubmodels() {
 		return environment.getSubmodelReferences(theShell.getId());
 	}
 	
@@ -115,7 +115,7 @@ public class AssetAdministrationShellController implements IAssetAdministrationS
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_AAS_SUBMODELS)
-	public List<ModelReference> setSubmodels(List<ModelReference> submodels) {
+	public List<Reference> setSubmodels(List<Reference> submodels) {
 		return environment.setSubmodelReferences(theShell.getId(), submodels);
 	}
 
@@ -124,7 +124,7 @@ public class AssetAdministrationShellController implements IAssetAdministrationS
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER)
-	public List<ModelReference> removeSubmodelReference(@PathParam("submodelIdentifier") String submodelIdentifier) {
+	public List<Reference> removeSubmodelReference(@PathParam("submodelIdentifier") String submodelIdentifier) {
 		return environment.deleteSubmodelReference(theShell.getId(),
 				ApiUtils.base64Decode(submodelIdentifier));
 	}

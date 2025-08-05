@@ -3,11 +3,11 @@ package at.srfg.iasset.repository.model.helper.value.mapper;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
@@ -25,7 +25,7 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 	@Override
 	public SubmodelElementCollectionValue mapToValue(SubmodelElementCollection modelElement) throws ValueMappingException {
 		SubmodelElementCollectionValue value = new SubmodelElementCollectionValue();
-		for ( SubmodelElement element : modelElement.getValues()) {
+		for ( SubmodelElement element : modelElement.getValue()) {
 			value.getValues().put(element.getIdShort(), ValueHelper.toValue(element));
 		}
 		return value;
@@ -33,7 +33,7 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 
 	@Override
 	public SubmodelElementCollection mapValueToElement(SubmodelElementCollection modelElement, JsonNode valueNode) throws ValueMappingException {
-		for (SubmodelElement element : modelElement.getValues()) {
+		for (SubmodelElement element : modelElement.getValue()) {
 			JsonNode elementValue = valueNode.get(element.getIdShort());
 			if ( elementValue != null) {
 				ValueHelper.applyValue(element, elementValue);
@@ -58,12 +58,19 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 	@Override
 	public SubmodelElementCollection mapValueToTemplate(ServiceEnvironment serviceEnvironment,
 			SubmodelElementCollection modelElement, JsonNode valueNode) throws ValueMappingException {
+		if ( modelElement.getSemanticId()!= null ) {
+			Optional<SubmodelElementCollection> template = serviceEnvironment.getSubmodelElement(modelElement.getSemanticId(), SubmodelElementCollection.class);
+			if ( template.isPresent()) {
+				return mapValueToTemplate(serviceEnvironment, modelElement, template.get(), valueNode);
+			}
+			
+		}
 
 		if ( valueNode.isObject()) {
 			Iterator<Entry<String,JsonNode>> fieldIterator = valueNode.fields();
 			while( fieldIterator.hasNext()) {
 				Entry<String, JsonNode> fieldNode = fieldIterator.next();
-				SubmodelElement element = modelElement.getValues().stream().filter(new Predicate<SubmodelElement>() {
+				SubmodelElement element = modelElement.getValue().stream().filter(new Predicate<SubmodelElement>() {
 
 					@Override
 					public boolean test(SubmodelElement t) {
@@ -75,7 +82,7 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 						@Override
 						public SubmodelElement get() {
 							SubmodelElement newElement = cloneElement(fieldNode.getKey(), fieldNode.getValue());
-							modelElement.getValues().add(newElement);
+							modelElement.getValue().add(newElement);
 							return newElement;
 						}});
 				
@@ -91,12 +98,12 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 	public SubmodelElementCollection mapValueToTemplate(ServiceEnvironment serviceEnvironment,
 			SubmodelElementCollection modelElement, SubmodelElementCollection templateElement, JsonNode valueNode) throws ValueMappingException {
 		// TODO Auto-generated method stub
-		modelElement.getValues().clear();
+		modelElement.getValue().clear();
 		if ( valueNode.isObject()) {
 			Iterator<Entry<String,JsonNode>> fieldIterator = valueNode.fields();
 			while( fieldIterator.hasNext()) {
 				Entry<String, JsonNode> fieldNode = fieldIterator.next();
-				Optional<SubmodelElement> element = templateElement.getValues().stream().filter(new Predicate<SubmodelElement>() {
+				Optional<SubmodelElement> element = templateElement.getValue().stream().filter(new Predicate<SubmodelElement>() {
 
 					@Override
 					public boolean test(SubmodelElement t) {
@@ -106,7 +113,7 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 				
 				if ( element.isPresent()) {
 					SubmodelElement instance = instantiate(element.get(), fieldNode.getValue());
-					modelElement.getValues().add(instance);
+					modelElement.getValue().add(instance);
 					ValueHelper.applyValue(serviceEnvironment, instance, element.get(), fieldNode.getValue());
 				}
 			}

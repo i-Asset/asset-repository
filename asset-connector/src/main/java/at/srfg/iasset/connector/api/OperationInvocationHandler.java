@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.eclipse.digitaltwin.aas4j.v3.model.ExternalReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.HasKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,7 +30,6 @@ import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
 import at.srfg.iasset.repository.model.operation.OperationResultValue;
-import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 /**
  * Handler covering the execution of operations
  */
@@ -408,7 +407,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		return this;
 	}
 	@Override
-	public OperationInvocationResult invoke(String aasIdentifier, ExternalReference reference) {
+	public OperationInvocationResult invoke(String aasIdentifier, Reference reference) {
 		
 		return this;
 	}

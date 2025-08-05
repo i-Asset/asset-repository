@@ -5,7 +5,6 @@ import java.util.List;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
@@ -194,7 +193,7 @@ public interface IAssetAdministrationShellInterface {
 	@RequestMapping(
 			method = RequestMethod.GET,
 			path=PATH_AAS_SUBMODELS)
-	public List<ModelReference> getSubmodels(
+	public List<Reference> getSubmodels(
 //			@Base64Encoded
 //			@Parameter(
 //					in = ParameterIn.PATH, 
@@ -213,7 +212,7 @@ public interface IAssetAdministrationShellInterface {
 	@RequestMapping(
 			method = RequestMethod.POST,
 			path=PATH_AAS_SUBMODELS)
-	public List<ModelReference> setSubmodels(
+	public List<Reference> setSubmodels(
 //			@Base64Encoded
 //			@Parameter(
 //					in = ParameterIn.PATH, 
@@ -223,7 +222,7 @@ public interface IAssetAdministrationShellInterface {
 //			@PathVariable("aasIdentifier") 
 //			String aasIdentifier,
 			@RequestBody
-			List<ModelReference> submodels
+			List<Reference> submodels
 			);
 
 	/**
@@ -235,7 +234,7 @@ public interface IAssetAdministrationShellInterface {
 	@RequestMapping(
 			method = RequestMethod.DELETE,
 			path=PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER)
-	public List<ModelReference> removeSubmodelReference(
+	public List<Reference> removeSubmodelReference(
 //			@Base64Encoded
 //			@Parameter(
 //					in = ParameterIn.PATH, 

@@ -15,7 +15,6 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Direction;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventPayload;
 import org.eclipse.digitaltwin.aas4j.v3.model.HasSemantics;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.StateOfEvent;
@@ -51,7 +50,7 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 	/**
 	 * Reference to the source element
 	 */
-	ModelReference sourceReference;
+	Reference sourceReference;
 	/**
 	 * The source element, provides access to observedReference
 	 * 
@@ -64,7 +63,7 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 	/**
 	 * The reference to the observed element
 	 */
-	ModelReference observedReference;
+	Reference observedReference;
 	/**
 	 * The semantic id of the observed element (ModelReference)
 	 */
@@ -116,9 +115,9 @@ public class EventElementHandlerImpl implements EventElementHandler, MessageHand
 	public EventElementHandlerImpl(
 					ConnectorMessaging parent,
 					BasicEventElement source,			// The "resolved" element
-					ModelReference sourceReference,		// The reference to the source Element
+					Reference sourceReference,			// The reference to the source Element
 					Referable observed,					// the "resolved" observed element
-					ModelReference observedReference,	// the reference to the observed element
+					Reference observedReference,		// the reference to the observed element
 					MessageBroker messageBroker			// broker settings (host, type)
 			) {
 		this.source = source;

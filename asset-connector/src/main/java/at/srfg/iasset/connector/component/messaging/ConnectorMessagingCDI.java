@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import org.eclipse.digitaltwin.aas4j.v3.model.BasicEventElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.Direction;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 
@@ -140,7 +139,7 @@ public class ConnectorMessagingCDI implements ConnectorMessaging {
 	/**
 	 * Register an {@link EventElement} 
 	 */
-	public void registerEventElement(ModelReference source) throws MessagingException {
+	public void registerEventElement(Reference source) throws MessagingException {
 		Optional<BasicEventElement> theSource = this.environment.resolve(source, BasicEventElement.class);
 		if ( theSource.isEmpty()) {
 			throw new MessagingException("Source element not properly configured: sourceElement not found");

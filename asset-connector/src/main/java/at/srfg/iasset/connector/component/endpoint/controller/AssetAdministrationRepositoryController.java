@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
@@ -110,7 +109,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS )
-	public List<ModelReference> getSubmodels(
+	public List<Reference> getSubmodels(
 			@PathParam("aasIdentifier")
 			String aasIdentifier) {
 		return environment.getSubmodelReferences(ApiUtils.base64Decode(aasIdentifier));
@@ -315,7 +314,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS)
-	public List<ModelReference> setSubmodels(@PathParam("aasIdentifier") String aasIdentifier, List<ModelReference> submodels) {
+	public List<Reference> setSubmodels(@PathParam("aasIdentifier") String aasIdentifier, List<Reference> submodels) {
 		return environment.setSubmodelReferences(ApiUtils.base64Decode(aasIdentifier), submodels);
 	}
 
@@ -324,7 +323,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 	@Produces(value = MediaType.APPLICATION_JSON)
 	@Consumes(value = MediaType.APPLICATION_JSON)
 	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER)
-	public List<ModelReference> removeSubmodelReference(@PathParam("aasIdentifier") String aasIdentifier, String submodelIdentifier) {
+	public List<Reference> removeSubmodelReference(@PathParam("aasIdentifier") String aasIdentifier, String submodelIdentifier) {
 		return environment.deleteSubmodelReference(	
 					ApiUtils.base64Decode(aasIdentifier), 
 					ApiUtils.base64Decode(submodelIdentifier)

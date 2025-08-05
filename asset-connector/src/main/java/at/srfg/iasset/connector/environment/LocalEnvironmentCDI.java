@@ -18,22 +18,22 @@ import java.util.stream.Collectors;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultModelReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelDescriptor;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.connector.api.ValueConsumer;
 import at.srfg.iasset.connector.api.ValueSupplier;
@@ -50,15 +50,17 @@ import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 import at.srfg.iasset.repository.model.helper.value.type.Value;
-import at.srfg.iasset.repository.model.helper.value.type.ValueType;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticIdCollector;
 import at.srfg.iasset.repository.model.operation.OperationCallback;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
@@ -74,9 +76,29 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	@Inject 
 	private ServiceEnvironment serviceEnvironment;
 	
-	
 	private final Set<String> registeredAssetIdentifier = new HashSet<>();
 
+	@Inject @Any
+	private Instance<AASEnvironment> aasData;
+	
+	@PostConstruct
+	protected void postConstruct() {
+		// 
+		for (AASEnvironment data : aasData) {
+			Environment env = data.getAASData();
+			
+			for (ConceptDescription cd : env.getConceptDescriptions()) {
+				serviceEnvironment.setConceptDescription(cd.getId(), cd);
+			}
+			for (AssetAdministrationShell shell : env.getAssetAdministrationShells()) {
+				serviceEnvironment.setAssetAdministrationShell(shell.getId(), shell);
+			}
+			for (Submodel sub : env.getSubmodels() ) {
+				serviceEnvironment.setSubmodel(sub.getId(), sub);
+			}
+		}
+		
+	}
 	
 	@PreDestroy
 	protected void destroyLocalEnvironment() {
@@ -394,8 +416,9 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	}
 	@Override
 	public boolean loadIntegrationPattern(String patternIdentifier) {
-		Reference pattern = new DefaultModelReference.Builder()
-				.key(new DefaultKey.Builder()
+		Reference pattern = new DefaultReference.Builder()
+				.type(ReferenceTypes.MODEL_REFERENCE)
+				.keys(new DefaultKey.Builder()
 						.type(KeyTypes.SUBMODEL)
 						.value(patternIdentifier)
 						.build())
@@ -445,14 +468,14 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		AssetAdministrationShellDescriptor descriptor = new DefaultAssetAdministrationShellDescriptor.Builder()
 				.id(theShell.getId())
 				.idShort(theShell.getIdShort())
-				.displayNames(theShell.getDisplayNames())
-				.descriptions(theShell.getDescriptions())
+				.displayName(theShell.getDisplayName())
+				.description(theShell.getDescription())
 				//
 				.globalAssetId(theShell.getAssetInformation().getGlobalAssetId())
 				.specificAssetIds(theShell.getAssetInformation().getSpecificAssetIds())
-				.endpoint(endpoint.getEndpoint())
+				.endpoints(endpoint.getEndpoint())
 				// @TODO: decide for the endpoint ... could be available only with alias
-				.endpoint(endpoint.getEndpoint(theShell.getId()))
+				.endpoints(endpoint.getEndpoint(theShell.getId()))
 				.submodelDescriptors(createSubmodelDescriptor(theShell))
 				.build();
 		
@@ -461,17 +484,17 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	private List<SubmodelDescriptor> createSubmodelDescriptor(AssetAdministrationShell theShell) {
 		List<SubmodelDescriptor> descriptor = new ArrayList<>();
 	
-		for ( ModelReference subRef : serviceEnvironment.getSubmodelReferences(theShell.getId())) {
+		for ( Reference subRef : serviceEnvironment.getSubmodelReferences(theShell.getId())) {
 			Optional<Submodel> sub = serviceEnvironment.resolve(subRef, Submodel.class);
 			if (sub.isPresent()) {
 				SubmodelDescriptor subDescriptor = new DefaultSubmodelDescriptor.Builder()
 						.id(sub.get().getId())
 						.idShort(sub.get().getIdShort())
-						.descriptions(sub.get().getDescriptions())
-						.displayNames(sub.get().getDisplayNames())
+						.description(sub.get().getDescription())
+						.displayName(sub.get().getDisplayName())
 						.semanticId(sub.get().getSemanticId())
-						.supplementalSemanticIds(supplementalSemantics(sub.get()))
-						.endpoint(endpoint.getEndpoint(theShell.getId(), sub.get().getId()))
+						.supplementalSemanticId(supplementalSemantics(sub.get()))
+						.endpoints(endpoint.getEndpoint(theShell.getId(), sub.get().getId()))
 						.build();
 				
 				descriptor.add(subDescriptor);

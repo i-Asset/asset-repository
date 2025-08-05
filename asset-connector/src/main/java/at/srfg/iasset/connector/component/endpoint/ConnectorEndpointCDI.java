@@ -219,7 +219,7 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
     @Override
 	public Endpoint getEndpoint() {
     	Endpoint ep = new DefaultEndpoint.Builder()
-    			.endpointInterface("AAS-REPOSITORY-3.0_ITWIN")
+    			._interface("AAS-REPOSITORY-3.0_ITWIN")
     			.protocolInformation(new DefaultProtocolInformation.Builder()
     					.href(String.format("%s", 
     							endpointAddress.toString()))
@@ -233,7 +233,7 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 		Optional<AssetAdministrationShell> shell = environment.getAssetAdministrationShell(aasIdentifier);
 		if ( shell.isPresent()) {
 			Endpoint ep = new DefaultEndpoint.Builder()
-					.endpointInterface("AAS-3.0_ITWIN")		
+					._interface("AAS-3.0_ITWIN")		
 					.protocolInformation(new DefaultProtocolInformation.Builder()
 							.href(String.format("%sshells/%s", 
 									endpointAddress.toString(), 
@@ -249,7 +249,7 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
     	Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
     	if ( sub.isPresent()) {
     		Endpoint ep = new DefaultEndpoint.Builder()
-    				.endpointInterface("SUBMODEL-3.0_ITWIN")
+    				._interface("SUBMODEL-3.0_ITWIN")
     				.protocolInformation(new DefaultProtocolInformation.Builder()
     						.href(String.format("%s/shells/%s/submodels/%s", 
     								endpointAddress.toString(), 

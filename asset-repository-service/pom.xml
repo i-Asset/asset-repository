@@ -105,13 +105,13 @@
 
 		<dependency>
 			<groupId>org.eclipse.digitaltwin.aas4j</groupId>
-			<artifactId>dataformat-json</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<artifactId>aas4j-dataformat-json</artifactId>
+			<version>1.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.digitaltwin.aas4j</groupId>
-			<artifactId>model</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<artifactId>aas4j-model</artifactId>
+			<version>1.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>at.srfg.iasset</groupId>

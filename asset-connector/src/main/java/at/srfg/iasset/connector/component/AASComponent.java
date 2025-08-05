@@ -132,8 +132,10 @@ public class AASComponent {
 	private void initializeComponent() {
 		// do the following:
 		if (! model.isUnsatisfied()) {
-//			model.loadData(environment);
+//			// load provided AAS data to the LocalEnvironment
 			model.get().loadData(environment);
+			// inject business logic
+			model.get().injectLogic(environment);
 		}
 		// - loadData
 		startEndpoint();

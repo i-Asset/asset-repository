@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -52,7 +52,7 @@ public class AASComponentTest {
 			
 		}
 		assertTrue(shells.size() == 1);
-		List<ModelReference> submodels = client.getSubmodels(shell.getId());
+		List<Reference> submodels = client.getSubmodels(shell.getId());
 		assertTrue(submodels.size() == 3 );
 		Submodel submodel = client.getSubmodel(shell.getId(), AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE.getId());
 		assertTrue(submodel != null && submodel.getId().equals(AASFull.SUBMODEL_BELT_OPERATIONS_TEMPLATE.getId()));

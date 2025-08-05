@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 import org.eclipse.digitaltwin.aas4j.v3.model.Entity;
 import org.eclipse.digitaltwin.aas4j.v3.model.Key;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
@@ -134,8 +133,8 @@ public class SubmodelUtils {
 	 * @param path
 	 * @return
 	 */
-	public static ModelReference getReference(Submodel submodel, String path) {
-		ModelReference modelRef = ReferenceUtils.toReference(submodel);
+	public static Reference getReference(Submodel submodel, String path) {
+		Reference modelRef = ReferenceUtils.toReference(submodel);
 		Path thePath = new Path(path);
 		Iterator<String> tokenIterator = thePath.iterator();
 		Referable parent = submodel;
@@ -275,9 +274,9 @@ public class SubmodelUtils {
 		if (Submodel.class.isInstance(parent)) {
 			return Submodel.class.cast(parent).getSubmodelElements();
 		} else if ( SubmodelElementCollection.class.isInstance(parent)) {
-			return SubmodelElementCollection.class.cast(parent).getValues();
+			return SubmodelElementCollection.class.cast(parent).getValue();
 		} else if ( SubmodelElementList.class.isInstance(parent)) {
-			return SubmodelElementList.class.cast(parent).getValues();
+			return SubmodelElementList.class.cast(parent).getValue();
 		} else if ( Entity.class.isInstance(parent)) {
 			return Entity.class.cast(parent).getStatements();
 		} else {
@@ -298,9 +297,9 @@ public class SubmodelUtils {
 		if (Submodel.class.isInstance(parent)) {
 			Submodel.class.cast(parent).getSubmodelElements().add(child);
 		} else if ( SubmodelElementCollection.class.isInstance(parent)) {
-			SubmodelElementCollection.class.cast(parent).getValues().add(child);
+			SubmodelElementCollection.class.cast(parent).getValue().add(child);
 		} else if ( SubmodelElementList.class.isInstance(parent)) {
-			SubmodelElementList.class.cast(parent).getValues().add(child);
+			SubmodelElementList.class.cast(parent).getValue().add(child);
 		} else if ( Entity.class.isInstance(parent)) {
 			Entity.class.cast(parent).getStatements().add(child);
 		} 

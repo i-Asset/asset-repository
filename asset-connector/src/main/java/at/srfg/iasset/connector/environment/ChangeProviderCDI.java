@@ -7,7 +7,6 @@ import java.util.function.BiConsumer;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.BasicEventElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataElement;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModelReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
@@ -125,7 +124,7 @@ public class ChangeProviderCDI implements ChangeProvider {
 			public void accept(String pathToElement, SubmodelElement u) {
 				if ( BasicEventElement.class.isInstance(u)) {
 					BasicEventElement basicEvent = (BasicEventElement)u;
-					ModelReference elementRef = SubmodelUtils.getReference(submodel, pathToElement);
+					Reference elementRef = SubmodelUtils.getReference(submodel, pathToElement);
 					try {
 						messaging.registerEventElement(elementRef);
 						eventElementCreated(submodel.getId(), pathToElement, BasicEventElement.class.cast(u));
