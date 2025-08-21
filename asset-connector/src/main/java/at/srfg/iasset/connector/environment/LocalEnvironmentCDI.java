@@ -31,6 +31,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEnvironment;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelDescriptor;
@@ -84,19 +85,15 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	@PostConstruct
 	protected void postConstruct() {
 		// 
+		Environment coll = new DefaultEnvironment.Builder().build();
 		for (AASEnvironment data : aasData) {
 			Environment env = data.getAASData();
-			
-			for (ConceptDescription cd : env.getConceptDescriptions()) {
-				serviceEnvironment.setConceptDescription(cd.getId(), cd);
-			}
-			for (AssetAdministrationShell shell : env.getAssetAdministrationShells()) {
-				serviceEnvironment.setAssetAdministrationShell(shell.getId(), shell);
-			}
-			for (Submodel sub : env.getSubmodels() ) {
-				serviceEnvironment.setSubmodel(sub.getId(), sub);
-			}
+			coll.getAssetAdministrationShells().addAll(env.getAssetAdministrationShells());
+			coll.getSubmodels().addAll(env.getSubmodels());
+			coll.getConceptDescriptions().addAll(env.getConceptDescriptions());
 		}
+		// store 
+		serviceEnvironment.setEnvironment(coll);
 		
 	}
 	
@@ -245,8 +242,8 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 			messaging.registerHandler(clazz, ReferenceUtils.asGlobalReference(semanticId), topic, addRefArray);
 		}
 		else {
+			messaging.registerHandler(clazz, ReferenceUtils.asGlobalReference(semanticId), topic, (Reference)null);
 		}
-		messaging.registerHandler(clazz, ReferenceUtils.asGlobalReference(semanticId), topic, (Reference)null);
 		
 	}
 

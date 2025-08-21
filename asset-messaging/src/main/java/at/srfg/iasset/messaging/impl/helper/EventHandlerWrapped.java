@@ -63,7 +63,7 @@ public class EventHandlerWrapped<T> {
 	}
 
 	public boolean matchesReference(List<Reference> references) {
-		return matching.stream().allMatch(new Predicate<Reference>() {
+		return matching.stream().anyMatch(new Predicate<Reference>() {
 
 			@Override
 			public boolean test(Reference t) {

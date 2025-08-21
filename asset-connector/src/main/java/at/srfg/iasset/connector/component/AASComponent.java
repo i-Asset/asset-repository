@@ -131,14 +131,18 @@ public class AASComponent {
 	}
 	private void initializeComponent() {
 		// do the following:
+		startEndpoint();
 		if (! model.isUnsatisfied()) {
 //			// load provided AAS data to the LocalEnvironment
+			logger.info("Loading Data");
 			model.get().loadData(environment);
 			// inject business logic
+			logger.info("Loading Implementations");
 			model.get().injectLogic(environment);
+			// 
+			model.get().registerAAS(environment);
 		}
 		// - loadData
-		startEndpoint();
 		// - startEndpoint
 		// - register AAS'es with Directory-Service!
 	}

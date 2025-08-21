@@ -22,7 +22,7 @@ public class ClientFactory {
 	private static ClientFactory instance;
 	
 	
-
+	
 	private final AASJacksonMapperProvider provider;
 //
 	private ClientFactory() {

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
@@ -139,9 +141,15 @@ public class InMemoryStorage implements Persistence {
 
 	@Override
 	public void setConceptDescriptions(List<ConceptDescription> conceptDescriptions) {
-		this.conceptDescription.putAll(
-				conceptDescriptions.stream()
-				.collect(Collectors.toMap(ConceptDescription::getId, s -> s)));
+		conceptDescriptions.forEach(new Consumer<ConceptDescription>() {
+
+			@Override
+			public void accept(ConceptDescription t) {
+				InMemoryStorage.this.conceptDescription.putIfAbsent(t.getId(), t);
+				
+			}
+		});
+
 		
 	}
 

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
@@ -93,6 +94,7 @@ public class RepositoryDirectory implements DirectoryService {
 				.description(descriptor.getDescription())
 				.displayName(descriptor.getDisplayName())
 				.assetInformation(new DefaultAssetInformation.Builder()
+						.assetKind(AssetKind.INSTANCE)
 						.globalAssetId(descriptor.getGlobalAssetId())
 						.specificAssetIds(descriptor.getSpecificAssetIds())
 						.build())

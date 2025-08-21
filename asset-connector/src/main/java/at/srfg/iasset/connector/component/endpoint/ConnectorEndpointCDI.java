@@ -251,7 +251,7 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
     		Endpoint ep = new DefaultEndpoint.Builder()
     				._interface("SUBMODEL-3.0_ITWIN")
     				.protocolInformation(new DefaultProtocolInformation.Builder()
-    						.href(String.format("%s/shells/%s/submodels/%s", 
+    						.href(String.format("%sshells/%s/submodels/%s", 
     								endpointAddress.toString(), 
     								ApiUtils.base64Encode(aasIdentifier),
     								ApiUtils.base64Encode(submodelIdentifier)))

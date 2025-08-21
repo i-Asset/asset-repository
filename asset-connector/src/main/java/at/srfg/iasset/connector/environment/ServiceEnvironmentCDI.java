@@ -16,6 +16,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
 import org.eclipse.digitaltwin.aas4j.v3.model.Key;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
@@ -26,6 +27,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -754,7 +756,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 							for ( Operation operation : operations) {
 								if (! operations.isEmpty()) {
 									String path = new SubmodelElementCollector().getPath("", remoteSubmodel, operation);
-									return Optional.of(new OperationInvocationHandler(connection.getShellInterface(), submodelDescriptor.getId(), path, operation, this, objectMapper));
+									return Optional.of(new OperationInvocationHandler(connection, submodelDescriptor.getId(), path, operation, this, objectMapper));
 								}
 							}
 						}							
@@ -767,6 +769,18 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 //			AssetAdministrationShellDescriptor descriptor 
 		}
 		return Optional.empty();
+	}
+	@Override
+	public void setEnvironment(Environment environment) {
+		storage.setAssetAdministrationShells(environment.getAssetAdministrationShells());
+		storage.setSubmodels(environment.getSubmodels());
+		storage.setConceptDescriptions(environment.getConceptDescriptions());
+		
+		// 
+		for (Submodel model : storage.getSubmodels()) {
+			changeProvider.notifyCreation(model, "", model);
+		}
+		
 	}
 
 }

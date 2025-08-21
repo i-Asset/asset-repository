@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
@@ -38,7 +39,11 @@ public interface ServiceEnvironment {
 	 * @param listener
 	 */
 	public void removeModelListener(ModelListener listener);
-
+	/**
+	 * Load the environment
+	 * @param environment
+	 */
+	public void setEnvironment(Environment environment);
 	/**
 	 * Obtain a {@link Submodel}. The {@link Submodel} is only returned when it exists and is assigned to the {@link AssetAdministrationShell}
 	 * @param aasIdentifier The {@link AssetAdministrationShell} containing/referencing the {@link Submodel}

@@ -43,9 +43,9 @@ import jakarta.ws.rs.PathParam;
 public interface IAssetAdministrationShellInterface {
 //	final String PATH_SHELLS 					= "/shells";
 //	final String AAS_IDENTIFIER					= "/{aasIdentifier}";
-	final String PATH_AAS_SUBMODELS				= "/aas/submodels";
+	final String PATH_AAS_SUBMODELS				= "/submodels";
 	final String SUBMODEL_IDENTIFIER			= "/{submodelIdentifier}";
-	final String PATH_SUBMODEL_ELEMENTS			= "/submodel/submodel-elements";
+	final String PATH_SUBMODEL_ELEMENTS			= "/submodel-elements";
 	final String IDSHORT_PATH 					= "/{path}";
 	final String VALUE_MODIFIER					= "/$value"; 
 	final String INVOKE							= "/invoke";

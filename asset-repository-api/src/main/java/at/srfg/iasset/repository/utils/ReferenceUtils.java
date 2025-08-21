@@ -197,6 +197,7 @@ public class ReferenceUtils {
         }
         try {
             T result = referenceType.getConstructor().newInstance();
+            result.setType(reference.getType());
             List<Key> newKeys = new ArrayList<>();
             for (Key key : reference.getKeys()) {
                 Key newKey = keyType.getConstructor().newInstance();

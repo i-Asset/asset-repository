@@ -16,10 +16,10 @@ import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.api.model.Message;
 import at.srfg.iasset.repository.api.model.MessageType;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
@@ -37,7 +37,8 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	
 	private final Operation operation;
 	private final ServiceEnvironment serviceEnvironment;
-	private final IAssetAdministrationShellInterface shellInterface;
+//	private final IAssetAdministrationShellInterface shellInterface;
+	private final ConnectionProvider connectionProvider;
 	private final String submodelIdentifier;
 	private final String pathToOperation;
 	
@@ -51,13 +52,13 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	}
 
 	public OperationInvocationHandler(
-			IAssetAdministrationShellInterface shellConnection,
+			ConnectionProvider shellConnection,
 			String submodelIdentifier, 
 			String pathToOperation,
 			Operation operation,
 			ServiceEnvironment environment, 
 			ObjectMapper mapper) {
-		this.shellInterface = shellConnection;
+		this.connectionProvider = shellConnection;
 		this.submodelIdentifier = submodelIdentifier;
 		this.pathToOperation = pathToOperation;
 		this.operation = operation;
@@ -413,11 +414,11 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	}
 	@Override
 	public OperationInvocationResult invoke() {
-		if ( shellInterface == null) {
+		if ( connectionProvider == null) {
 			throw new IllegalStateException("Wrong usage! Use full constructor!");
 		}
 		try {
-			OperationResultValue result = shellInterface.invokeOperation(submodelIdentifier, pathToOperation, getOperationRequestValue());
+			OperationResultValue result = connectionProvider.getShellInterface().invokeOperation(submodelIdentifier, pathToOperation, getOperationRequestValue());
 			applyOperationResultValue(result);
 		} catch (ValueMappingException e) {
 			OperationResultValue result = new OperationResultValue();
