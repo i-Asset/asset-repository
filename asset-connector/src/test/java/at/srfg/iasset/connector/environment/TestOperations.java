@@ -3,7 +3,7 @@ package at.srfg.iasset.connector.environment;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +47,7 @@ public class TestOperations {
 		Optional<Operation> op = SubmodelUtils.getSubmodelElementAt(submodel, "getPlantStructure",Operation.class);
 		if ( op.isPresent()) {
 			//
-			String dateTimeString = Instant.now().toString();
+			String dateTimeString = LocalDateTime.now().toString();
 			String string = UUID.randomUUID().toString();
 			String intVal = Integer.valueOf(new Random(10).nextInt()).toString();
 			String doubleVal = Double.valueOf(new Random(100).nextDouble()).toString();
