@@ -7,6 +7,7 @@ import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
@@ -27,6 +28,7 @@ public class ClientFactory {
 //
 	private ClientFactory() {
 		this.provider = new AASJacksonMapperProvider();
+		this.provider.getMapper().registerModule(new JavaTimeModule());
 		// keep custom instances
 		this.provider.useImplementation(Property.class, InstanceProperty.class);
 		this.provider.useImplementation(Operation.class, InstanceOperation.class);

@@ -47,6 +47,9 @@ public interface LocalEnvironment {
 	 * @param shell
 	 */
 	public void addAdministrationShell(AssetAdministrationShell shell);
+	public Optional<AssetAdministrationShell> getAssetAdministrationShell(String identifier);
+	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier);
+	public Optional<Submodel> getSubmodel(String submodelIdentifier);
 	/**
 	 * Add a new {@link Submodel} to the local environment. The model is registered
 	 * with the identified {@link AssetAdministrationShell} 

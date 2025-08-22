@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
@@ -132,6 +131,22 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	public void addAdministrationShell(AssetAdministrationShell shell) {
 		serviceEnvironment.setAssetAdministrationShell(shell.getId(), shell);
 
+	}
+	
+
+	@Override
+	public Optional<AssetAdministrationShell> getAssetAdministrationShell(String identifier) {
+		return serviceEnvironment.getAssetAdministrationShell(identifier);
+	}
+
+	@Override
+	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier) {
+		return serviceEnvironment.getSubmodel(aasIdentifier, submodelIdentifier);
+	}
+
+	@Override
+	public Optional<Submodel> getSubmodel(String submodelIdentifier) {
+		return serviceEnvironment.getSubmodel(submodelIdentifier);
 	}
 
 	@Override

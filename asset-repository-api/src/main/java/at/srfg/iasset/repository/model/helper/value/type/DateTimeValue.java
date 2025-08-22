@@ -1,20 +1,20 @@
 package at.srfg.iasset.repository.model.helper.value.type;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
-public class DateTimeValue extends Value<Instant>{
+public class DateTimeValue extends Value<LocalDateTime>{
 
 	public DateTimeValue() {
 		
 	}
-	public DateTimeValue(Instant value) {
+	public DateTimeValue(LocalDateTime value) {
 		super(value);
 	}
 
 	@Override
-	public Value<Instant> fromValue(String stringValue) {
+	public Value<LocalDateTime> fromValue(String stringValue) {
 		if ( stringValue !=null ) {
-			setValue(Instant.parse(stringValue));
+			setValue(LocalDateTime.parse(stringValue));
 		}
 		return this;
 	}

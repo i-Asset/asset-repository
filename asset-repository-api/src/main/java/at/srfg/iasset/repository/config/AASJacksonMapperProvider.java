@@ -28,6 +28,8 @@ public class AASJacksonMapperProvider implements ContextResolver<ObjectMapper> {
 	public AASJacksonMapperProvider() {
 		initTypeResolver();
 		this.mapper = new JsonMapperFactory().create(typeResolver);
+		this.mapper.registerModule(new JavaTimeModule());
+		this.mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}
 
 	public ObjectMapper getMapper() {
@@ -80,6 +82,8 @@ public class AASJacksonMapperProvider implements ContextResolver<ObjectMapper> {
 	public <T> void useImplementation(Class<T> aasInterface, Class<? extends T> implementation) {
 		typeResolver.addMapping(aasInterface, implementation);
 		this.mapper = new JsonMapperFactory().create(typeResolver);
+		this.mapper.registerModule(new JavaTimeModule());
+		this.mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}
 
 }
