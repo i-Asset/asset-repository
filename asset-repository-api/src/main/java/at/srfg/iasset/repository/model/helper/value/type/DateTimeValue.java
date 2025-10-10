@@ -1,20 +1,18 @@
 package at.srfg.iasset.repository.model.helper.value.type;
 
-import java.time.LocalDateTime;
-
-public class DateTimeValue extends Value<LocalDateTime>{
+public class DateTimeValue extends Value<XSDateTime>{
 
 	public DateTimeValue() {
 		
 	}
-	public DateTimeValue(LocalDateTime value) {
+	public DateTimeValue(XSDateTime value) {
 		super(value);
 	}
 
 	@Override
-	public Value<LocalDateTime> fromValue(String stringValue) {
+	public Value<XSDateTime> fromValue(String stringValue) {
 		if ( stringValue !=null ) {
-			setValue(LocalDateTime.parse(stringValue));
+			setValue(XSDateTime.parse(stringValue));
 		}
 		return this;
 	}

@@ -17,11 +17,15 @@ public enum ValueType {
 	STRING(		StringValue.class, 		DataTypeDefXsd.STRING, DataTypeDefXsd.ANY_URI),
 	BOOLEAN(	BooleanValue.class, 	DataTypeDefXsd.BOOLEAN),
 	DECIMAL(	DecimalValue.class, 	DataTypeDefXsd.DECIMAL),
-	DOUBLE(		DoubleValue.class, 		DataTypeDefXsd.DOUBLE),
+	DOUBLE(		DoubleValue.class, 		DataTypeDefXsd.DOUBLE, DataTypeDefXsd.FLOAT),
+	DURATION(	DurationValue.class, 	DataTypeDefXsd.DURATION),
 	INTEGER(	IntegerValue.class, 	DataTypeDefXsd.INTEGER, DataTypeDefXsd.INT),
+	LONG(		LongValue.class, 		DataTypeDefXsd.LONG),
 	BINARY(		BinaryValue.class, 		DataTypeDefXsd.BASE64BINARY),
 	DATE_TIME(	DateTimeValue.class, 	DataTypeDefXsd.DATE_TIME),
 	SHORT(		ShortValue.class,		DataTypeDefXsd.SHORT),
+	DATE(		DateValue.class, 		DataTypeDefXsd.DATE),
+	TIME(		TimeValue.class, 		DataTypeDefXsd.TIME),
 	;
 	
 	private List<DataTypeDefXsd> xsdTypes;

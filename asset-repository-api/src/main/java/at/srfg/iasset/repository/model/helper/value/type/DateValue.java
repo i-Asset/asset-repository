@@ -18,7 +18,7 @@ public class DateValue extends Value<LocalDate>{
 
 	@Override
 	public ValueType getValueType() {
-		return ValueType.DATE_TIME;
+		return ValueType.DATE;
 	}
 
 }
