@@ -26,11 +26,14 @@ public class ConfigurationProducer {
 
     private Properties properties;
     
+    private Properties sysProperies; 
+    
     @Inject
     private Logger logger;
 
     @PostConstruct
     public void init() {
+    	sysProperies = System.getProperties();
 
         properties = new Properties();
         InputStream stream = ConfigurationProducer.class.getResourceAsStream("/application.properties");
@@ -66,27 +69,34 @@ public class ConfigurationProducer {
     @Produces
     @Configurable
     public String produceString(InjectionPoint ip) {
-        return properties.getProperty(getKey(ip));
+    	return getProperty(ip);
+//    	return properties.getProperty(getKey(ip));
     }
 
     @Produces
     @Configurable
     public Integer produceInteger(InjectionPoint ip) {
-        return Integer.valueOf(properties.getProperty(getKey(ip)));
+    	return Integer.valueOf(getProperty(ip));
+//        return Integer.valueOf(properties.getProperty(getKey(ip)));
     }
 
     @Produces
     @Configurable
     public Long produceLong(InjectionPoint ip) {
-        return Long.valueOf(properties.getProperty(getKey(ip)));
+    	return Long.valueOf(getProperty(ip));
+//        return Long.valueOf(properties.getProperty(getKey(ip)));
     }
 
     @Produces
     @Configurable
     public Boolean produceBoolean(InjectionPoint ip) {
-        return Boolean.valueOf(this.properties.getProperty(getKey(ip)));
+    	return Boolean.valueOf(getProperty(ip));
+//        return Boolean.valueOf(this.properties.getProperty(getKey(ip)));
     }
-
+    private String getProperty(InjectionPoint ip) {
+    	String key = getKey(ip);
+    	return sysProperies.getProperty(key, properties.getProperty(key));
+    }
     private String getKey(InjectionPoint ip) {
     	Configurable classConfigurable = ip.getMember().getDeclaringClass().getAnnotation(Configurable.class);
     	if ( classConfigurable != null) {
