@@ -39,13 +39,14 @@ public class ConfigurationProducer {
         InputStream stream = ConfigurationProducer.class.getResourceAsStream("/application.properties");
 
         if (stream == null) {
-            throw new RuntimeException("Cannot find application.properties configuration file.");
+            logger.warn("Cannot find application.properties configuration file.");
         }
-
-        try {
-            this.properties.load(stream);
-        } catch (final IOException e) {
-            throw new RuntimeException("Configuration file cannot be loaded.");
+        else {
+	        try {
+	            this.properties.load(stream);
+	        } catch (final IOException e) {
+	            throw new RuntimeException("Configuration file cannot be loaded.");
+	        }
         }
         // check for additional properties
         loadAdditionalProperties();
