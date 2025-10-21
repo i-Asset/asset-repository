@@ -1,18 +1,18 @@
 package at.srfg.iasset.connector.component.config;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import org.slf4j.Logger;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Read the <code>application.properties</code> file from the classpath and produce values that can be injected with @{@link Configurable}.
@@ -26,14 +26,14 @@ public class ConfigurationProducer {
 
     private Properties properties;
     
-    private Properties sysProperies; 
+    private Map<String, String> sysProperies;
     
     @Inject
     private Logger logger;
 
     @PostConstruct
     public void init() {
-    	sysProperies = System.getProperties();
+    	sysProperies = System.getenv();
 
         properties = new Properties();
         InputStream stream = ConfigurationProducer.class.getResourceAsStream("/application.properties");
@@ -96,7 +96,8 @@ public class ConfigurationProducer {
     }
     private String getProperty(InjectionPoint ip) {
     	String key = getKey(ip);
-    	return sysProperies.getProperty(key, properties.getProperty(key));
+        String uCaseKey = key.toUpperCase().replace(".","_");
+    	return sysProperies.getOrDefault(uCaseKey, properties.getProperty(key));
     }
     private String getKey(InjectionPoint ip) {
     	Configurable classConfigurable = ip.getMember().getDeclaringClass().getAnnotation(Configurable.class);
