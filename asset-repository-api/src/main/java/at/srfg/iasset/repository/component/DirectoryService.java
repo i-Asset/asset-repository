@@ -1,5 +1,6 @@
 package at.srfg.iasset.repository.component;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
@@ -22,6 +23,7 @@ public interface DirectoryService {
 
 	Optional<AssetAdministrationShellDescriptor> getShellDescriptor(String aasIdentifier);
 	Optional<AssetAdministrationShellDescriptor> getShellDescriptorBySupplementalSemanticId(String supplementalSemanticId);
+	Optional<AssetAdministrationShellDescriptor> getShellDescriptorBySupplementalSemanticIds(String supplemental, List<String> additional);
 
 	Optional<SubmodelDescriptor> getSubmodelDescriptor(String aasDescriptor, String submodelIdentifier);
 

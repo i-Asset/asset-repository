@@ -527,7 +527,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	}
 
 	@Override
-	public Optional<OperationInvocation> getImplementation(String semanticId) {
+	public Optional<OperationInvocation> getImplementation(String semanticId, String ... additional) {
 		// TODO Auto-generated method stub
 		return Optional.empty();
 	}

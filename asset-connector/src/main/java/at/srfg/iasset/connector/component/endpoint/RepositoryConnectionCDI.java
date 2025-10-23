@@ -1,6 +1,8 @@
 package at.srfg.iasset.connector.component.endpoint;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
@@ -97,8 +99,13 @@ public class RepositoryConnectionCDI implements RepositoryConnection {
 		return null;
 	}
 
+//	@Override
+//	public Optional<AssetAdministrationShellDescriptor> findImplementation(String semanticId) {
+//		return Optional.ofNullable( serviceProvider.getDirectoryInterface().lookupBySemanticId(semanticId));	
+//	}
 	@Override
-	public Optional<AssetAdministrationShellDescriptor> findImplementation(String semanticId) {
-		return Optional.ofNullable( serviceProvider.getDirectoryInterface().lookupBySemanticId(semanticId));	
+	public Optional<AssetAdministrationShellDescriptor> findImplementation(String semanticId, String ... additional ) {
+		// 
+		return Optional.ofNullable( serviceProvider.getDirectoryInterface().lookupBySemanticIds(semanticId, List.of(additional) ));	
 	}
 }

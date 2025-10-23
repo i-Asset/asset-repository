@@ -4,7 +4,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.HasKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
@@ -12,9 +16,6 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.repository.api.model.Message;
 import at.srfg.iasset.repository.api.model.MessageType;
@@ -30,6 +31,7 @@ import at.srfg.iasset.repository.model.operation.OperationRequest;
 import at.srfg.iasset.repository.model.operation.OperationRequestValue;
 import at.srfg.iasset.repository.model.operation.OperationResult;
 import at.srfg.iasset.repository.model.operation.OperationResultValue;
+import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 /**
  * Handler covering the execution of operations
  */
@@ -413,13 +415,20 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		return this;
 	}
 	@Override
-	public OperationInvocationResult invoke() {
+	public OperationInvocationResult invoke() throws OperationInvocationException {
 		if ( connectionProvider == null) {
 			throw new IllegalStateException("Wrong usage! Use full constructor!");
 		}
 		try {
 			OperationResultValue result = connectionProvider.getShellInterface().invokeOperation(submodelIdentifier, pathToOperation, getOperationRequestValue());
-			applyOperationResultValue(result);
+			if ( result.isSuccess()) {
+				applyOperationResultValue(result);
+			}
+			else {
+				// TODO: pretty print messages from result
+				throw new OperationInvocationException(result.getMessages().toString());
+						
+			}
 		} catch (ValueMappingException e) {
 			OperationResultValue result = new OperationResultValue();
 			result.setSuccess(false);
@@ -429,5 +438,5 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		return this;
 //		throw new UnsupportedOperationException("Not yet implemented!");
 	}
-	
+
 }

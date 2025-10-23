@@ -79,7 +79,12 @@ public class RepositoryDirectory implements DirectoryService {
 		return storage.findAssetAdministrationShellDescriptorBySupplementalSemanticId(supplementalSemanticId);
 		
 	}
-
+	@Override
+	public Optional<AssetAdministrationShellDescriptor> getShellDescriptorBySupplementalSemanticIds(String semantic,
+			List<String> supplementalSemanticId) {
+		return storage.findAssetAdministrationShellDescriptorBySupplementalSemanticIds(semantic, supplementalSemanticId);
+		
+	}
 	@Override
 	public AssetAdministrationShell registerShellDescriptor(String aasIdentifier, AssetAdministrationShellDescriptor shell) {
 		// 

@@ -697,12 +697,13 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		return Optional.empty();
 	}
 	@Override
-	public Optional<OperationInvocation> getImplementation(String semanticId) {
+	public Optional<OperationInvocation> getImplementation(String semanticId, String ... additional) {
 		Optional<OperationInvocation> localImplementation = findLocalImplementation(semanticId);
 		if ( localImplementation.isPresent()) {
 			return localImplementation;
 		}
-		Optional<AssetAdministrationShellDescriptor> implementor = repository.findImplementation(semanticId);
+		// search for implementation
+		Optional<AssetAdministrationShellDescriptor> implementor = repository.findImplementation(semanticId, additional);
 		if ( implementor.isPresent() ) {
 			//
 			// extract endpoint
@@ -713,7 +714,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 				@Override
 				public boolean test(Endpoint t) {
 					// check for proper endpoint interface
-					if ( t.get_interface().equals("AAS-3.0_ITWIN")) {
+					if ( t.get_interface().startsWith("AAS-3.0")) {
 						if ( t.getProtocolInformation().getHref()!= null) {
 							return true;
 						}

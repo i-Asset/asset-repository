@@ -30,7 +30,7 @@ public interface RepositoryConnection {
 	 * @param semanticId The external semantic id
 	 * @return
 	 */
-	Optional<AssetAdministrationShellDescriptor> findImplementation(String semanticId);
+	Optional<AssetAdministrationShellDescriptor> findImplementation(String semanticId, String... additional);
 	/**
 	 * Unregister the {@link AssetAdministrationShell} from the Asset Directory.
 	 * @param aasIdentifier

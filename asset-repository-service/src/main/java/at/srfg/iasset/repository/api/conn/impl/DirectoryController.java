@@ -1,5 +1,7 @@
 package at.srfg.iasset.repository.api.conn.impl;
 
+import java.util.List;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
@@ -60,9 +62,10 @@ public class DirectoryController implements DirectoryInterface {
 	}
 
 	@Override
-	public AssetAdministrationShellDescriptor lookupBySemanticId(String supplementalSemanticId) {
-		return service.getShellDescriptorBySupplementalSemanticId(
-				ApiUtils.base64Decode(supplementalSemanticId)).orElse(null);
+	public AssetAdministrationShellDescriptor lookupBySemanticIds(String supplemental, List<String> additional) {
+		return service.getShellDescriptorBySupplementalSemanticIds(
+				ApiUtils.base64Decode(supplemental), additional)
+				.orElse(null);
 	}
 
 }

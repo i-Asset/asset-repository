@@ -18,10 +18,9 @@ public class InMemoryStorage implements Persistence {
 	private final Map<String, Submodel> submodel = new HashMap<String, Submodel>();
 	private final Map<String, ConceptDescription> conceptDescription = new HashMap<String, ConceptDescription>();
 
-
 	@Override
 	public AssetAdministrationShell persist(AssetAdministrationShell assetAdministrationShell) {
-		
+
 		this.assetAdministrationShell.put(assetAdministrationShell.getId(), assetAdministrationShell);
 		return assetAdministrationShell;
 	}
@@ -68,7 +67,7 @@ public class InMemoryStorage implements Persistence {
 
 	@Override
 	public Optional<ConceptDescription> findConceptDescriptionById(String cdIdentifier) {
-		if ( conceptDescription.containsKey(cdIdentifier)) {
+		if (conceptDescription.containsKey(cdIdentifier)) {
 			return Optional.of(conceptDescription.get(cdIdentifier));
 		}
 		return Optional.empty();
@@ -76,7 +75,7 @@ public class InMemoryStorage implements Persistence {
 
 	@Override
 	public Optional<AssetAdministrationShell> findAssetAdministrationShellById(String aasIdentifier) {
-		if ( assetAdministrationShell.containsKey(aasIdentifier)) {
+		if (assetAdministrationShell.containsKey(aasIdentifier)) {
 			return Optional.of(assetAdministrationShell.get(aasIdentifier));
 		}
 		return Optional.empty();
@@ -84,7 +83,7 @@ public class InMemoryStorage implements Persistence {
 
 	@Override
 	public Optional<Submodel> findSubmodelById(String submodelIdentifier) {
-		if ( submodel.containsKey(submodelIdentifier)) {
+		if (submodel.containsKey(submodelIdentifier)) {
 			return Optional.of(submodel.get(submodelIdentifier));
 		}
 		return Optional.empty();
@@ -102,26 +101,22 @@ public class InMemoryStorage implements Persistence {
 
 	@Override
 	public void setAssetAdministrationShells(List<AssetAdministrationShell> shells) {
-		this.assetAdministrationShell.putAll(
-				shells.stream()
-				.collect(Collectors.toMap(AssetAdministrationShell::getId, a->a)));
-		
+		this.assetAdministrationShell
+				.putAll(shells.stream().collect(Collectors.toMap(AssetAdministrationShell::getId, a -> a)));
+
 	}
 
 	@Override
 	public void setSubmodels(List<Submodel> submodels) {
-		this.submodel.putAll(
-				submodels.stream()
-				.collect(Collectors.toMap(Submodel::getId, s -> s)));
-		
+		this.submodel.putAll(submodels.stream().collect(Collectors.toMap(Submodel::getId, s -> s)));
+
 	}
 
 	@Override
 	public void setConceptDescriptions(List<ConceptDescription> conceptDescriptions) {
-		this.conceptDescription.putAll(
-				conceptDescriptions.stream()
-				.collect(Collectors.toMap(ConceptDescription::getId, s -> s)));
-		
+		this.conceptDescription
+				.putAll(conceptDescriptions.stream().collect(Collectors.toMap(ConceptDescription::getId, s -> s)));
+
 	}
 
 	@Override
@@ -137,6 +132,12 @@ public class InMemoryStorage implements Persistence {
 	@Override
 	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticId(
 			String supplemental) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticIds(
+			String semanticId, List<String> supplemental) {
 		throw new UnsupportedOperationException();
 	}
 

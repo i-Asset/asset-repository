@@ -5,6 +5,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
+import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 /**
  * Interface for operation handling!
  * @author dglachs
@@ -89,8 +90,9 @@ public interface OperationInvocation {
 	 * Execute the operation, it is up to the semantic middleware to 
 	 * identify the responsible AAS instance.
 	 * @return
+	 * @throws OperationInvocationException 
 	 */
-	OperationInvocationResult invoke();
+	OperationInvocationResult invoke() throws OperationInvocationException;
 	/**
 	 * Execute the operation with the named aasIdentifier 
 	 * @param aasIdentifier

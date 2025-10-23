@@ -321,7 +321,7 @@ public interface ServiceEnvironment {
 	 * @param semanticId
 	 * @return
 	 */
-	public Optional<OperationInvocation> getImplementation(String semanticId);
+	public Optional<OperationInvocation> getImplementation(String semanticId, String ... additional);
 	
 //	/**
 //	 * Execute the identified operation

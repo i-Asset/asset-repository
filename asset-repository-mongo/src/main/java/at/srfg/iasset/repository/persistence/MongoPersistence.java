@@ -2,12 +2,21 @@ package at.srfg.iasset.repository.persistence;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -18,6 +27,7 @@ import at.srfg.iasset.repository.persistence.service.AssetAdministrationShellDes
 import at.srfg.iasset.repository.persistence.service.AssetAdministrationShellRepository;
 import at.srfg.iasset.repository.persistence.service.ConceptDescriptionRepository;
 import at.srfg.iasset.repository.persistence.service.SubmodelRepository;
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 @Component
 public class MongoPersistence implements Persistence {
@@ -118,6 +128,24 @@ public class MongoPersistence implements Persistence {
 			throw new IllegalStateException(String.format("Multiple descriptors for semantic ID \"%s\" present!", supplemental));
 		}
 		
+	}
+
+	@Override
+	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticIds(String mainSemanticId,
+			List<String> additional) {
+		additional.add(mainSemanticId);
+		Query query = Query.query(Criteria.where("submodelDescriptors.supplementalSemanticId.keys.value").all(additional));
+		
+		List<AssetAdministrationShellDescriptor> result = template.find(query, AssetAdministrationShellDescriptor.class);
+		if ( result.isEmpty() ) {
+			return Optional.empty();
+		}
+		else if ( result.size() == 1) {
+			return Optional.of(result.get(0));
+		}
+		else {
+			throw new IllegalStateException(String.format("Multiple descriptors for semantic ID \"%s\" present!", mainSemanticId));
+		}
 	}
 
 	@Override

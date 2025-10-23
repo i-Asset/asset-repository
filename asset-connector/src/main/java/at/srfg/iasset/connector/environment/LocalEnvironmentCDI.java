@@ -417,15 +417,16 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		serviceEnvironment.removeModelListener(listener);
 	}
 	@Override
-	public OperationInvocation getOperationInvocation(String semanticId) throws OperationInvocationException {
+	public OperationInvocation getOperationInvocation(String semanticId, String ... additional) throws OperationInvocationException {
 		// search for the asset implementing a requested semantic id
-		Optional<OperationInvocation> implementation = serviceEnvironment.getImplementation(semanticId);
+		Optional<OperationInvocation> implementation = serviceEnvironment.getImplementation(semanticId, additional);
 		if ( implementation.isPresent()) {
 			return implementation.get();
 		}
 		// operation must not return null!
 		throw new OperationInvocationException(String.format("Operation with semantic id %s not found!", semanticId) );
 	}
+	
 	@Override
 	public boolean loadIntegrationPattern(String patternIdentifier) {
 		Reference pattern = new DefaultReference.Builder()

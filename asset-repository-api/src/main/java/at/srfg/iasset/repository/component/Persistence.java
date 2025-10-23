@@ -1,5 +1,6 @@
 package at.srfg.iasset.repository.component;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
@@ -81,5 +82,10 @@ public interface Persistence extends Environment {
 	 * Retrieve an AssetAdministrationShellDes
 	 */
 	Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticId(String supplemental);
-
+	/**
+	 * Retrieve AssetAdministrationShellDescriptors based on the provided supplemental semantic id's
+	 * @param supplemental
+	 * @return
+	 */
+	Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticIds(String supplemental, List<String> additional);
 }

@@ -191,7 +191,7 @@ public interface LocalEnvironment {
 	 * @param semanticId
 	 * @return
 	 */
-	public OperationInvocation getOperationInvocation(String semanticId) throws OperationInvocationException;
+	public OperationInvocation getOperationInvocation(String semanticId, String ... additional) throws OperationInvocationException;
 	/**
 	 * Register an {@link OperationCallback} method which is to be executed
 	 * @param aasIdentifier

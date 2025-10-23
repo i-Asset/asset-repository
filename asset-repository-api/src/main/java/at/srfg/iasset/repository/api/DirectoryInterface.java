@@ -1,5 +1,7 @@
 package at.srfg.iasset.repository.api;
 
+import java.util.List;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
@@ -39,18 +41,32 @@ public interface DirectoryInterface {
 					schema = @Schema()) @PathVariable("aasIdentifier") 
 			String aasIdentifier);
 	
+//	@Operation(summary = "Obtain the descriptor of an Asset containing any of the requested semantic identifiers")
+//	@RequestMapping(
+//			method = RequestMethod.GET,
+//			path="/lookup/{supplementalSemanticId}")
+//	AssetAdministrationShellDescriptor lookupBySemanticId(
+//			@Base64Encoded
+//			@Parameter(
+//					in = ParameterIn.PATH,
+//					description = "A semantic identifer",
+//					required = true,
+//					schema = @Schema()) @PathVariable("supplementalSemanticId") 
+//			String supplementalSemanticId);
 	@Operation(summary = "Obtain the descriptor of an Asset containing any of the requested semantic identifiers")
 	@RequestMapping(
-			method = RequestMethod.GET,
+			method = RequestMethod.POST,
 			path="/lookup/{supplementalSemanticId}")
-	AssetAdministrationShellDescriptor lookupBySemanticId(
+	AssetAdministrationShellDescriptor lookupBySemanticIds(
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH,
 					description = "A semantic identifer",
 					required = true,
 					schema = @Schema()) @PathVariable("supplementalSemanticId") 
-			String supplementalSemanticId);
+			String supplementalSemanticId,
+			@RequestBody
+			List<String> additional);
 	
 	@Operation(summary = "Obtain the descriptor of an Asset based on it's identifier",
 			tags = "Asset Administration Shell Directory Interface (for Connector)")
