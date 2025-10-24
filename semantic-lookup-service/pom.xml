@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>at.srfg.iasset</groupId>
 		<artifactId>asset-repository</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.1.0</version>
 	</parent>
 	<artifactId>semantic-lookup-service</artifactId>
 	<name>Semantic Lookup Service</name>
@@ -139,7 +139,7 @@
 		<dependency>
 			<groupId>at.srfg.iasset</groupId>
 			<artifactId>semantic-lookup-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.1.0</version>
 		</dependency>
 				<!-- Swagger UI 
 
