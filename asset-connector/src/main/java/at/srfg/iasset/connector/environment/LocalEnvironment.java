@@ -236,6 +236,9 @@ public interface LocalEnvironment {
 	 * @return
 	 */
 	public <T> T getElementValue(String aasIdentifier, String submodelIdentifier, String path, Class<T> clazz);
+	
+	public <T extends SubmodelElement> T getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path, Class<T> clazz);
+	
 	/**
 	 * Register the {@link AssetAdministrationShell} with the configured directory service
 	 * @param aasIdentifier

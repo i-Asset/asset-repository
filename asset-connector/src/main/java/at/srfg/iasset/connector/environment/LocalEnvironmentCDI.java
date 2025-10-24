@@ -462,6 +462,17 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		return serviceEnvironment.getElementValue(aasIdentifier, submodelIdentifier, path, value);
 		
 	}
+	
+	@Override
+	public <T extends SubmodelElement> T getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path,
+			Class<T> clazz) {
+		Optional<SubmodelElement> element = serviceEnvironment.getSubmodelElement(aasIdentifier, submodelIdentifier, path);
+		if ( element.isPresent() && clazz.isInstance(element.get())) {
+			return clazz.cast(element.get()); 
+		}
+		return null;
+	}
+
 	@Override
 	public void registerAssetAdministrationShell(String aasIdentifier) {
 		Optional<AssetAdministrationShell> optShell = serviceEnvironment.getAssetAdministrationShell(aasIdentifier);
