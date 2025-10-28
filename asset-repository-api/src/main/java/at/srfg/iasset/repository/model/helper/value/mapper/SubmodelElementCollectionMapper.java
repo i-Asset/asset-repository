@@ -6,19 +6,21 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
-import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementCollectionValue;
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 
 public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElementCollection, SubmodelElementCollectionValue>{
 
@@ -97,7 +99,6 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 	@Override
 	public SubmodelElementCollection mapValueToTemplate(ServiceEnvironment serviceEnvironment,
 			SubmodelElementCollection modelElement, SubmodelElementCollection templateElement, JsonNode valueNode) throws ValueMappingException {
-		// TODO Auto-generated method stub
 		modelElement.getValue().clear();
 		if ( valueNode.isObject()) {
 			Iterator<Entry<String,JsonNode>> fieldIterator = valueNode.fields();
@@ -120,23 +121,71 @@ public class SubmodelElementCollectionMapper implements ValueMapper<SubmodelElem
 		}
 		return modelElement;
 	}
+	@Override
+	public SubmodelElementCollection mapValueToTemplate(ServiceEnvironment serviceEnvironment,
+			SubmodelElementCollection modelElement, Reference modelReference, JsonNode valueNode) throws ValueMappingException {
+		Optional<SubmodelElementCollection> template = serviceEnvironment.resolve(modelReference, SubmodelElementCollection.class);
+		if ( template.isPresent()) {
+			SubmodelElementCollection templateElement = template.get(); 
+			
+			modelElement.getValue().clear();
+			if ( valueNode.isObject()) {
+				Iterator<Entry<String,JsonNode>> fieldIterator = valueNode.fields();
+				while( fieldIterator.hasNext()) {
+					Entry<String, JsonNode> fieldNode = fieldIterator.next();
+					Optional<SubmodelElement> element = templateElement.getValue().stream().filter(new Predicate<SubmodelElement>() {
+						
+						@Override
+						public boolean test(SubmodelElement t) {
+							return fieldNode.getKey().equals(t.getIdShort());
+						}})
+							.findFirst();
+					
+					if ( element.isPresent()) {
+						Reference refToTemplate = ReferenceUtils.toReference(modelReference, element.get());
+						SubmodelElement instance = instantiate(element.get(), fieldNode.getValue());
+						if ( instance.getSemanticId() == null ) {
+							instance.setSemanticId(refToTemplate);
+						}
+						modelElement.getValue().add(instance);
+						ValueHelper.applyValue(serviceEnvironment, instance, ReferenceUtils.toReference(modelReference, element.get()), fieldNode.getValue());
+					}
+				}
+			}
+		}
+		else {
+			mapValueToElement(modelElement, valueNode);
+		}
+		return modelElement;
+	}
 	private SubmodelElement instantiate(SubmodelElement template, JsonNode valueNode) {
 		if ( valueNode.isArray() && valueNode.has(0) && valueNode.get(0).isValueNode() && template instanceof SubmodelElementList) {
 			SubmodelElement listElement = AASModelHelper.newElementInstance(SubmodelElementList.class);
 			listElement.setIdShort(template.getIdShort());
+			Reference semanticId = template.getSemanticId();
+			if ( semanticId != null && semanticId.getType()==ReferenceTypes.EXTERNAL_REFERENCE) {
+				listElement.setSemanticId(semanticId);
+			}
 //			listElement.setKind(ModelingKind.INSTANCE);
 			return listElement;
 		}
 		else if ( valueNode.isObject() && template instanceof SubmodelElementCollection) {
 			SubmodelElement listElement = AASModelHelper.newElementInstance(SubmodelElementCollection.class);
 			listElement.setIdShort(template.getIdShort());
+			Reference semanticId = template.getSemanticId();
+			if ( semanticId != null && semanticId.getType()==ReferenceTypes.EXTERNAL_REFERENCE) {
+				listElement.setSemanticId(semanticId);
+			}
 //			listElement.setKind(ModelingKind.INSTANCE);
 			return listElement;
 		}
 		else if (template instanceof Property){
 			Property listElement = AASModelHelper.newElementInstance(Property.class);
 			listElement.setIdShort(template.getIdShort());
-//			listElement.setKind(ModelingKind.INSTANCE);
+			Reference semanticId = template.getSemanticId();
+			if ( semanticId != null && semanticId.getType()==ReferenceTypes.EXTERNAL_REFERENCE) {
+				listElement.setSemanticId(semanticId);
+			}
 			listElement.setValueType(((Property)template).getValueType());
 			return listElement;
 		}

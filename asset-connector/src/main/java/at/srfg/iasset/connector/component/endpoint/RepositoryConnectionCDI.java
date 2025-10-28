@@ -1,26 +1,21 @@
 package at.srfg.iasset.connector.component.endpoint;
 
-import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequest;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequestValue;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationResult;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationResultValue;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEndpoint;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProtocolInformation;
 
 import at.srfg.iasset.connector.component.config.ServiceProvider;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.OperationInvocationResult;
-import at.srfg.iasset.repository.model.operation.OperationRequest;
-import at.srfg.iasset.repository.model.operation.OperationRequestValue;
-import at.srfg.iasset.repository.model.operation.OperationResult;
-import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.ServiceUnavailableException;

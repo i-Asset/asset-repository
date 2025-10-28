@@ -6,13 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.reflect.TypeToken;
+
 import org.apache.commons.lang3.reflect.ConstructorUtils;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.reflect.TypeToken;
 
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
@@ -87,6 +88,14 @@ public class ValueHelper {
 		
 		if ( mapper.containsKey(propertyInterface)) {
 			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapValueToTemplate(environment, instanceElement, templateElement, node);
+		}
+		return null;
+	}
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M applyValue(ServiceEnvironment environment, M instanceElement, Reference modelReference, JsonNode node) throws ValueMappingException {
+		Class<?> propertyInterface = AASModelHelper.getAasInterface(instanceElement.getClass());
+		
+		if ( mapper.containsKey(propertyInterface)) {
+			return (M) ((ValueMapper<M,V>)mapper.get(propertyInterface)).mapValueToTemplate(environment, instanceElement, modelReference, node);
 		}
 		return null;
 	}

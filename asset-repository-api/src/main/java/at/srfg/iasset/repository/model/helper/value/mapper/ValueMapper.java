@@ -1,10 +1,11 @@
 package at.srfg.iasset.repository.model.helper.value.mapper;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
@@ -37,6 +38,9 @@ public interface ValueMapper<M extends SubmodelElement, V extends SubmodelElemen
 		return mapValueToElement(modelElement, valueNode);
 	}
 	default M mapValueToTemplate(ServiceEnvironment serviceEnvironment, M modelElement, M templateElement, JsonNode valueNode) throws ValueMappingException {
+		return mapValueToTemplate(serviceEnvironment, modelElement, valueNode);
+	}
+	default M mapValueToTemplate(ServiceEnvironment serviceEnvironment, M modelElement, Reference modelReference, JsonNode valueNode) throws ValueMappingException {
 		return mapValueToTemplate(serviceEnvironment, modelElement, valueNode);
 	}
 	default M applyValues(M modelElement, V valueObject) throws ValueMappingException {

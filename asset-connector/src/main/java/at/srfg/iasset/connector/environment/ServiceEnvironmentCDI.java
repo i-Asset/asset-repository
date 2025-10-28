@@ -12,31 +12,35 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
 import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
+import org.eclipse.digitaltwin.aas4j.v3.model.ExecutionState;
 import org.eclipse.digitaltwin.aas4j.v3.model.Key;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
+import org.eclipse.digitaltwin.aas4j.v3.model.MessageTypeEnum;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequest;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequestValue;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationResult;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationResultValue;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultMessage;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
 
 import at.srfg.iasset.connector.api.OperationInvocationHandler;
 import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
 import at.srfg.iasset.repository.api.exception.NotFoundException;
-import at.srfg.iasset.repository.api.model.ExecutionState;
-import at.srfg.iasset.repository.api.model.Message;
-import at.srfg.iasset.repository.api.model.MessageType;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
@@ -51,10 +55,6 @@ import at.srfg.iasset.repository.model.helper.visitor.OperationCollector;
 import at.srfg.iasset.repository.model.helper.visitor.SemanticLookupVisitor;
 import at.srfg.iasset.repository.model.helper.visitor.SubmodelElementCollector;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationRequest;
-import at.srfg.iasset.repository.model.operation.OperationRequestValue;
-import at.srfg.iasset.repository.model.operation.OperationResult;
-import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
@@ -540,9 +540,11 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 						OperationResult res = invocation.getOperationResult(false);
 						res.setExecutionState(ExecutionState.FAILED);
 						res.setSuccess(false);
-						res.addMessagesItem(new Message()
-									.messageType(MessageType.EXCEPTION)
-									.text(e.getLocalizedMessage()));
+						// TODO ADD MESSAGE TO RESULT
+//						res.m
+//						res.addMessagesItem(new Message()
+//									.messageType(MessageType.EXCEPTION)
+//									.text(e.getLocalizedMessage()));
 						return res;
 					}
 				}
@@ -572,14 +574,25 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 					else {
 						return invocation.getOperationResultValue(false);
 					}
-				} catch (OperationInvocationException e) {
-					OperationResultValue res = invocation.getOperationResultValue(false);
-					res.setExecutionState(ExecutionState.FAILED);
-					res.setSuccess(false);
-					res.addMessagesItem(new Message()
-								.messageType(MessageType.EXCEPTION)
-								.text(e.getLocalizedMessage()));
-					return res;
+					
+				} catch (ValueMappingException ve) {
+					return new DefaultOperationResultValue.Builder()
+							.success(false)
+							.executionState(ExecutionState.FAILED)
+							.messages(new DefaultMessage.Builder()
+								.messageType(MessageTypeEnum.EXCEPTION)
+								.text(ve.getLocalizedMessage()).build())
+							.build();
+					
+				}
+				catch (OperationInvocationException e) {
+					return new DefaultOperationResultValue.Builder()
+							.success(false)
+							.executionState(ExecutionState.FAILED)
+							.messages(new DefaultMessage.Builder()
+								.messageType(MessageTypeEnum.EXCEPTION)
+								.text(e.getLocalizedMessage()).build())
+							.build();
 				}
 
 			}

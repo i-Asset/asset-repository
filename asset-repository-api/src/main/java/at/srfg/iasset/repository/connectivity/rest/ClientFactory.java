@@ -1,13 +1,17 @@
 package at.srfg.iasset.repository.connectivity.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequestValue;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationResultValue;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationRequestValue;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import at.srfg.iasset.repository.config.AASJacksonMapperProvider;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
@@ -30,6 +34,8 @@ public class ClientFactory {
 		this.provider = new AASJacksonMapperProvider();
 		this.provider.getMapper().registerModule(new JavaTimeModule());
 		// keep custom instances
+		this.provider.useImplementation(OperationRequestValue.class, DefaultOperationRequestValue.class);
+		this.provider.useImplementation(OperationResultValue.class, DefaultOperationResultValue.class);
 		this.provider.useImplementation(Property.class, InstanceProperty.class);
 		this.provider.useImplementation(Operation.class, InstanceOperation.class);
 	}

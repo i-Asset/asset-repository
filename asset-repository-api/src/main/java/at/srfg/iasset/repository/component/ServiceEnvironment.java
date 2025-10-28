@@ -9,6 +9,10 @@ import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequest;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequestValue;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationResult;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationResultValue;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
@@ -18,10 +22,6 @@ import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import at.srfg.iasset.repository.api.exception.NotFoundException;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
-import at.srfg.iasset.repository.model.operation.OperationRequest;
-import at.srfg.iasset.repository.model.operation.OperationRequestValue;
-import at.srfg.iasset.repository.model.operation.OperationResult;
-import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 /**
  * Defines functionality for managing the AAS Service Model. 

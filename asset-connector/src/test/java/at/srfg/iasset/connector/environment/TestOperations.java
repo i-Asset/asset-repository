@@ -10,31 +10,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Predicate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequest;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequestValue;
+import org.eclipse.digitaltwin.aas4j.v3.model.OperationResultValue;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationRequest;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationRequestValue;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
 import org.junit.jupiter.api.Test;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.connectivity.rest.ClientFactory;
 import at.srfg.iasset.repository.model.AASPlantStructureSubmodel;
-import at.srfg.iasset.repository.model.InvocationRequest;
-import at.srfg.iasset.repository.model.InvocationResult;
 import at.srfg.iasset.repository.model.PlantElement;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
-import at.srfg.iasset.repository.model.operation.OperationRequest;
-import at.srfg.iasset.repository.model.operation.OperationRequestValue;
-import at.srfg.iasset.repository.model.operation.OperationResultValue;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
 
 public class TestOperations {
@@ -54,8 +56,8 @@ public class TestOperations {
 			
 			//
 			Operation operation = op.get();
-			InvocationRequest<OperationVariable> request = new OperationRequest();
-			InvocationRequest<Object> valueRequest = new OperationRequestValue();
+			OperationRequest request = new DefaultOperationRequest.Builder().build();
+			OperationRequestValue valueRequest = new DefaultOperationRequestValue.Builder().build();
 			// add default values
 			for ( OperationVariable ov : operation.getInputVariables() ) {
 				if ( ov.getValue() instanceof Property) {
@@ -79,8 +81,8 @@ public class TestOperations {
 						break;
 					default:
 					}
-					request.inputArgument(ov);
-					valueRequest.inputArgument(ValueHelper.toValue(ov.getValue()));
+					request.getInputArguments().add(ov);
+					valueRequest.getInputArguments().put(ov.getValue().getIdShort(), ValueHelper.toValue(ov.getValue()));
 				}
 				if (ov.getValue() instanceof SubmodelElementCollection ) {
 					SubmodelElementCollection c = (SubmodelElementCollection) ov.getValue();
@@ -106,8 +108,8 @@ public class TestOperations {
 							}
 						}
 					}
-					request.inputArgument(ov);
-					valueRequest.inputArgument(ValueHelper.toValue(ov.getValue()));
+					request.getInputArguments().add(ov);
+					valueRequest.getInputArguments().put(ov.getValue().getIdShort(), ValueHelper.toValue(ov.getValue()));
 				}
 			}
 			// add default values
@@ -133,8 +135,8 @@ public class TestOperations {
 						break;
 					default:
 					}
-					request.inoutputArgument(ov);
-					valueRequest.inoutputArgument(ValueHelper.toValue(ov.getValue()));
+					request.getInputArguments().add(ov);
+					valueRequest.getInputArguments().put(ov.getValue().getIdShort(), ValueHelper.toValue(ov.getValue()));
 				}
 			}
 			
@@ -158,12 +160,21 @@ public class TestOperations {
 			}
 
 			OperationRequestValue value2 = objectMapper.readValue(valueOutput, OperationRequestValue.class);
-			
-			for (int i = 0; i < value2.getInputArguments().size(); i++) {
-				JsonNode fromObject = objectMapper.convertValue(value2.getInputArgument(i), JsonNode.class);
-				OperationVariable element = operation.getInputVariables().get(i);
+			for ( String key : value2.getInputArguments().keySet()) {
+				JsonNode fromObject = objectMapper.convertValue(value2.getInputArguments().get(key), JsonNode.class);
+				Optional<OperationVariable> element = operation.getInputVariables().stream().filter(new Predicate<OperationVariable>() {
+
+					@Override
+					public boolean test(OperationVariable t) {
+						// TODO Auto-generated method stub
+						return t.getValue().getIdShort().equals(key);
+					}}).findFirst();
+				if ( element.isPresent() ) {
+					ValueHelper.applyValue(element.get().getValue(), fromObject);
+				}
 				
-				ValueHelper.applyValue(element.getValue(), fromObject);
+			}
+			for (int i = 0; i < value2.getInputArguments().size(); i++) {
 			}
 			for ( OperationVariable ov : operation.getInputVariables() ) {
 				if ( ov.getValue() instanceof Property) {
@@ -224,7 +235,8 @@ public class TestOperations {
 		Optional<Operation> op = SubmodelUtils.getSubmodelElementAt(submodel, "getPlantStructure",Operation.class);
 		if ( op.isPresent()) {
 			Operation operation = op.get();
-			InvocationResult<Object> valueResult = new OperationResultValue();
+			OperationResultValue valueResult = new DefaultOperationResultValue.Builder().build();
+			
 			List<PlantElement> plants = new ArrayList<>();
 			PlantElement plant = new PlantElement();
 			plant.setName("demoName");
@@ -232,7 +244,7 @@ public class TestOperations {
 			plant.setIdentifiers(Collections.singletonList("identifier"));
 			plants.add(plant);
 
-			valueResult.getOutputArguments().add(plants);
+			valueResult.getOutputArguments().put("plantStructure", plants);
 			
 			String valueOut = objectMapper.writeValueAsString(valueResult);
 			System.out.println(valueOut);
