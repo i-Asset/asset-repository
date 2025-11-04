@@ -6,6 +6,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -95,6 +96,8 @@ public interface DirectoryInterface {
 	@Operation(summary = "Regester a new AssetAdministrationShell Descriptor",
 			tags = "Asset Administration Shell Directory Interface (for Connector)")
 	@RequestMapping(
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes =  MediaType.APPLICATION_JSON_VALUE,
 			method = RequestMethod.POST,
 			path="/aas/{aasIdentifier}")
 	AssetAdministrationShell register(
@@ -124,6 +127,8 @@ public interface DirectoryInterface {
 	@Operation(summary="Add a SubmodelDescriptor to an existing AssetAdministrationShell Descriptor",
 			tags = "Asset Administration Shell Directory Interface (for Connector)")
 	@RequestMapping(
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes =  MediaType.APPLICATION_JSON_VALUE,
 			method = RequestMethod.POST,
 			path="/aas/{aasIdentifier}/submodel/{submodelIdentifier}")
 	Submodel register(
