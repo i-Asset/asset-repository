@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>at.srfg.iasset</groupId>
 		<artifactId>asset-repository</artifactId>
-		<version>0.1.1</version>
+		<version>0.1.2</version>
 	</parent>
 	<artifactId>asset-connector</artifactId>
 	<name>Asset Connector</name>
@@ -18,12 +18,12 @@
 		<dependency>
 			<groupId>at.srfg.iasset</groupId>
 			<artifactId>asset-messaging</artifactId>
-			<version>0.1.1</version>
+			<version>0.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>at.srfg.iasset</groupId>
 			<artifactId>asset-repository-api</artifactId>
-			<version>0.1.1</version>
+			<version>0.1.2</version>
 		</dependency>
 		<!-- Weld SE -->
 		<dependency>
