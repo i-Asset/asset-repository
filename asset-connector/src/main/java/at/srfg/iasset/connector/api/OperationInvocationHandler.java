@@ -1,17 +1,15 @@
 package at.srfg.iasset.connector.api;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.eclipse.digitaltwin.aas4j.v3.model.HasKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.Message;
 import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequest;
@@ -26,8 +24,9 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationRequestValue;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResult;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
 
-import at.srfg.iasset.repository.api.model.Message;
-import at.srfg.iasset.repository.api.model.MessageType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
@@ -444,8 +443,15 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 				applyOperationResultValue(result);
 			}
 			else {
-				// TODO: pretty print messages from result
-				throw new OperationInvocationException(result.getMessages().toString());
+				List<String> messages = 
+				result.getMessages().stream().map(new Function<Message, String>() {
+
+					@Override
+					public String apply(Message t) {
+						return t.getText();
+					}
+				}).toList();
+				throw new OperationInvocationException(messages.toString());
 						
 			}
 		} catch (ValueMappingException e) {

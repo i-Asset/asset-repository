@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -424,7 +425,8 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 			return implementation.get();
 		}
 		// operation must not return null!
-		throw new OperationInvocationException(String.format("Operation with semantic id %s not found!", semanticId) );
+		
+		throw new OperationInvocationException(String.format("Operation for [%s] serving %s not found!", semanticId, Arrays.asList(additional)) );
 	}
 	
 	@Override

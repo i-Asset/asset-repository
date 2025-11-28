@@ -17,7 +17,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 
 @Path("")
 @RequestMapping(path = "")
@@ -100,6 +102,8 @@ public interface DirectoryInterface {
 			consumes =  MediaType.APPLICATION_JSON_VALUE,
 			method = RequestMethod.POST,
 			path="/aas/{aasIdentifier}")
+	@Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
+	@Consumes(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
 	AssetAdministrationShell register(
 			@Base64Encoded
 			@Parameter(
@@ -131,6 +135,8 @@ public interface DirectoryInterface {
 			consumes =  MediaType.APPLICATION_JSON_VALUE,
 			method = RequestMethod.POST,
 			path="/aas/{aasIdentifier}/submodel/{submodelIdentifier}")
+	@Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
+	@Consumes(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
 	Submodel register(
 			@Base64Encoded
 			@Parameter(
