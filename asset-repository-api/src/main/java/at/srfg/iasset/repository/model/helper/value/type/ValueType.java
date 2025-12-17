@@ -9,43 +9,50 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.base.CoreDatatype.XSD;
 
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 
 public enum ValueType {
-	STRING(		StringValue.class, 		DataTypeDefXsd.STRING, DataTypeDefXsd.ANY_URI),
-	BOOLEAN(	BooleanValue.class, 	DataTypeDefXsd.BOOLEAN),
-	DECIMAL(	DecimalValue.class, 	DataTypeDefXsd.DECIMAL),
-	DOUBLE(		DoubleValue.class, 		DataTypeDefXsd.DOUBLE, DataTypeDefXsd.FLOAT),
-	DURATION(	DurationValue.class, 	DataTypeDefXsd.DURATION),
-	INTEGER(	IntegerValue.class, 	DataTypeDefXsd.INTEGER, DataTypeDefXsd.INT),
-	LONG(		LongValue.class, 		DataTypeDefXsd.LONG),
-	BINARY(		BinaryValue.class, 		DataTypeDefXsd.BASE64BINARY),
-	DATE_TIME(	DateTimeValue.class, 	DataTypeDefXsd.DATE_TIME),
-	SHORT(		ShortValue.class,		DataTypeDefXsd.SHORT),
-	DATE(		DateValue.class, 		DataTypeDefXsd.DATE),
-	TIME(		TimeValue.class, 		DataTypeDefXsd.TIME),
+	STRING(		StringValue.class, 		XSD.STRING,			DataTypeDefXsd.STRING, DataTypeDefXsd.ANY_URI),
+	BOOLEAN(	BooleanValue.class, 	XSD.BOOLEAN,		DataTypeDefXsd.BOOLEAN),
+	DECIMAL(	DecimalValue.class, 	XSD.DECIMAL,		DataTypeDefXsd.DECIMAL),
+	DOUBLE(		DoubleValue.class, 		XSD.DOUBLE,			DataTypeDefXsd.DOUBLE, DataTypeDefXsd.FLOAT),
+	DURATION(	DurationValue.class, 	XSD.DURATION,		DataTypeDefXsd.DURATION),
+	INTEGER(	IntegerValue.class, 	XSD.INT,			DataTypeDefXsd.INTEGER, DataTypeDefXsd.INT),
+	LONG(		LongValue.class, 		XSD.LONG,			DataTypeDefXsd.LONG),
+	BINARY(		BinaryValue.class, 		XSD.BASE64BINARY,	DataTypeDefXsd.BASE64BINARY),
+	DATE_TIME(	DateTimeValue.class, 	XSD.DATETIME,		DataTypeDefXsd.DATE_TIME),
+	SHORT(		ShortValue.class,		XSD.SHORT,			DataTypeDefXsd.SHORT),
+	DATE(		DateValue.class, 		XSD.DATE,			DataTypeDefXsd.DATE),
+	TIME(		TimeValue.class, 		XSD.TIME,			DataTypeDefXsd.TIME),
 	;
 	
 	private List<DataTypeDefXsd> xsdTypes;
 	private Class<? extends Value<?>> valueClass;
 	private Type reflectionType;
+	private XSD coreDataType;
 	
 	Class<? extends Value<?>> getValueClass() {
 		return valueClass;
 	}
 	
-	private ValueType(Class<? extends Value<?>> value, DataTypeDefXsd ... xsd) {
+	private ValueType(Class<? extends Value<?>> value, XSD xsdCoreType, DataTypeDefXsd ... xsd) {
 		this.valueClass = value;
 		this.xsdTypes = Arrays.asList(xsd);
 		this.reflectionType = extractType(valueClass);
+		this.coreDataType = xsdCoreType;
 	}
 	private Type extractType(Class<? extends Value<?>> valueClass) {
 		// we 
 		ParameterizedType superClass = (ParameterizedType) valueClass.getGenericSuperclass();
 //		ParameterizedType aType = (ParameterizedType) superClass.getGenericInterfaces()[0];
 		return superClass.getActualTypeArguments()[0];
+	}
+	public IRI toIRI() {
+		return coreDataType.getIri();
 	}
 //	/**
 //	 * Obtain the typed Value representation from a given {@link SubmodelElement}.

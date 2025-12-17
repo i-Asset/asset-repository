@@ -48,6 +48,7 @@ public interface IAssetAdministrationShellRepositoryInterface {
 	final String PATH_SUBMODEL_ELEMENTS			= "/submodel-elements";
 	final String IDSHORT_PATH 					= "/{path}";
 	final String VALUE_MODIFIER					= "/$value"; 
+	final String RDF_VALUE_MODIFIER				= "/$jsonld"; 
 	final String INVOKE							= "/invoke";
 	final String IDSHORT_PATH_WILDCARD			= "/{path:.+}";
 	final String PATH_CONCEPT_DESCRIPTION		= "/concept-description";
@@ -417,6 +418,38 @@ public interface IAssetAdministrationShellRepositoryInterface {
 			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE},
 			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + VALUE_MODIFIER)
 	public Object getValue(	
+			@Base64Encoded
+			@Parameter(
+					in = ParameterIn.PATH, 
+					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
+					required = true, 
+					schema = @Schema()) 
+			@PathVariable("aasIdentifier")
+			String aasIdentifier,
+			@Base64Encoded
+			@Parameter(
+					in = ParameterIn.PATH, 
+					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
+					required = true, 
+					schema = @Schema()) 
+			@PathVariable("submodelIdentifier")
+			String submodelIdentifier,
+			@Parameter(description = "The path to the container")
+			@PathVariable("path") 
+			String path);
+	/**
+	 * Obtain the children of the element
+	 * @param identifier
+	 * @param path
+	 * @return
+	 */
+	@Operation(summary = "Proprietary: Obtain the RDF value of the (Data)Element",
+			tags = "Asset Administration Shell Repository Interface (for Connector)")
+	@RequestMapping(
+			method = RequestMethod.GET,
+			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE},
+			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + RDF_VALUE_MODIFIER)
+	public Object getRDFValue(	
 			@Base64Encoded
 			@Parameter(
 					in = ParameterIn.PATH, 

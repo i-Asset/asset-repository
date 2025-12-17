@@ -187,6 +187,12 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 		return server.deleteSubmodelReference(aasIdentifier, submodelIdentifier);
 	}
 
+	@Override
+	public Object getRDFValue(String aasIdentifier, String submodelIdentifier, String path) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not yet implemented!");
+	}
+
 
 
 }

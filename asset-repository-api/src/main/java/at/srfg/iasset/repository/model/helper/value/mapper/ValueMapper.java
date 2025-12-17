@@ -1,11 +1,14 @@
 package at.srfg.iasset.repository.model.helper.value.mapper;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.TreeModel;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
@@ -18,6 +21,10 @@ public interface ValueMapper<M extends SubmodelElement, V extends SubmodelElemen
 	 * @return
 	 */
 	V mapToValue(M modelElement) throws ValueMappingException;
+	
+	default Model mapToRDF(ServiceEnvironment environment, M modelElement, Resource parentNode) throws ValueMappingException {
+		return new TreeModel();
+	}
 	/**
 	 * Update the pre-existing model element with the provided valueNode
 	 * <p>

@@ -1,5 +1,6 @@
 package at.srfg.iasset.connector.environment;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -11,9 +12,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
@@ -37,15 +35,29 @@ import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultMessage;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
+import org.eclipse.rdf4j.rio.helpers.JSONLDMode;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.connector.api.OperationInvocationHandler;
 import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
 import at.srfg.iasset.repository.api.exception.NotFoundException;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.Persistence;
+import at.srfg.iasset.repository.component.RDFEnvironment;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
+import at.srfg.iasset.repository.model.helper.RDFHelper;
 import at.srfg.iasset.repository.model.helper.ValueHelper;
 import at.srfg.iasset.repository.model.helper.payload.PayloadValueHelper;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
@@ -77,6 +89,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	@Inject
 	private RepositoryConnection repository;
 	
+	@Inject RDFEnvironment rdfEnvironment;
 
 	@PostConstruct
 	private void init() {
@@ -220,12 +233,15 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 						return Optional.of(keySub.get());
 					}
 					break;
+				case GLOBAL_REFERENCE:
 				case CONCEPT_DESCRIPTION:
 					Optional<ConceptDescription> cDesc = getConceptDescription(rootKey.getValue());
 					if ( cDesc.isPresent()) {
 						return Optional.of(cDesc.get());
 					}
-					break;
+					
+					return Optional.empty();
+					//
 				case ASSET_ADMINISTRATION_SHELL:
 					Optional<AssetAdministrationShell> aas = storage.findAssetAdministrationShellById(rootKey.getValue());
 					if ( aas.isPresent()) {
@@ -244,8 +260,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 						return Optional.of(aas.get());
 					}
 					break;
-				case GLOBAL_REFERENCE:
-					return Optional.empty();
+
 				default:
 					throw new IllegalArgumentException("Provided reference points to a non-identifiable element!");
 				}
@@ -406,6 +421,43 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	}
 
 	@Override
+	public String getElementRDFValue(String aasIdentifier, String submodelIdentifier, String path) {
+		Optional<SubmodelElement> element = getSubmodelElement(submodelIdentifier, path);
+		if ( element.isPresent()) {
+			try {
+				Model model =  RDFHelper.toRDF(rdfEnvironment, element.get());
+				
+		        StringWriter sw = new StringWriter();
+		        RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, sw);
+		        
+//		        writer.handleNamespace("schema", "http://schema.org/");
+//		        writer.handleNamespace("ex", ex);
+		        // JSON-LD Modus: COMPACT
+		        writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
+
+		        // Optional: hübsche Ausgabe und kompakte Arrays
+		        writer.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
+		        writer.getWriterConfig().set(JSONLDSettings.COMPACT_ARRAYS, true);
+		        
+//		        // Optional: Namespaces für kompakte Prefixe im Kontext
+//		        writer.startRDF();
+//		        // Schreiben
+//		        writer.endRDF();
+		        
+		        Rio.write(model, writer);
+				
+		        return sw.toString();
+			} catch (ValueMappingException e) {
+				throw new InternalServerErrorException(e);
+			}
+		}
+//		Optional<Submodel> submodel = getSubmodel(submodelIdentifier);
+//		if ( submodel.isPresent()) {
+//			return SubmodelUtils.getValueAt(submodel.get(),path);
+//		}
+		throw new NotFoundException(submodelIdentifier, path);
+	}
+	@Override
 	public SubmodelElementValue getElementValue(String aasIdentifier, String submodelIdentifier, String path) {
 		Optional<Submodel> sub = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( sub.isPresent() ) {
@@ -511,7 +563,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	public SubmodelElement setSubmodelElement(String aasIdentifier, String submodelIdentifier,
 			SubmodelElement element) {
 		// TODO implement or remove when not needed
-		return null;
+		return setSubmodelElement(aasIdentifier, submodelIdentifier, element.getIdShort(), element);
 	}
 
 	@Override
@@ -796,5 +848,27 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		}
 		
 	}
+	@Override
+	public Optional<Reference> getSemanticIdenfier(SubmodelElement submodelElement) {
+		Reference ref = submodelElement.getSemanticId();
+		// check whether the semantic id is an iri
+		if (ref != null && ReferenceUtils.firstKeyType(ref)==KeyTypes.GLOBAL_REFERENCE) {
+			
+			IRI iri = SimpleValueFactory.getInstance().createIRI(ReferenceUtils.firstKeyValue(ref));
+			
+			return Optional.of(ref);
+		}
+		//
+		else {
+			// either no semantic id or a model 
+		}
+		
+		//
+		if ( ref.getType()==ReferenceTypes.EXTERNAL_REFERENCE) {
+			return Optional.of(ref);
+		}
+		return Optional.empty();
+	}
+	
 
 }

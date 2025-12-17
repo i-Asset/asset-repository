@@ -197,6 +197,22 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 					ApiUtils.base64Decode(submodelIdentifier),
 					path);
 	}
+	@Override
+	@GET
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + RDF_VALUE_MODIFIER)
+	public Object getRDFValue(
+			@PathParam("aasIdentifier")
+			String aasIdentifier, 
+			@PathParam("submodelIdentifier")
+			String submodelIdentifier, 
+			@PathParam("path")
+			String path) {
+		return environment.getElementRDFValue(					
+				ApiUtils.base64Decode(aasIdentifier), 
+				ApiUtils.base64Decode(submodelIdentifier), 
+				path);
+	}
 
 	@Override
 	@GET

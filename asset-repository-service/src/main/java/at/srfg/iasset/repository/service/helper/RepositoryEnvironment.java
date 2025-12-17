@@ -27,6 +27,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.rdf4j.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -287,6 +288,13 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		}
 		return Optional.empty();
 	}
+	
+	@Override
+	public String getElementRDFValue(String aasIdentivier, String submodelIdentifier, String path) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Override
 	public SubmodelElementValue getElementValue(String aasIdentifier, String submodelIdentifier, String path) {
 		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
@@ -296,6 +304,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 		}
 		return null;
 	}
+	
 	@Override
 	public void setElementValue(String aasIdentifier, String submodelIdentifier, String path, Object value) {
 		Optional<SubmodelElement> element = getSubmodelElement(aasIdentifier, submodelIdentifier, path);
@@ -536,6 +545,12 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	public void setEnvironment(Environment environment) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Optional<Reference> getSemanticIdenfier(SubmodelElement submodelElement) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
 	}
 
 

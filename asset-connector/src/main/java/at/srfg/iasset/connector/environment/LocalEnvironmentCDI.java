@@ -7,7 +7,6 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +34,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEnvironment;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReference;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelDescriptor;
+import org.eclipse.rdf4j.model.Model;
 
 import at.srfg.iasset.connector.api.ValueConsumer;
 import at.srfg.iasset.connector.api.ValueSupplier;
@@ -45,6 +45,7 @@ import at.srfg.iasset.messaging.EventProducer;
 import at.srfg.iasset.messaging.exception.MessagingException;
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.component.ModelListener;
+import at.srfg.iasset.repository.component.RDFEnvironment;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.exception.ShellNotFoundException;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
@@ -77,6 +78,9 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	@Inject 
 	private ServiceEnvironment serviceEnvironment;
 	
+	@Inject
+	private RDFEnvironment rdfModel;
+	
 	private final Set<String> registeredAssetIdentifier = new HashSet<>();
 
 	@Inject @Any
@@ -87,10 +91,15 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		// 
 		Environment coll = new DefaultEnvironment.Builder().build();
 		for (AASEnvironment data : aasData) {
+			
 			Environment env = data.getAASData();
-			coll.getAssetAdministrationShells().addAll(env.getAssetAdministrationShells());
-			coll.getSubmodels().addAll(env.getSubmodels());
-			coll.getConceptDescriptions().addAll(env.getConceptDescriptions());
+			if ( data != null) {
+				coll.getAssetAdministrationShells().addAll(env.getAssetAdministrationShells());
+				coll.getSubmodels().addAll(env.getSubmodels());
+				coll.getConceptDescriptions().addAll(env.getConceptDescriptions());
+			}
+			
+			rdfModel.addModel(data.getRDFData());
 		}
 		// store 
 		serviceEnvironment.setEnvironment(coll);
@@ -473,6 +482,19 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 			return clazz.cast(element.get()); 
 		}
 		return null;
+	}
+
+	@Override
+	public <T extends SubmodelElement> void setSubmodelElement(String aasIdentifier, String submodelIdentifier,
+			String path, T element) {
+		// when no path provided, the element belongs to the submodel!
+		if ( path == null || path.length() == 0 ) {
+			serviceEnvironment.setSubmodelElement(aasIdentifier, submodelIdentifier, element);
+		}
+		else {
+			serviceEnvironment.setSubmodelElement(aasIdentifier, submodelIdentifier, path, element);
+		}
+		
 	}
 
 	@Override

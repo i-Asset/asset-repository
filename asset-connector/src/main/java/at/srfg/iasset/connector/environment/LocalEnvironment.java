@@ -236,8 +236,24 @@ public interface LocalEnvironment {
 	 * @return
 	 */
 	public <T> T getElementValue(String aasIdentifier, String submodelIdentifier, String path, Class<T> clazz);
-	
+	/**
+	 * Retrieve the {@link SubmodelElement} from the submodel by it's path 
+	 * @param <T>
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @param path
+	 * @param clazz
+	 * @return
+	 */
 	public <T extends SubmodelElement> T getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path, Class<T> clazz);
+	/**
+	 * Update a {@link SubmodelElement} by it's path
+	 * @param <T>
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @param element
+	 */
+	public <T extends SubmodelElement> void setSubmodelElement(String aasIdentifier, String submodelIdentifier, String path, T element);
 	
 	/**
 	 * Register the {@link AssetAdministrationShell} with the configured directory service

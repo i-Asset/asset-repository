@@ -18,6 +18,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.rdf4j.model.Model;
 
 import at.srfg.iasset.repository.api.exception.NotFoundException;
 import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
@@ -189,6 +190,7 @@ public interface ServiceEnvironment {
 	 * @return
 	 */
 	SubmodelElementValue getElementValue(String aasIdentifier, String submodelIdentifier, String path);
+	String getElementRDFValue(String aasIdentivier, String submodelIdentifier, String path);
 	/**
 	 * Obtain the ValueOnly representation of a SubmodelElement
 	 * @param aasIdentifier
@@ -322,6 +324,12 @@ public interface ServiceEnvironment {
 	 * @return
 	 */
 	public Optional<OperationInvocation> getImplementation(String semanticId, String ... additional);
+	/**
+	 * Try to find the main semanticId of the provided element. 
+	 * @param submodelElement
+	 * @return
+	 */
+	public Optional<Reference> getSemanticIdenfier(SubmodelElement submodelElement); 
 	
 //	/**
 //	 * Execute the identified operation
