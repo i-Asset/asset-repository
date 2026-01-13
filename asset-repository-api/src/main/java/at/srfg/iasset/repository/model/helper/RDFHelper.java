@@ -19,6 +19,7 @@ import com.google.common.reflect.TypeToken;
 import at.srfg.iasset.repository.component.RDFEnvironment;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
+import at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.rdf.mapper.RDFMapper;
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 import io.github.classgraph.ClassGraph;
@@ -56,20 +57,33 @@ public class RDFHelper {
 			}
 		}
 	}
-	public static <M extends SubmodelElement, V extends at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue> Model toRDF(RDFEnvironment environment, M submodelElement) throws ValueMappingException {
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> Model toRDF(RDFEnvironment environment, M submodelElement) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
 			return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToRDF(environment, null, submodelElement);
-			//return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToValue(submodelElement);
 		}
 		return new TreeModel();
 	}
-	public static <M extends SubmodelElement, V extends at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue> Model toRDF(RDFEnvironment environment, Resource parent, M submodelElement) throws ValueMappingException {
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> Model toRDF(RDFEnvironment environment, Resource parent, M submodelElement) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
 			return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToRDF(environment, parent, submodelElement);
 			
 		}
 		return new TreeModel();
+	}
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M fromRDF(RDFEnvironment environment, Model model, M submodelElement) throws ValueMappingException {
+		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
+		if ( mapper.containsKey(propertyInterface)) {
+			return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToElement(environment, null, model, submodelElement);
+		}
+		return submodelElement;
+	}
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> M fromRDF(RDFEnvironment environment, Resource parent, Model model, M submodelElement) throws ValueMappingException {
+		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
+		if ( mapper.containsKey(propertyInterface)) {
+			return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToElement(environment, parent, model, submodelElement);
+		}
+		return submodelElement;
 	}
 }

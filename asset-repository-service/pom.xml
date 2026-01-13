@@ -102,7 +102,11 @@
 			<artifactId>asset-repository-mongo</artifactId>
 			<version>0.1.2</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.eclipse.digitaltwin.aas4j</groupId>
+			<artifactId>aas4j-model</artifactId>
+			<version>1.0.5</version>
+		</dependency>
 		<dependency>
 			<groupId>org.eclipse.digitaltwin.aas4j</groupId>
 			<artifactId>aas4j-dataformat-json</artifactId>

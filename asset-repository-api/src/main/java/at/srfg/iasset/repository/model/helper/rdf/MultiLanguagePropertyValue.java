@@ -20,7 +20,6 @@ public class MultiLanguagePropertyValue extends DataElementValue {
 			@Override
 			public void accept(LangStringTextType t) {
 				value.put(t.getLanguage(), t.getText());
-				
 			}
 		});
 		

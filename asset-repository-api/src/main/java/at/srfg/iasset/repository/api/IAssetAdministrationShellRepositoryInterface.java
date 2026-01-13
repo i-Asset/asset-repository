@@ -1,5 +1,6 @@
 package at.srfg.iasset.repository.api;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
@@ -469,7 +470,40 @@ public interface IAssetAdministrationShellRepositoryInterface {
 			@Parameter(description = "The path to the container")
 			@PathVariable("path") 
 			String path);
-	
+	/**
+	 * Store the json-ld document
+	 * @param identifier
+	 * @param path
+	 * @return
+	 */
+	@Operation(summary = "Proprietary: Map the JSON-LD docuzment (Data)Element",
+			tags = "Asset Administration Shell Repository Interface (for Connector)")
+	@RequestMapping(
+			method = RequestMethod.POST,
+			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE},
+			path=PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + RDF_VALUE_MODIFIER)
+	public void setRDFValue(	
+			@Base64Encoded
+			@Parameter(
+					in = ParameterIn.PATH, 
+					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
+					required = true, 
+					schema = @Schema()) 
+			@PathVariable("aasIdentifier")
+			String aasIdentifier,
+			@Base64Encoded
+			@Parameter(
+					in = ParameterIn.PATH, 
+					description = "The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)", 
+					required = true, 
+					schema = @Schema()) 
+			@PathVariable("submodelIdentifier")
+			String submodelIdentifier,
+			@Parameter(description = "The path to the container")
+			@PathVariable("path") 
+			String path,
+			@RequestBody
+			InputStream jsonld);	
 	
 	@Operation(summary =  "Obtain the identifiable element",
 			tags = "Asset Administration Shell Repository Interface (for Connector)")

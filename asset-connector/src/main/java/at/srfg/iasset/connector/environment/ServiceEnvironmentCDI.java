@@ -421,32 +421,13 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	}
 
 	@Override
-	public String getElementRDFValue(String aasIdentifier, String submodelIdentifier, String path) {
+	public Model getElementRDFValue(String aasIdentifier, String submodelIdentifier, String path) {
 		Optional<SubmodelElement> element = getSubmodelElement(submodelIdentifier, path);
 		if ( element.isPresent()) {
 			try {
-				Model model =  RDFHelper.toRDF(rdfEnvironment, element.get());
+				return  RDFHelper.toRDF(rdfEnvironment, element.get());
 				
-		        StringWriter sw = new StringWriter();
-		        RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, sw);
-		        
-//		        writer.handleNamespace("schema", "http://schema.org/");
-//		        writer.handleNamespace("ex", ex);
-		        // JSON-LD Modus: COMPACT
-		        writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
-
-		        // Optional: hübsche Ausgabe und kompakte Arrays
-		        writer.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
-		        writer.getWriterConfig().set(JSONLDSettings.COMPACT_ARRAYS, true);
-		        
-//		        // Optional: Namespaces für kompakte Prefixe im Kontext
-//		        writer.startRDF();
-//		        // Schreiben
-//		        writer.endRDF();
-		        
-		        Rio.write(model, writer);
 				
-		        return sw.toString();
 			} catch (ValueMappingException e) {
 				throw new InternalServerErrorException(e);
 			}
@@ -456,6 +437,26 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 //			return SubmodelUtils.getValueAt(submodel.get(),path);
 //		}
 		throw new NotFoundException(submodelIdentifier, path);
+	}
+	
+	@Override
+	public void setElementRDFValue(String aasIdentivier, String submodelIdentifier, String path, Model model) {
+		Optional<SubmodelElement> element = getSubmodelElement(submodelIdentifier, path);
+		if ( element.isPresent()) {
+			try {
+				RDFHelper.fromRDF(rdfEnvironment, model, element.get());
+				
+				
+			} catch (ValueMappingException e) {
+				throw new InternalServerErrorException(e);
+			}
+		}
+//		Optional<Submodel> submodel = getSubmodel(submodelIdentifier);
+//		if ( submodel.isPresent()) {
+//			return SubmodelUtils.getValueAt(submodel.get(),path);
+//		}
+		throw new NotFoundException(submodelIdentifier, path);
+		
 	}
 	@Override
 	public SubmodelElementValue getElementValue(String aasIdentifier, String submodelIdentifier, String path) {

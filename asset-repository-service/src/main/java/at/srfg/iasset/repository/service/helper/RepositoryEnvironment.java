@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
@@ -30,6 +28,8 @@ import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.rdf4j.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.srfg.iasset.repository.api.IAssetAdministrationShellInterface;
 import at.srfg.iasset.repository.api.exception.NotFoundException;
@@ -290,8 +290,7 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	}
 	
 	@Override
-	public String getElementRDFValue(String aasIdentivier, String submodelIdentifier, String path) {
-		// TODO Auto-generated method stub
+	public Model getElementRDFValue(String aasIdentivier, String submodelIdentifier, String path) {
 		return null;
 	}
 
@@ -551,6 +550,12 @@ public class RepositoryEnvironment implements ServiceEnvironment {
 	public Optional<Reference> getSemanticIdenfier(SubmodelElement submodelElement) {
 		// TODO Auto-generated method stub
 		return Optional.empty();
+	}
+
+	@Override
+	public void setElementRDFValue(String aasIdentivier, String submodelIdentifier, String path, Model model) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

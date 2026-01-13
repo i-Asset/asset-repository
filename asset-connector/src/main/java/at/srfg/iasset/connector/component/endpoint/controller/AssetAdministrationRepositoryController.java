@@ -1,5 +1,10 @@
 package at.srfg.iasset.connector.component.endpoint.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.List;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
@@ -12,11 +17,21 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
+import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
+import org.eclipse.rdf4j.rio.helpers.JSONLDMode;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -34,6 +49,9 @@ import jakarta.ws.rs.core.SecurityContext;
 public class AssetAdministrationRepositoryController implements IAssetAdministrationShellRepositoryInterface {
 	@Context
 	private SecurityContext securityContext;
+	
+	@Context
+	private HttpServletRequest request;
 	/**
 	 * Injected Service Environment
 	 */
@@ -208,10 +226,61 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 			String submodelIdentifier, 
 			@PathParam("path")
 			String path) {
-		return environment.getElementRDFValue(					
+		// obtain the model
+		Model model = environment.getElementRDFValue(					
 				ApiUtils.base64Decode(aasIdentifier), 
 				ApiUtils.base64Decode(submodelIdentifier), 
 				path);
+		// produce JSON-LD
+        StringWriter sw = new StringWriter();
+        RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, sw);
+        
+//        writer.handleNamespace("schema", "http://schema.org/");
+//        writer.handleNamespace("ex", ex);
+        // JSON-LD Modus: COMPACT
+        writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
+
+        // Optional: hübsche Ausgabe und kompakte Arrays
+        writer.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
+        writer.getWriterConfig().set(JSONLDSettings.COMPACT_ARRAYS, true);
+    
+        
+        Rio.write(model, writer);
+        return sw.toString();
+
+	}
+
+	@Override
+	@POST
+	@Produces(value = MediaType.APPLICATION_JSON)
+	@Consumes(value = MediaType.APPLICATION_JSON)
+	@Path(PATH_SHELLS + AAS_IDENTIFIER + PATH_AAS_SUBMODELS + SUBMODEL_IDENTIFIER + PATH_SUBMODEL_ELEMENTS + IDSHORT_PATH + RDF_VALUE_MODIFIER)
+	public void setRDFValue(
+			@PathParam("aasIdentifier")
+			String aasIdentifier, 
+			@PathParam("submodelIdentifier")
+			String submodelIdentifier, 
+			@PathParam("path")
+			String path,
+			InputStream jsonLD) {
+		// TODO Auto-generated method stub
+		Model model;
+		try {
+//			Reader stringR = new StringReader(jsonLD);
+			model = Rio.parse(jsonLD, RDFFormat.JSONLD);
+			environment.setElementRDFValue(ApiUtils.base64Decode(aasIdentifier),
+					ApiUtils.base64Decode(submodelIdentifier), path, model);
+		} catch (RDFParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedRDFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		throw new Exception("Setting/Parsing JSON-LD failed");
 	}
 
 	@Override

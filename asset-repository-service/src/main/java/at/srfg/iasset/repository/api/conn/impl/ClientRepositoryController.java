@@ -1,5 +1,6 @@
 package at.srfg.iasset.repository.api.conn.impl;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -191,6 +192,13 @@ public class ClientRepositoryController implements IAssetAdministrationShellRepo
 	public Object getRDFValue(String aasIdentifier, String submodelIdentifier, String path) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Not yet implemented!");
+	}
+
+	@Override
+	public void setRDFValue(String aasIdentifier, String submodelIdentifier, String path, InputStream json) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not yet implemented!");
+		
 	}
 
 
