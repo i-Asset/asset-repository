@@ -1,53 +1,5 @@
 package at.srfg.iasset.connector.environment;
 
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
-import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
-import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
-import org.eclipse.digitaltwin.aas4j.v3.model.ExecutionState;
-import org.eclipse.digitaltwin.aas4j.v3.model.Key;
-import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
-import org.eclipse.digitaltwin.aas4j.v3.model.MessageTypeEnum;
-import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequest;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequestValue;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationResult;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationResultValue;
-import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultMessage;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFWriter;
-import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
-import org.eclipse.rdf4j.rio.helpers.JSONLDMode;
-import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import at.srfg.iasset.connector.api.OperationInvocationHandler;
 import at.srfg.iasset.connector.component.endpoint.RepositoryConnection;
 import at.srfg.iasset.repository.api.exception.NotFoundException;
@@ -70,10 +22,25 @@ import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
+import org.eclipse.digitaltwin.aas4j.v3.model.*;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultMessage;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ServiceEnvironmentCDI implements ServiceEnvironment {
@@ -633,7 +600,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 							.success(false)
 							.executionState(ExecutionState.FAILED)
 							.messages(new DefaultMessage.Builder()
-								.messageType(MessageTypeEnum.EXCEPTION)
+								.messageType(MessageType.EXCEPTION)
 								.text(ve.getLocalizedMessage()).build())
 							.build();
 					
@@ -643,7 +610,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 							.success(false)
 							.executionState(ExecutionState.FAILED)
 							.messages(new DefaultMessage.Builder()
-								.messageType(MessageTypeEnum.EXCEPTION)
+								.messageType(MessageType.EXCEPTION)
 								.text(e.getLocalizedMessage()).build())
 							.build();
 				}
@@ -799,7 +766,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 					public boolean test(SubmodelDescriptor t) {
 						// check for proper interface!
 						// 
-						return t.getSupplementalSemanticId().stream().anyMatch(new Predicate<Reference>() {
+						return t.getSupplementalSemanticIds().stream().anyMatch(new Predicate<Reference>() {
 	
 							@Override
 							public boolean test(Reference t) {
