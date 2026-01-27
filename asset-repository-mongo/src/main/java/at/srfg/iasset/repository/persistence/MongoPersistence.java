@@ -134,7 +134,7 @@ public class MongoPersistence implements Persistence {
 	public Optional<AssetAdministrationShellDescriptor> findAssetAdministrationShellDescriptorBySupplementalSemanticIds(String mainSemanticId,
 			List<String> additional) {
 		additional.add(mainSemanticId);
-		Query query = Query.query(Criteria.where("submodelDescriptors.supplementalSemanticId.keys.value").all(additional));
+		Query query = Query.query(Criteria.where("submodelDescriptors.supplementalSemanticIds.keys.value").all(additional));
 		
 		List<AssetAdministrationShellDescriptor> result = template.find(query, AssetAdministrationShellDescriptor.class);
 		if ( result.isEmpty() ) {
