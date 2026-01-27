@@ -450,12 +450,15 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			} catch (ValueMappingException e) {
 				throw new InternalServerErrorException(e);
 			}
+			
+		}
+		else {
+			throw new NotFoundException(submodelIdentifier, path);
 		}
 //		Optional<Submodel> submodel = getSubmodel(submodelIdentifier);
 //		if ( submodel.isPresent()) {
 //			return SubmodelUtils.getValueAt(submodel.get(),path);
 //		}
-		throw new NotFoundException(submodelIdentifier, path);
 		
 	}
 	@Override
