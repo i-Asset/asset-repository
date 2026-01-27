@@ -1,41 +1,5 @@
 package at.srfg.iasset.connector.environment;
 
-import java.lang.reflect.GenericDeclaration;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
-import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
-import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
-import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
-import org.eclipse.digitaltwin.aas4j.v3.model.Property;
-import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEnvironment;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReference;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelDescriptor;
-import org.eclipse.rdf4j.model.Model;
-
 import at.srfg.iasset.connector.api.ValueConsumer;
 import at.srfg.iasset.connector.api.ValueSupplier;
 import at.srfg.iasset.connector.component.ConnectorEndpoint;
@@ -64,6 +28,15 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
+import org.eclipse.digitaltwin.aas4j.v3.model.*;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.*;
+
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class LocalEnvironmentCDI implements LocalEnvironment {
@@ -541,7 +514,7 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 						.description(sub.get().getDescription())
 						.displayName(sub.get().getDisplayName())
 						.semanticId(sub.get().getSemanticId())
-						.supplementalSemanticId(supplementalSemantics(sub.get()))
+						.supplementalSemanticIds(supplementalSemantics(sub.get()))
 						.endpoints(endpoint.getEndpoint(theShell.getId(), sub.get().getId()))
 						.build();
 				
