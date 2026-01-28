@@ -31,13 +31,13 @@ import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 @IRI("aas:OperationRequest")
 public class DefaultOperationRequestValue implements OperationRequestValue {
 
-  @IRI("https://admin-shell.io/aas/3/0/OperationRequest/clientTimeoutDuration")
+  @IRI("https://admin-shell.io/aas/3/1/OperationRequest/clientTimeoutDuration")
   protected Duration clientTimeoutDuration;
 
-  @IRI("https://admin-shell.io/aas/3/0/OperationRequest/inoutputArguments")
+  @IRI("https://admin-shell.io/aas/3/1/OperationRequest/inoutputArguments")
   protected Map<String, Object> inoutputArguments = new HashMap<>();
 
-  @IRI("https://admin-shell.io/aas/3/0/OperationRequest/inputArguments")
+  @IRI("https://admin-shell.io/aas/3/1/OperationRequest/inputArguments")
   protected Map<String, Object> inputArguments = new HashMap<>();
 
   public DefaultOperationRequestValue() {}

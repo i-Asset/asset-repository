@@ -21,37 +21,36 @@ import org.eclipse.digitaltwin.aas4j.v3.model.annotations.IRI;
 import org.eclipse.digitaltwin.aas4j.v3.model.annotations.KnownSubtypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResult;
 
-import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 
 /** */
 @KnownSubtypes({@KnownSubtypes.Type(value = DefaultOperationResult.class)})
 public interface OperationResultValue extends BaseOperationResult {
 
   /**
-   * More information under https://admin-shell.io/aas/3/0/OperationResult/inoutputArguments
+   * More information under https://admin-shell.io/aas/3/1/OperationResult/inoutputArguments
    *
    * @return Returns the List of OperationVariables for the property inoutputArguments.
    */
-  @IRI("https://admin-shell.io/aas/3/0/OperationResult/inoutputArguments")
+  @IRI("https://admin-shell.io/aas/3/1/OperationResult/inoutputArguments")
   Map<String, Object> getInoutputArguments();
 
   /**
-   * More information under https://admin-shell.io/aas/3/0/OperationResult/inoutputArguments
+   * More information under https://admin-shell.io/aas/3/1/OperationResult/inoutputArguments
    *
    * @param inoutputArguments desired value for the property inoutputArguments.
    */
   void setInoutputArguments(Map<String, Object> inoutputArguments);
 
   /**
-   * More information under https://admin-shell.io/aas/3/0/OperationResult/outputArguments
+   * More information under https://admin-shell.io/aas/3/1/OperationResult/outputArguments
    *
    * @return Returns the List of OperationVariables for the property outputArguments.
    */
-  @IRI("https://admin-shell.io/aas/3/0/OperationResult/outputArguments")
+  @IRI("https://admin-shell.io/aas/3/1/OperationResult/outputArguments")
   Map<String, Object> getOutputArguments();
 
   /**
-   * More information under https://admin-shell.io/aas/3/0/OperationResult/outputArguments
+   * More information under https://admin-shell.io/aas/3/1/OperationResult/outputArguments
    *
    * @param outputArguments desired value for the property outputArguments.
    */

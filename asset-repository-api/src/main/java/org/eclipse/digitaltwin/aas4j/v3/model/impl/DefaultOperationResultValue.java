@@ -33,19 +33,19 @@ import at.srfg.iasset.repository.model.helper.value.SubmodelElementValue;
 @IRI("aas:OperationResult")
 public class DefaultOperationResultValue implements OperationResultValue {
 
-  @IRI("https://admin-shell.io/aas/3/0/BaseOperationResult/executionState")
+  @IRI("https://admin-shell.io/aas/3/1/BaseOperationResult/executionState")
   protected ExecutionState executionState;
 
-  @IRI("https://admin-shell.io/aas/3/0/BaseOperationResult/success")
+  @IRI("https://admin-shell.io/aas/3/1/BaseOperationResult/success")
   protected boolean success;
 
-  @IRI("https://admin-shell.io/aas/3/0/Result/messages")
+  @IRI("https://admin-shell.io/aas/3/1/Result/messages")
   protected List<Message> messages = new ArrayList<>();
 
-  @IRI("https://admin-shell.io/aas/3/0/OperationResult/inoutputArguments")
+  @IRI("https://admin-shell.io/aas/3/1/OperationResult/inoutputArguments")
   protected Map<String, Object> inoutputArguments = new HashMap<>();
 
-  @IRI("https://admin-shell.io/aas/3/0/OperationResult/outputArguments")
+  @IRI("https://admin-shell.io/aas/3/1/OperationResult/outputArguments")
   protected Map<String, Object> outputArguments = new HashMap<>();
 
   public DefaultOperationResultValue() {}
