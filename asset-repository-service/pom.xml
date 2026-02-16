@@ -86,12 +86,6 @@
 			<version>2.8.14</version>
 		</dependency>
 
-		<!-- Spring docker-compose -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-docker-compose</artifactId>
-		</dependency>
-
 		<!-- Spring mongodb -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -135,4 +129,17 @@
 		</dependency>
 	</dependencies>
 
+    <profiles>
+        <profile>
+            <id>compose</id>
+            <dependencies>
+                <!-- Spring docker-compose -->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-docker-compose</artifactId>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
