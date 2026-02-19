@@ -30,6 +30,8 @@ import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import org.eclipse.digitaltwin.aas4j.v3.model.*;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -41,7 +43,8 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class LocalEnvironmentCDI implements LocalEnvironment {
 
-	
+
+	private static final Logger log = LoggerFactory.getLogger(LocalEnvironmentCDI.class);
 	@Inject
 	private ConnectorEndpoint endpoint;
 	
@@ -64,17 +67,21 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		// 
 		Environment coll = new DefaultEnvironment.Builder().build();
 		for (AASEnvironment data : aasData) {
-			
+			log.info("cretating environment for data {}", data.getClass().getName());
 			Environment env = data.getAASData();
 			if ( data != null) {
+				log.info("adding Shells");
 				coll.getAssetAdministrationShells().addAll(env.getAssetAdministrationShells());
+				log.info("adding Submodels");
 				coll.getSubmodels().addAll(env.getSubmodels());
+				log.info("adding Concept Descriptions");
 				coll.getConceptDescriptions().addAll(env.getConceptDescriptions());
 			}
-			
+			log.info("adding model to RDF Model");
 			rdfModel.addModel(data.getRDFData());
 		}
-		// store 
+		// store
+		log.info("storing environment");
 		serviceEnvironment.setEnvironment(coll);
 		
 	}
