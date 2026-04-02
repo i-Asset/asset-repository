@@ -33,7 +33,7 @@ public class MultiLanguagePropertyValueMapper implements RDFMapper<MultiLanguage
 			model.setNamespace("xs", XSD.NAMESPACE);
 		}
 		final Resource resource = parent;
-		Optional<IRI> property = rdfMetaModel.getSemanticIdentifier(modelElement.getSemanticId());
+		Optional<IRI> property = rdfMetaModel.getSemanticIdentifier(modelElement);
 		if ( property.isPresent()) {
 			modelElement.getValue().forEach(new Consumer<LangStringTextType>() {
 

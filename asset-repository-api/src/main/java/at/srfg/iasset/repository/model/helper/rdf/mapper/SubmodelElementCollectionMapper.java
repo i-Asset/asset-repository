@@ -43,10 +43,12 @@ public class SubmodelElementCollectionMapper implements RDFMapper<SubmodelElemen
 				// link to existing 
 				model.add(parent, propertyIri.get(), collectionResource);
 			}
+			// uncomplete code - start!
 			else {
 				// parent present, use default namespace
 				SimpleValueFactory.getInstance().createIRI(rdfMetaModel.getDefaultNamespace(), modelElement.getIdShort());
 			}
+			// uncomplete code - end!
 		}
 		// 
 		for (SubmodelElement submodelElement : modelElement.getValue() ) {
