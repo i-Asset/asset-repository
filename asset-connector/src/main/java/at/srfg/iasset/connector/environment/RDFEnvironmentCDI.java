@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.HasSemantics;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
@@ -36,6 +37,13 @@ public class RDFEnvironmentCDI implements RDFEnvironment {
 	@Inject
 	private ServiceEnvironment serviceEnvironment;
 	
+
+	@Override
+	public Optional<IRI> getSemanticIdentifier(HasSemantics element) {
+		return getSemanticIdentifier(element.getSemanticId());
+	}
+
+
 
 	@Override
 	public Optional<IRI> getSemanticIdentifier(Reference semanticId) {

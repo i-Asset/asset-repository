@@ -3,11 +3,11 @@ package at.srfg.iasset.repository.component;
 import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.HasSemantics;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Namespace;
 
 public interface RDFEnvironment {
 	/**
@@ -21,6 +21,7 @@ public interface RDFEnvironment {
 	 * @return IRI or {@link Optional#empty()} when not found
 	 */
 	public Optional<IRI> getSemanticIdentifier(Reference element);
+	public Optional<IRI> getSemanticIdentifier(HasSemantics element);
 	/**
 	 * Retrieve the type IRI for the given element. 
 	 * <p>The type IRI is resolved by looking for a linked {@link ConceptDescription}
