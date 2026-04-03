@@ -1,14 +1,13 @@
 package at.srfg.iasset.connector.component.endpoint;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
+import at.srfg.iasset.connector.component.ConnectorEndpoint;
+import at.srfg.iasset.connector.component.endpoint.config.AliasConfig;
+import at.srfg.iasset.connector.component.endpoint.config.ShellsConfig;
+import at.srfg.iasset.repository.api.ApiUtils;
+import at.srfg.iasset.repository.component.ServiceEnvironment;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
@@ -20,19 +19,19 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import at.srfg.iasset.connector.component.ConnectorEndpoint;
-import at.srfg.iasset.connector.component.endpoint.config.AliasConfig;
-import at.srfg.iasset.connector.component.endpoint.config.ShellsConfig;
-import at.srfg.iasset.repository.api.ApiUtils;
-import at.srfg.iasset.repository.component.ServiceEnvironment;
-import jakarta.annotation.PreDestroy;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
+import java.net.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @ApplicationScoped
 public class ConnectorEndpointCDI implements ConnectorEndpoint {
 
+	private static final Logger log = LoggerFactory.getLogger(ConnectorEndpointCDI.class);
 	private HttpServer httpServer;
 	private static final int defaultPort = 5050;
 	private int port = defaultPort;
@@ -51,7 +50,7 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 		stop();
 	}
 
-	public void start(int port, String contextRoot) {
+	public void start(int port, String contextRoot, String externalUrl) {
 		this.port = port;
 		ResourceConfig config = new ShellsConfig(environment);
 		GrizzlyHttpContainer handler = ContainerFactory.createContainer(GrizzlyHttpContainer.class, config);
@@ -63,16 +62,21 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 		
 //		serverConfiguration = httpServer.getServerConfiguration();
 		httpServer.getServerConfiguration().addHttpHandler(handler, contextRoot);
-		
+
 		try {
 			InetAddress search = getLocalHostLANAddress();
 			String host = search.getHostAddress();
 //			String host = InetAddress.getLocalHost().getHostAddress();
 			endpointAddress = URI.create(String.format("http://%s:%s%s", host, this.port, contextRoot));
+			// setting of url can override the endpoint address
+			if (externalUrl != null) {
+				endpointAddress = new URL(externalUrl).toURI();
+			}
+			log.info("external endpoint address: {}", endpointAddress);
 			httpServer.start();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("error when starting http server '{}'", httpServer.getServerConfiguration().getHttpServerName(), e);
+			log.debug("", e);
 		}
 		
 	}
@@ -199,19 +203,19 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 	}
 	@Override
 	public void start() {
-		start(settings.getPort(), settings.getContext());
+		start(settings.getPort(), settings.getContext(), settings.getExternalUrl());
 		
 	}
 	@Override
 	public void start(int port) {
-		start(port, settings.getContext());
+		start(port, settings.getContext(), settings.getExternalUrl());
 		
 	}
 
 	@Override
 	public URI getServiceAddress() {
-		if ( endpointAddress == null) {
-			throw new IllegalStateException("Adress not available, please start endpoint first!");
+		if (endpointAddress == null) {
+			throw new IllegalStateException("Address not available, please start endpoint first!");
 		}
 		return endpointAddress;
 	}
@@ -231,7 +235,7 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
     @Override
 	public Endpoint getEndpoint(String aasIdentifier) {
 		Optional<AssetAdministrationShell> shell = environment.getAssetAdministrationShell(aasIdentifier);
-		if ( shell.isPresent()) {
+		if (shell.isPresent()) {
 			Endpoint ep = new DefaultEndpoint.Builder()
 					._interface("AAS-3.0_ITWIN")		
 					.protocolInformation(new DefaultProtocolInformation.Builder()
@@ -247,7 +251,7 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
 	}
     public Endpoint getEndpoint(String aasIdentifier, String submodelIdentifier) {
     	Optional<Submodel> sub = environment.getSubmodel(aasIdentifier, submodelIdentifier);
-    	if ( sub.isPresent()) {
+    	if (sub.isPresent()) {
     		Endpoint ep = new DefaultEndpoint.Builder()
     				._interface("SUBMODEL-3.0_ITWIN")
     				.protocolInformation(new DefaultProtocolInformation.Builder()

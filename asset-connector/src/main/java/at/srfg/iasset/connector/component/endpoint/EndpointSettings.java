@@ -15,6 +15,9 @@ public class EndpointSettings {
 	@Configurable("endpoint.context")
 	private String context;
 	@Inject
+	@Configurable("endpoint.externalUrl")
+	private String externalUrl;
+		@Inject
 	@Configurable("endpoint.port")
 	private int port;
 
@@ -32,5 +35,11 @@ public class EndpointSettings {
 		return port;
 	}
 	
+	/**
+	 * @return the externalUrl
+	 */
+	public String getExternalUrl() {
+		return externalUrl;
+	}
 	
 }
