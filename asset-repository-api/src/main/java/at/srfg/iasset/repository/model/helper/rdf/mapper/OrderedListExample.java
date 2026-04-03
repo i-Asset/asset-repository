@@ -69,7 +69,7 @@ public class OrderedListExample {
             Rio.write(model, out, RDFFormat.JSONLD,
                     Rio.createWriter(RDFFormat.JSONLD, out)
                             .getWriterConfig()
-                            .set(JSONLDSettings.JSONLD_MODE, JSONLDMode.FLATTEN)
+                            .set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT)
                             .set(BasicWriterSettings.PRETTY_PRINT, true)
                             .set(JSONLDSettings.COMPACT_ARRAYS, true)
             );

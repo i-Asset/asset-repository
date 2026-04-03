@@ -22,6 +22,17 @@ import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingExcept
 public class SubmodelElementCollectionMapper implements RDFMapper<SubmodelElementCollection, SubmodelElementCollectionValue>{
 
 	@Override
+	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, IRI predicate,
+			SubmodelElementCollection modelElement) throws ValueMappingException {
+		
+		Model model = new TreeModel();
+		
+		// TODO Auto-generated method stub
+		// when everything is done
+		return RDFMapper.super.mapToRDF(rdfMetaModel, parent, predicate, modelElement);
+	}
+
+	@Override
 	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, SubmodelElementCollection modelElement) {
 		// TODO Auto-generated method stub
 		Model model = new TreeModel();
