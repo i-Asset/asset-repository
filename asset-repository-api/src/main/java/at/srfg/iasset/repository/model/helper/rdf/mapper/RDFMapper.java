@@ -33,4 +33,7 @@ public interface RDFMapper<M extends SubmodelElement, V extends SubmodelElementV
 		return modelElement;
 	}
 
+	default V mapToRDF(M modelElement) throws ValueMappingException {
+		return null;
+	}
 }	
