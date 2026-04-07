@@ -242,7 +242,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	private Optional<OperationVariable> findInputVariable(String idShort) {
 		switch (countInputVariables()) {
 		case 0:
-			throw new IllegalStateException("No output variable is present!");
+			throw new IllegalStateException("No input variable is present!");
 		case 1: 
 			if ( idShort == null) {
 				return inputVariables().stream().findFirst();
@@ -250,7 +250,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			// no break!
 		default:
 			if ( idShort == null) {
-				throw new IllegalStateException("Multiiple output variables are present!");
+				throw new IllegalStateException("Multiple input variables are present!");
 			}
 			return inputVariables().stream().filter(new Predicate<OperationVariable>() {
 				@Override
@@ -273,7 +273,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			// no break!
 		default:
 			if ( idShort == null) {
-				throw new IllegalStateException("Multiiple output variables are present present!");
+				throw new IllegalStateException("Multiple output variables are present!");
 			}
 			return outputVariables().stream().filter(new Predicate<OperationVariable>() {
 				@Override
