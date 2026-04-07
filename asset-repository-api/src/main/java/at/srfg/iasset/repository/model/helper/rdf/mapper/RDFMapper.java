@@ -4,6 +4,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.TreeModel;
 
 import at.srfg.iasset.repository.component.RDFEnvironment;
@@ -35,5 +36,11 @@ public interface RDFMapper<M extends SubmodelElement, V extends SubmodelElementV
 
 	default V mapToRDF(M modelElement) throws ValueMappingException {
 		return null;
+	}
+	default V mapToValue(M modelElement, RDFEnvironment rdfEnvironment) throws ValueMappingException {
+		return mapToRDF(modelElement);
+	}
+	default Model mapValueToRDF(ValueFactory vf, Resource parent, V value) {
+		return new TreeModel();
 	}
 }	

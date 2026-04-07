@@ -1,7 +1,6 @@
 package at.srfg.iasset.repository.model.helper.rdf.mapper;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
@@ -21,6 +20,17 @@ import at.srfg.iasset.repository.model.helper.rdf.SubmodelElementListValue;
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 public class SubmodelElementListMapper implements RDFMapper<SubmodelElementList, SubmodelElementListValue> {
+	
+
+	@Override
+	public SubmodelElementListValue mapToValue(SubmodelElementList modelElement, RDFEnvironment rdfEnvironment)
+			throws ValueMappingException {
+		SubmodelElementListValue listValue = new SubmodelElementListValue(modelElement.getOrderRelevant());
+		for ( SubmodelElement element : modelElement.getValue()) {
+			listValue.addValue(RDFHelper.toValue(element, rdfEnvironment));
+		}
+		return listValue;
+	}
 
 	@Override
 	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, SubmodelElementList modelElement)

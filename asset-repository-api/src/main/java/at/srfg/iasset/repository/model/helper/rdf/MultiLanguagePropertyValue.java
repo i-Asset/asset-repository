@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.LangStringTextType;
+import org.eclipse.rdf4j.model.IRI;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -14,6 +15,7 @@ public class MultiLanguagePropertyValue extends DataElementValue {
 	private Map<String, String> value;
 
 	public MultiLanguagePropertyValue(List<LangStringTextType> langString) {
+		
 		value = new HashMap<>();
 		langString.forEach(new Consumer<LangStringTextType>() {
 

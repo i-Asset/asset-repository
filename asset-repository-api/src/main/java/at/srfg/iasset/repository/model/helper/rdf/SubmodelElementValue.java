@@ -1,6 +1,7 @@
 package at.srfg.iasset.repository.model.helper.rdf;
 
 import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Resource;
 
 /**
  * Value Class representing the RDF serialization
@@ -10,7 +11,7 @@ import org.eclipse.rdf4j.model.Model;
  */
 public abstract class SubmodelElementValue {
 
-	void addToRDF(Model model) {
+	public void addToRDF(Resource parent, Model model) {
 		
 	};
 

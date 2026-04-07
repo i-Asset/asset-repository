@@ -1,7 +1,7 @@
 package at.srfg.iasset.repository.model.helper.rdf;
 
-public abstract class DataElementValue extends SubmodelElementValue {
+import org.eclipse.rdf4j.model.IRI;
 
-	
+public abstract class DataElementValue extends SubmodelElementValue {
 
 }

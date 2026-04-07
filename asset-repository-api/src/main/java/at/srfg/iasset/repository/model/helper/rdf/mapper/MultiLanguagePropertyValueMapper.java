@@ -11,8 +11,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.TreeModel;
 import org.eclipse.rdf4j.model.util.Models;
@@ -24,6 +22,12 @@ import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingExcept
 
 public class MultiLanguagePropertyValueMapper implements RDFMapper<MultiLanguageProperty, MultiLanguagePropertyValue> {
 
+	@Override
+	public MultiLanguagePropertyValue mapToRDF(MultiLanguageProperty modelElement)
+			throws ValueMappingException {
+		
+		return new MultiLanguagePropertyValue(modelElement.getValue());
+	}
 	@Override
 	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, MultiLanguageProperty modelElement)
 			throws ValueMappingException {

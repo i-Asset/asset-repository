@@ -11,8 +11,10 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 	 */
 	@JsonValue
 	private List<SubmodelElementValue> values;
+	private boolean ordered;
 	
-	public SubmodelElementListValue() {
+	public SubmodelElementListValue(Boolean ordered) {
+		this.ordered = (ordered == null ? false : ordered); 
 		this.values = new ArrayList<>();
 	}
 
@@ -23,7 +25,9 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 	public void setValues(List<SubmodelElementValue> values) {
 		this.values = values;
 	}
-	
+	public void addValue(SubmodelElementValue value) {
+		this.values.add(value);
+	}
 	
 	
 }

@@ -1,5 +1,7 @@
 package at.srfg.iasset.repository.model.helper.rdf;
 
+import org.eclipse.rdf4j.model.IRI;
+
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import at.srfg.iasset.repository.model.helper.value.type.Value;
@@ -9,7 +11,7 @@ public class PropertyValue extends DataElementValue {
 	Value<?> typedValue; 
 	
 	public PropertyValue(Value<?> typedValue) {
-		this.typedValue = typedValue;
+			this.typedValue = typedValue;
 	}
 	
 	public Value<?> getValue() {

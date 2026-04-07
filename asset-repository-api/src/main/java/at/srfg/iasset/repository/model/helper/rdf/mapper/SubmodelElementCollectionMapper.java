@@ -17,20 +17,31 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import at.srfg.iasset.repository.component.RDFEnvironment;
 import at.srfg.iasset.repository.model.helper.RDFHelper;
 import at.srfg.iasset.repository.model.helper.rdf.SubmodelElementCollectionValue;
+import at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 public class SubmodelElementCollectionMapper implements RDFMapper<SubmodelElementCollection, SubmodelElementCollectionValue>{
+	
 
 	@Override
-	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, IRI predicate,
-			SubmodelElementCollection modelElement) throws ValueMappingException {
+	public SubmodelElementCollectionValue mapToValue(SubmodelElementCollection modelElement,
+			RDFEnvironment rdfEnvironment) throws ValueMappingException {
 		
-		Model model = new TreeModel();
+		Optional<IRI> typeIRI = rdfEnvironment.getTypeInformation(modelElement.getSemanticId());
+
+		SubmodelElementCollectionValue valueElement = new SubmodelElementCollectionValue(typeIRI.orElse(null));
 		
-		// TODO Auto-generated method stub
-		// when everything is done
-		return RDFMapper.super.mapToRDF(rdfMetaModel, parent, predicate, modelElement);
+		for (SubmodelElement child : modelElement.getValue()) {
+			Optional<IRI> propertyIRI = rdfEnvironment.getSemanticIdentifier(child);
+			if ( propertyIRI.isPresent()) {
+				SubmodelElementValue value = RDFHelper.toValue(child, rdfEnvironment);
+				valueElement.addValue(propertyIRI.get(), value);
+			}
+		}
+		return valueElement;
 	}
+
+
 
 	@Override
 	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, SubmodelElementCollection modelElement) {
