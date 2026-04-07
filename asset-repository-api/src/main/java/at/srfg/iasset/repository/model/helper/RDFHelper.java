@@ -62,7 +62,7 @@ public class RDFHelper {
 	public static <M extends SubmodelElement, V extends SubmodelElementValue> V toValue(M submodelElement) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
-			return (V) ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToRDF(submodelElement);
+			return (V) ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToValue(submodelElement);
 		}
 		return null;
 		
@@ -83,6 +83,7 @@ public class RDFHelper {
 			V valueRoot = (V) ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToValue(submodelElement, environment);
 			// need a valuefactory and the parent resource
 			ValueFactory vf = SimpleValueFactory.getInstance();
+			// distinguish between data elements and structural elements here?
 			return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToRDF(environment, null, submodelElement);
 		}
 		return null;

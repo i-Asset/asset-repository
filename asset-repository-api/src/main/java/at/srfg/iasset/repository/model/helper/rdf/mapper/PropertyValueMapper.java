@@ -22,9 +22,11 @@ import at.srfg.iasset.repository.model.helper.value.type.ValueType;
 public class PropertyValueMapper implements RDFMapper<Property, PropertyValue>{
 
 	@Override
-	public PropertyValue mapToRDF(Property modelElement) throws ValueMappingException {
+	public PropertyValue mapToValue(Property modelElement) throws ValueMappingException {
 		return new PropertyValue(Value.getValue(modelElement.getValueType(), modelElement.getValue()));
 	}
+
+	
 
 	@Override
 	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, Property modelElement) throws ValueMappingException {

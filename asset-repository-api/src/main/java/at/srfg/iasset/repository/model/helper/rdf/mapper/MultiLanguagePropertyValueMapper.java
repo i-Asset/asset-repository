@@ -23,7 +23,7 @@ import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingExcept
 public class MultiLanguagePropertyValueMapper implements RDFMapper<MultiLanguageProperty, MultiLanguagePropertyValue> {
 
 	@Override
-	public MultiLanguagePropertyValue mapToRDF(MultiLanguageProperty modelElement)
+	public MultiLanguagePropertyValue mapToValue(MultiLanguageProperty modelElement)
 			throws ValueMappingException {
 		
 		return new MultiLanguagePropertyValue(modelElement.getValue());

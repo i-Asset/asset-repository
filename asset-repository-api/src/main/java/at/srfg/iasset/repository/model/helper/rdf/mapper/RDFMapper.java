@@ -23,6 +23,7 @@ public interface RDFMapper<M extends SubmodelElement, V extends SubmodelElementV
 	default Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, M modelElement) throws ValueMappingException {
 		return new TreeModel();
 	}
+
 	default Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, Model model, M modelElement) throws ValueMappingException {
 		return new TreeModel();
 	}
@@ -34,13 +35,11 @@ public interface RDFMapper<M extends SubmodelElement, V extends SubmodelElementV
 		return modelElement;
 	}
 
-	default V mapToRDF(M modelElement) throws ValueMappingException {
+	default V mapToValue(M modelElement) throws ValueMappingException {
 		return null;
 	}
 	default V mapToValue(M modelElement, RDFEnvironment rdfEnvironment) throws ValueMappingException {
-		return mapToRDF(modelElement);
+		return mapToValue(modelElement);
 	}
-	default Model mapValueToRDF(ValueFactory vf, Resource parent, V value) {
-		return new TreeModel();
-	}
+	
 }	
