@@ -1,32 +1,5 @@
 package at.srfg.iasset.connector.api;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-import org.eclipse.digitaltwin.aas4j.v3.model.HasKind;
-import org.eclipse.digitaltwin.aas4j.v3.model.Message;
-import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
-import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequest;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequestValue;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationResult;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationResultValue;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationRequestValue;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResult;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.connectivity.ConnectionProvider;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
@@ -36,11 +9,24 @@ import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingExcept
 import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.OperationInvocationResult;
 import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.digitaltwin.aas4j.v3.model.*;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationRequestValue;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResult;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 /**
  * Handler covering the execution of operations
  */
 public class OperationInvocationHandler implements OperationInvocation, OperationInvocationResult {
-	
+
+	private static final Logger log = LoggerFactory.getLogger(OperationInvocationHandler.class);
 	private final Operation operation;
 	private final ServiceEnvironment serviceEnvironment;
 //	private final IAssetAdministrationShellInterface shellInterface;
@@ -49,10 +35,10 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	private final String pathToOperation;
 	
 	private ObjectMapper objectMapper;
-	
+
 	public OperationInvocationHandler(
 		InstanceOperation operation,
-		ServiceEnvironment environment, 
+		ServiceEnvironment environment,
 		ObjectMapper mapper) {
 		this(null, null, null, operation, environment, mapper);
 	}
@@ -81,12 +67,20 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	 */
 	public void applyOperationRequestValue(OperationRequestValue request) {
 		for (OperationVariable variable : operation.getInputVariables()) {
+			if (!hasIdShort(variable)) {
+				log.error("idShort not found in operation input variable {}", variable);
+				throw new IllegalStateException("idShort missing in operation variable of " + operation);
+			}
 			Optional<Object> value = Optional.ofNullable(request.getInputArguments().get(variable.getValue().getIdShort()));
 			if ( value.isPresent()) {
 				applyParameter(variable.getValue(), value.get());
 			}
 		}
 		for (OperationVariable variable : operation.getInoutputVariables()) {
+			if (!hasIdShort(variable)) {
+				log.error("idShort not found in operation inoutput variable {}", variable);
+				throw new IllegalStateException("idShort missing in operation variable of " + operation);
+			}
 			Optional<Object> value = Optional.ofNullable(request.getInoutputArguments().get(variable.getValue().getIdShort()));
 			if ( value.isPresent()) {
 				applyParameter(variable.getValue(), value.get());
@@ -97,8 +91,13 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		operation.setInputVariables(request.getInputArguments());
 		operation.setInoutputVariables(request.getInoutputArguments());
 	}
+
 	private void applyOperationResultValue(OperationResultValue result) {
 		for (OperationVariable variable : operation.getOutputVariables()) {
+			if (!hasIdShort(variable)) {
+				log.error("idShort not found in operation output variable {}", variable);
+				throw new IllegalStateException("idShort missing in operation variable of " + operation);
+			}
 			Optional<Object> value = Optional.ofNullable(result.getOutputArguments().get(variable.getValue().getIdShort()));
 			if ( value.isPresent()) {
 				applyParameter(variable.getValue(), value.get());
@@ -146,7 +145,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 				output.put(variable.getValue().getIdShort(), value);
 			}
 		}
-		
+
 		return new DefaultOperationResultValue.Builder()
 				.success(success)
 				.outputArguments(output)
@@ -163,15 +162,15 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	}
 	public <T> void setInput(T param) {
 		switch (countInputVariables()) {
-		case 0: // no input variables 
+		case 0: // no input variables
 			throw new IllegalArgumentException("No input variable defined! ");
 		case 1: // only one input variable
 			Optional<OperationVariable> iv = findInputVariable(null);
-			// apply value 
+			// apply value
 			if ( iv.isPresent()) {
 				// applies the value in the operation's model hierarchy
 				applyParameter(iv.get().getValue(), param);
-				// 
+				//
 			}
 			break;
 		default:
@@ -188,15 +187,15 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	}
 	public <T> OperationInvocation setInput(String key, T param) {
 		switch (countInputVariables()) {
-		case 0: // no input variables 
+		case 0: // no input variables
 			throw new IllegalArgumentException("No input variable defined! ");
 		default: // only one input variable
 			Optional<OperationVariable> iv = findInputVariable(key);
-			// apply value 
+			// apply value
 			if ( iv.isPresent()) {
 				// validate the provided value
 				applyParameter(iv.get().getValue(), param);
-				// 
+				//
 			}
 			break;
 		}
@@ -207,32 +206,31 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	 * @param <T>
 	 * @param submodelElement The element reflecting the provided object
 	 * @param value The (typed) value object
-	 * @throws ValueMappingException 
 	 */
 	private <T> void applyParameter(SubmodelElement submodelElement, T value) {
-		// 
+		//
 		try {
-		JsonNode valueAsNode = objectMapper.convertValue(value, JsonNode.class);
-		// need to validate the input value with the model
-		Reference semanticId = submodelElement.getSemanticId();
-//		Optional<SubmodelElement> templated = serviceEnvironment.resolve(semanticId, SubmodelElement.class);
-		if ( semanticId.getType() == ReferenceTypes.MODEL_REFERENCE) {
-			ValueHelper.applyValue(serviceEnvironment, submodelElement, semanticId, valueAsNode);
-		}
-		else {
-			ValueHelper.applyValue(serviceEnvironment, submodelElement, valueAsNode);
-		}
+			JsonNode valueAsNode = objectMapper.convertValue(value, JsonNode.class);
+			// need to validate the input value with the model
+			Reference semanticId = submodelElement.getSemanticId();
+	//		Optional<SubmodelElement> templated = serviceEnvironment.resolve(semanticId, SubmodelElement.class);
+			if ( semanticId.getType() == ReferenceTypes.MODEL_REFERENCE) {
+				ValueHelper.applyValue(serviceEnvironment, submodelElement, semanticId, valueAsNode);
+			} else {
+				ValueHelper.applyValue(serviceEnvironment, submodelElement, valueAsNode);
+			}
 		} catch (ValueMappingException e) {
-//			throw new OperationInvocationException(e.getMessage());
+			log.error("applying value {} failed", value, e);
+			throw new IllegalArgumentException(e.getMessage(), e);
 		}
 	}
-
 	private List<OperationVariable> inputVariables() {
 		List<OperationVariable> input = new ArrayList<>();
 		input.addAll(operation.getInputVariables());
 		input.addAll(operation.getInoutputVariables());
 		return input;
 	}
+
 	private List<OperationVariable> outputVariables() {
 		List<OperationVariable> output = new ArrayList<>();
 		output.addAll(operation.getOutputVariables());
@@ -243,7 +241,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		switch (countInputVariables()) {
 		case 0:
 			throw new IllegalStateException("No input variable is present!");
-		case 1: 
+		case 1:
 			if ( idShort == null) {
 				return inputVariables().stream().findFirst();
 			}
@@ -254,19 +252,27 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			}
 			return inputVariables().stream().filter(new Predicate<OperationVariable>() {
 				@Override
-				public boolean test(OperationVariable t) {
-					return t.getValue().getIdShort().equalsIgnoreCase(idShort);
+				public boolean test(OperationVariable in) {
+					try {
+						if (!hasIdShort(in)) {
+							log.error("idShort not found in operation variable {}", in);
+							throw new IllegalStateException("idShort missing in operation variable of " + operation);
+						}
+						return in.getValue().getIdShort().equalsIgnoreCase(idShort);
+					} catch (Exception e) {
+						throw new IllegalStateException("input variable not found " + idShort);
+					}
 				}
 			})
 			.findFirst();
-			
+
 		}
 	}
 	private Optional<OperationVariable> findOutputVariable(String idShort) {
 		switch (countOutputVariables()) {
 		case 0:
 			throw new IllegalStateException("No output variable is present!");
-		case 1: 
+		case 1:
 			if ( idShort == null) {
 				return outputVariables().stream().findFirst();
 			}
@@ -277,21 +283,29 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			}
 			return outputVariables().stream().filter(new Predicate<OperationVariable>() {
 				@Override
-				public boolean test(OperationVariable t) {
-					return t.getValue().getIdShort().equalsIgnoreCase(idShort);
+				public boolean test(OperationVariable out) {
+					try {
+						if (!hasIdShort(out)) {
+							log.error("idShort not found in operation variable {}", out);
+							throw new IllegalStateException("idShort missing in operation variable of " + operation);
+						}
+						return out.getValue().getIdShort().equalsIgnoreCase(idShort);
+					} catch (Exception e) {
+						throw new IllegalStateException("output variable not found " + idShort);
+					}
 				}
 			})
 			.findFirst();
-			
+
 		}
 	}
-
 	private int countInputVariables() {
-		return operation.getInoutputVariables().size() 
+		return operation.getInoutputVariables().size()
 				+ operation.getInputVariables().size();
 	}
+
 	private int countOutputVariables() {
-		return operation.getInoutputVariables().size() 
+		return operation.getInoutputVariables().size()
 				+ operation.getOutputVariables().size();
 	}
 	@Override
@@ -302,49 +316,49 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 
 	public <T> T getInput(String key, Class<T> clazz) {
 		switch (countInputVariables()) {
-		case 0: // no input variables 
+		case 0: // no input variables
 			throw new IllegalArgumentException("No Input variable defined! ");
 		default:
 			Optional<OperationVariable> iv = findInputVariable(key);
-			// apply value 
+			// apply value
 			if ( iv.isPresent()) {
-				// 
+				//
 				try {
 					SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
 					return objectMapper.convertValue(paramterValue, clazz);
 				} catch (ValueMappingException e) {
-					
+
 				}
 			}
 			break;
 			// multiple input parameters are present
 		}
-		return null; 
+		return null;
 	}
-
 	public <T> T getInput(Class<T> clazz) {
 		switch (countInputVariables()) {
-		case 0: // no input variables 
+		case 0: // no input variables
 			throw new IllegalArgumentException("No Input variable defined! ");
 		case 1: // only one input variable
 			Optional<OperationVariable> iv = findInputVariable(null);
-			// apply value 
+			// apply value
 			if ( iv.isPresent()) {
 				try {
 					SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
 					return objectMapper.convertValue(paramterValue, clazz);
 				} catch (ValueMappingException e) {
-					
+
 				}
-				// 
+				//
 			}
 			break;
 		default:
 			// multiple input parameters are present
 			throw new IllegalStateException("Multiple InputVariables present, use getResult(key, type)");
 		}
-		return null; 
+		return null;
 	}
+
 	@Override
 	public <T> T getResult(Class<T> clazz) {
 		return getResult(null, clazz);
@@ -352,9 +366,9 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	@Override
 	public <T> T getResult(String key, Class<T> clazz){
 		Optional<OperationVariable> iv = findOutputVariable(key);
-		// apply value 
+		// apply value
 		if ( iv.isPresent()) {
-			// 
+			//
 			try {
 				SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
 				return objectMapper.convertValue(paramterValue, clazz);
@@ -363,25 +377,26 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 				e.printStackTrace();
 			}
 		}
-		return null; 
+		return null;
 	}
-
 
 	@Override
 	public <T> void setOutput(T param) {
 		setOutput(null, param);
 	}
+
 	@Override
-	public <T> OperationInvocation setOutput(String key, T param)  {
-		Optional<OperationVariable> iv = findOutputVariable(key);
-		// apply value 
+	public <T> OperationInvocation setOutput(String idShort, T param)  {
+		Optional<OperationVariable> iv = findOutputVariable(idShort);
+		// apply value
 		if ( iv.isPresent()) {
+			log.debug("applying value {} to parameter {}", iv, param.getClass());
 			// validate the provided value
 			applyParameter(iv.get().getValue(), param);
-			// 
+			//
 		}
 		return this;
-	}	
+	}
 	@Override
 	public Object getResult()  {
 		return getResult(null, Object.class);
@@ -397,23 +412,22 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	@Override
 	public <T> List<T> getResultList(String idShort, Class<T> clazz) {
 		Optional<OperationVariable> iv = findOutputVariable(idShort);
-		// apply value 
+		// apply value
 		if ( iv.isPresent()) {
-			//			
+			//
 			try {
 				SubmodelElementValue paramterValue = ValueHelper.toValue(iv.get().getValue());
 				return objectMapper.convertValue(
-						paramterValue, 
+						paramterValue,
 						objectMapper.getTypeFactory().constructCollectionLikeType(List.class, clazz)
 						);
-				
+
 			} catch (ValueMappingException e) {
-				
+
 			}
 		}
-		return new ArrayList<>(); 
+		return new ArrayList<>();
 	}
-
 	@Override
 	public OperationInvocationResult invoke(String aasIdentifier, String submodelIdentifier, String path) {
 		try {
@@ -424,12 +438,13 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			e.printStackTrace();
 		}
 
-		
+
 		return this;
 	}
+
 	@Override
 	public OperationInvocationResult invoke(String aasIdentifier, Reference reference) {
-		
+
 		return this;
 	}
 	@Override
@@ -443,7 +458,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 				applyOperationResultValue(result);
 			}
 			else {
-				List<String> messages = 
+				List<String> messages =
 				result.getMessages().stream().map(new Function<Message, String>() {
 
 					@Override
@@ -452,17 +467,16 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 					}
 				}).toList();
 				throw new OperationInvocationException(messages.toString());
-						
+
 			}
 		} catch (ValueMappingException e) {
 			throw new OperationInvocationException(e.getMessage());
 		}
 
-		
+
 		return this;
 //		throw new UnsupportedOperationException("Not yet implemented!");
 	}
-
 	@Override
 	public Optional<SubmodelElement> getResultVariable(String idShort) {
 		Optional<OperationVariable> ov = findOutputVariable(idShort);
@@ -470,6 +484,10 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			return Optional.of(ov.get().getValue());
 		}
 		return Optional.empty();
+	}
+
+	private static boolean hasIdShort(OperationVariable variable) {
+		return variable != null && variable.getValue() != null && variable.getValue().getIdShort() != null && !variable.getValue().getIdShort().isBlank();
 	}
 
 }

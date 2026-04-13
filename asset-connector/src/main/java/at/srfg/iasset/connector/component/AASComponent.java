@@ -1,16 +1,5 @@
 package at.srfg.iasset.connector.component;
 
-import java.util.List;
-
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.digitaltwin.aas4j.v3.model.Property;
-import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.inject.WeldInstance;
-import org.slf4j.Logger;
-
 import at.srfg.iasset.connector.api.ValueConsumer;
 import at.srfg.iasset.connector.api.ValueSupplier;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
@@ -31,6 +20,16 @@ import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
+import org.jboss.weld.inject.WeldInstance;
+import org.slf4j.Logger;
+
+import java.util.List;
 /**
  * The {@link AASComponent} represents the active I4.0 component. As such it
  * <ul>
@@ -68,7 +67,10 @@ public class AASComponent {
 	
 	@Inject
 	Instance<AASComponentModel> model;
-	
+
+	@Inject
+	AASComponentSettings settings;
+
 	/**
 	 * Add an existing {@link AssetAdministrationShell} to the current component
 	 * @param shell
@@ -131,20 +133,29 @@ public class AASComponent {
 	}
 	private void initializeComponent() {
 		// do the following:
-		startEndpoint();
+		// - startEndpoint
+		// - loadData
+		// - register AAS'es with Directory-Service!
+		if (!settings.endpointDisabled()) {
+			startEndpoint();
+		}
 		if (! model.isUnsatisfied()) {
-//			// load provided AAS data to the LocalEnvironment
+			// load provided AAS data to the LocalEnvironment
 			logger.info("Loading Data");
 			model.get().loadData(environment);
 			// inject business logic
 			logger.info("Loading Implementations");
 			model.get().injectLogic(environment);
-			// 
-			model.get().registerAAS(environment);
+			//
+
+			if (!settings.registrationDisabled()) {
+				model.get().registerAAS(environment);
+                for (AssetAdministrationShell assetAdministrationShell : environment.getServiceEnvironment().getAllAssetAdministrationShells()) {
+					logger.info("registering AssetAdministrationShell '{}'", assetAdministrationShell.getId());
+                    this.register(assetAdministrationShell.getId());
+                }
+            }
 		}
-		// - loadData
-		// - startEndpoint
-		// - register AAS'es with Directory-Service!
 	}
 
 	public static AASComponent create() {

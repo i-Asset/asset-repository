@@ -1,51 +1,32 @@
 package at.srfg.iasset.connector.component.endpoint.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.List;
-
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequest;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationRequestValue;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationResult;
-import org.eclipse.digitaltwin.aas4j.v3.model.OperationResultValue;
-import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.RDFWriter;
-import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
-import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
-import org.eclipse.rdf4j.rio.helpers.JSONLDMode;
-import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
-
 import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.SecurityContext;
+import org.eclipse.digitaltwin.aas4j.v3.model.*;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.rio.*;
+import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
+import org.eclipse.rdf4j.rio.helpers.JSONLDMode;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.List;
 
 @Path("")
 public class AssetAdministrationRepositoryController implements IAssetAdministrationShellRepositoryInterface {
+	private static final Logger log = LoggerFactory.getLogger(AssetAdministrationRepositoryController.class);
 	@Context
 	private SecurityContext securityContext;
 	
@@ -332,11 +313,16 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 			@PathParam("path")
 			String path,
 			OperationRequest parameterMap) {
-		return environment.invokeOperation(					
-					ApiUtils.base64Decode(aasIdentifier), 
-					ApiUtils.base64Decode(submodelIdentifier), 
-					path, 
-					parameterMap);
+		try {
+            return environment.invokeOperation(
+                    ApiUtils.base64Decode(aasIdentifier),
+                    ApiUtils.base64Decode(submodelIdentifier),
+                    path,
+                    parameterMap);
+		} catch (Exception e) {
+			log.debug("invoke operation failed", e);
+			throw new BadRequestException(e);
+		}
 	}
 	@Override
 	@POST
@@ -351,11 +337,16 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 			@PathParam("path")
 			String path,
 			OperationRequestValue parameterMap) {
-		return environment.invokeOperationValue(					
-					ApiUtils.base64Decode(aasIdentifier), 
-					ApiUtils.base64Decode(submodelIdentifier), 
-					path, 
+		try {
+			return environment.invokeOperationValue(
+					ApiUtils.base64Decode(aasIdentifier),
+					ApiUtils.base64Decode(submodelIdentifier),
+					path,
 					parameterMap);
+		} catch (Exception e) {
+			log.debug("invoke operation value failed", e);
+			throw new BadRequestException(e);
+		}
 	}
 
 	@Override

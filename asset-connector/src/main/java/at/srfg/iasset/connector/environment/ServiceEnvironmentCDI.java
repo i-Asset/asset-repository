@@ -34,6 +34,8 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -44,23 +46,24 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ServiceEnvironmentCDI implements ServiceEnvironment {
+	private static final Logger log = LoggerFactory.getLogger(ServiceEnvironmentCDI.class);
 	@Inject
 	private Persistence storage;
-	
+
 	@Inject
 	private ObjectMapper objectMapper;
-	
+
 	@Inject
 	private ChangeProvider changeProvider;
-	
+
 	@Inject
 	private RepositoryConnection repository;
-	
+
 	@Inject RDFEnvironment rdfEnvironment;
 
 	@PostConstruct
 	private void init() {
-		
+
 	}
 	/**
 	 * Add a {@link ModelListener} to the local environment
@@ -83,7 +86,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		if ( shell.isPresent()) {
 			if ( ReferenceUtils.extractReferenceFromList(shell.get().getSubmodels(), submodelIdentifier, KeyTypes.SUBMODEL).isPresent() ) {
 				return storage.findSubmodelById(submodelIdentifier);
-			}		
+			}
 		}
 		return Optional.empty();
 	}
@@ -108,7 +111,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		Optional<Submodel> existing = storage.findSubmodelById(submodelIdentifier);
 
 		existing.ifPresent(new Consumer<Submodel>() {
-			
+
 			@Override
 			public void accept(Submodel t) {
 				changeProvider.notifyDeletion(submodel, "", t);
@@ -143,9 +146,9 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 					public Optional<ConceptDescription> get() {
 						Optional<ConceptDescription> fromRepo = repository.getConceptDescription(identifier);
 						if ( fromRepo.isPresent()) {
-							// 
+							//
 							return Optional.of(storage.persist(fromRepo.get()));
-							
+
 						}
 						return Optional.empty();
 					}});
@@ -206,7 +209,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 					if ( cDesc.isPresent()) {
 						return Optional.of(cDesc.get());
 					}
-					
+
 					return Optional.empty();
 					//
 				case ASSET_ADMINISTRATION_SHELL:
@@ -233,7 +236,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 				}
 			}
 		}
-		
+
 		return Optional.empty();
 	}
 
@@ -284,8 +287,8 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			SubmodelElement body) {
 		Optional<Submodel> submodel = getSubmodel(aasIdentifier, submodelIdentifier);
 		if ( submodel.isPresent()) {
-			// 
-			
+			//
+
 			Optional<SubmodelElement> oldElement = SubmodelUtils.removeSubmodelElementAt(submodel.get(), idShortPath);
 			oldElement.ifPresent(new Consumer<SubmodelElement>() {
 
@@ -293,19 +296,19 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 				public void accept(SubmodelElement t) {
 					// TODO: Handle events
 					 changeProvider.notifyDeletion(submodel.get(), idShortPath, t);
-					
+
 				}
 			});
 
 			Optional<SubmodelElement> added = SubmodelUtils.setSubmodelElementAt(submodel.get(),idShortPath, body);
 			added.ifPresent(new Consumer<SubmodelElement>() {
-				
+
 
 				@Override
 				public void accept(SubmodelElement t) {
 					// TODO: Handle creation event
 					 changeProvider.notifyCreation(submodel.get(), idShortPath, t);
-					
+
 				}
 			});
 			if ( added.isPresent()) {
@@ -355,13 +358,13 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			Optional<Submodel> existing = storage.findSubmodelById(submodelIdentifier);
 			existing.ifPresent(new Consumer<Submodel>() {
 				// submodel is to be replaced. trigger a deletion message to listeners
-				
+
 				@Override
 				public void accept(Submodel t) {
 					 changeProvider.notifyDeletion(submodel, "", t);
 				}
 			});
-			
+
 			submodel.setId(submodelIdentifier);
 			Submodel stored = storage.persist(submodel);
 			// handle event
@@ -369,7 +372,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			return stored;
 		}
 
-		return null;	
+		return null;
 	}
 	@Override
 	public Submodel setSubmodel(String submodelIdentifier, Submodel submodel) {
@@ -393,8 +396,8 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		if ( element.isPresent()) {
 			try {
 				return  RDFHelper.toRDF(rdfEnvironment, element.get());
-				
-				
+
+
 			} catch (ValueMappingException e) {
 				throw new InternalServerErrorException(e);
 			}
@@ -405,19 +408,19 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 //		}
 		throw new NotFoundException(submodelIdentifier, path);
 	}
-	
+
 	@Override
 	public void setElementRDFValue(String aasIdentivier, String submodelIdentifier, String path, Model model) {
 		Optional<SubmodelElement> element = getSubmodelElement(submodelIdentifier, path);
 		if ( element.isPresent()) {
 			try {
 				RDFHelper.fromRDF(rdfEnvironment, model, element.get());
-				
-				
+
+
 			} catch (ValueMappingException e) {
 				throw new InternalServerErrorException(e);
 			}
-			
+
 		}
 		else {
 			throw new NotFoundException(submodelIdentifier, path);
@@ -426,7 +429,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 //		if ( submodel.isPresent()) {
 //			return SubmodelUtils.getValueAt(submodel.get(),path);
 //		}
-		
+
 	}
 	@Override
 	public SubmodelElementValue getElementValue(String aasIdentifier, String submodelIdentifier, String path) {
@@ -435,7 +438,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			return SubmodelUtils.getValueAt(sub.get(), path);
 		}
 
-		return null;	
+		return null;
 	}
 
 	@Override
@@ -466,7 +469,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 
 			}
 		}
-		throw new NotFoundException(String.format("Referenced Element (%s) not found!", 
+		throw new NotFoundException(String.format("Referenced Element (%s) not found!",
 				PayloadValueHelper.toValue(reference)));
 	}
 
@@ -527,7 +530,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 				return theShell.getSubmodels();
 			}
 		}
-		return Collections.emptyList();	
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -575,30 +578,37 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public OperationResultValue invokeOperationValue(String aasIdentifier, String submodelIdentifier,
 			String path, OperationRequestValue parameterMap) {
 //		getSubmodelElement(aasIdentifier, submodelIdentifier, path, Operation.class);
 		Optional<Operation> theOperation = getSubmodelElement(aasIdentifier, submodelIdentifier, path, Operation.class);
 		if ( theOperation.isPresent()) {
-			if (InstanceOperation.class.isInstance(theOperation.get())) {
-				InstanceOperation instanceOperation = InstanceOperation.class.cast(theOperation.get());
-				// create the operation invocation
-				OperationInvocationHandler invocation = new OperationInvocationHandler(instanceOperation, this, this.objectMapper);
-				// apply the incoming parameters
-				invocation.applyOperationRequestValue(parameterMap);
-				// invoke the operation
+			Operation op = theOperation.get();
+			if (InstanceOperation.class.isInstance(op)) {
 				try {
-					if ( instanceOperation.callback().execute(invocation) ) {
+					InstanceOperation instanceOperation = InstanceOperation.class.cast(op);
+					// create the operation invocation
+					log.debug("casting operation {} to instance.", op);
+					OperationInvocationHandler oih = new OperationInvocationHandler(instanceOperation, this, this.objectMapper);
+					log.debug("invocation handler {} created. Applying parameters: {}", oih, parameterMap);
+					// apply the incoming parameters
+					oih.applyOperationRequestValue(parameterMap);
+					// invoke the operation
+					if ( instanceOperation.callback().execute(oih) ) {
+						OperationResultValue successfulResultValue = oih.getOperationResultValue(true);
+						log.debug("successfully executed injected operation callback, returning result with success {}", successfulResultValue);
 						// create the OperationResultValue object with success true
-						return invocation.getOperationResultValue(true);
+						return successfulResultValue;
+					} else {
+						OperationResultValue failureResultValue = oih.getOperationResultValue(false);
+						log.debug("failure in operation callback, returning result with failure {}", failureResultValue);
+						return failureResultValue;
 					}
-					else {
-						return invocation.getOperationResultValue(false);
-					}
-					
+
 				} catch (ValueMappingException ve) {
+					log.warn("failure in value mapping, returning result with failure {}", ve.getMessage(), ve);
 					return new DefaultOperationResultValue.Builder()
 							.success(false)
 							.executionState(ExecutionState.FAILED)
@@ -606,9 +616,10 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 								.messageType(MessageType.EXCEPTION)
 								.text(ve.getLocalizedMessage()).build())
 							.build();
-					
+
 				}
 				catch (OperationInvocationException e) {
+					log.warn("failure in operation invocation, returning result with failure {}", e.getMessage(), e);
 					return new DefaultOperationResultValue.Builder()
 							.success(false)
 							.executionState(ExecutionState.FAILED)
@@ -618,9 +629,9 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 							.build();
 				}
 
-			}
+            }
 		}
-		// the operation is not actively supported 
+		// the operation is not actively supported
 		return null;
 	}
 //	@Override
@@ -648,9 +659,9 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 						if ( t.getSupplementalSemanticIds() != null && !(t.getSupplementalSemanticIds().isEmpty())) {
 							if (t.getSupplementalSemanticIds().contains(semanticId)) {
 								return true;
-							} 
+							}
 						}
-						// 
+						//
 						if (t.getSemanticId() != null && t.getSemanticId() instanceof Reference) {
 							Reference modelReference = (Reference) t.getSemanticId();
 							if ( semanticId.equals(modelReference.getReferredSemanticId())) {
@@ -693,10 +704,10 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	public <T extends SubmodelElement> Optional<T> getSubmodelElement(Reference reference, Class<T> clazz) {
 		// only model references are allowed
 		if (reference.getType() == ReferenceTypes.MODEL_REFERENCE) {
-			return resolve(reference, clazz);		
-			
+			return resolve(reference, clazz);
+
 		}
-		// TODO: in case it is a global reference, we will need to search the storage 
+		// TODO: in case it is a global reference, we will need to search the storage
 		// for an element !!
 		Optional<AssetAdministrationShellDescriptor> descriport = repository.findImplementation(ReferenceUtils.firstKeyValue(reference));
 		for ( Submodel submodel : storage.getSubmodels() ) {
@@ -705,19 +716,20 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			if ( elemWithRef.isPresent()) {
 				return elemWithRef;
 			}
-			// not found in this submodel, continue ... 
+			// not found in this submodel, continue ...
 		}
 		return Optional.empty();
 	}
 	@Override
 	public void registerAssetAdministrationShell(AssetAdministrationShellDescriptor aasDescriptor) {
+		log.debug("registering '{}'", aasDescriptor.getId());
 		repository.register(aasDescriptor);
 	}
 	@Override
 	public void unregisterAssetAdministrationShell(String aasIdentifier) {
 		repository.unregister(aasIdentifier);
 	}
-	
+
 	private Optional<OperationInvocation> findLocalImplementation(String semanticId) {
 		for (Submodel submodel : storage.getSubmodels()) {
 			Set<Operation> operations = new OperationCollector().collect(submodel, ReferenceUtils.asGlobalReference(semanticId));
@@ -727,7 +739,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 						return Optional.of(new OperationInvocationHandler(InstanceOperation.class.cast(operation), this, objectMapper));
 					}
 				}
-				// 
+				//
 			}
 		}
 		return Optional.empty();
@@ -744,7 +756,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			//
 			// extract endpoint
 			Reference semanticReference = ReferenceUtils.asGlobalReference(semanticId);
-			
+
 			AssetAdministrationShellDescriptor aasDescriptor = implementor.get();
 			Optional<Endpoint> endpoint = aasDescriptor.getEndpoints().stream().filter(new Predicate<Endpoint>() {
 				@Override
@@ -761,48 +773,48 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			}).findFirst();
 			// OK with the endpoint for registry interface
 			if ( endpoint.isPresent() ) {
-				
-			
+
+
 				Optional<SubmodelDescriptor> submodelImplementing = aasDescriptor.getSubmodelDescriptors().stream().filter(new Predicate<SubmodelDescriptor>() {
-	
+
 					@Override
 					public boolean test(SubmodelDescriptor t) {
 						// check for proper interface!
-						// 
+						//
 						return t.getSupplementalSemanticIds().stream().anyMatch(new Predicate<Reference>() {
-	
+
 							@Override
 							public boolean test(Reference t) {
 								return semanticReference.equals(t);
 							}
 						});
 					}
-	
+
 					}).findFirst();
-			
+
 				if ( submodelImplementing.isPresent() ) {
 					SubmodelDescriptor submodelDescriptor = (SubmodelDescriptor) submodelImplementing.get();
-					
+
 						ConnectionProvider connection = ConnectionProvider.getConnection(endpoint.get().getProtocolInformation().getHref());
-						
-						
+
+
 						Submodel remoteSubmodel = connection.getShellInterface().getSubmodel(submodelDescriptor.getId());
 						if ( remoteSubmodel != null) {
 							Set<Operation> operations = new OperationCollector().collect(remoteSubmodel, semanticReference);
-							// 
+							//
 							for ( Operation operation : operations) {
 								if (! operations.isEmpty()) {
 									String path = new SubmodelElementCollector().getPath("", remoteSubmodel, operation);
 									return Optional.of(new OperationInvocationHandler(connection, submodelDescriptor.getId(), path, operation, this, objectMapper));
 								}
 							}
-						}							
+						}
 					}
 				}
-			
+
 			// search for operation / event equipped with the semanticId
 			// extract the reference from the endpoint
-			// 
+			//
 //			AssetAdministrationShellDescriptor descriptor 
 		}
 		return Optional.empty();
@@ -812,34 +824,34 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		storage.setAssetAdministrationShells(environment.getAssetAdministrationShells());
 		storage.setSubmodels(environment.getSubmodels());
 		storage.setConceptDescriptions(environment.getConceptDescriptions());
-		
-		// 
+
+		//
 		for (Submodel model : storage.getSubmodels()) {
 			changeProvider.notifyCreation(model, "", model);
 		}
-		
+
 	}
 	@Override
 	public Optional<Reference> getSemanticIdenfier(SubmodelElement submodelElement) {
 		Reference ref = submodelElement.getSemanticId();
 		// check whether the semantic id is an iri
 		if (ref != null && ReferenceUtils.firstKeyType(ref)==KeyTypes.GLOBAL_REFERENCE) {
-			
+
 			IRI iri = SimpleValueFactory.getInstance().createIRI(ReferenceUtils.firstKeyValue(ref));
-			
+
 			return Optional.of(ref);
 		}
 		//
 		else {
-			// either no semantic id or a model 
+			// either no semantic id or a model
 		}
-		
+
 		//
 		if ( ref.getType()==ReferenceTypes.EXTERNAL_REFERENCE) {
 			return Optional.of(ref);
 		}
 		return Optional.empty();
 	}
-	
+
 
 }

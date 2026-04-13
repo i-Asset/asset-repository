@@ -3,6 +3,7 @@ package at.srfg.iasset.connector.environment;
 import java.util.Optional;
 import java.util.function.Function;
 
+import at.srfg.iasset.repository.component.ServiceEnvironment;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
@@ -261,6 +262,6 @@ public interface LocalEnvironment {
 	 */
 	public void registerAssetAdministrationShell(String aasIdentifier);
 	
-	
+	public ServiceEnvironment getServiceEnvironment();
 
 }

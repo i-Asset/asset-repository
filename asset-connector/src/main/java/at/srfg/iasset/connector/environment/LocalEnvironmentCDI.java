@@ -50,24 +50,29 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	
 	@Inject 
 	private ConnectorMessaging messaging;
-	
-	@Inject 
+
+	@Inject
 	private ServiceEnvironment serviceEnvironment;
-	
+
 	@Inject
 	private RDFEnvironment rdfModel;
-	
+
 	private final Set<String> registeredAssetIdentifier = new HashSet<>();
 
 	@Inject @Any
 	private Instance<AASEnvironment> aasData;
-	
+
+	@Override
+	public ServiceEnvironment getServiceEnvironment() {
+		return serviceEnvironment;
+	}
+
 	@PostConstruct
 	protected void postConstruct() {
 		// 
 		Environment coll = new DefaultEnvironment.Builder().build();
 		for (AASEnvironment data : aasData) {
-			log.info("cretating environment for data {}", data.getClass().getName());
+			log.info("creating environment for data {}", data.getClass().getName());
 			Environment env = data.getAASData();
 			if ( data != null) {
 				log.info("adding Shells");
@@ -481,9 +486,11 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	public void registerAssetAdministrationShell(String aasIdentifier) {
 		Optional<AssetAdministrationShell> optShell = serviceEnvironment.getAssetAdministrationShell(aasIdentifier);
 		if ( optShell.isPresent()) {
-			
+			log.debug("creating descriptor for AAS id '{}'", aasIdentifier);
 			createDescriptor(optShell.get());
 			registeredAssetIdentifier.add(aasIdentifier);
+		} else {
+			log.warn("AssetAdministrationShell with identifier '{}' not found in service environment", aasIdentifier);
 		}
 		
 	}
@@ -501,12 +508,23 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 				//
 				.globalAssetId(theShell.getAssetInformation().getGlobalAssetId())
 				.specificAssetIds(theShell.getAssetInformation().getSpecificAssetIds())
-				.endpoints(endpoint.getEndpoint())
-				// @TODO: decide for the endpoint ... could be available only with alias
-				.endpoints(endpoint.getEndpoint(theShell.getId()))
 				.submodelDescriptors(createSubmodelDescriptor(theShell))
 				.build();
-		
+
+		try {
+			Endpoint endpoint1 = endpoint.getEndpoint();
+			log.debug("setting endpoint1 '{}' to AAS '{}'", endpoint1.getProtocolInformation().getHref(), theShell.getId());
+			Endpoint endpoint2 = endpoint.getEndpoint(theShell.getId());
+			log.debug("setting endpoint2 '{}' to AAS '{}'", endpoint2.getProtocolInformation().getHref(), theShell.getId());
+			descriptor.setEndpoints(List.of(
+					endpoint1,
+					// @TODO: decide for the endpoint ... could be available only with alias
+					endpoint2
+			));
+		} catch (NullPointerException | IllegalStateException e) {
+			log.warn("no endpoint for shell with id {}", theShell.getId());
+		}
+
 		serviceEnvironment.registerAssetAdministrationShell(descriptor);
 	}
 	private List<SubmodelDescriptor> createSubmodelDescriptor(AssetAdministrationShell theShell) {
@@ -522,8 +540,15 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 						.displayName(sub.get().getDisplayName())
 						.semanticId(sub.get().getSemanticId())
 						.supplementalSemanticIds(supplementalSemantics(sub.get()))
-						.endpoints(endpoint.getEndpoint(theShell.getId(), sub.get().getId()))
 						.build();
+
+				try {
+					subDescriptor.setEndpoints(List.of(
+							endpoint.getEndpoint(theShell.getId(), sub.get().getId())
+					));
+				} catch (NullPointerException | IllegalStateException e) {
+					log.warn("no endpoint for submodel with id {}", sub.get().getId());
+				}
 				
 				descriptor.add(subDescriptor);
 			}

@@ -226,7 +226,7 @@ public class ConnectorEndpointCDI implements ConnectorEndpoint {
     			._interface("AAS-REPOSITORY-3.0_ITWIN")
     			.protocolInformation(new DefaultProtocolInformation.Builder()
     					.href(String.format("%s", 
-    							endpointAddress.toString()))
+    							endpointAddress.toString())) // FIXME: may cause NullPointerException
     					.build())
     			.build()
     			;
