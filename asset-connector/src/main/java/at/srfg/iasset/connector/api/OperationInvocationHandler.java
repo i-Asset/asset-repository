@@ -214,7 +214,7 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 			// need to validate the input value with the model
 			Reference semanticId = submodelElement.getSemanticId();
 	//		Optional<SubmodelElement> templated = serviceEnvironment.resolve(semanticId, SubmodelElement.class);
-			if ( semanticId.getType() == ReferenceTypes.MODEL_REFERENCE) {
+			if (semanticId != null && semanticId.getType() == ReferenceTypes.MODEL_REFERENCE) {
 				ValueHelper.applyValue(serviceEnvironment, submodelElement, semanticId, valueAsNode);
 			} else {
 				ValueHelper.applyValue(serviceEnvironment, submodelElement, valueAsNode);
