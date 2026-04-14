@@ -1,0 +1,86 @@
+{
+  "serviceData": {
+    "sideEdgeParameter": {
+      "angleTail": 0.7,
+      "angleWaist": 0.6,
+      "angleTip": 0.8
+    },
+    "productData": {
+      "skiBrand": "ATOMIC",
+      "skiWidthWaist": 68,
+      "skiWidthTail": 97.5,
+      "skiProductName": "REDSTER X9S RVSK S + X 14 GW",
+      "skiManufacturer": "Amer Sports",
+      "skiWidthTip": 108,
+      "skiLength": 175
+    },
+    "baseEdgeParameter": {
+      "angleTail": 0.7,
+      "angleWaist": 0.6,
+      "angleTip": 0.8
+    },
+    "identification": {
+      "serviceCount": 1,
+      "serialNumber": "23584809",
+      "componentCode": "AA0027688+",
+      "setCode": "Commercial Set - SYS"
+    },
+    "edgePerformance": {
+      "vEdge": true,
+      "performanceClass": "R"
+    },
+    "serviceRequest": {
+      "carrierData": "http://wseqr.amersports.com/?sn=23584809",
+      "machineNumber": "8585-0989",
+      "machineType": "Jupiter X",
+      "authenticationToken": "eOMtThyhVNLWUZNRcBaQKxI"
+    }
+  },
+  "serviceResult": 
+  {
+    "resultDeviationDescription": "Customer Request",
+    "resultDateTime": "2025-12-01T10:14:35.230+01:00",
+    "resultHasDeviations": true,
+    "identification": {
+      "serviceCount": 1,
+      "serialNumber": "23584809",
+      "componentCode": "AA0027688+",
+      "setCode": "Commercial Set - SYS"
+    },
+    "serviceRequest": {
+      "carrierData": "http://wseqr.amersports.com/?sn=23584809",
+      "machineNumber": "8585-0989",
+      "machineType": "Jupiter X",
+      "authenticationToken": "JxkyvRnL"
+    },
+    "sideEdgeParameter": {
+      "angleTail": 0.7,
+      "angleWaist": 0.6,
+      "angleTip": 0.8
+    },
+    "baseEdgeParameter": {
+      "angleTail": 0.7,
+      "angleWaist": 0.6,
+      "angleTip": 0.8
+    }
+  },
+  "serviceError": 
+  {
+    "error": {
+      "errorMessage": "UMaAIKKIkknjWEXJUfPxxQHeWKEJ",
+      "errorCode": "VLhpfQGTMDYpsBZxvfBoeygjb"
+    },
+    "serviceRequest": {
+      "carrierData": "http://wseqr.amersports.com/?sn=23584809",
+      "machineNumber": "8585-0989",
+      "machineType": "Jupiter X",
+      "authenticationToken": "RYtGKbgicZaHCBRQDSx"
+    }
+  },
+  "serviceRequest": {
+    "carrierData": "http://wseqr.amersports.com/?sn=23584809",
+    "machineNumber": "8585-0989",
+    "machineType": "Jupiter X",
+    "authenticationToken": "yedUsFwdkelQbxeTeQOvaScfqIOOmaa"
+  }
+}

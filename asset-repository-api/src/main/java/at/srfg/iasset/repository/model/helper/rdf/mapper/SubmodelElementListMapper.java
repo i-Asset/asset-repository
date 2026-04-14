@@ -23,15 +23,28 @@ public class SubmodelElementListMapper implements RDFMapper<SubmodelElementList,
 	
 
 	@Override
-	public SubmodelElementListValue mapToValue(SubmodelElementList modelElement, RDFEnvironment rdfEnvironment)
+	public Optional<SubmodelElementListValue> mapToValue(SubmodelElementList modelElement, RDFEnvironment rdfEnvironment)
 			throws ValueMappingException {
-		SubmodelElementListValue listValue = new SubmodelElementListValue(modelElement.getOrderRelevant());
+		Optional<IRI> listProperty = rdfEnvironment.getSemanticIdentifier(modelElement);
+
+		Optional<IRI> listSemantics = rdfEnvironment.getSemanticIdentifier(modelElement.getSemanticIdListElement());
+		SubmodelElementListValue listValue = new SubmodelElementListValue(listProperty.get(), modelElement.getOrderRelevant());
 		for ( SubmodelElement element : modelElement.getValue()) {
-			listValue.addValue(RDFHelper.toValue(element, rdfEnvironment));
+			RDFHelper.toValue(element, rdfEnvironment).ifPresent((value)-> listValue.addValue(value));
 		}
-		return listValue;
+		return Optional.of(listValue);
 	}
 
+	    @Override
+    public Optional<SubmodelElementListValue> mapToValueAndModel(SubmodelElementList modelElement, RDFEnvironment rdfEnvironment, Model model, Resource parent) throws ValueMappingException {
+		Optional<IRI> listProperty = rdfEnvironment.getSemanticIdentifier(modelElement);
+
+		Optional<IRI> listSemantics = rdfEnvironment.getSemanticIdentifier(modelElement.getSemanticIdListElement());
+
+		
+        return RDFMapper.super.mapToValueAndModel(modelElement, rdfEnvironment, model, parent);
+    }
+	
 	@Override
 	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, SubmodelElementList modelElement)
 			throws ValueMappingException {
@@ -80,5 +93,6 @@ public class SubmodelElementListMapper implements RDFMapper<SubmodelElementList,
 		// TODO Auto-generated method stub
 		return RDFMapper.super.mapToElement(rdfMetaModel, parent, model, modelElement);
 	}
+
 
 }

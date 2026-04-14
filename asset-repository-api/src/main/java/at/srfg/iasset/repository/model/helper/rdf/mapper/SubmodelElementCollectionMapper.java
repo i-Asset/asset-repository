@@ -1,6 +1,7 @@
 package at.srfg.iasset.repository.model.helper.rdf.mapper;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
@@ -24,28 +25,81 @@ public class SubmodelElementCollectionMapper implements RDFMapper<SubmodelElemen
 	
 
 	@Override
-	public SubmodelElementCollectionValue mapToValue(SubmodelElementCollection modelElement,
+	public Optional<SubmodelElementCollectionValue> mapToValue(SubmodelElementCollection modelElement,
 			RDFEnvironment rdfEnvironment) throws ValueMappingException {
+		
 		
 		Optional<IRI> typeIRI = rdfEnvironment.getTypeInformation(modelElement.getSemanticId());
 
-		SubmodelElementCollectionValue valueElement = new SubmodelElementCollectionValue(typeIRI.orElse(null));
+		Optional<IRI> property = rdfEnvironment.getSemanticIdentifier(modelElement);
+		SubmodelElementCollectionValue valueElement = new SubmodelElementCollectionValue(property.orElse(null), typeIRI);
 		
 		for (SubmodelElement child : modelElement.getValue()) {
-			Optional<IRI> propertyIRI = rdfEnvironment.getSemanticIdentifier(child);
-			if ( propertyIRI.isPresent()) {
-				SubmodelElementValue value = RDFHelper.toValue(child, rdfEnvironment);
-				valueElement.addValue(propertyIRI.get(), value);
-			}
+			RDFHelper.toValue(child, rdfEnvironment).ifPresent((value) -> valueElement.addValue(value.predicate(), value));
 		}
-		return valueElement;
+		return Optional.of(valueElement);
 	}
 
 
+	@Override
+	public Optional<SubmodelElementCollectionValue> mapToValueAndModel(SubmodelElementCollection modelElement,
+			RDFEnvironment rdfEnvironment, Model model, Resource parent) throws ValueMappingException {
+		Optional<IRI> typeIRI = rdfEnvironment.getTypeInformation(modelElement.getSemanticId());
+		Optional<IRI> property = rdfEnvironment.getSemanticIdentifier(modelElement);
+		
+		final Resource subject = (parent != null ? parent : SimpleValueFactory.getInstance().createBNode());
+		
+		if (typeIRI.isPresent()) {
+			// add the rdf:type statement
+			model.add(subject, RDF.TYPE, typeIRI.get());
+
+			addToNamespaces(model, typeIRI.get().getNamespace());
+
+		}
+		if ( property.isPresent() ) {
+			model.add(subject, property.get(), subject);
+			addToNamespaces(model, property.get().getNamespace());
+		}
+		SubmodelElementCollectionValue valueElement = new SubmodelElementCollectionValue(property.orElse(null), typeIRI);
+		
+		for (SubmodelElement child : modelElement.getValue()) {
+			RDFHelper.getMapper(child).mapToValueAndModel(child, rdfEnvironment, model, subject);
+			RDFHelper.toValue(child, rdfEnvironment).ifPresent((value) -> valueElement.addValue(value.predicate(), value));
+		}
+		return Optional.of(valueElement);
+	}
+
+
+	public void toRDFModel(SubmodelElementCollection modelElement, RDFEnvironment rdfEnvironment, Model model, Resource parentNode) throws ValueMappingException {
+		Resource collectionResource = SimpleValueFactory.getInstance().createBNode();
+	
+		Optional<IRI> typeIRI = rdfEnvironment.getTypeInformation(modelElement.getSemanticId());
+		// type statement is not mandatory! 
+		if (typeIRI.isPresent()) {
+			// add the rdf:type statement
+			model.add(collectionResource, RDF.TYPE, typeIRI.get());
+
+			addToNamespaces(model, typeIRI.get().getNamespace());
+
+		}
+		Optional<IRI> predicate = rdfEnvironment.getSemanticIdentifier(modelElement);
+		if ( predicate.isPresent()) {
+
+		}
+		// add all submodel elements to the model
+		modelElement.getValue().forEach((final SubmodelElement child) -> {
+                    try {
+                        RDFHelper.getMapper(child).toRDFModel(child, rdfEnvironment, model, collectionResource);
+                    } catch (ValueMappingException ex) {
+                        System.getLogger(SubmodelElementCollectionMapper.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
+                });
+
+
+	}
 
 	@Override
 	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, SubmodelElementCollection modelElement) {
-		// TODO Auto-generated method stub
 		Model model = new TreeModel();
 		model.setNamespace("xsd", XSD.NAMESPACE);
 		Resource collectionResource = SimpleValueFactory.getInstance().createBNode();

@@ -1,0 +1,3339 @@
+{
+  "assetAdministrationShells" : [ {
+    "modelType" : "AssetAdministrationShell",
+    "assetInformation" : {
+      "assetKind" : "Type"
+    },
+    "submodels" : [ {
+      "keys" : [ {
+        "type" : "Submodel",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#SkiMaintenance/submodel"
+      } ],
+      "type" : "ModelReference"
+    } ],
+    "administration" : { },
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#SkiMaintenance",
+    "description" : [ {
+      "language" : "en",
+      "text" : "defaultAdminShell"
+    } ],
+    "idShort" : "defaultAdminShell"
+  } ],
+  "conceptDescriptions" : [ {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Aspect model for a ski maintenance process (aka \"ski service\").\nThis Aspect Model was developed by Salzburg Research (SRFG, https://www.salzburgresearch.at) in the project PASSAT (Digital Product Passport Austria & Beyond, https://digialer-produkt-pass.at)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Maintenance"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "SkiMaintenance"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#SkiMaintenance",
+    "category" : "APPLICATION_CLASS",
+    "description" : [ {
+      "language" : "en",
+      "text" : "Aspect model for a ski maintenance process (aka \"ski service\").\nThis Aspect Model was developed by Salzburg Research (SRFG, https://www.salzburgresearch.at) in the project PASSAT (Digital Product Passport Austria & Beyond, https://digialer-produkt-pass.at)"
+    } ],
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Ski Maintenance"
+    } ],
+    "idShort" : "SkiMaintenance"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Performance Class"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Class "
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "performanceClass"
+        } ],
+        "valueList" : {
+          "valueReferencePairs" : [ {
+            "value" : "R",
+            "valueId" : {
+              "keys" : [ {
+                "type" : "DataElement",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#PerformanceClassEnum:_R8c257489"
+              } ],
+              "type" : "ModelReference"
+            }
+          }, {
+            "value" : "S",
+            "valueId" : {
+              "keys" : [ {
+                "type" : "DataElement",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#PerformanceClassEnum:_S8de0b3c4"
+              } ],
+              "type" : "ModelReference"
+            }
+          }, {
+            "value" : "C",
+            "valueId" : {
+              "keys" : [ {
+                "type" : "DataElement",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#PerformanceClassEnum:_C6b23c0d5"
+              } ],
+              "type" : "ModelReference"
+            }
+          } ]
+        }
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#performanceClass",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Class "
+    } ],
+    "idShort" : "performanceClass"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "BOOLEAN",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Variant Performance Processing"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "vEdge"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "vEdge"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#vEdge",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "vEdge"
+    } ],
+    "idShort" : "vEdge"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#PerformanceData"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Edge Performance data controls the ski service process. The kind of grinding, performance class and other attributes which may control the visual appearance of the service settings at the machine's display"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Edge Performance"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "edgePerformance"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#edgePerformance",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Edge Performance"
+    } ],
+    "idShort" : "edgePerformance"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle at the end of the ski (tail)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle Tail"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "angleTail"
+        } ],
+        "unit" : "degreeUnitOfAngle"
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTail",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Grinding Angle Tail"
+    } ],
+    "idShort" : "angleTail"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle at the middle of the ski (waist)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle Waist"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "angleWaist"
+        } ],
+        "unit" : "degreeUnitOfAngle"
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#angleWaist",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Grinding Angle Waist"
+    } ],
+    "idShort" : "angleWaist"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle at the front of the ski (tip)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle Tip"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "angleTip"
+        } ],
+        "unit" : "degreeUnitOfAngle"
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTip",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Grinding Angle Tip"
+    } ],
+    "idShort" : "angleTip"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#EdgeParameter"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Base Edge Parameter"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "baseEdgeParameter"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#baseEdgeParameter",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Base Edge Parameter"
+    } ],
+    "idShort" : "baseEdgeParameter"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#EdgeParameter"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Side Edge parameter"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "sideEdgeParameter"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#sideEdgeParameter",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Side Edge parameter"
+    } ],
+    "idShort" : "sideEdgeParameter"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Width of the Ski (Tail)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Width (Tail)"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiWidthTail"
+        } ],
+        "unit" : "millimetre"
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#skiWidthTail",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Width (Tail)"
+    } ],
+    "idShort" : "skiWidthTail"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Width of the Ski (Waist)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Width (Waist)"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiWidthWaist"
+        } ],
+        "unit" : "millimetre"
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#skiWidthWaist",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Width (Waist)"
+    } ],
+    "idShort" : "skiWidthWaist"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Width of the Ski (Tip)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Width (Tip)"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiWidthTip"
+        } ],
+        "unit" : "millimetre"
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#skiWidthTip",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Width (Tip)"
+    } ],
+    "idShort" : "skiWidthTip"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "INTEGER_COUNT",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Length of the Ski in Centimeter"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Length"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiLength"
+        } ],
+        "unit" : "centimetre"
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#skiLength",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Length"
+    } ],
+    "idShort" : "skiLength"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Name of the Ski Product"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Product Name"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiProductName"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#skiProductName",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Product Name"
+    } ],
+    "idShort" : "skiProductName"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Brand"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Brand"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiBrand"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#skiBrand",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Brand"
+    } ],
+    "idShort" : "skiBrand"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Manufacturer of the product"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Manufacturer"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiManufacturer"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#skiManufacturer",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Manufacturer"
+    } ],
+    "idShort" : "skiManufacturer"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#ProductData"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Product Data including dimensions, manufacturer"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Product Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "productData"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#productData",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Product Data"
+    } ],
+    "idShort" : "productData"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "INTEGER_COUNT",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Number of the recorded maintenance services for the product (optional, omit when no maintenance recorded)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Service Count"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "serviceCount"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceCount",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Service Count"
+    } ],
+    "idShort" : "serviceCount"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Code describing the Article in the manufacturers Database"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Article Component Code"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "componentCode"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#componentCode",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Article Component Code"
+    } ],
+    "idShort" : "componentCode"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Model General Set"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Set Code"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "setCode"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#setCode",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Ski Set Code"
+    } ],
+    "idShort" : "setCode"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Serial Number of the requested ski"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Serial Number"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "serialNumber"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#serialNumber",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Serial Number"
+    } ],
+    "idShort" : "serialNumber"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#IdentificationData"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Ski Identification Data"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Data Identification"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "identification"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#identification",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Ski Data Identification"
+    } ],
+    "idShort" : "identification"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Security Token"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Authentication Token"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "authenticationToken"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#authenticationToken",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Authentication Token"
+    } ],
+    "idShort" : "authenticationToken"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Identifying number of the requesting machine"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Machine Number"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "machineNumber"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#machineNumber",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Machine Number"
+    } ],
+    "idShort" : "machineNumber"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Type of the requesting machine"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Machine Type"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "machineType"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#machineType",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Machine Type"
+    } ],
+    "idShort" : "machineType"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Information extracted from the DPP-Identifier Carrier (QR-Code, NFC)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "DPP Identifier Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "carrierData"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#carrierData",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "DPP Identifier Data"
+    } ],
+    "idShort" : "carrierData"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#SkiDataRequest"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Service Request Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "serviceRequest"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceRequest",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Service Request Data"
+    } ],
+    "idShort" : "serviceRequest"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#SkiDataResponse"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Response Data covering the Ski Service Request"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Service Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "serviceData"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceData",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Ski Service Data"
+    } ],
+    "idShort" : "serviceData"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Timestamp of the Ski Maintenance"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Maintenance Date & Time"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "resultDateTime"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#resultDateTime",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Maintenance Date & Time"
+    } ],
+    "idShort" : "resultDateTime"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "BOOLEAN",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "The original request has been modified"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Result with deviations"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "resultHasDeviations"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#resultHasDeviations",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Result with deviations"
+    } ],
+    "idShort" : "resultHasDeviations"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Textual explanation why the original data was modified"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Deviation Description"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "resultDeviationDescription"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#resultDeviationDescription",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Deviation Description"
+    } ],
+    "idShort" : "resultDeviationDescription"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#SkiDataResult"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Data provided after the executed ski maintenance back to the manufacturer of the ski in service."
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Service Result"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "serviceResult"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceResult",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Ski Service Result"
+    } ],
+    "idShort" : "serviceResult"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Code"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "errorCode"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#errorCode",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Error Code"
+    } ],
+    "idShort" : "errorCode"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Message"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "errorMessage"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#errorMessage",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Error Message"
+    } ],
+    "idShort" : "errorMessage"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#ErrorMessage"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Object"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "error"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#error",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Error Object"
+    } ],
+    "idShort" : "error"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#SkiDataError"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Handling"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "serviceError"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceError",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Error Handling"
+    } ],
+    "idShort" : "serviceError"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Operation to obtain the ski service data from the manufacturer's DPP-services. The main information for identifying a product is the carrier's data. Additional Information (requesting device) may be provided optionally.\n\nThe response contains the entire product information including edge grinding parameters."
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Get Ski Service Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "getSkiServiceData"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#getSkiServiceData",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Get Ski Service Data"
+    } ],
+    "idShort" : "getSkiServiceData"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Service Result"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "setSkiServiceResult"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#setSkiServiceResult",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Ski Service Result"
+    } ],
+    "idShort" : "setSkiServiceResult"
+  } ],
+  "submodels" : [ {
+    "modelType" : "Submodel",
+    "kind" : "Template",
+    "semanticId" : {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:at.srfg.passat.ski:1.0.0#SkiMaintenance"
+      } ],
+      "type" : "ExternalReference"
+    },
+    "administration" : { },
+    "id" : "urn:samm:at.srfg.passat.ski:1.0.0#SkiMaintenance/submodel",
+    "description" : [ {
+      "language" : "en",
+      "text" : "Aspect model for a ski maintenance process (aka \"ski service\").\nThis Aspect Model was developed by Salzburg Research (SRFG, https://www.salzburgresearch.at) in the project PASSAT (Digital Product Passport Austria & Beyond, https://digialer-produkt-pass.at)"
+    } ],
+    "idShort" : "SkiMaintenance",
+    "submodelElements" : [ {
+      "modelType" : "SubmodelElementCollection",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "ConceptDescription",
+          "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceData"
+        } ],
+        "type" : "ModelReference"
+      },
+      "description" : [ {
+        "language" : "en",
+        "text" : "Response Data covering the Ski Service Request"
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Ski Service Data"
+      } ],
+      "idShort" : "serviceData",
+      "value" : [ {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#edgePerformance"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Edge Performance data controls the ski service process. The kind of grinding, performance class and other attributes which may control the visual appearance of the service settings at the machine's display"
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Edge Performance"
+        } ],
+        "idShort" : "edgePerformance",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#performanceClass"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Class "
+          } ],
+          "idShort" : "performanceClass"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#vEdge"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:boolean",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "vEdge"
+          } ],
+          "idShort" : "vEdge"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#baseEdgeParameter"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Base Edge Parameter"
+        } ],
+        "idShort" : "baseEdgeParameter",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tail"
+          } ],
+          "idShort" : "angleTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Waist"
+          } ],
+          "idShort" : "angleWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tip"
+          } ],
+          "idShort" : "angleTip"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#sideEdgeParameter"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Side Edge parameter"
+        } ],
+        "idShort" : "sideEdgeParameter",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tail"
+          } ],
+          "idShort" : "angleTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Waist"
+          } ],
+          "idShort" : "angleWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tip"
+          } ],
+          "idShort" : "angleTip"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#productData"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Product Data including dimensions, manufacturer"
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Product Data"
+        } ],
+        "idShort" : "productData",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiWidthTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Width (Tail)"
+          } ],
+          "idShort" : "skiWidthTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiWidthWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Width (Waist)"
+          } ],
+          "idShort" : "skiWidthWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiWidthTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Width (Tip)"
+          } ],
+          "idShort" : "skiWidthTip"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiLength"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:positiveInteger",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Length"
+          } ],
+          "idShort" : "skiLength"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiProductName"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Product Name"
+          } ],
+          "idShort" : "skiProductName"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiBrand"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Brand"
+          } ],
+          "idShort" : "skiBrand"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiManufacturer"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Manufacturer"
+          } ],
+          "idShort" : "skiManufacturer"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#identification"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Ski Identification Data"
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Ski Data Identification"
+        } ],
+        "idShort" : "identification",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceCount"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:positiveInteger",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Service Count"
+          } ],
+          "idShort" : "serviceCount"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#componentCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Article Component Code"
+          } ],
+          "idShort" : "componentCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#setCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Ski Set Code"
+          } ],
+          "idShort" : "setCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serialNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Serial Number"
+          } ],
+          "idShort" : "serialNumber"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceRequest"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Service Request Data"
+        } ],
+        "idShort" : "serviceRequest",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#authenticationToken"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Authentication Token"
+          } ],
+          "idShort" : "authenticationToken"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Number"
+          } ],
+          "idShort" : "machineNumber"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineType"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Type"
+          } ],
+          "idShort" : "machineType"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#carrierData"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:anyURI",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "DPP Identifier Data"
+          } ],
+          "idShort" : "carrierData"
+        } ]
+      } ]
+    }, {
+      "modelType" : "SubmodelElementCollection",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "ConceptDescription",
+          "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceRequest"
+        } ],
+        "type" : "ModelReference"
+      },
+      "description" : [ {
+        "language" : "en",
+        "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Service Request Data"
+      } ],
+      "idShort" : "serviceRequest",
+      "value" : [ {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#authenticationToken"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:string",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Authentication Token"
+        } ],
+        "idShort" : "authenticationToken"
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineNumber"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:string",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Machine Number"
+        } ],
+        "idShort" : "machineNumber"
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineType"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:string",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Machine Type"
+        } ],
+        "idShort" : "machineType"
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#carrierData"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:anyURI",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "DPP Identifier Data"
+        } ],
+        "idShort" : "carrierData"
+      } ]
+    }, {
+      "modelType" : "SubmodelElementCollection",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "ConceptDescription",
+          "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceResult"
+        } ],
+        "type" : "ModelReference"
+      },
+      "description" : [ {
+        "language" : "en",
+        "text" : "Data provided after the executed ski maintenance back to the manufacturer of the ski in service."
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Ski Service Result"
+      } ],
+      "idShort" : "serviceResult",
+      "value" : [ {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#resultDateTime"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:dateTime",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Maintenance Date & Time"
+        } ],
+        "idShort" : "resultDateTime"
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceRequest"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Service Request Data"
+        } ],
+        "idShort" : "serviceRequest",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#authenticationToken"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Authentication Token"
+          } ],
+          "idShort" : "authenticationToken"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Number"
+          } ],
+          "idShort" : "machineNumber"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineType"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Type"
+          } ],
+          "idShort" : "machineType"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#carrierData"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:anyURI",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "DPP Identifier Data"
+          } ],
+          "idShort" : "carrierData"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#baseEdgeParameter"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Base Edge Parameter"
+        } ],
+        "idShort" : "baseEdgeParameter",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tail"
+          } ],
+          "idShort" : "angleTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Waist"
+          } ],
+          "idShort" : "angleWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tip"
+          } ],
+          "idShort" : "angleTip"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#sideEdgeParameter"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Side Edge parameter"
+        } ],
+        "idShort" : "sideEdgeParameter",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tail"
+          } ],
+          "idShort" : "angleTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Waist"
+          } ],
+          "idShort" : "angleWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tip"
+          } ],
+          "idShort" : "angleTip"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#identification"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Ski Identification Data"
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Ski Data Identification"
+        } ],
+        "idShort" : "identification",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceCount"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:positiveInteger",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Service Count"
+          } ],
+          "idShort" : "serviceCount"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#componentCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Article Component Code"
+          } ],
+          "idShort" : "componentCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#setCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Ski Set Code"
+          } ],
+          "idShort" : "setCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serialNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Serial Number"
+          } ],
+          "idShort" : "serialNumber"
+        } ]
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#resultHasDeviations"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:boolean",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Result with deviations"
+        } ],
+        "idShort" : "resultHasDeviations"
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#resultDeviationDescription"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:string",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Deviation Description"
+        } ],
+        "idShort" : "resultDeviationDescription"
+      } ]
+    }, {
+      "modelType" : "SubmodelElementCollection",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "ConceptDescription",
+          "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceError"
+        } ],
+        "type" : "ModelReference"
+      },
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Error Handling"
+      } ],
+      "idShort" : "serviceError",
+      "value" : [ {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceRequest"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Service Request Data"
+        } ],
+        "idShort" : "serviceRequest",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#authenticationToken"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Authentication Token"
+          } ],
+          "idShort" : "authenticationToken"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Number"
+          } ],
+          "idShort" : "machineNumber"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineType"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Type"
+          } ],
+          "idShort" : "machineType"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#carrierData"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:anyURI",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "DPP Identifier Data"
+          } ],
+          "idShort" : "carrierData"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:at.srfg.passat.ski:1.0.0#error"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Error Object"
+        } ],
+        "idShort" : "error",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#errorCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Error Code"
+          } ],
+          "idShort" : "errorCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#errorMessage"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Error Message"
+          } ],
+          "idShort" : "errorMessage"
+        } ]
+      } ]
+    }, {
+      "modelType" : "Operation",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "Operation",
+          "value" : "urn:samm:at.srfg.passat.ski:1.0.0#getSkiServiceData"
+        } ],
+        "type" : "ModelReference"
+      },
+      "inputVariables" : [ {
+        "value" : {
+          "modelType" : "SubmodelElementCollection",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "ConceptDescription",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceRequest"
+            } ],
+            "type" : "ModelReference"
+          },
+          "description" : [ {
+            "language" : "en",
+            "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+          } ],
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Service Request Data"
+          } ],
+          "idShort" : "serviceRequest",
+          "value" : [ {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#authenticationToken"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Authentication Token"
+            } ],
+            "idShort" : "authenticationToken"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineNumber"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Machine Number"
+            } ],
+            "idShort" : "machineNumber"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineType"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Machine Type"
+            } ],
+            "idShort" : "machineType"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#carrierData"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:anyURI",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "DPP Identifier Data"
+            } ],
+            "idShort" : "carrierData"
+          } ]
+        }
+      } ],
+      "outputVariables" : [ {
+        "value" : {
+          "modelType" : "SubmodelElementCollection",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "ConceptDescription",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceData"
+            } ],
+            "type" : "ModelReference"
+          },
+          "description" : [ {
+            "language" : "en",
+            "text" : "Response Data covering the Ski Service Request"
+          } ],
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Ski Service Data"
+          } ],
+          "idShort" : "serviceData",
+          "value" : [ {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#edgePerformance"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Edge Performance data controls the ski service process. The kind of grinding, performance class and other attributes which may control the visual appearance of the service settings at the machine's display"
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Edge Performance"
+            } ],
+            "idShort" : "edgePerformance",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#performanceClass"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Class "
+              } ],
+              "idShort" : "performanceClass"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#vEdge"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:boolean",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "vEdge"
+              } ],
+              "idShort" : "vEdge"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#baseEdgeParameter"
+              } ],
+              "type" : "ModelReference"
+            },
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Base Edge Parameter"
+            } ],
+            "idShort" : "baseEdgeParameter",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tail"
+              } ],
+              "idShort" : "angleTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Waist"
+              } ],
+              "idShort" : "angleWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tip"
+              } ],
+              "idShort" : "angleTip"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#sideEdgeParameter"
+              } ],
+              "type" : "ModelReference"
+            },
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Side Edge parameter"
+            } ],
+            "idShort" : "sideEdgeParameter",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tail"
+              } ],
+              "idShort" : "angleTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Waist"
+              } ],
+              "idShort" : "angleWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tip"
+              } ],
+              "idShort" : "angleTip"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#productData"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Product Data including dimensions, manufacturer"
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Product Data"
+            } ],
+            "idShort" : "productData",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiWidthTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Width (Tail)"
+              } ],
+              "idShort" : "skiWidthTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiWidthWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Width (Waist)"
+              } ],
+              "idShort" : "skiWidthWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiWidthTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Width (Tip)"
+              } ],
+              "idShort" : "skiWidthTip"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiLength"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:positiveInteger",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Length"
+              } ],
+              "idShort" : "skiLength"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiProductName"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Product Name"
+              } ],
+              "idShort" : "skiProductName"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiBrand"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Brand"
+              } ],
+              "idShort" : "skiBrand"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#skiManufacturer"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Manufacturer"
+              } ],
+              "idShort" : "skiManufacturer"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#identification"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Ski Identification Data"
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Ski Data Identification"
+            } ],
+            "idShort" : "identification",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceCount"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:positiveInteger",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Service Count"
+              } ],
+              "idShort" : "serviceCount"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#componentCode"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Article Component Code"
+              } ],
+              "idShort" : "componentCode"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#setCode"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Ski Set Code"
+              } ],
+              "idShort" : "setCode"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serialNumber"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Serial Number"
+              } ],
+              "idShort" : "serialNumber"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceRequest"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Service Request Data"
+            } ],
+            "idShort" : "serviceRequest",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#authenticationToken"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Authentication Token"
+              } ],
+              "idShort" : "authenticationToken"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineNumber"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Machine Number"
+              } ],
+              "idShort" : "machineNumber"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineType"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Machine Type"
+              } ],
+              "idShort" : "machineType"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#carrierData"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:anyURI",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "DPP Identifier Data"
+              } ],
+              "idShort" : "carrierData"
+            } ]
+          } ]
+        }
+      } ],
+      "description" : [ {
+        "language" : "en",
+        "text" : "Operation to obtain the ski service data from the manufacturer's DPP-services. The main information for identifying a product is the carrier's data. Additional Information (requesting device) may be provided optionally.\n\nThe response contains the entire product information including edge grinding parameters."
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Get Ski Service Data"
+      } ],
+      "idShort" : "getSkiServiceData"
+    }, {
+      "modelType" : "Operation",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "Operation",
+          "value" : "urn:samm:at.srfg.passat.ski:1.0.0#setSkiServiceResult"
+        } ],
+        "type" : "ModelReference"
+      },
+      "inputVariables" : [ {
+        "value" : {
+          "modelType" : "SubmodelElementCollection",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "ConceptDescription",
+              "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceResult"
+            } ],
+            "type" : "ModelReference"
+          },
+          "description" : [ {
+            "language" : "en",
+            "text" : "Data provided after the executed ski maintenance back to the manufacturer of the ski in service."
+          } ],
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Ski Service Result"
+          } ],
+          "idShort" : "serviceResult",
+          "value" : [ {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#resultDateTime"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:dateTime",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Maintenance Date & Time"
+            } ],
+            "idShort" : "resultDateTime"
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceRequest"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Service Request Data"
+            } ],
+            "idShort" : "serviceRequest",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#authenticationToken"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Authentication Token"
+              } ],
+              "idShort" : "authenticationToken"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineNumber"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Machine Number"
+              } ],
+              "idShort" : "machineNumber"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#machineType"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Machine Type"
+              } ],
+              "idShort" : "machineType"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#carrierData"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:anyURI",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "DPP Identifier Data"
+              } ],
+              "idShort" : "carrierData"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#baseEdgeParameter"
+              } ],
+              "type" : "ModelReference"
+            },
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Base Edge Parameter"
+            } ],
+            "idShort" : "baseEdgeParameter",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tail"
+              } ],
+              "idShort" : "angleTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Waist"
+              } ],
+              "idShort" : "angleWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tip"
+              } ],
+              "idShort" : "angleTip"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#sideEdgeParameter"
+              } ],
+              "type" : "ModelReference"
+            },
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Side Edge parameter"
+            } ],
+            "idShort" : "sideEdgeParameter",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tail"
+              } ],
+              "idShort" : "angleTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Waist"
+              } ],
+              "idShort" : "angleWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#angleTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tip"
+              } ],
+              "idShort" : "angleTip"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#identification"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Ski Identification Data"
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Ski Data Identification"
+            } ],
+            "idShort" : "identification",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serviceCount"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:positiveInteger",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Service Count"
+              } ],
+              "idShort" : "serviceCount"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#componentCode"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Article Component Code"
+              } ],
+              "idShort" : "componentCode"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#setCode"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Ski Set Code"
+              } ],
+              "idShort" : "setCode"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:at.srfg.passat.ski:1.0.0#serialNumber"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Serial Number"
+              } ],
+              "idShort" : "serialNumber"
+            } ]
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#resultHasDeviations"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:boolean",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Result with deviations"
+            } ],
+            "idShort" : "resultHasDeviations"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:at.srfg.passat.ski:1.0.0#resultDeviationDescription"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Deviation Description"
+            } ],
+            "idShort" : "resultDeviationDescription"
+          } ]
+        }
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Ski Service Result"
+      } ],
+      "idShort" : "setSkiServiceResult"
+    } ]
+  } ]
+}

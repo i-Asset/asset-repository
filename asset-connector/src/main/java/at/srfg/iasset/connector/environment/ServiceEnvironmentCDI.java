@@ -22,12 +22,15 @@ import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.*;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultMessage;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
@@ -41,6 +44,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import org.eclipse.rdf4j.model.impl.TreeModel;
 
 @ApplicationScoped
 public class ServiceEnvironmentCDI implements ServiceEnvironment {
@@ -392,7 +397,12 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		Optional<SubmodelElement> element = getSubmodelElement(submodelIdentifier, path);
 		if ( element.isPresent()) {
 			try {
-				at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue value = RDFHelper.toValue(element.get(), rdfEnvironment);
+				Optional<at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue> value = RDFHelper.toValue(element.get(), rdfEnvironment);
+				if ( value.isPresent()) {
+					Model model = new TreeModel();
+					value.get().addToModel(null, model);
+					return model;
+				}
 				return  RDFHelper.toRDF(rdfEnvironment, element.get());
 				
 				

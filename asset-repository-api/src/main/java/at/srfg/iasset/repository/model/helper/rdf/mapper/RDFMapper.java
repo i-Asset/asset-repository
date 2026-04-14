@@ -1,10 +1,12 @@
 package at.srfg.iasset.repository.model.helper.rdf.mapper;
 
+import java.util.Optional;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Namespace;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.TreeModel;
 
 import at.srfg.iasset.repository.component.RDFEnvironment;
@@ -35,11 +37,31 @@ public interface RDFMapper<M extends SubmodelElement, V extends SubmodelElementV
 		return modelElement;
 	}
 
-	default V mapToValue(M modelElement) throws ValueMappingException {
+	default Optional<V> mapToValue(M modelElement) throws ValueMappingException {
 		return null;
 	}
-	default V mapToValue(M modelElement, RDFEnvironment rdfEnvironment) throws ValueMappingException {
+	default Optional<V> mapToValue(M modelElement, RDFEnvironment rdfEnvironment) throws ValueMappingException {
 		return mapToValue(modelElement);
 	}
-	
+	default void toRDFModel(M modelElement, RDFEnvironment rdfEnvironment, Model model, Resource parentNode) throws ValueMappingException {
+
+	}
+	default void addToNamespaces(Model model, String namespace) {
+		Optional<Namespace> vocab = model.getNamespace("");
+		if ( vocab.isEmpty()) {
+			model.setNamespace("", namespace);
+		}
+		else {
+			if (! vocab.get().getName().equals(namespace)) {
+				//
+				long nsCount = model.getNamespaces().stream().filter((Namespace t) -> !t.getPrefix().startsWith("ns")).count();
+				model.setNamespace(String.format("ns%s", nsCount), namespace);
+			}
+		}
+	}
+
+	default Optional<V> mapToValueAndModel(M modelElement,
+			RDFEnvironment rdfMetaModel, Model model, Resource parent) throws ValueMappingException {
+		return Optional.empty();
+	}
 }	

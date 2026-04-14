@@ -1,0 +1,50 @@
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:com.examples:1.0.0#> .
+
+:AAS2RDFDemo a samm:Aspect ;
+   samm:properties ( :label :maxRotationSpeed :productClassifications ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:label a samm:Property ;
+   samm:preferredName "MultiLingualLabel"@en ;
+   samm:characteristic samm-c:MultiLanguageText ;
+   samm:exampleValue "Deutsches Label"@en .
+
+:maxRotationSpeed a samm:Property ;
+   samm:characteristic :SpeedCharacteristic ;
+   samm:exampleValue "200"^^xsd:int .
+
+:productClassifications a samm:Property ;
+   samm:preferredName "Product Classifications"@en ;
+   samm:characteristic :ClassificationCharacteristic .
+
+:SpeedCharacteristic a samm:Characteristic ;
+   samm:dataType xsd:int .
+
+:ClassificationCharacteristic a samm-c:List ;
+   samm:preferredName "Classfication List"@en ;
+   samm:dataType :ProductClassificationEntity .
+
+:ProductClassificationEntity a samm:Entity ;
+   samm:preferredName "Entity for ProductClassificaitonSystems"@en ;
+   samm:see <https://industrialdigitaltwin.io/aas-specifications/IDTA-01001/v3.2/mappings/mappings.html#_example_value_only_serialization_for_a_submodel> ;
+   samm:properties ( :productClassificationVersion :productClassId :productClassificationSystem ) .
+
+:productClassificationVersion a samm:Property ;
+   samm:preferredName "Version"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "0.9" .
+
+:productClassId a samm:Property ;
+   samm:preferredName "Class Identifier"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "27-01-88-77" .
+
+:productClassificationSystem a samm:Property ;
+   samm:preferredName "System "@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "ECLASS" .
+

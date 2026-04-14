@@ -3,7 +3,6 @@ package at.srfg.iasset.repository.model.helper;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
@@ -48,15 +47,10 @@ public class Path implements Iterable<String> {
 		return token;
 	}
 	public static void main(String[]args) {
-		Path p = new Path("first.second[2].fourth");
+		Path p = new Path("first.second(2).fourth");
 		
-		p.forEach(new Consumer<String>() {
-
-			@Override
-			public void accept(String t) {
-				System.out.println(t);
-				
-			}
-		});
+		p.forEach((String t) -> {
+                    System.out.println(t);
+                });
 	}
 }

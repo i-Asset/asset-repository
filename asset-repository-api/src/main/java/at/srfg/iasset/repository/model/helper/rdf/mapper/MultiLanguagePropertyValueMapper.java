@@ -23,11 +23,34 @@ import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingExcept
 public class MultiLanguagePropertyValueMapper implements RDFMapper<MultiLanguageProperty, MultiLanguagePropertyValue> {
 
 	@Override
-	public MultiLanguagePropertyValue mapToValue(MultiLanguageProperty modelElement)
+	public Optional<MultiLanguagePropertyValue> mapToValue(MultiLanguageProperty modelElement, RDFEnvironment rdfMetaModel)
 			throws ValueMappingException {
-		
-		return new MultiLanguagePropertyValue(modelElement.getValue());
+		Optional<IRI> property = rdfMetaModel.getSemanticIdentifier(modelElement);
+		if ( property.isPresent()) {
+			return Optional.of(new MultiLanguagePropertyValue(property.get(), modelElement.getValue()));
+		}
+		return Optional.empty();
 	}
+	@Override
+	public Optional<MultiLanguagePropertyValue> mapToValueAndModel(MultiLanguageProperty modelElement, RDFEnvironment rdfMetaModel, Model model, Resource parent)
+			throws ValueMappingException {
+		Optional<IRI> property = rdfMetaModel.getSemanticIdentifier(modelElement);
+		if ( property.isPresent()) {
+			// check parent - when not available, create a BNode
+			final Resource subject = (parent != null ? parent : SimpleValueFactory.getInstance().createBNode());
+
+			// check for namespaces
+			addToNamespaces(model, property.get().getNamespace());
+			// add the literals to the model
+			modelElement.getValue().forEach((LangStringTextType t) -> {
+							Literal langString = SimpleValueFactory.getInstance().createLiteral(t.getText(), t.getLanguage());
+                            model.add(subject, property.get(), langString);
+                        });
+			// create and return the value object
+			return Optional.of(new MultiLanguagePropertyValue(property.get(), modelElement.getValue()));
+		}
+		return Optional.empty();
+	}	
 	@Override
 	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, MultiLanguageProperty modelElement)
 			throws ValueMappingException {

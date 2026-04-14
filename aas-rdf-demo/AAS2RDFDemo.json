@@ -1,0 +1,349 @@
+{
+  "assetAdministrationShells" : [ {
+    "modelType" : "AssetAdministrationShell",
+    "assetInformation" : {
+      "assetKind" : "Type"
+    },
+    "submodels" : [ {
+      "keys" : [ {
+        "type" : "Submodel",
+        "value" : "urn:samm:com.examples:1.0.0#AAS2RDFDemo/submodel"
+      } ],
+      "type" : "ModelReference"
+    } ],
+    "administration" : { },
+    "id" : "urn:samm:com.examples:1.0.0#AAS2RDFDemo",
+    "description" : [ {
+      "language" : "en",
+      "text" : "defaultAdminShell"
+    } ],
+    "idShort" : "defaultAdminShell"
+  } ],
+  "conceptDescriptions" : [ {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "AAS2RDFDemo"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "AAS2RDFDemo"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.examples:1.0.0#AAS2RDFDemo",
+    "category" : "APPLICATION_CLASS",
+    "idShort" : "AAS2RDFDemo"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "MultiLingualLabel"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "label"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.examples:1.0.0#label",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "MultiLingualLabel"
+    } ],
+    "idShort" : "label"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "INTEGER_COUNT",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "maxRotationSpeed"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "maxRotationSpeed"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.examples:1.0.0#maxRotationSpeed",
+    "idShort" : "maxRotationSpeed"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Version"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "productClassificationVersion"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.examples:1.0.0#productClassificationVersion",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Version"
+    } ],
+    "idShort" : "productClassificationVersion"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Class Identifier"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "productClassId"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.examples:1.0.0#productClassId",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Class Identifier"
+    } ],
+    "idShort" : "productClassId"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "System "
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "productClassificationSystem"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.examples:1.0.0#productClassificationSystem",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "System "
+    } ],
+    "idShort" : "productClassificationSystem"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.examples:1.0.0#ProductClassificationEntity"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Product Classifications"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "productClassifications"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.examples:1.0.0#productClassifications",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Product Classifications"
+    } ],
+    "idShort" : "productClassifications"
+  } ],
+  "submodels" : [ {
+    "modelType" : "Submodel",
+    "kind" : "Template",
+    "semanticId" : {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.examples:1.0.0#AAS2RDFDemo"
+      } ],
+      "type" : "ExternalReference"
+    },
+    "administration" : { },
+    "id" : "urn:samm:com.examples:1.0.0#AAS2RDFDemo/submodel",
+    "idShort" : "AAS2RDFDemo",
+    "submodelElements" : [ {
+      "modelType" : "MultiLanguageProperty",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:com.examples:1.0.0#label"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "MultiLingualLabel"
+      } ],
+      "idShort" : "label"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:com.examples:1.0.0#maxRotationSpeed"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "valueType" : "xs:int",
+      "idShort" : "maxRotationSpeed"
+    }, {
+      "modelType" : "SubmodelElementList",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:com.examples:1.0.0#productClassifications"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Product Classifications"
+      } ],
+      "idShort" : "productClassifications",
+      "orderRelevant" : false,
+      "typeValueListElement" : "SubmodelElementCollection",
+      "value" : [ {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.examples:1.0.0#productClassifications"
+          } ],
+          "type" : "ModelReference"
+        },
+        "supplementalSemanticIds" : [ {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "https://industrialdigitaltwin.io/aas-specifications/IDTA-01001/v3.2/mappings/mappings.html#_example_value_only_serialization_for_a_submodel"
+          } ],
+          "type" : "ExternalReference"
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Product Classifications"
+        } ],
+        "idShort" : "ProductClassificationEntity",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.examples:1.0.0#productClassificationVersion"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Version"
+          } ],
+          "idShort" : "productClassificationVersion"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.examples:1.0.0#productClassId"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Class Identifier"
+          } ],
+          "idShort" : "productClassId"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.examples:1.0.0#productClassificationSystem"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "System "
+          } ],
+          "idShort" : "productClassificationSystem"
+        } ]
+      } ]
+    } ]
+  } ]
+}
