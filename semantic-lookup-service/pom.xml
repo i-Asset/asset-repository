@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>at.srfg.iasset</groupId>
 		<artifactId>asset-repository</artifactId>
-		<version>0.3.0-SNAPSHOT</version>
+		<version>0.3.0</version>
 	</parent>
 	<artifactId>semantic-lookup-service</artifactId>
 	<name>Semantic Lookup Service</name>
