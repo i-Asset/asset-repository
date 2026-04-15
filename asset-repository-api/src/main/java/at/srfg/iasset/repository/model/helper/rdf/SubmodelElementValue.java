@@ -46,8 +46,11 @@ public abstract class SubmodelElementValue {
 		else {
 			if (! vocab.get().getName().equals(namespace)) {
 				//
-				long nsCount = model.getNamespaces().stream().filter((Namespace t) -> !t.getPrefix().startsWith("ns")).count();
-				model.setNamespace(String.format("ns%s", nsCount), namespace);
+				Optional<Namespace> ns = model.getNamespaces().stream().filter((Namespace t)-> t.getName().equals(namespace)).findFirst();
+				if ( ns.isEmpty()) {
+					long nsCount = model.getNamespaces().stream().filter((Namespace t) -> !t.getPrefix().startsWith("ns")).count();
+					model.setNamespace(String.format("ns%s", nsCount), namespace);
+				}
 			}
 		}
 	}

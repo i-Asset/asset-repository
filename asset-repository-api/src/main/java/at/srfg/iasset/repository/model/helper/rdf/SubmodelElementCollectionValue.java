@@ -41,6 +41,7 @@ public class SubmodelElementCollectionValue extends SubmodelElementValue {
     protected Optional<Value> addToModel(Resource parent, Model model) {
 		Resource collection = SimpleValueFactory.getInstance().createBNode();
 		if ( type.isPresent()) {
+			addToNamespaces(model, type.get().getNamespace());
 			model.add(collection, RDF.TYPE, type.get());
 			// TODO: Handle namespace
 		}
