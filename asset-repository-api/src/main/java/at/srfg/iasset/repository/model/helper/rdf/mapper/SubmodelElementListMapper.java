@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.TreeModel;
+import org.eclipse.rdf4j.model.util.RDFCollections;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
@@ -36,61 +37,10 @@ public class SubmodelElementListMapper implements RDFMapper<SubmodelElementList,
 	}
 
 	    @Override
-    public Optional<SubmodelElementListValue> mapToValueAndModel(SubmodelElementList modelElement, RDFEnvironment rdfEnvironment, Model model, Resource parent) throws ValueMappingException {
-		Optional<IRI> listProperty = rdfEnvironment.getSemanticIdentifier(modelElement);
-
-		Optional<IRI> listSemantics = rdfEnvironment.getSemanticIdentifier(modelElement.getSemanticIdListElement());
-
-		
-        return RDFMapper.super.mapToValueAndModel(modelElement, rdfEnvironment, model, parent);
-    }
-	
-	@Override
-	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, SubmodelElementList modelElement)
-			throws ValueMappingException {
-		// TODO Auto-generated method stub
-		Model model = new TreeModel();
-		if (parent == null ) {
-			parent = SimpleValueFactory.getInstance().createBNode();
-			model.setNamespace("xs", XSD.NAMESPACE);
-		}
-		Optional<IRI> property = rdfMetaModel.getSemanticIdentifier(modelElement.getSemanticId());
-		if ( property.isPresent()) {
-			// 
-			BNode listHead = SimpleValueFactory.getInstance().createBNode();
-			// create property for list
-			model.add(parent, property.get(), listHead);
-			
-			Iterator<SubmodelElement>	listIterator =		modelElement.getValue().iterator();
-			BNode current = listHead;
-			//
-			while (listIterator.hasNext()) {
-				BNode value = SimpleValueFactory.getInstance().createBNode();
-				SubmodelElement listChild = listIterator.next();
-				model.addAll(RDFHelper.toRDF(rdfMetaModel, value, listChild));
-				
-				model.add(current, RDF.FIRST, value );
-				
-				if ( listIterator.hasNext())  {
-					BNode next = SimpleValueFactory.getInstance().createBNode();
-					model.add(current, RDF.REST, next);
-					
-					current = next;
-					
-				}
-				else {
-					model.add(current, RDF.REST, RDF.NIL);
-				}
-			}
-		}
-
-		return model;
-	}
-
-	@Override
 	public SubmodelElementList mapToElement(RDFEnvironment rdfMetaModel, Resource parent, Model model,
 			SubmodelElementList modelElement) throws ValueMappingException {
 		// TODO Auto-generated method stub
+//		RDFCollections.asValues(model, parent, null, null)
 		return RDFMapper.super.mapToElement(rdfMetaModel, parent, model, modelElement);
 	}
 

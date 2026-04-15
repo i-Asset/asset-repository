@@ -397,14 +397,12 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		Optional<SubmodelElement> element = getSubmodelElement(submodelIdentifier, path);
 		if ( element.isPresent()) {
 			try {
+				Model model = new TreeModel();
 				Optional<at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue> value = RDFHelper.toValue(element.get(), rdfEnvironment);
 				if ( value.isPresent()) {
-					Model model = new TreeModel();
 					value.get().asRDF(null, model);
-					return model;
 				}
-				return  RDFHelper.toRDF(rdfEnvironment, element.get());
-				
+				return model;
 				
 			} catch (ValueMappingException e) {
 				throw new InternalServerErrorException(e);

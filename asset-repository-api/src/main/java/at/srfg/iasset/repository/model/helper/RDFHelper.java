@@ -84,22 +84,6 @@ public class RDFHelper {
 		}
 		throw new ValueMappingException(String.format("Mapper for interface (%s) not found!", propertyInterface.getName()));
 	}
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> Model toRDF(RDFEnvironment environment, M submodelElement) throws ValueMappingException {
-		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
-		if ( mapper.containsKey(propertyInterface)) {
-			return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToRDF(environment, null, submodelElement);
-		}
-		return new TreeModel();
-	}
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> Model toRDF(RDFEnvironment environment, Resource parent, M submodelElement) throws ValueMappingException {
-		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
-		if ( mapper.containsKey(propertyInterface)) {
-			return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToRDF(environment, parent, submodelElement);
-			
-		}
-		return new TreeModel();
-	}
-
 	public static <M extends SubmodelElement, V extends SubmodelElementValue> M fromRDF(RDFEnvironment environment, Model model, M submodelElement) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
