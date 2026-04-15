@@ -14,8 +14,9 @@ public abstract class DataElementValue extends SubmodelElementValue {
         super(predicate);
     }
     @Override
-    public Optional<Value> addToModel(Resource parent, Model model) {
-        // handle the data alement - simply add element to the model 
+    public final Optional<Value> addToModel(Resource parent, Model model) {
+    	addToNamespaces(model, predicate().getNamespace());
+        // handle the data element - simply add element to the model 
         Resource subject = (parent == null ? SimpleValueFactory.getInstance().createBNode() : parent);
         addToRDF(subject,model);
         // return null to indicate, that everything is set

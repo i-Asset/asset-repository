@@ -400,7 +400,7 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 				Optional<at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue> value = RDFHelper.toValue(element.get(), rdfEnvironment);
 				if ( value.isPresent()) {
 					Model model = new TreeModel();
-					value.get().addToModel(null, model);
+					value.get().asRDF(null, model);
 					return model;
 				}
 				return  RDFHelper.toRDF(rdfEnvironment, element.get());

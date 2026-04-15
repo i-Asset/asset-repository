@@ -31,6 +31,7 @@ public class PropertyValue extends DataElementValue {
     @Override
     protected void addToRDF(Resource parent, Model model) {
 		model.setNamespace("xsd", XSD.NAMESPACE);
+		
 		Literal literal = SimpleValueFactory.getInstance().createLiteral(typedValue.getValue().toString(), typedValue.getValueType().toIRI());
 		model.add(parent, predicate(), literal);
     }

@@ -40,10 +40,10 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 	}
 
     @Override
-    public Optional<Value> addToModel(Resource parent, Model model) {
+    protected Optional<Value> addToModel(Resource parent, Model model) {
 		
-		Resource listElement = SimpleValueFactory.getInstance().createBNode();
 		if ( ordered) {
+			Resource listElement = SimpleValueFactory.getInstance().createBNode();
 			//
 
 			Iterator<SubmodelElementValue> listIterator = values.iterator();
@@ -59,9 +59,18 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 				}
 			}
 			RDFCollections.asRDF(listValues, listElement, model);
+			return Optional.of(listElement);
 
 		}
-		return Optional.of(listElement);
+		else {
+			for (SubmodelElementValue item : values ) {
+				Optional<Value> itemValue = item.addToModel(parent, model);
+				if (itemValue.isPresent()) {
+					model.add(parent, item.predicate(), itemValue.get());
+				}
+			}
+			return Optional.of(parent);
+		}
     }
 
 

@@ -38,7 +38,7 @@ public class SubmodelElementCollectionValue extends SubmodelElementValue {
 	}
 
     @Override
-    public Optional<Value> addToModel(Resource parent, Model model) {
+    protected Optional<Value> addToModel(Resource parent, Model model) {
 		Resource collection = SimpleValueFactory.getInstance().createBNode();
 		if ( type.isPresent()) {
 			model.add(collection, RDF.TYPE, type.get());
