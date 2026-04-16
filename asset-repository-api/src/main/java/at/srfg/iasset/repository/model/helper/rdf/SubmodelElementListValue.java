@@ -41,10 +41,13 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 
     @Override
     protected Optional<Value> addToModel(Resource parent, Model model) {
-		
 		if ( ordered) {
 			Resource listElement = SimpleValueFactory.getInstance().createBNode();
 			//
+			if ( parent == null ) {
+				parent = SimpleValueFactory.getInstance().createBNode();
+				model.add(parent, predicate(), listElement );
+			}
 
 			Iterator<SubmodelElementValue> listIterator = values.iterator();
 
