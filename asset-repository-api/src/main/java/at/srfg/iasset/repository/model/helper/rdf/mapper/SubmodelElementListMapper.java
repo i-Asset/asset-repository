@@ -54,7 +54,7 @@ public class SubmodelElementListMapper implements RDFMapper<SubmodelElementList,
 
 		}
 		// parent must be set in order to proceed
-		if ( parent != null {
+		if ( parent != null ) {
 			// need to synchronize the values based on the index
 			ArrayList<Value> values = RDFCollections.asValues(model, parent, new ArrayList<>() ); 
 			// traverse the list 
