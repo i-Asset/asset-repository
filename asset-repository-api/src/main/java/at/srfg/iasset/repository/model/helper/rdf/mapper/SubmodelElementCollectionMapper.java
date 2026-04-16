@@ -40,6 +40,7 @@ public class SubmodelElementCollectionMapper implements RDFMapper<SubmodelElemen
 			SubmodelElementCollection modelElement) throws ValueMappingException {
 		// when no parent resource provided, try to find the root node!
 		if ( parent == null ) {
+			// check for type to resolve root based on type!
 			Optional<IRI> typeIRI = rdfMetaModel.getTypeInformation(modelElement.getSemanticId());
 			if ( typeIRI.isPresent()) {
 				Optional<Resource> root = model.filter(null, RDF.TYPE, typeIRI.get()).subjects()
@@ -55,8 +56,22 @@ public class SubmodelElementCollectionMapper implements RDFMapper<SubmodelElemen
 					// keep the root
 					parent = root.get();
 				}
-				
-			
+			}
+			else {
+				// need to search for subjects which are not used as value
+				Optional<Resource> root = model.subjects()
+						.stream()
+						.filter((Resource t) -> {
+	                                            if (!model.contains(null, null, t))
+	                                                return true;
+	                                            //
+	                                            return false;
+	                                })
+					.findFirst();
+					if ( root.isPresent()) {
+						// keep the root
+						parent = root.get();
+					}
 			}
 		}
 		

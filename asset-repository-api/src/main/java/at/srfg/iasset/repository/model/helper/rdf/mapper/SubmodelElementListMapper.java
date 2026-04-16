@@ -53,13 +53,17 @@ public class SubmodelElementListMapper implements RDFMapper<SubmodelElementList,
 			}
 
 		}
-		// need to synchronize the values based on the index
-		ArrayList<Value> values = RDFCollections.asValues(model, parent, new ArrayList<>() ); 
-		// traverse the list 
-		for (int i = 0; i < Math.min(values.size(), modelElement.getValue().size()); i++) {
-			if ( Resource.class.isInstance( values.get(i))) {
-				RDFHelper.fromRDF(rdfMetaModel, Resource.class.cast(values.get(i)), model, modelElement.getValue().get(i));
-			}
+		// parent must be set in order to proceed
+		if ( parent != null {
+			// need to synchronize the values based on the index
+			ArrayList<Value> values = RDFCollections.asValues(model, parent, new ArrayList<>() ); 
+			// traverse the list 
+			for (int i = 0; i < Math.min(values.size(), modelElement.getValue().size()); i++) {
+				// the value must be a valid rdf:Resource
+				if ( Resource.class.isInstance( values.get(i))) {
+					RDFHelper.fromRDF(rdfMetaModel, Resource.class.cast(values.get(i)), model, modelElement.getValue().get(i));
+				}
+			}		
 		}
 
 		return modelElement;
