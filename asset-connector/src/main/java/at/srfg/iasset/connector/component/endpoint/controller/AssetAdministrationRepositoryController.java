@@ -235,9 +235,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
         StringWriter sw = new StringWriter();
         RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, sw);
         
-//        writer.handleNamespace("schema", "http://schema.org/");
-//        writer.handleNamespace("ex", ex);
-        // JSON-LD Modus: COMPACT
+        // default JSON-LD Modus: COMPACT
         writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
 
         // Optional: hübsche Ausgabe und kompakte Arrays

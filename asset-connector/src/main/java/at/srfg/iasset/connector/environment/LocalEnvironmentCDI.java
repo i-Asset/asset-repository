@@ -312,8 +312,18 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 				if ( InstanceProperty.class.isInstance(theProp)) {
 					InstanceProperty iProp = InstanceProperty.class.cast(theProp);
 					//
-					ParameterizedType t = (ParameterizedType) supplier.getClass().getGenericInterfaces()[0];
-					final Type p = t.getActualTypeArguments()[0];
+//					Type type = supplier.getClass().getGenericInterfaces()[0];
+//					if ( type instanceof Class<?>) {
+//						Class<?> classType = (Class<?>) type;
+//						
+//					}
+//					else if ( type instanceof ParameterizedType) {
+//						
+//					}
+//				
+//					
+//					ParameterizedType t = (ParameterizedType) supplier.getClass().getGenericInterfaces()[0];
+//					final Type p = t.getActualTypeArguments()[0];
 					
 
 					iProp.supplier(new Supplier<String>() {
