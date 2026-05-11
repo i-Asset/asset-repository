@@ -45,10 +45,7 @@ public class SubmodelElementCollectionMapper implements RDFMapper<SubmodelElemen
 				Optional<Resource> root = model.filter(null, RDF.TYPE, typeIRI.get()).subjects()
 					.stream()
 					.filter((Resource t) -> {
-                                            if (!model.contains(null, null, t))
-                                                return true;
-                                            //
-                                            return false;
+                                            return (!model.contains(null, null, t));
                                 })
 				.findFirst();
 				if ( root.isPresent()) {
