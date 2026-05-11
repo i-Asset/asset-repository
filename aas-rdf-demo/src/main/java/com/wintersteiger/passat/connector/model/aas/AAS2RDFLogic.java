@@ -1,9 +1,7 @@
-package com.wintersteiger.passat.connector.model;
+package com.wintersteiger.passat.connector.model.aas;
 
 import java.time.LocalDateTime;
 import java.util.Random;
-
-import com.wintersteiger.passat.connector.model.aas.AASModelLogic;
 
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import jakarta.enterprise.context.ApplicationScoped;
