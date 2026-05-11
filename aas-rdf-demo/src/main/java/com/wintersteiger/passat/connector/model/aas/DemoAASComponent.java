@@ -16,7 +16,7 @@ import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class WintersteigerAAS implements AASComponentModel {
+public class DemoAASComponent implements AASComponentModel {
 	@Inject
 	private Logger logger;
 
