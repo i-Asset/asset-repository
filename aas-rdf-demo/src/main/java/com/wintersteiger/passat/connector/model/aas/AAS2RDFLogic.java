@@ -3,6 +3,7 @@ package com.wintersteiger.passat.connector.model.aas;
 import java.time.LocalDateTime;
 import java.util.Random;
 
+import at.srfg.iasset.connector.api.ValueSupplier;
 import at.srfg.iasset.connector.environment.LocalEnvironment;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -13,7 +14,7 @@ public class AAS2RDFLogic implements AASModelLogic{
     public void injectLogic(LocalEnvironment environment) {
         // Provide linking to the AAS Model - at this point, she live data from the asset might be provied!
         environment.registerValueCallback("http://example.org/aas2rdf", "http://example.org/aas2rdf/submodel", "data.lastUpdate", () -> LocalDateTime.now());
-        environment.registerValueCallback("http://example.org/aas2rdf", "http://example.org/aas2rdf/submodel", "data.maxRotationSpeed", () -> AAS2RDFLogic.nextInt(15000));
+        environment.registerValueCallback("http://example.org/aas2rdf", "http://example.org/aas2rdf/submodel", "data.maxRotationSpeed",() -> nextInt(5000));
     }
     public static int nextInt(int bound) {
         return new Random().nextInt(bound);
