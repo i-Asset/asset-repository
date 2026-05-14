@@ -199,8 +199,14 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 					if ( keySub.isPresent()) {
 						if ( keyIterator.hasNext()) {
 							Optional<SubmodelElement> elem = SubmodelUtils.resolveKeyPath(keySub.get(), keyIterator);
-							if ( elem.isPresent() )
+							if ( elem.isPresent() ) {
 								return Optional.of(elem.get());
+								
+							}
+							else {
+								return Optional.empty();
+							}
+							
 						}
 						return Optional.of(keySub.get());
 					}
