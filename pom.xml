@@ -25,6 +25,7 @@
 		<module>asset-repository-api</module>
 		<module>asset-repository-mongo</module>
 		<module>asset-repository-service</module>
+		<module>aas-rdf-demo</module>
 	</modules>
     <dependencies>
         <dependency>
