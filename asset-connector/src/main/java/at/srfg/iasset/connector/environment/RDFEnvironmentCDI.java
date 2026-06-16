@@ -62,7 +62,19 @@ public class RDFEnvironmentCDI implements RDFEnvironment {
 				if ( ConceptDescription.class.isInstance(semanticElementType)) {
 					// reference pointed to ConceptDescription
 					ConceptDescription cDesc = ConceptDescription.class.cast(semanticElementType);
-					//
+					// in case, the concept description has an isCaseOf reference, we can use this as the semantic identifier
+					Optional<Reference> typeRef = cDesc.getIsCaseOf().stream().filter((Reference t) -> {
+                                            // is it a
+                                            if ( IdType.isIRI(ReferenceUtils.firstKeyValue(t))) {
+                                                return true;
+                                            }
+                                            return false;
+                                        })
+										.findFirst();
+					if ( typeRef.isPresent() && IdType.isIRI(ReferenceUtils.firstKeyValue(typeRef.get()))) {
+						return Optional.of(SimpleValueFactory.getInstance().createIRI(ReferenceUtils.firstKeyValue(typeRef.get())));
+					}
+					// when no isCaseOf reference with IRI found, we can use the concept description's own id as semantic identifier
 					if ( IdType.isIRI(cDesc.getId())) {
 						return Optional.of(SimpleValueFactory.getInstance().createIRI(cDesc.getId()));
 					}
