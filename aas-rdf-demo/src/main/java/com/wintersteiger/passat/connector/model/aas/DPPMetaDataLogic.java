@@ -5,18 +5,20 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
+import org.eclipse.digitaltwin.aas4j.v3.model.AasSubmodelElements;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementList;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultLangStringNameType;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
 
 import at.srfg.iasset.connector.environment.LocalEnvironment;
-import at.srfg.iasset.repository.exception.ShellNotFoundException;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -49,18 +51,13 @@ public class DPPMetaDataLogic implements  AASModelLogic {
                 .build();
             //
             environment.setConceptDescription(cDesc.getId(), cDesc);
-
-            Submodel submodel = new DefaultSubmodel.Builder()
-                // TODO: Choose proper DPP-ID
-                .id("https://www.copadata.com/dpp/123456789")
-                .administration(template.getAdministration())
-                .displayName(template.getDisplayName())
-                .submodelElements(new DefaultSubmodelElementCollection.Builder()
+            environment.getSubmodel("http://example.org/aas2rdf/submodel").ifPresent(submodel -> {
+                submodel.setSemanticId(ReferenceUtils.asGlobalReference(cDesc.getId()));
+                submodel.getSubmodelElements().add(new DefaultSubmodelElementCollection.Builder()
                     .idShort("dppData")
                     // 
                     .semanticId(ReferenceUtils.asGlobalReference(ReferenceUtils.lastKeyValue(template.getSemanticId())))
-                    .build())
-                .build();
+                    .build());
 
                 SubmodelUtils.getSubmodelElementAt(submodel, "dppData", SubmodelElementCollection.class).ifPresent(dppContainer -> {
                     environment.createInstance(template, "digitalProductPassportId", Property.class).ifPresent(instance -> {
@@ -95,17 +92,27 @@ public class DPPMetaDataLogic implements  AASModelLogic {
                         instance.setValue("facilityId-123456789");
                         dppContainer.getValue().add(instance);
                     });
+                    environment.createInstance(template, "contentSpecificationIds", SubmodelElementList.class).ifPresent(instance -> {
+                        instance.setOrderRelevant(true);
+                        instance.setTypeValueListElement(AasSubmodelElements.PROPERTY);
+                        instance.setValueTypeListElement(DataTypeDefXsd.STRING);
+                        instance.getValue().add(new DefaultProperty.Builder()
+                            .idShort("0")
+                            .value("contentSpecificatonId-0")
+                            .valueType(DataTypeDefXsd.STRING)
+                            .semanticId(ReferenceUtils.asGlobalReference("urn:content:contentSpecificationId"))
+                            .build());
+                        instance.getValue().add(new DefaultProperty.Builder()
+                            .idShort("1")
+                            .value("contentSpecificatonId-1")
+                            .valueType(DataTypeDefXsd.STRING)
+                            .semanticId(ReferenceUtils.asGlobalReference("urn:content:contentSpecificationId"))
+                            .build());
+                        dppContainer.getValue().add(instance);
+                    });
                 });
+            });
 
-            
-
-            
-            try {
-                environment.addSubmodel("http://example.org/aas2rdf", submodel);
-            } catch (ShellNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
         }
 
 
