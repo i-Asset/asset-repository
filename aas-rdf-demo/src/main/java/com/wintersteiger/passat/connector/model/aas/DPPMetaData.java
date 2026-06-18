@@ -40,7 +40,7 @@ public class DPPMetaData implements AASEnvironment {
 
 
 	private Environment loadEnvironment() throws Exception {
-		FileInputStream fs = new FileInputStream(new File("IDTA 02099-1_Template Digital Product Passport - Part 1.json"));
+		FileInputStream fs = new FileInputStream(new File("DPPMetaDataJson.json"));
 		Environment env = new org.eclipse.digitaltwin.aas4j.v3.dataformat.json.JsonDeserializer().read(fs, Environment.class); 
 //		Environment env = new XmlDeserializer().read(fs);
 		

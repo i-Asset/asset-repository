@@ -247,25 +247,6 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
         // Optional: hübsche Ausgabe und kompakte Arrays
         writer.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
         writer.getWriterConfig().set(JSONLDSettings.COMPACT_ARRAYS, true);
-        // 
-        RdfProvider.provider().createDataset();
-        RdfProvider.provider().createIRI("urn:samm:com.examples.1.0.0#productClassifications");
-        
-        String context = "{\n"
-        		+ "  \"@context\": {\n"
-        		+ "    \"urn:samm:com.examples:1.0.0#productClassifications\": {\n"
-        		+ "      \"@container\": \"@set\"\n"
-        		+ "    }\n"
-        		+ "  }\n"
-        		+ "}   ";
-        StringReader str = new StringReader(context);
-        try {
-			JsonDocument doc = JsonDocument.of(str);
-			writer.getWriterConfig().set(JSONLDSettings.FRAME, doc);
-		} catch (JsonLdError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
         Rio.write(model, writer);
         return sw.toString();
 
