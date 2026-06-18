@@ -1,5 +1,6 @@
 package com.wintersteiger.passat.connector.model.aas;
 
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AasSubmodelElements;
@@ -26,27 +27,34 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementList;
 import org.slf4j.Logger;
 
 import at.srfg.iasset.connector.environment.AASEnvironment;
+import at.srfg.iasset.connector.environment.LocalEnvironment;
+import at.srfg.iasset.repository.utils.ReferenceUtils;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class AAS2RDFData implements AASEnvironment {
+public class DPPMetaDataInstance implements AASEnvironment {
 
 	@Inject
 	private Logger logger;
+	
+	@Inject 
+	LocalEnvironment environment;
 	/**
+	 * 
 	 * Settings for Atomic Connector
 	 */
 	private AssetAdministrationShell shell;
 	private Submodel operationSubmodel;
 	
-	private final String SUBMODEL_ID = "urn:samm:com.examples:1.0.0#AAS2RDFDemo/submodel";
+	private final String SUBMODEL_ID = "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0";
 	
 
 	private AssetAdministrationShell createShell() {
+		
 		AssetAdministrationShell shell = new DefaultAssetAdministrationShell.Builder()
-				.id("http://example.org/aas2rdf")
-				.idShort("aas2rdf")
+				.id("http://dppmeta.org/exampleAAS")
+				.idShort("dppMetaAAS")
 				.assetInformation(new DefaultAssetInformation.Builder()
 						.assetKind(AssetKind.INSTANCE)
 						.build())
@@ -58,7 +66,7 @@ public class AAS2RDFData implements AASEnvironment {
 						.type(ReferenceTypes.MODEL_REFERENCE)
 						.keys(new DefaultKey.Builder()
 								.type(KeyTypes.SUBMODEL)
-								.value("http://example.org/aas2rdf/submodel")
+								.value("http://dppmeta.org/exampleAAS/submodel")
 								.build())
 						.build())
 				.build();
@@ -67,44 +75,15 @@ public class AAS2RDFData implements AASEnvironment {
 	}
 	private Submodel createSubmodel() {
 		Submodel submodel = new DefaultSubmodel.Builder()
-				.id("http://example.org/aas2rdf/submodel")
-				.idShort("aas2rdfsub")
+				.id("http://dppmeta.org/exampleAAS/submodel")
+				.idShort("dppMeta")
 				.submodelElements(new DefaultSubmodelElementCollection.Builder()
 						.idShort("data")
 						.displayName(new DefaultLangStringNameType.Builder()
 								.language("de")
 								.text("Container for RDF-Data")
 								.build())
-						.value(new DefaultMultiLanguageProperty.Builder()
-								.idShort("label")
-								.value(new DefaultLangStringTextType.Builder()
-										.language("de")
-										.text("Bezeichnung DEUTSCH")
-										.build())
-								.value(new DefaultLangStringTextType.Builder()
-										.language("en")
-										.text("Bezeichnung ENGLISCH")
-										.build())
-								.value(new DefaultLangStringTextType.Builder()
-										.language("dk")
-										.text("Bezeichnung DÄNISCH")
-										.build())
-								.semanticId(new DefaultReference.Builder()
-										.type(ReferenceTypes.MODEL_REFERENCE)
-										.keys(new DefaultKey.Builder()
-												.type(KeyTypes.SUBMODEL)
-												.value(SUBMODEL_ID)
-												.build())
-										.keys(new DefaultKey.Builder()
-												.type(KeyTypes.MULTI_LANGUAGE_PROPERTY)
-												.value("label")
-												.build())
-										.build())
-								.build())
 						.value(new DefaultProperty.Builder()
-								.idShort("maxRotationSpeed")
-								.value("2000")
-								.valueType(DataTypeDefXsd.INT)
 								.semanticId(new DefaultReference.Builder()
 										.type(ReferenceTypes.MODEL_REFERENCE)
 										.keys(new DefaultKey.Builder()
@@ -113,14 +92,73 @@ public class AAS2RDFData implements AASEnvironment {
 												.build())
 										.keys(new DefaultKey.Builder()
 												.type(KeyTypes.PROPERTY)
-												.value("maxRotationSpeed")
+												.value("digitalProductPassportId")
 												.build())
 										.build())
-								.build())	
+								.valueType(DataTypeDefXsd.STRING)
+								.value("http://wseqr.amersports.com/dpp/1234567")
+								.build())
 						.value(new DefaultProperty.Builder()
-								.idShort("lastUpdate")
-								.value(java.time.LocalDateTime.now().toString())
-								.valueType(DataTypeDefXsd.DATE_TIME)
+								.semanticId(new DefaultReference.Builder()
+										.type(ReferenceTypes.MODEL_REFERENCE)
+										.keys(new DefaultKey.Builder()
+												.type(KeyTypes.SUBMODEL)
+												.value(SUBMODEL_ID)
+												.build())
+										.keys(new DefaultKey.Builder()
+												.type(KeyTypes.PROPERTY)
+												.value("uniqueProductIdentifier")
+												.build())
+										.build())
+								.valueType(DataTypeDefXsd.STRING)
+								.value("http://wseqr.amersports.com/?sn=1234567")
+								.build())
+						.value(new DefaultProperty.Builder()
+								.semanticId(new DefaultReference.Builder()
+										.type(ReferenceTypes.MODEL_REFERENCE)
+										.keys(new DefaultKey.Builder()
+												.type(KeyTypes.SUBMODEL)
+												.value(SUBMODEL_ID)
+												.build())
+										.keys(new DefaultKey.Builder()
+												.type(KeyTypes.PROPERTY)
+												.value("granularity")
+												.build())
+										.build())
+								.valueType(DataTypeDefXsd.STRING)
+								.value("Item")
+								.build())
+						.value(new DefaultProperty.Builder()
+								.semanticId(new DefaultReference.Builder()
+										.type(ReferenceTypes.MODEL_REFERENCE)
+										.keys(new DefaultKey.Builder()
+												.type(KeyTypes.SUBMODEL)
+												.value(SUBMODEL_ID)
+												.build())
+										.keys(new DefaultKey.Builder()
+												.type(KeyTypes.PROPERTY)
+												.value("dppSchemaVersion")
+												.build())
+										.build())
+								.valueType(DataTypeDefXsd.STRING)
+								.value("https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0")
+								.build())
+						.value(new DefaultProperty.Builder()
+								.semanticId(new DefaultReference.Builder()
+										.type(ReferenceTypes.MODEL_REFERENCE)
+										.keys(new DefaultKey.Builder()
+												.type(KeyTypes.SUBMODEL)
+												.value(SUBMODEL_ID)
+												.build())
+										.keys(new DefaultKey.Builder()
+												.type(KeyTypes.PROPERTY)
+												.value("dppStatus")
+												.build())
+										.build())
+								.valueType(DataTypeDefXsd.STRING)
+								.value("Active")
+								.build())
+						.value(new DefaultProperty.Builder()
 								.semanticId(new DefaultReference.Builder()
 										.type(ReferenceTypes.MODEL_REFERENCE)
 										.keys(new DefaultKey.Builder()
@@ -132,22 +170,10 @@ public class AAS2RDFData implements AASEnvironment {
 												.value("lastUpdate")
 												.build())
 										.build())
-								.build())	
-						.value(new DefaultSubmodelElementList.Builder()
-								.idShort("productClassification")
-								.orderRelevant(false)
-								.typeValueListElement(AasSubmodelElements.SUBMODEL_ELEMENT_COLLECTION)
-								.semanticIdListElement(new DefaultReference.Builder()
-										.type(ReferenceTypes.MODEL_REFERENCE)
-										.keys(new DefaultKey.Builder()
-												.type(KeyTypes.SUBMODEL)
-												.value(SUBMODEL_ID)
-												.build())
-										.keys(new DefaultKey.Builder()
-												.type(KeyTypes.PROPERTY)
-												.value("productClassifications")
-												.build())
-										.build())			
+								.valueType(DataTypeDefXsd.DATE_TIME)
+								.value(LocalDateTime.now().toString())
+								.build())
+						.value(new DefaultProperty.Builder()
 								.semanticId(new DefaultReference.Builder()
 										.type(ReferenceTypes.MODEL_REFERENCE)
 										.keys(new DefaultKey.Builder()
@@ -156,12 +182,13 @@ public class AAS2RDFData implements AASEnvironment {
 												.build())
 										.keys(new DefaultKey.Builder()
 												.type(KeyTypes.PROPERTY)
-												.value("productClassifications")
+												.value("economicOperatorId")
 												.build())
-										.build())			
-								.value(createClassification("V01", "22-01-10", "ECLASS"))
-								.value(createClassification("V1.0", "http://example.org/class12", "GS1"))
+										.build())
+								.valueType(DataTypeDefXsd.STRING)
+								.value("urn:dpp:amersports.com")
 								.build())
+
 					.build())
 				.build();
 		return submodel;

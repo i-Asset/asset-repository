@@ -31,6 +31,7 @@ import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import jakarta.inject.Inject;
+import jakarta.json.JsonStructure;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -44,6 +45,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.SecurityContext;
+import no.hasmac.jsonld.JsonLd;
+import no.hasmac.jsonld.JsonLdError;
+import no.hasmac.jsonld.document.Document;
+import no.hasmac.jsonld.document.JsonDocument;
+import no.hasmac.rdf.spi.RdfProvider;
 
 @Path("")
 public class AssetAdministrationRepositoryController implements IAssetAdministrationShellRepositoryInterface {
@@ -241,8 +247,25 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
         // Optional: hübsche Ausgabe und kompakte Arrays
         writer.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
         writer.getWriterConfig().set(JSONLDSettings.COMPACT_ARRAYS, true);
-    
+        // 
+        RdfProvider.provider().createDataset();
+        RdfProvider.provider().createIRI("urn:samm:com.examples.1.0.0#productClassifications");
         
+        String context = "{\n"
+        		+ "  \"@context\": {\n"
+        		+ "    \"urn:samm:com.examples:1.0.0#productClassifications\": {\n"
+        		+ "      \"@container\": \"@set\"\n"
+        		+ "    }\n"
+        		+ "  }\n"
+        		+ "}   ";
+        StringReader str = new StringReader(context);
+        try {
+			JsonDocument doc = JsonDocument.of(str);
+			writer.getWriterConfig().set(JSONLDSettings.FRAME, doc);
+		} catch (JsonLdError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         Rio.write(model, writer);
         return sw.toString();
 
