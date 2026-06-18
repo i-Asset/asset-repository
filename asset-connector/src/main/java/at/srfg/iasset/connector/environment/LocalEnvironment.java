@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.EventElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
@@ -50,6 +51,8 @@ public interface LocalEnvironment {
 	public Optional<AssetAdministrationShell> getAssetAdministrationShell(String identifier);
 	public Optional<Submodel> getSubmodel(String aasIdentifier, String submodelIdentifier);
 	public Optional<Submodel> getSubmodel(String submodelIdentifier);
+	public Optional<ConceptDescription> getConceptDescription(String identifier);
+	public void setConceptDescription(String identifier, ConceptDescription conceptDescription);
 	/**
 	 * Add a new {@link Submodel} to the local environment. The model is registered
 	 * with the identified {@link AssetAdministrationShell} 
@@ -260,7 +263,16 @@ public interface LocalEnvironment {
 	 * @param aasIdentifier
 	 */
 	public void registerAssetAdministrationShell(String aasIdentifier);
-	
-	
+	/**
+	 * Create a new instance of the provided template. The template element is identified by the provided path and must be of {@link ModelingKind#TEMPLATE}. The created instance is registered with the local environment and can be accessed via the provided path.
+	 * @param <T>
+	 * @param template
+	 * @param path
+	 * @return
+	 */
+	public <T extends SubmodelElement> Optional<T> createInstance(Submodel template, String path);
+	public <T extends SubmodelElement> Optional<T> createInstance(Submodel template, String path, Class<T> clazz);
+    void setConceptDescription(ConceptDescription conceptDescription);
+
 
 }
