@@ -4,6 +4,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContent;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContentRDF;
+import org.eclipse.digitaltwin.aas4j.v3.model.EmbeddedDataSpecification;
 import org.eclipse.digitaltwin.aas4j.v3.model.HasSemantics;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
@@ -62,19 +65,33 @@ public class RDFEnvironmentCDI implements RDFEnvironment {
 				if ( ConceptDescription.class.isInstance(semanticElementType)) {
 					// reference pointed to ConceptDescription
 					ConceptDescription cDesc = ConceptDescription.class.cast(semanticElementType);
+					Optional<EmbeddedDataSpecification> embeddedDataSpecOpt = cDesc.getEmbeddedDataSpecifications().stream().filter((EmbeddedDataSpecification e) -> {
+						// filter logic here
+						DataSpecificationContent content = e.getDataSpecificationContent();
+						if ( content instanceof DataSpecificationContentRDF rdf) {
+							return true;
+						}
+						return false;
+					}).findFirst();
+					if ( embeddedDataSpecOpt.isPresent()) {
+						DataSpecificationContentRDF rdfContent = DataSpecificationContentRDF.class.cast(embeddedDataSpecOpt.get().getDataSpecificationContent());
+						return Optional.of(SimpleValueFactory.getInstance().createIRI(rdfContent.getIri()));
+					}
+					/*
 					// in case, the concept description has an isCaseOf reference, we can use this as the semantic identifier
 					Optional<Reference> typeRef = cDesc.getIsCaseOf().stream().filter((Reference t) -> {
-                                            // is it a
-                                            if ( IdType.isIRI(ReferenceUtils.firstKeyValue(t))) {
-                                                return true;
-                                            }
-                                            return false;
-                                        })
-										.findFirst();
+						// is it a
+						if ( IdType.isIRI(ReferenceUtils.firstKeyValue(t))) {
+							return true;
+						}
+						return false;
+					})
+					.findFirst();
 					if ( typeRef.isPresent() && IdType.isIRI(ReferenceUtils.firstKeyValue(typeRef.get()))) {
 						return Optional.of(SimpleValueFactory.getInstance().createIRI(ReferenceUtils.firstKeyValue(typeRef.get())));
 					}
 					// when no isCaseOf reference with IRI found, we can use the concept description's own id as semantic identifier
+					*/
 					if ( IdType.isIRI(cDesc.getId())) {
 						return Optional.of(SimpleValueFactory.getInstance().createIRI(cDesc.getId()));
 					}

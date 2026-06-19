@@ -84,7 +84,7 @@ public class DPPMetaDataLogic implements  AASModelLogic {
                         instance.setValue(LocalDateTime.of(LocalDate.now(), LocalTime.of(12,00)).toString());
                         dppContainer.getValue().add(instance);
                     });
-                    environment.createInstance(template, "economicOperatiorId", Property.class).ifPresent(instance -> {
+                    environment.createInstance(template, "economicOperatorId", Property.class).ifPresent(instance -> {
                         instance.setValue("economicOperator-123456789");
                         dppContainer.getValue().add(instance);
                     });
@@ -100,13 +100,13 @@ public class DPPMetaDataLogic implements  AASModelLogic {
                             .idShort("0")
                             .value("contentSpecificatonId-0")
                             .valueType(DataTypeDefXsd.STRING)
-                            .semanticId(ReferenceUtils.asGlobalReference("urn:content:contentSpecificationId"))
+                            .semanticId(instance.getSemanticId())
                             .build());
                         instance.getValue().add(new DefaultProperty.Builder()
                             .idShort("1")
                             .value("contentSpecificatonId-1")
                             .valueType(DataTypeDefXsd.STRING)
-                            .semanticId(ReferenceUtils.asGlobalReference("urn:content:contentSpecificationId"))
+                            .semanticId(instance.getSemanticId())
                             .build());
                         dppContainer.getValue().add(instance);
                     });

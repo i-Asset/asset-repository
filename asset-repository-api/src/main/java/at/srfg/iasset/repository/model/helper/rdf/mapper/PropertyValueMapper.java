@@ -3,19 +3,13 @@ package at.srfg.iasset.repository.model.helper.rdf.mapper;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import org.eclipse.digitaltwin.aas4j.v3.model.MultiLanguageProperty;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.impl.TreeModel;
 import org.eclipse.rdf4j.model.util.Models;
-import org.eclipse.rdf4j.model.vocabulary.XSD;
-
 import at.srfg.iasset.repository.component.RDFEnvironment;
-import at.srfg.iasset.repository.model.helper.rdf.MultiLanguagePropertyValue;
 import at.srfg.iasset.repository.model.helper.rdf.PropertyValue;
 import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 import at.srfg.iasset.repository.model.helper.value.type.Value;

@@ -8,8 +8,6 @@ import org.eclipse.digitaltwin.aas4j.v3.model.LangStringNameType;
 import org.eclipse.digitaltwin.aas4j.v3.model.LangStringTextType;
 import org.eclipse.digitaltwin.aas4j.v3.model.annotations.IRI;
 import org.eclipse.digitaltwin.aas4j.v3.model.builder.DataSpecificationContentRDFBuilder;
-import org.eclipse.digitaltwin.aas4j.v3.model.builder.OperationRequestValueBuilder;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationRequestValue.Builder;
 
 public class DefaultDataSpecificationContentRDF implements DataSpecificationContentRDF {
 

@@ -25,7 +25,7 @@ public class SubmodelElementListMapper implements RDFMapper<SubmodelElementList,
 		Optional<IRI> listProperty = rdfEnvironment.getSemanticIdentifier(modelElement);
 
 		Optional<IRI> listSemantics = rdfEnvironment.getSemanticIdentifier(modelElement.getSemanticIdListElement());
-		SubmodelElementListValue listValue = new SubmodelElementListValue(listProperty.get(), modelElement.getOrderRelevant());
+		SubmodelElementListValue listValue = new SubmodelElementListValue(listProperty.get(), modelElement.getOrderRelevant(), modelElement.getTypeValueListElement());
 		for ( SubmodelElement element : modelElement.getValue()) {
 			RDFHelper.toValue(element, rdfEnvironment).ifPresent((value)-> listValue.addValue(value));
 		}

@@ -9,7 +9,6 @@ import java.util.function.Function;
 import org.eclipse.esmf.aspectmodel.aas.AasFileFormat;
 import org.eclipse.esmf.aspectmodel.aas.AasGenerationConfig;
 import org.eclipse.esmf.aspectmodel.aas.AasGenerationConfigBuilder;
-import org.eclipse.esmf.aspectmodel.aas.AspectModelAasGenerator;
 import org.eclipse.esmf.aspectmodel.aas.DefaultPropertyMapper;
 import org.eclipse.esmf.aspectmodel.loader.AspectModelLoader;
 import org.eclipse.esmf.metamodel.AspectModel;
