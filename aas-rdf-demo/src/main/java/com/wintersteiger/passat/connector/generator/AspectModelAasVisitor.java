@@ -592,10 +592,25 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
 	            .description( definitionsProperty )
 	            .preferredName( preferredNames )
 	            .sameAs(property.getSee())
-	            .resourceType(property.getClass().getName())
+	            .resourceType(extractResourceType( property.getCharacteristic() ) )
 //	            .shortName( LangStringMapper.SHORT_NAME.createLangString( property.getName(), DEFAULT_LOCALE ) )
 	            .build();
 	   }
+
+	private String extractResourceType(Optional<Characteristic> characteristic) {
+		// whenever 
+		if (characteristic.isPresent()) {
+			Optional<Type> dataType = characteristic.get().getDataType();
+			if ( dataType.isPresent()) {
+				if ( dataType.get().isComplexType() ) {
+               return dataType.get().getUrn();
+				}
+			}
+			
+		}
+		return null;
+	}
+
 
    private DataSpecificationIec61360 extractDataSpecificationContent( final Property property ) {
       final List<LangStringDefinitionTypeIec61360> definitionsProperty = property.getDescriptions().stream()
