@@ -30,7 +30,7 @@ public class Generator {
 	}
 	void doTheStuff() throws Exception {
 		DefaultPropertyMapper propertyDefault = new DefaultPropertyMapper();
-		AspectModel model = new AspectModelLoader().load(new File("AAS2RDFDemo.ttl"));
+		AspectModel model = new AspectModelLoader().load(new File("DppMetadata.ttl"));
 		
 		
 		AasGenerationConfig config = AasGenerationConfigBuilder.builder()
@@ -43,7 +43,7 @@ public class Generator {
 			@Override
 			public OutputStream apply(String t) {
 				try {
-					FileOutputStream out = new FileOutputStream(new File("AAS2RDFDemo.json"));
+					FileOutputStream out = new FileOutputStream(new File("DPPMetaDataJson.json"));
 					return out;
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block

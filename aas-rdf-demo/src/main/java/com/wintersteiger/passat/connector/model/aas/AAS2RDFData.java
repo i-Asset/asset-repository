@@ -135,7 +135,7 @@ public class AAS2RDFData implements AASEnvironment {
 								.build())	
 						.value(new DefaultSubmodelElementList.Builder()
 								.idShort("productClassification")
-								.orderRelevant(true)
+								.orderRelevant(false)
 								.typeValueListElement(AasSubmodelElements.SUBMODEL_ELEMENT_COLLECTION)
 								.semanticIdListElement(new DefaultReference.Builder()
 										.type(ReferenceTypes.MODEL_REFERENCE)

@@ -26,8 +26,8 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped 
 public class DPPMetaDataLogic implements  AASModelLogic {
-    public static final String aasIdentifier = "https://admin-shell.io/idta/aas/DppMetadata/1/0";
-    public static final String submodelIdentifier = "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0";
+    public static final String aasIdentifier = "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata";
+    public static final String submodelIdentifier = "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata/submodel";
 
     @Inject
     private LocalEnvironment environment;

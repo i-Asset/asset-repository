@@ -384,7 +384,6 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		// TODO Auto-generated method stub
 		try {
 			
-			ParameterizedType t = (ParameterizedType) parameter.getClass().getGenericSuperclass();
 			
 			Method method = getClass().getMethod("executeMethod", String.class, String.class, String.class, Object.class);
 			for (Type type : method.getGenericParameterTypes() ) {

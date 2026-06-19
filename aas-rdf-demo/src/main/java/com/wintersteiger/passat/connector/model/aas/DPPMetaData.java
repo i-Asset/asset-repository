@@ -17,8 +17,30 @@ public class DPPMetaData implements AASEnvironment {
 	
 
 
+//	private Environment loadEnvironment() throws Exception {
+//		FileInputStream fs = new FileInputStream(new File("DPPMetaData.json"));
+//		Environment env = new org.eclipse.digitaltwin.aas4j.v3.dataformat.json.JsonDeserializer().read(fs, Environment.class); 
+////		Environment env = new XmlDeserializer().read(fs);
+//		
+//		return env;
+//	}
+//	@Override
+//	public Environment getAASData() {
+//		try {
+//			return loadEnvironment();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return new DefaultEnvironment.Builder().build();
+//		}
+//	}
+	
+//	@Resource(lookup = "/samm/meta-model/2.2.0/aspect-meta-model-definitions.ttl")
+//	private InputStream samm;
+	
+
+
 	private Environment loadEnvironment() throws Exception {
-		FileInputStream fs = new FileInputStream(new File("IDTA 02099-1_Template Digital Product Passport - Part 1.json"));
+		FileInputStream fs = new FileInputStream(new File("DPPMetaDataJson.json"));
 		Environment env = new org.eclipse.digitaltwin.aas4j.v3.dataformat.json.JsonDeserializer().read(fs, Environment.class); 
 //		Environment env = new XmlDeserializer().read(fs);
 		

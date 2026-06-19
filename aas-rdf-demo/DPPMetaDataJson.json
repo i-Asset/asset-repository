@@ -1,0 +1,890 @@
+{
+  "assetAdministrationShells" : [ {
+    "modelType" : "AssetAdministrationShell",
+    "assetInformation" : {
+      "assetKind" : "Type"
+    },
+    "submodels" : [ {
+      "keys" : [ {
+        "type" : "Submodel",
+        "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata/submodel"
+      } ],
+      "type" : "ModelReference"
+    } ],
+    "administration" : { },
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata",
+    "description" : [ {
+      "language" : "en",
+      "text" : "defaultAdminShell"
+    } ],
+    "idShort" : "defaultAdminShell"
+  } ],
+  "conceptDescriptions" : [ {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "\n   Digital record of product characteristics throughout its life cycle.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "digital product passport (DPP)"
+        }, {
+          "language" : "de",
+          "text" : "Digitaler Produktpass (DPP)"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "DppMetadata"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata",
+    "category" : "APPLICATION_CLASS",
+    "description" : [ {
+      "language" : "en",
+      "text" : "\n   Digital record of product characteristics throughout its life cycle.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+    } ],
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "digital product passport (DPP)"
+    }, {
+      "language" : "de",
+      "text" : "Digitaler Produktpass (DPP)"
+    } ],
+    "idShort" : "DppMetadata"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "\n   Unique identifier of an instance of the digital product passport.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "unique product passport identifier (DPP ID)"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "digitalProductPassportId"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#digitalProductPassportId",
+        "resourceType" : "org.eclipse.esmf.aspectmodel.loader.DefaultPropertyWrapper",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "unique product passport identifier (DPP ID)"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : "\n   Unique identifier of an instance of the digital product passport.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/idta/cds/digitalProductPassportId/1" ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#digitalProductPassportId",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "unique product passport identifier (DPP ID)"
+    } ],
+    "idShort" : "digitalProductPassportId"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "\n   Unique string of characters for the identification of a product, that also enables a web link to the digital product passport.\n   \n   String formatted according to EN 18219:2026.\n\n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "unique product identifier"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "uniqueProductIdentifier"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#uniqueProductIdentifier",
+        "resourceType" : "org.eclipse.esmf.aspectmodel.loader.DefaultPropertyWrapper",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "unique product identifier"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : "\n   Unique string of characters for the identification of a product, that also enables a web link to the digital product passport.\n   \n   String formatted according to EN 18219:2026.\n\n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1", "urn:irdi:0112/2///61360_7#CBA055#001", "urn:irdi:0112/2///61987#ABN590#002", "urn:irdi:0173-1#02-ABH173#003", "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#uriOfTheProduct" ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#uniqueProductIdentifier",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "unique product identifier"
+    } ],
+    "idShort" : "uniqueProductIdentifier"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : " \n   The granularity of the Product. \n   \n   There are three values: ‘Model‘, ‘Item‘ and ‘Batch‘.\n   \n   The term ‘model’ usually refers to a version of a product of which all units share the same technical characteristics relevant for the ecodesign requirements \n   and the same model identifier, the term ‘batch’ usually refers to a subset \n   of a specific model composed of all products produced in a specific manufacturing plant at a specific moment \n   in time and the term ‘item’ usually refers to a single unit of a model. \n   \n  SOURCE: ESPR p2024/1781, REGULATION (EU) 2024/1781 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 13 June 2024 \n  establishing a framework for the setting of ecodesign requirements for sustainable products, \n  amending Directive (EU) 2020/1828 and Regulation (EU) 2023/1542 and repealing Directive 2009/125/EC. URI: OJ:L_202401781\n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "granularity"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "granularity"
+        } ],
+        "valueList" : {
+          "valueReferencePairs" : [ {
+            "value" : "Model",
+            "valueId" : {
+              "keys" : [ {
+                "type" : "DataElement",
+                "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#GranularityEnum:_Model5e2c614c"
+              } ],
+              "type" : "ModelReference"
+            }
+          }, {
+            "value" : "Batch",
+            "valueId" : {
+              "keys" : [ {
+                "type" : "DataElement",
+                "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#GranularityEnum:_Batch320b5d80"
+              } ],
+              "type" : "ModelReference"
+            }
+          }, {
+            "value" : "Item",
+            "valueId" : {
+              "keys" : [ {
+                "type" : "DataElement",
+                "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#GranularityEnum:_Item652bcc3a"
+              } ],
+              "type" : "ModelReference"
+            }
+          } ]
+        }
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#granularity",
+        "resourceType" : "org.eclipse.esmf.aspectmodel.loader.DefaultPropertyWrapper",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "granularity"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : " \n   The granularity of the Product. \n   \n   There are three values: ‘Model‘, ‘Item‘ and ‘Batch‘.\n   \n   The term ‘model’ usually refers to a version of a product of which all units share the same technical characteristics relevant for the ecodesign requirements \n   and the same model identifier, the term ‘batch’ usually refers to a subset \n   of a specific model composed of all products produced in a specific manufacturing plant at a specific moment \n   in time and the term ‘item’ usually refers to a single unit of a model. \n   \n  SOURCE: ESPR p2024/1781, REGULATION (EU) 2024/1781 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 13 June 2024 \n  establishing a framework for the setting of ecodesign requirements for sustainable products, \n  amending Directive (EU) 2020/1828 and Regulation (EU) 2023/1542 and repealing Directive 2009/125/EC. URI: OJ:L_202401781\n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/aas/3/1/AssetKind", "https://admin-shell.io/idta/cds/granularity/1" ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#granularity",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "granularity"
+    } ],
+    "idShort" : "granularity"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "\n   Reference standard the DPP instance schema refers to.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "DPP schema version"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "dppSchemaVersion"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#dppSchemaVersion",
+        "resourceType" : "org.eclipse.esmf.aspectmodel.loader.DefaultPropertyWrapper",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "DPP schema version"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : "\n   Reference standard the DPP instance schema refers to.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/idta/cds/dppSchemaVersion/1" ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#dppSchemaVersion",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "DPP schema version"
+    } ],
+    "idShort" : "dppSchemaVersion"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "\n   Status of the DPP instance as digital resource.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "DPP status"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "dppStatus"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#dppStatus",
+        "resourceType" : "org.eclipse.esmf.aspectmodel.loader.DefaultPropertyWrapper",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "DPP status"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : "\n   Status of the DPP instance as digital resource.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/idta/cds/dppSchemaVersion/1" ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#dppStatus",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "DPP status"
+    } ],
+    "idShort" : "dppStatus"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "\n   Date and time of the latest update to the DPP instance.\n   \n   String formatted as Timestamp UTC-based according to ISO 8601-1:2019/Amd1:2022.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "last update"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "lastUpdate"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#lastUpdate",
+        "resourceType" : "org.eclipse.esmf.aspectmodel.loader.DefaultPropertyWrapper",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "last update"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : "\n   Date and time of the latest update to the DPP instance.\n   \n   String formatted as Timestamp UTC-based according to ISO 8601-1:2019/Amd1:2022.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/aas/3/2/AdministrativeInformation/updatedAt", "https://admin-shell.io/idta/cds/lastUpdate/1" ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#lastUpdate",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "last update"
+    } ],
+    "idShort" : "lastUpdate"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "\n   Unique string of characters for the identification of an actor involved in a product's life cycle.\n   \n   String formatted according to EN 18219:2026.\n\n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "economic operator ID"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "economicOperatorId"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#economicOperatorId",
+        "resourceType" : "org.eclipse.esmf.aspectmodel.loader.DefaultPropertyWrapper",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "economic operator ID"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : "\n   Unique string of characters for the identification of an actor involved in a product's life cycle.\n   \n   String formatted according to EN 18219:2026.\n\n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/idta/cds/economicOperatorId/1" ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#economicOperatorId",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "economic operator ID"
+    } ],
+    "idShort" : "economicOperatorId"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "\n   Unique string of characters for the identification of locations or buildings involved in a product's value chain or used by actors  involved in a product's life cycle.\n   \n   String formatted according to EN 18219:2026.\n\n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "facility ID"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "facilityId"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#facilityId",
+        "resourceType" : "org.eclipse.esmf.aspectmodel.loader.DefaultPropertyWrapper",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "facility ID"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : "\n   Unique string of characters for the identification of locations or buildings involved in a product's value chain or used by actors  involved in a product's life cycle.\n   \n   String formatted according to EN 18219:2026.\n\n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/idta/cds/facilityId/1", "https://adminshell.io/idta/nameplate/3/0/UniqueFacilityIdentifier", "urn:irdi:0173-1#02-AAV646#003", "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#uniqueFacilityIdentifier" ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#facilityId",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "facility ID"
+    } ],
+    "idShort" : "facilityId"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "\n   Reference to horizontal or product-type related content specifications for the DPP.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "content specification IDs"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "contentSpecificationIds"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#contentSpecificationIds",
+        "resourceType" : "org.eclipse.esmf.aspectmodel.loader.DefaultPropertyWrapper",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "content specification IDs"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : "\n   Reference to horizontal or product-type related content specifications for the DPP.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/idta/cds/contentSpecificationIds/1" ]
+      }
+    } ],
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#contentSpecificationIds",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "content specification IDs"
+    } ],
+    "idShort" : "contentSpecificationIds"
+  } ],
+  "submodels" : [ {
+    "modelType" : "Submodel",
+    "kind" : "Template",
+    "semanticId" : {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata"
+      } ],
+      "type" : "ExternalReference"
+    },
+    "supplementalSemanticIds" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "https://admin-shell.io/idta/cds/dppMetadata/1"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "administration" : { },
+    "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata/submodel",
+    "description" : [ {
+      "language" : "en",
+      "text" : "\n   Digital record of product characteristics throughout its life cycle.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+    } ],
+    "idShort" : "DppMetadata",
+    "submodelElements" : [ {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#digitalProductPassportId"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "supplementalSemanticIds" : [ {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/idta/cds/digitalProductPassportId/1"
+        } ],
+        "type" : "ExternalReference"
+      } ],
+      "valueType" : "xs:string",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "unique product passport identifier (DPP ID)"
+      } ],
+      "idShort" : "digitalProductPassportId"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#uniqueProductIdentifier"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "supplementalSemanticIds" : [ {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:irdi:0112/2///61987#ABN590#002"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#uriOfTheProduct"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:irdi:0112/2///61360_7#CBA055#001"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:irdi:0173-1#02-ABH173#003"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
+        } ],
+        "type" : "ExternalReference"
+      } ],
+      "valueType" : "xs:string",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "unique product identifier"
+      } ],
+      "idShort" : "uniqueProductIdentifier"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#granularity"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "supplementalSemanticIds" : [ {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/idta/cds/granularity/1"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/aas/3/1/AssetKind"
+        } ],
+        "type" : "ExternalReference"
+      } ],
+      "valueType" : "xs:string",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "granularity"
+      } ],
+      "idShort" : "granularity"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#dppSchemaVersion"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "supplementalSemanticIds" : [ {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/idta/cds/dppSchemaVersion/1"
+        } ],
+        "type" : "ExternalReference"
+      } ],
+      "valueType" : "xs:string",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "DPP schema version"
+      } ],
+      "idShort" : "dppSchemaVersion"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#dppStatus"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "supplementalSemanticIds" : [ {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/idta/cds/dppSchemaVersion/1"
+        } ],
+        "type" : "ExternalReference"
+      } ],
+      "valueType" : "xs:string",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "DPP status"
+      } ],
+      "idShort" : "dppStatus"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#lastUpdate"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "supplementalSemanticIds" : [ {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/aas/3/2/AdministrativeInformation/updatedAt"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/idta/cds/lastUpdate/1"
+        } ],
+        "type" : "ExternalReference"
+      } ],
+      "valueType" : "xs:dateTime",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "last update"
+      } ],
+      "idShort" : "lastUpdate"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#economicOperatorId"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "supplementalSemanticIds" : [ {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/idta/cds/economicOperatorId/1"
+        } ],
+        "type" : "ExternalReference"
+      } ],
+      "valueType" : "xs:string",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "economic operator ID"
+      } ],
+      "idShort" : "economicOperatorId"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#facilityId"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "supplementalSemanticIds" : [ {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:irdi:0173-1#02-AAV646#003"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#uniqueFacilityIdentifier"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://adminshell.io/idta/nameplate/3/0/UniqueFacilityIdentifier"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/idta/cds/facilityId/1"
+        } ],
+        "type" : "ExternalReference"
+      } ],
+      "valueType" : "xs:string",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "facility ID"
+      } ],
+      "idShort" : "facilityId"
+    }, {
+      "modelType" : "SubmodelElementList",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#contentSpecificationIds"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "supplementalSemanticIds" : [ {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/idta/cds/contentSpecificationIds/1"
+        } ],
+        "type" : "ExternalReference"
+      } ],
+      "description" : [ {
+        "language" : "en",
+        "text" : "\n   Reference to horizontal or product-type related content specifications for the DPP.\n   \n   SOURCE: EN 18223:2026(en)   \n   "
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "content specification IDs"
+      } ],
+      "idShort" : "contentSpecificationIds",
+      "orderRelevant" : false,
+      "typeValueListElement" : "SubmodelElementCollection",
+      "value" : [ {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#contentSpecificationIds"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:string",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "content specification IDs"
+        } ],
+        "idShort" : "contentSpecificationIds"
+      } ]
+    } ]
+  } ]
+}

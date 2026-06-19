@@ -32,10 +32,10 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.XSD;
-import org.apache.poi.ss.formula.functions.T;
 import org.eclipse.digitaltwin.aas4j.v3.model.AasSubmodelElements;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContentRDF;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationIec61360;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeIec61360;
 import org.eclipse.digitaltwin.aas4j.v3.model.EmbeddedDataSpecification;
@@ -43,7 +43,9 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
 import org.eclipse.digitaltwin.aas4j.v3.model.Key;
 import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.LangStringDefinitionTypeIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.LangStringNameType;
 import org.eclipse.digitaltwin.aas4j.v3.model.LangStringPreferredNameTypeIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.LangStringTextType;
 import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
@@ -60,6 +62,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShe
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetInformation;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultBlob;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationContentRDF;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationIec61360;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEmbeddedDataSpecification;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEnvironment;
@@ -106,7 +109,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.ImmutableMap;
-import com.wintersteiger.passat.connector.generator.AspectModelAasVisitor.SubmodelElementBuilder;
 
 public class AspectModelAasVisitor implements AspectVisitor<Environment, Context> {
    private static final Logger LOG = LoggerFactory.getLogger( AspectModelAasVisitor.class );
@@ -118,6 +120,8 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
    public static final String ALLOWS_ENUMERATION_VALUE_REGEX = "[^a-zA-Z0-9-_]";
    public static final String CONCEPT_DESCRIPTION_DATA_SPECIFICATION_URL =
          "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0";
+   public static final String CONCEPT_DESCRIPTION_DATA_SPECIFICATION_RDF_URL =
+	         "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0";
 
    private static final Pattern IRDI_BARE_PATTERN = Pattern.compile(
          "^\\d{4}-\\d+(?:%23\\d{2}|#\\d{2})-[A-Za-z0-9-]+(?:%23\\d{3}|#\\d{3})$"
@@ -511,6 +515,7 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
                      .idShort( property.getName() )
                      .displayName( LangStringMapper.NAME.map( property.getPreferredNames() ) )
                      .embeddedDataSpecifications( extractEmbeddedDataSpecification( property ) )
+                     .embeddedDataSpecifications( extractEmbeddedDataSpecificationRDF( property ) )
                      .id( DEFAULT_MAPPER.determineIdentifierFor( property ) )
                      // add is case of reference where appropriate
                      .isCaseOf( buildIsCaseOfReference(property.getCharacteristic()))
@@ -555,7 +560,12 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
             .dataSpecificationContent( extractDataSpecificationContent( property ) )
             .build();
    }
-
+   private EmbeddedDataSpecification extractEmbeddedDataSpecificationRDF( final Property property ) {
+	      return new DefaultEmbeddedDataSpecification.Builder()
+	            .dataSpecification( buildReferenceForSeeElement( CONCEPT_DESCRIPTION_DATA_SPECIFICATION_RDF_URL ) )
+	            .dataSpecificationContent( extractDataSpecificationContentRDF( property ) )
+	            .build();
+	   }
    private EmbeddedDataSpecification extractEmbeddedDataSpecification( final org.eclipse.esmf.metamodel.Operation operation ) {
       return new DefaultEmbeddedDataSpecification.Builder()
             .dataSpecification( buildReferenceForSeeElement( CONCEPT_DESCRIPTION_DATA_SPECIFICATION_URL ) )
@@ -569,6 +579,23 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
             .dataSpecificationContent( extractDataSpecificationContent( aspect ) )
             .build();
    }
+   private DataSpecificationContentRDF extractDataSpecificationContentRDF( final Property property ) {
+	      final List<LangStringTextType> definitionsProperty = property.getDescriptions().stream()
+	            .map( LangStringMapper.TEXT::map ).toList();
+
+	      final List<LangStringNameType> preferredNames = property.getPreferredNames().isEmpty()
+	            ? Collections.singletonList( LangStringMapper.NAME.createLangString( property.getName(), DEFAULT_LOCALE ) )
+	            : property.getPreferredNames().stream().map( LangStringMapper.NAME::map ).collect( Collectors.toList() );
+
+	      return new DefaultDataSpecificationContentRDF.Builder()
+	    		.iri(DEFAULT_MAPPER.determineIdentifierFor( property ))
+	            .description( definitionsProperty )
+	            .preferredName( preferredNames )
+	            .sameAs(property.getSee())
+	            .resourceType(property.getClass().getName())
+//	            .shortName( LangStringMapper.SHORT_NAME.createLangString( property.getName(), DEFAULT_LOCALE ) )
+	            .build();
+	   }
 
    private DataSpecificationIec61360 extractDataSpecificationContent( final Property property ) {
       final List<LangStringDefinitionTypeIec61360> definitionsProperty = property.getDescriptions().stream()

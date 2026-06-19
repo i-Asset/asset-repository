@@ -46,8 +46,8 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 			//
 			if ( parent == null ) {
 				parent = SimpleValueFactory.getInstance().createBNode();
-				model.add(parent, predicate(), listElement );
 			}
+			model.add(parent, predicate(), listElement );
 
 			Iterator<SubmodelElementValue> listIterator = values.iterator();
 
@@ -62,7 +62,7 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 				}
 			}
 			RDFCollections.asRDF(listValues, listElement, model);
-			return Optional.of(listElement);
+			return Optional.empty();
 
 		}
 		else {
@@ -72,7 +72,7 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 					model.add(parent, item.predicate(), itemValue.get());
 				}
 			}
-			return Optional.of(parent);
+			return Optional.empty();
 		}
     }
 
