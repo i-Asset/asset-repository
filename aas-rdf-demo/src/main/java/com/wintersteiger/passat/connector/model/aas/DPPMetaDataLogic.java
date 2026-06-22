@@ -261,28 +261,41 @@ public class DPPMetaDataLogic implements  AASModelLogic {
                             environment.createInstance(itemModel, "maintenanceHistory", SubmodelElementList.class).ifPresent(instance -> {
                                 instance.setOrderRelevant(true);
                                 instance.setTypeValueListElement(AasSubmodelElements.SUBMODEL_ELEMENT_COLLECTION);
-                                environment.createInstance(itemModel, "maintenanceHistory.MaintenanceActivity(0)", SubmodelElementCollection.class).ifPresent(activity -> {
+                                environment.createInstance(itemModel, "maintenanceHistory(0)", SubmodelElementCollection.class).ifPresent(activity -> {
                                     activity.setIdShort(String.format("%s", instance.getValue().size()));
-                                    environment.createInstance(itemModel, "maintenanceHistory.MaintenanceAcitivity(0).occurredAt", Property.class).ifPresent(occurredAt-> {
+                                    environment.createInstance(itemModel, "maintenanceHistory(0).occurredAt", Property.class).ifPresent(occurredAt-> {
                                         occurredAt.setValue(LocalDateTime.now().toString());
+                                        activity.getValue().add(occurredAt);
                                     });
+                                    environment.createInstance(itemModel, "maintenanceHistory(0).message", Property.class).ifPresent(message-> {
+                                        message.setValue("Kantenschleifen nach Herstellervorgabe");
+                                        activity.getValue().add(message);
+                                    });
+                                    environment.createInstance(itemModel, "maintenanceHistory(0).maintenanceType", Property.class).ifPresent(message-> {
+                                        message.setValue("Kantenschleifen");
+                                        activity.getValue().add(message);
+                                    });
+                                    instance.getValue().add(activity);
+                                });
+                                environment.createInstance(itemModel, "maintenanceHistory(0)", SubmodelElementCollection.class).ifPresent(activity -> {
+                                	activity.setIdShort(String.format("%s", instance.getValue().size()));
+                                	environment.createInstance(itemModel, "maintenanceHistory(0).occurredAt", Property.class).ifPresent(occurredAt-> {
+                                		occurredAt.setValue(LocalDateTime.now().toString());
+                                		activity.getValue().add(occurredAt);
+                                	});
+                                	environment.createInstance(itemModel, "maintenanceHistory(0).message", Property.class).ifPresent(message-> {
+                                		message.setValue("Kantenschleifen nach Herstellervorgabe");
+                                		activity.getValue().add(message);
+                                	});
+                                	environment.createInstance(itemModel, "maintenanceHistory(0).maintenanceType", Property.class).ifPresent(message-> {
+                                		message.setValue("Kantenschleifen");
+                                		activity.getValue().add(message);
+                                	});
+                                    instance.getValue().add(activity);
                                     
                                 });
-                                /*
-                                instance.getValue().add(new DefaultProperty.Builder()
-                                .idShort("0")
-                                .value("Nameplate")
-                                .valueType(DataTypeDefXsd.STRING)
-                                .semanticId(instance.getSemanticId())
-                                .build());
-                                instance.getValue().add(new DefaultProperty.Builder()
-                                .idShort("1")
-                                .value("contentSpecificatonId-1")
-                                .valueType(DataTypeDefXsd.STRING)
-                                .semanticId(instance.getSemanticId())
-                                .build());
-                                */
-                                dppContainer.getValue().add(instance);
+                                productContainer.getValue().add(instance);
+                                
                             });
                         });
                     });

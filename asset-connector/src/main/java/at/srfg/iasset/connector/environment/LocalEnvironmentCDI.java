@@ -535,6 +535,7 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return Optional.empty();
 	}

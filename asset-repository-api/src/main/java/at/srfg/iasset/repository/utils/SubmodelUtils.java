@@ -236,7 +236,12 @@ public class SubmodelUtils {
 	private static <T extends SubmodelElement> Optional<T> getChild(Referable parent, String idShort, Class<T> type) {
 		if ( SubmodelElementList.class.isInstance(parent)) {
 			List<SubmodelElement> children = getChildren(parent);
-			int index = Integer.valueOf(idShort);
+			int index = 0;
+			try {
+				index = Integer.valueOf(idShort);				
+			} catch (NumberFormatException e) {
+				// keep index
+			}
 			if ( children.size()>index) {
 				SubmodelElement elem = children.get(index);
 				if (type.isInstance(elem)) {
