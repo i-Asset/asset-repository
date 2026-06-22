@@ -1,0 +1,1009 @@
+{
+  "assetAdministrationShells" : [ {
+    "modelType" : "AssetAdministrationShell",
+    "assetInformation" : {
+      "assetKind" : "Type"
+    },
+    "submodels" : [ {
+      "keys" : [ {
+        "type" : "Submodel",
+        "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ItemData/submodel"
+      } ],
+      "type" : "ModelReference"
+    } ],
+    "administration" : { },
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ItemData",
+    "description" : [ {
+      "language" : "en",
+      "text" : "defaultAdminShell"
+    } ],
+    "idShort" : "defaultAdminShell"
+  } ],
+  "conceptDescriptions" : [ {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "ItemData"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "ItemData"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ItemData",
+    "category" : "APPLICATION_CLASS",
+    "idShort" : "ItemData"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Angle Tail"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "angleTail"
+        } ],
+        "unit" : "degreeUnitOfAngle"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTail",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Angle Tail"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTail",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Angle Tail"
+    } ],
+    "idShort" : "angleTail"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Angle Waist"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "angleWaist"
+        } ],
+        "unit" : "degreeUnitOfAngle"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleWaist",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Angle Waist"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleWaist",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Angle Waist"
+    } ],
+    "idShort" : "angleWaist"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Angle Tip"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "angleTip"
+        } ],
+        "unit" : "degreeUnitOfAngle"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTip",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Angle Tip"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTip",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Angle Tip"
+    } ],
+    "idShort" : "angleTip"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#SkiAngles"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "maintenanceDetails"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "maintenanceDetails"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceDetails",
+        "resourceType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#SkiAngles",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "maintenanceDetails"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceDetails",
+    "idShort" : "maintenanceDetails"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Maintenance Description"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "message"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#message",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Maintenance Description"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#message",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Maintenance Description"
+    } ],
+    "idShort" : "message"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Maintenance Type"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "maintenanceType"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceType",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Maintenance Type"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceType",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Maintenance Type"
+    } ],
+    "idShort" : "maintenanceType"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Date & Time of Service Activity"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "occurredAt"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#occurredAt",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Date & Time of Service Activity"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#occurredAt",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Date & Time of Service Activity"
+    } ],
+    "idShort" : "occurredAt"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#MaintenanceActivity"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Service History"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "maintenanceHistory"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceHistory",
+        "resourceType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#MaintenanceActivity",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Service History"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceHistory",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Service History"
+    } ],
+    "idShort" : "maintenanceHistory"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "URL"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "url"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#url",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "URL"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#url",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "URL"
+    } ],
+    "idShort" : "url"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Delivery Date"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "deliveryDate"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#deliveryDate",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Delivery Date"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#deliveryDate",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Delivery Date"
+    } ],
+    "idShort" : "deliveryDate"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "EAN"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "ean"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ean",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "EAN"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ean",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "EAN"
+    } ],
+    "idShort" : "ean"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Production Date"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "manufactureDate"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#manufactureDate",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Production Date"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#manufactureDate",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Production Date"
+    } ],
+    "idShort" : "manufactureDate"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "addMaintenance"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "addMaintenance"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#addMaintenance",
+    "idShort" : "addMaintenance"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#MaintenanceActivity"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "maintenanceActivity"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "maintenanceActivity"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceActivity",
+        "resourceType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#MaintenanceActivity",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "maintenanceActivity"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceActivity",
+    "idShort" : "maintenanceActivity"
+  } ],
+  "submodels" : [ {
+    "modelType" : "Submodel",
+    "kind" : "Template",
+    "semanticId" : {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ItemData"
+      } ],
+      "type" : "ExternalReference"
+    },
+    "administration" : { },
+    "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ItemData/submodel",
+    "idShort" : "ItemData",
+    "submodelElements" : [ {
+      "modelType" : "SubmodelElementList",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceHistory"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Service History"
+      } ],
+      "idShort" : "maintenanceHistory",
+      "orderRelevant" : false,
+      "typeValueListElement" : "SubmodelElementCollection",
+      "value" : [ {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceHistory"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Service History"
+        } ],
+        "idShort" : "MaintenanceActivity",
+        "value" : [ {
+          "modelType" : "SubmodelElementCollection",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "ConceptDescription",
+              "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceDetails"
+            } ],
+            "type" : "ModelReference"
+          },
+          "idShort" : "maintenanceDetails",
+          "value" : [ {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTail"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:double",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Angle Tail"
+            } ],
+            "idShort" : "angleTail"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleWaist"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:double",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Angle Waist"
+            } ],
+            "idShort" : "angleWaist"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTip"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:double",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Angle Tip"
+            } ],
+            "idShort" : "angleTip"
+          } ]
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#message"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Maintenance Description"
+          } ],
+          "idShort" : "message"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceType"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Maintenance Type"
+          } ],
+          "idShort" : "maintenanceType"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#occurredAt"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:dateTime",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Date & Time of Service Activity"
+          } ],
+          "idShort" : "occurredAt"
+        } ]
+      } ]
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#url"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "valueType" : "xs:anyURI",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "URL"
+      } ],
+      "idShort" : "url"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#deliveryDate"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "valueType" : "xs:dateTime",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Delivery Date"
+      } ],
+      "idShort" : "deliveryDate"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ean"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "valueType" : "xs:string",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "EAN"
+      } ],
+      "idShort" : "ean"
+    }, {
+      "modelType" : "Property",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#manufactureDate"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "valueType" : "xs:dateTime",
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Production Date"
+      } ],
+      "idShort" : "manufactureDate"
+    }, {
+      "modelType" : "Operation",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "Operation",
+          "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#addMaintenance"
+        } ],
+        "type" : "ModelReference"
+      },
+      "inputVariables" : [ {
+        "value" : {
+          "modelType" : "SubmodelElementCollection",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "ConceptDescription",
+              "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceActivity"
+            } ],
+            "type" : "ModelReference"
+          },
+          "idShort" : "maintenanceActivity",
+          "value" : [ {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceDetails"
+              } ],
+              "type" : "ModelReference"
+            },
+            "idShort" : "maintenanceDetails",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Angle Tail"
+              } ],
+              "idShort" : "angleTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Angle Waist"
+              } ],
+              "idShort" : "angleWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Angle Tip"
+              } ],
+              "idShort" : "angleTip"
+            } ]
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#message"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Maintenance Description"
+            } ],
+            "idShort" : "message"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceType"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Maintenance Type"
+            } ],
+            "idShort" : "maintenanceType"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#occurredAt"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:dateTime",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Date & Time of Service Activity"
+            } ],
+            "idShort" : "occurredAt"
+          } ]
+        }
+      } ],
+      "idShort" : "addMaintenance"
+    } ]
+  } ]
+}

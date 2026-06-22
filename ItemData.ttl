@@ -1,0 +1,100 @@
+
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.2.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:com.copadata.dpp.AtomicSki:2.0.0#> .
+
+:ItemData a samm:Aspect ;
+   samm:properties (
+      :maintenanceHistory
+      :url
+      :deliveryDate
+      :ean
+      :manufactureDate
+   ) ;
+   samm:operations ( :addMaintenance ) ;
+   samm:events ( ) .
+
+:manufactureDate a samm:Property ;
+   samm:preferredName "Production Date"@en ;
+   samm:characteristic samm-c:Timestamp .
+
+:ean a samm:Property ;
+   samm:preferredName "EAN"@en ;
+   samm:characteristic samm-c:Text .
+
+:deliveryDate a samm:Property ;
+   samm:preferredName "Delivery Date"@en ;
+   samm:characteristic samm-c:Timestamp .
+
+:url a samm:Property ;
+   samm:preferredName "URL"@en ;
+   samm:characteristic samm-c:ResourcePath .
+
+:ServiceHistoryCharacteristic a samm-c:SortedSet ;
+   samm:preferredName "List of Services"@en ;
+   samm:dataType :MaintenanceActivity .
+
+:occurredAt a samm:Property ;
+   samm:preferredName "Date & Time of Service Activity"@en ;
+   samm:characteristic samm-c:Timestamp .
+
+:maintenanceHistory a samm:Property ;
+   samm:preferredName "Service History"@en ;
+   samm:characteristic :ServiceHistoryCharacteristic .
+
+:MaintenanceActivity a samm:Entity ;
+   samm:preferredName "Details of Service"@en ;
+   samm:properties (
+      [ samm:property :maintenanceDetails; samm:optional true ]
+      :message
+      :maintenanceType
+      :occurredAt
+   ) .
+
+:maintenanceType a samm:Property ;
+   samm:preferredName "Maintenance Type"@en ;
+   samm:characteristic samm-c:Text .
+
+:message a samm:Property ;
+   samm:preferredName "Maintenance Description"@en ;
+   samm:characteristic samm-c:Text .
+
+:maintenanceDetails a samm:Property ;
+   samm:characteristic :MaintenanceDetailsCharacteristic .
+
+:SkiAngles a samm:Entity ;
+   samm:preferredName "Angles for Maintenance"@en ;
+   samm:properties ( :angleTail :angleWaist :angleTip ) .
+
+:MaintenanceDetailsCharacteristic a samm:Characteristic ;
+   samm:preferredName "Angles applied by Maintenance Provider"@en ;
+   samm:dataType :SkiAngles .
+
+:angleTip a samm:Property ;
+   samm:preferredName "Angle Tip"@en ;
+   samm:characteristic :DegreeUnitOfAngleCharacteristic .
+
+:DegreeUnitOfAngleCharacteristic a samm-c:Quantifiable ;
+   samm:dataType xsd:double ;
+   samm-c:unit unit:degreeUnitOfAngle .
+
+:angleWaist a samm:Property ;
+   samm:preferredName "Angle Waist"@en ;
+   samm:characteristic :DegreeUnitOfAngleCharacteristic .
+
+:angleTail a samm:Property ;
+   samm:preferredName "Angle Tail"@en ;
+   samm:characteristic :DegreeUnitOfAngleCharacteristic .
+
+:addMaintenance a samm:Operation ;
+   samm:input ( :maintenanceActivity ) .
+
+:maintenanceActivity a samm:Property ;
+   samm:characteristic :MaintenanceActivityCharacteristic .
+
+:MaintenanceActivityCharacteristic a samm:Characteristic ;
+   samm:dataType :MaintenanceActivity .
+

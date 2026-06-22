@@ -69,15 +69,15 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		Environment coll = new DefaultEnvironment.Builder().build();
 		for (AASEnvironment data : aasData) {
 			log.info("cretating environment for data {}", data.getClass().getName());
+			//
 			Environment env = data.getAASData();
-			if ( data != null) {
-				log.info("adding Shells");
-				coll.getAssetAdministrationShells().addAll(env.getAssetAdministrationShells());
-				log.info("adding Submodels");
-				coll.getSubmodels().addAll(env.getSubmodels());
-				log.info("adding Concept Descriptions");
-				coll.getConceptDescriptions().addAll(env.getConceptDescriptions());
-			}
+			log.info("adding Shells");
+			coll.getAssetAdministrationShells().addAll(env.getAssetAdministrationShells());
+			log.info("adding Submodels");
+			coll.getSubmodels().addAll(env.getSubmodels());
+			log.info("adding Concept Descriptions");
+			coll.getConceptDescriptions().addAll(env.getConceptDescriptions());
+
 			log.info("adding model to RDF Model");
 			rdfModel.addModel(data.getRDFData());
 		}
@@ -509,21 +509,22 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	public <T extends SubmodelElement> Optional<T> createInstance(Submodel template, String pathToElement, Class<T> clazz) {
 		try {
 			final Reference refToPassportId = SubmodelUtils.getReference(template, pathToElement);
-			Optional<T> elementOpt = serviceEnvironment.resolve(refToPassportId, clazz);
+			Optional<Referable> elementOpt = serviceEnvironment.resolve(refToPassportId);
 			if ( elementOpt.isPresent() ){
-				T element = elementOpt.get();
+				Referable sourceReferable = elementOpt.get();
+				HasSemantics sourceSemantics = HasSemantics.class.cast(elementOpt.get());
 				// retain the semantic id of the template element
-				refToPassportId.setReferredSemanticId(element.getSemanticId());
+				refToPassportId.setReferredSemanticId(sourceSemantics.getSemanticId());
 				T instance = AASModelHelper.newElementInstance(clazz);
 				// add referred semantic
-				instance.setIdShort(element.getIdShort());
-				instance.setDisplayName(element.getDisplayName());
+				instance.setIdShort(sourceReferable.getIdShort());
+				instance.setDisplayName(sourceReferable.getDisplayName());
 				// in case it is a propery, be sure to use the value type of the template property
-				if ( element instanceof Property prop ) {
+				if ( sourceReferable instanceof Property prop ) {
 					Property instanceProp = (Property)instance;
 					instanceProp.setValueType(prop.getValueType());
 				}
-				if ( element instanceof SubmodelElementList list ) {
+				if ( sourceReferable instanceof SubmodelElementList list ) {
 					SubmodelElementList instanceList = (SubmodelElementList)instance;
 					instanceList.setOrderRelevant(list.getOrderRelevant());
 					instanceList.setValueTypeListElement(list.getValueTypeListElement());

@@ -26,7 +26,7 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 	
 	public SubmodelElementListValue(IRI predicate, Boolean ordered, AasSubmodelElements listElementType) {
 		super(predicate);
-		this.ordered = (ordered == null ? false : ordered); 
+		this.ordered = (ordered == null ? true : ordered); 
 		this.listElementType = (listElementType == null ? AasSubmodelElements.PROPERTY : listElementType);
 		this.values = new ArrayList<>();
 	}
@@ -44,7 +44,8 @@ public class SubmodelElementListValue extends SubmodelElementValue {
 
     @Override
     protected Optional<Value> addToModel(Resource parent, Model model) {
-		if ( ordered) {
+		// for now, "ordered" is set to true by default
+		if ( true ) {
 
 			//
 			if ( parent == null ) {

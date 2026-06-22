@@ -1,0 +1,66 @@
+
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.2.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:com.copadata.dpp.AtomicSki:2.0.0#> .
+
+:ProductModel a samm:Aspect ;
+   samm:properties (
+      :sideCutTail
+      :sideCutWaist
+      :sideCutTip
+      :steelEdgeSidewallAngle
+      :baseEdgeAngle
+      :season
+      :brand
+      :productName
+      :articleNumber
+      :set
+   ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:set a samm:Property ;
+   samm:preferredName "Commercial Set"@en ;
+   samm:characteristic samm-c:MultiLanguageText .
+
+:articleNumber a samm:Property ;
+   samm:preferredName "Article Number"@en ;
+   samm:characteristic samm-c:Text .
+
+:productName a samm:Property ;
+   samm:preferredName "Product Name"@en ;
+   samm:characteristic samm-c:MultiLanguageText .
+
+:brand a samm:Property ;
+   samm:preferredName "Brand"@en ;
+   samm:characteristic samm-c:MultiLanguageText .
+
+:season a samm:Property ;
+   samm:preferredName "Season"@en ;
+   samm:characteristic samm-c:MultiLanguageText .
+
+:baseEdgeAngle a samm:Property ;
+   samm:characteristic samm-c:Text .
+
+:steelEdgeSidewallAngle a samm:Property ;
+   samm:characteristic samm-c:Text .
+
+:sideCutTip a samm:Property ;
+   samm:preferredName "Side Cut Tip"@en ;
+   samm:characteristic :WidthCharacteristic .
+
+:WidthCharacteristic a samm-c:Quantifiable ;
+   samm:dataType xsd:double ;
+   samm-c:unit unit:millimetre .
+
+:sideCutWaist a samm:Property ;
+   samm:preferredName "Side Cut Waist"@en ;
+   samm:characteristic :WidthCharacteristic .
+
+:sideCutTail a samm:Property ;
+   samm:preferredName "Side Cut Tail"@en ;
+   samm:characteristic :WidthCharacteristic .
+
