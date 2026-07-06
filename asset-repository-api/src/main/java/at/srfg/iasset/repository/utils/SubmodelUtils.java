@@ -238,7 +238,7 @@ public class SubmodelUtils {
 			List<SubmodelElement> children = getChildren(parent);
 			int index = 0;
 			try {
-				index = Integer.valueOf(idShort);				
+				index = Integer.parseInt(idShort);				
 			} catch (NumberFormatException e) {
 				// keep index
 			}

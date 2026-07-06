@@ -546,6 +546,7 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
                      .idShort( aspect.getName() )
                      .displayName( LangStringMapper.NAME.map( aspect.getPreferredNames() ) )
                      .embeddedDataSpecifications( extractEmbeddedDataSpecification( aspect ) )
+                     .embeddedDataSpecifications( extractEmbeddedDataSpecificationRDF( aspect ) )
                      .id( DEFAULT_MAPPER.determineIdentifierFor( aspect ) )
                      .description( LangStringMapper.TEXT.map( aspect.getDescriptions() ) )
                      .category( CONCEPT_DESCRIPTION_CATEGORY )
@@ -566,6 +567,13 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
 	            .dataSpecificationContent( extractDataSpecificationContentRDF( property ) )
 	            .build();
 	   }
+   private EmbeddedDataSpecification extractEmbeddedDataSpecificationRDF( final Aspect aspect ) {
+	      return new DefaultEmbeddedDataSpecification.Builder()
+	            .dataSpecification( buildReferenceForSeeElement( CONCEPT_DESCRIPTION_DATA_SPECIFICATION_RDF_URL ) )
+	            .dataSpecificationContent( extractDataSpecificationContentRDF( aspect ) )
+	            .build();
+	   }
+
    private EmbeddedDataSpecification extractEmbeddedDataSpecification( final org.eclipse.esmf.metamodel.Operation operation ) {
       return new DefaultEmbeddedDataSpecification.Builder()
             .dataSpecification( buildReferenceForSeeElement( CONCEPT_DESCRIPTION_DATA_SPECIFICATION_URL ) )
@@ -593,6 +601,23 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
 	            .preferredName( preferredNames )
 	            .sameAs(property.getSee())
 	            .resourceType(extractResourceType( property.getCharacteristic() ) )
+//	            .shortName( LangStringMapper.SHORT_NAME.createLangString( property.getName(), DEFAULT_LOCALE ) )
+	            .build();
+	   }
+   private DataSpecificationContentRDF extractDataSpecificationContentRDF( final Aspect aspect ) {
+	      final List<LangStringTextType> definitionsProperty = aspect.getDescriptions().stream()
+	            .map( LangStringMapper.TEXT::map ).toList();
+
+	      final List<LangStringNameType> preferredNames = aspect.getPreferredNames().isEmpty()
+	            ? Collections.singletonList( LangStringMapper.NAME.createLangString( aspect.getName(), DEFAULT_LOCALE ) )
+	            : aspect.getPreferredNames().stream().map( LangStringMapper.NAME::map ).collect( Collectors.toList() );
+
+	      return new DefaultDataSpecificationContentRDF.Builder()
+	    		.iri(DEFAULT_MAPPER.determineIdentifierFor( aspect ))
+	            .description( definitionsProperty )
+	            .preferredName( preferredNames )
+	            .sameAs(aspect.getSee())
+	            .resourceType(DEFAULT_MAPPER.determineIdentifierFor( aspect ))
 //	            .shortName( LangStringMapper.SHORT_NAME.createLangString( property.getName(), DEFAULT_LOCALE ) )
 	            .build();
 	   }

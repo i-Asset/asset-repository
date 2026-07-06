@@ -40,6 +40,23 @@
           "text" : "ProductModel"
         } ]
       }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ProductModel",
+        "resourceType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ProductModel",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "ProductModel"
+        } ]
+      }
     } ],
     "id" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ProductModel",
     "category" : "APPLICATION_CLASS",

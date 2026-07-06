@@ -115,7 +115,7 @@ public class RDFEnvironmentCDI implements RDFEnvironment {
 		if ( semanticId != null) {
 			Reference referredSemanticId = semanticId.getReferredSemanticId();
 			if ( referredSemanticId!=null) {
-				return getSemanticIdentifier(referredSemanticId);
+				return getTypeInformation(referredSemanticId);
 			}
 			// resolve the reference!
 			Optional<Referable> semanticElementTypeOpt = serviceEnvironment.resolve(semanticId);
@@ -126,6 +126,19 @@ public class RDFEnvironmentCDI implements RDFEnvironment {
 					// reference pointed to ConceptDescription
 					ConceptDescription cDesc = ConceptDescription.class.cast(semanticElementType);
 					//
+					Optional<EmbeddedDataSpecification> embeddedDataSpecOpt = cDesc.getEmbeddedDataSpecifications().stream().filter((EmbeddedDataSpecification e) -> {
+						// filter logic here
+						DataSpecificationContent content = e.getDataSpecificationContent();
+						if ( content instanceof DataSpecificationContentRDF rdf) {
+							return true;
+						}
+						return false;
+					}).findFirst();
+					if ( embeddedDataSpecOpt.isPresent()) {
+						DataSpecificationContentRDF rdfContent = DataSpecificationContentRDF.class.cast(embeddedDataSpecOpt.get().getDataSpecificationContent());
+						return Optional.of(SimpleValueFactory.getInstance().createIRI(rdfContent.getResourceType()));
+					}
+
 					Optional<Reference> typeRef = cDesc.getIsCaseOf().stream().filter(new Predicate<Reference>() {
 
 						@Override

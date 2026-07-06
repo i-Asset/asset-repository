@@ -36,16 +36,41 @@
           "text" : "\r\n   Digital record of product characteristics throughout its life cycle.\r\n   \r\n   SOURCE: EN 18223:2026(en)   \r\n   "
         } ],
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "digital product passport (DPP)"
-        }, {
           "language" : "de",
           "text" : "Digitaler Produktpass (DPP)"
+        }, {
+          "language" : "en",
+          "text" : "digital product passport (DPP)"
         } ],
         "shortName" : [ {
           "language" : "en",
           "text" : "DppMetadata"
         } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationContentRDF",
+        "iri" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata",
+        "resourceType" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata",
+        "preferredName" : [ {
+          "language" : "de",
+          "text" : "Digitaler Produktpass (DPP)"
+        }, {
+          "language" : "en",
+          "text" : "digital product passport (DPP)"
+        } ],
+        "description" : [ {
+          "language" : "en",
+          "text" : "\r\n   Digital record of product characteristics throughout its life cycle.\r\n   \r\n   SOURCE: EN 18223:2026(en)   \r\n   "
+        } ],
+        "sameAs" : [ "https://admin-shell.io/idta/cds/dppMetadata/1" ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.dpp.dpp_metadata:1.0.0#DppMetadata",
@@ -55,11 +80,11 @@
       "text" : "\r\n   Digital record of product characteristics throughout its life cycle.\r\n   \r\n   SOURCE: EN 18223:2026(en)   \r\n   "
     } ],
     "displayName" : [ {
-      "language" : "en",
-      "text" : "digital product passport (DPP)"
-    }, {
       "language" : "de",
       "text" : "Digitaler Produktpass (DPP)"
+    }, {
+      "language" : "en",
+      "text" : "digital product passport (DPP)"
     } ],
     "idShort" : "DppMetadata"
   }, {
@@ -805,6 +830,12 @@
       "supplementalSemanticIds" : [ {
         "keys" : [ {
           "type" : "GlobalReference",
+          "value" : "urn:irdi:0173-1#02-AAV646#003"
+        } ],
+        "type" : "ExternalReference"
+      }, {
+        "keys" : [ {
+          "type" : "GlobalReference",
           "value" : "https://adminshell.io/idta/nameplate/3/0/UniqueFacilityIdentifier"
         } ],
         "type" : "ExternalReference"
@@ -818,12 +849,6 @@
         "keys" : [ {
           "type" : "GlobalReference",
           "value" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#uniqueFacilityIdentifier"
-        } ],
-        "type" : "ExternalReference"
-      }, {
-        "keys" : [ {
-          "type" : "GlobalReference",
-          "value" : "urn:irdi:0173-1#02-AAV646#003"
         } ],
         "type" : "ExternalReference"
       } ],
