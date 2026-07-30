@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>at.srfg.iasset</groupId>
 		<artifactId>asset-repository</artifactId>
-		<version>0.3.2</version>
+		<version>0.3.3</version>
 	</parent>
 	<artifactId>semantic-lookup-service</artifactId>
 	<name>Semantic Lookup Service</name>
@@ -115,7 +115,7 @@
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>apache-jena-libs</artifactId>
-            <version>4.10.0</version>
+            <version>6.1.0</version>
             <type>pom</type>
         </dependency>
 

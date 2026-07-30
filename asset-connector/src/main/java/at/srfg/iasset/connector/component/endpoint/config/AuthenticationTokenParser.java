@@ -1,22 +1,17 @@
 package at.srfg.iasset.connector.component.endpoint.config;
 
+import at.srfg.iasset.connector.component.endpoint.config.exception.InvalidAuthenticationTokenException;
+import io.jsonwebtoken.*;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import at.srfg.iasset.connector.component.endpoint.config.exception.InvalidAuthenticationTokenException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.InvalidClaimException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import jakarta.enterprise.context.Dependent;
-import jakarta.inject.Inject;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * Component which provides operations for parsing JWT tokens.
@@ -38,7 +33,7 @@ class AuthenticationTokenParser {
     public AuthenticationTokenDetails parseToken(String token) {
 
         try {
-        	Claims claims = Jwts.parserBuilder()
+        	Claims claims = Jwts.parser()
 	        			.requireAudience(settings.getAudience())
 	        			.setAllowedClockSkewSeconds(settings.getClockSkew())
 	        			.setSigningKey(settings.getKey())

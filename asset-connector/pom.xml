@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>at.srfg.iasset</groupId>
 		<artifactId>asset-repository</artifactId>
-		<version>0.3.2</version>
+		<version>0.3.3</version>
 	</parent>
 	<artifactId>asset-connector</artifactId>
 	<name>Asset Connector</name>
 	<properties>
-		<jjwt.version>0.11.5</jjwt.version>
+		<jjwt.version>0.12.6</jjwt.version>
 		<start-class>at.srfg.iasset.connector.ConnectorWithCDI</start-class>
 	</properties>
 	<dependencies>
