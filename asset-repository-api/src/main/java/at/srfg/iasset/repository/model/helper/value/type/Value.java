@@ -85,7 +85,7 @@ public abstract class Value<T> {
 		} catch (InvocationTargetException | InstantiationException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException e ){
 			// TODO: Method must not return NULl
 		}
-		throw new ValueMappingException("Provided value cannot ");
+		throw new ValueMappingException("Provided value cannot be mapped to " + type);
 	}
 	public static  <T> T toValue(Type type, String value) throws ValueMappingException {
 		ValueType valueType = ValueType.fromDataType(type);
