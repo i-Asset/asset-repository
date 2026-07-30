@@ -29,7 +29,6 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	private static final Logger log = LoggerFactory.getLogger(OperationInvocationHandler.class);
 	private final Operation operation;
 	private final ServiceEnvironment serviceEnvironment;
-//	private final IAssetAdministrationShellInterface shellInterface;
 	private final ConnectionProvider connectionProvider;
 	private final String submodelIdentifier;
 	private final String pathToOperation;
@@ -390,7 +389,9 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		Optional<OperationVariable> iv = findOutputVariable(idShort);
 		// apply value
 		if ( iv.isPresent()) {
-			log.debug("applying value {} to parameter {}", iv, param.getClass());
+			if (log.isTraceEnabled()) {
+				log.trace("applying value {} to parameter {}", iv, param.getClass());
+			}
 			// validate the provided value
 			applyParameter(iv.get().getValue(), param);
 			//
