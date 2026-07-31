@@ -11,4 +11,8 @@ public class ValueMappingException extends Exception {
 		super(t);
 	}
 
+    public ValueMappingException(String message, Throwable t) {
+        super(message, t);
+    }
+
 }

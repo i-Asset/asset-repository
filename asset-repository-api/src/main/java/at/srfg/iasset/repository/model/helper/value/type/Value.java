@@ -1,14 +1,12 @@
 package at.srfg.iasset.repository.model.helper.value.type;
 
+import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
-
-import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
-
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingException;
 
 public abstract class Value<T> {
 	
@@ -83,9 +81,9 @@ public abstract class Value<T> {
 			return theValue;
 		
 		} catch (InvocationTargetException | InstantiationException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException e ){
-			// TODO: Method must not return NULl
+			// report transformation errors
+			throw new ValueMappingException(String.format("Value Mapping failed for type %s", type), e);
 		}
-		throw new ValueMappingException("Provided value cannot be mapped to " + type);
 	}
 	public static  <T> T toValue(Type type, String value) throws ValueMappingException {
 		ValueType valueType = ValueType.fromDataType(type);
@@ -98,9 +96,8 @@ public abstract class Value<T> {
 			return newVal.getValue();
 		
 		} catch (InvocationTargetException | InstantiationException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException e ){
-			// TODO: report transformation errors
-			e.printStackTrace();
-			return null;
+			// report transformation errors
+			throw new ValueMappingException(String.format("Value Mapping failed for type %s", valueType), e);
 		}		
 	}
 	/**
@@ -125,10 +122,8 @@ public abstract class Value<T> {
 			val.setValue(value);
 			return val.toString();
 		} catch (InvocationTargetException | InstantiationException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | SecurityException e ){
-			// TODO: report transformation errors
-			e.printStackTrace();
-		
+			// report transformation errors
+			throw new ValueMappingException(String.format("Value Mapping failed for type %s", valueType), e);
 		}
-		throw new ValueMappingException(String.format("Value Mapping failed for ", null) );
 	}
 }
