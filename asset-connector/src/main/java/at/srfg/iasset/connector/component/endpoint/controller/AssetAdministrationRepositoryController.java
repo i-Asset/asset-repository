@@ -345,6 +345,7 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
 					parameterMap);
 		} catch (Exception e) {
 			log.debug("invoke operation value failed", e);
+			// TODO: distinguish between InternalServerError and BadRequest?
 			throw new BadRequestException(e);
 		}
 	}
