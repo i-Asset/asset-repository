@@ -6,14 +6,13 @@
 	<parent>
 		<groupId>at.srfg.iasset</groupId>
 		<artifactId>asset-repository</artifactId>
-		<version>0.3.4</version>
+		<version>0.3.5-SNAPSHOT</version>
 	</parent>
 	<artifactId>semantic-lookup-service</artifactId>
 	<name>Semantic Lookup Service</name>
 	<description>Service providing a IEC 61360 compatible taxonomy</description>
 
 	<properties>
-		<java.version>17</java.version>
 		<spring-cloud.version>2025.0.1</spring-cloud.version>
 		<commons-fileupload.version>1.6.0</commons-fileupload.version>
 			<!--
@@ -218,6 +217,7 @@
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
+				<version>4.9.10</version>
 			</plugin>
 		</plugins>
 	</build>
