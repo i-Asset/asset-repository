@@ -4,11 +4,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.List;
 import java.util.Collections;
-import java.util.function.Function;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContent;
-import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContentRDF;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationRDF;
 import org.eclipse.digitaltwin.aas4j.v3.model.EmbeddedDataSpecification;
 import org.eclipse.digitaltwin.aas4j.v3.model.HasDataSpecification;
@@ -140,13 +138,13 @@ public class RDFEnvironmentCDI implements RDFEnvironment {
 					Optional<EmbeddedDataSpecification> embeddedDataSpecOpt = cDesc.getEmbeddedDataSpecifications().stream().filter((EmbeddedDataSpecification e) -> {
 						// filter logic here
 						DataSpecificationContent content = e.getDataSpecificationContent();
-						if ( content instanceof DataSpecificationContentRDF rdf) {
+						if ( content instanceof DataSpecificationRDF rdf) {
 							return true;
 						}
 						return false;
 					}).findFirst();
 					if ( embeddedDataSpecOpt.isPresent()) {
-						DataSpecificationContentRDF rdfContent = DataSpecificationContentRDF.class.cast(embeddedDataSpecOpt.get().getDataSpecificationContent());
+						DataSpecificationRDF rdfContent = DataSpecificationRDF.class.cast(embeddedDataSpecOpt.get().getDataSpecificationContent());
 						return Optional.of(SimpleValueFactory.getInstance().createIRI(rdfContent.getIri()));
 					}
 					/*
@@ -201,14 +199,14 @@ public class RDFEnvironmentCDI implements RDFEnvironment {
 					Optional<EmbeddedDataSpecification> embeddedDataSpecOpt = cDesc.getEmbeddedDataSpecifications().stream().filter((EmbeddedDataSpecification e) -> {
 						// filter logic here
 						DataSpecificationContent content = e.getDataSpecificationContent();
-						if ( content instanceof DataSpecificationContentRDF rdf) {
+						if ( content instanceof DataSpecificationRDF rdf) {
 							return true;
 						}
 						return false;
 					}).findFirst();
 					if ( embeddedDataSpecOpt.isPresent()) {
-						DataSpecificationContentRDF rdfContent = DataSpecificationContentRDF.class.cast(embeddedDataSpecOpt.get().getDataSpecificationContent());
-						return Optional.of(SimpleValueFactory.getInstance().createIRI(rdfContent.getResourceType()));
+						DataSpecificationRDF rdfContent = DataSpecificationRDF.class.cast(embeddedDataSpecOpt.get().getDataSpecificationContent());
+						return Optional.of(SimpleValueFactory.getInstance().createIRI(rdfContent.getRdfType()));
 					}
 
 					Optional<Reference> typeRef = cDesc.getIsCaseOf().stream().filter(new Predicate<Reference>() {

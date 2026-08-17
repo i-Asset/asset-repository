@@ -75,11 +75,11 @@ public class DPPMetaDataLogic implements  AASModelLogic {
 
                 SubmodelUtils.getSubmodelElementAt(submodel, "dppData", SubmodelElementCollection.class).ifPresent(dppContainer -> {
                     environment.createInstance(template, "digitalProductPassportId", Property.class).ifPresent(instance -> {
-                        instance.setValue("https://atomic-ski.passat.srfg.at/aas/ski/SN7777777");
+                        instance.setValue("https://atomic-ski.copadata.com/aas/ski/SN7777777");
                         dppContainer.getValue().add(instance);
                     });
                     environment.createInstance(template, "uniqueProductIdentifier", Property.class).ifPresent(instance -> {
-                        instance.setValue("https://atomic-ski.passat.srfg.at/aas/ski/PMAA7777777");
+                        instance.setValue("https://atomic-ski.copadata.com/aas/ski/PMAA7777777");
                         dppContainer.getValue().add(instance);
                     });
                     environment.createInstance(template, "granularity", Property.class).ifPresent(instance -> {
@@ -99,11 +99,11 @@ public class DPPMetaDataLogic implements  AASModelLogic {
                         dppContainer.getValue().add(instance);
                     });
                     environment.createInstance(template, "economicOperatorId", Property.class).ifPresent(instance -> {
-                        instance.setValue("https://atomic-ski.passat.srfg.at/aas/ski/altenmarkt");
+                        instance.setValue("https://atomic-ski.copadata.com/aas/ski/altenmarkt");
                         dppContainer.getValue().add(instance);
                     });
                     environment.createInstance(template, "facilityId", Property.class).ifPresent(instance -> {
-                        instance.setValue("https://atomic-ski.passat.srfg.at/aas/ski/altenmarkt");
+                        instance.setValue("https://atomic-ski.copadata.com/aas/ski/altenmarkt");
                         dppContainer.getValue().add(instance);
                     });
                     environment.createInstance(template, "contentSpecificationIds", SubmodelElementList.class).ifPresent(instance -> {
