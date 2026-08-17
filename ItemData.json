@@ -49,9 +49,10 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ItemData",
-        "resourceType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ItemData",
+        "rdfType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ItemData",
+        "dataType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ItemData",
         "preferredName" : [ {
           "language" : "en",
           "text" : "ItemData"
@@ -93,8 +94,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTail",
+        "localName" : "angleTail",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Angle Tail"
@@ -139,8 +141,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleWaist",
+        "localName" : "angleWaist",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Angle Waist"
@@ -185,8 +188,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#angleTip",
+        "localName" : "angleTip",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Angle Tip"
@@ -237,9 +241,10 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceDetails",
-        "resourceType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#SkiAngles",
+        "localName" : "maintenanceDetails",
+        "rdfType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#SkiAngles",
         "preferredName" : [ {
           "language" : "en",
           "text" : "maintenanceDetails"
@@ -279,8 +284,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#message",
+        "localName" : "message",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Maintenance Description"
@@ -324,8 +330,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceType",
+        "localName" : "maintenanceType",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Maintenance Type"
@@ -369,8 +376,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#occurredAt",
+        "localName" : "occurredAt",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Date & Time of Service Activity"
@@ -421,9 +429,10 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceHistory",
-        "resourceType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#MaintenanceActivity",
+        "localName" : "maintenanceHistory",
+        "rdfType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#MaintenanceActivity",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Service History"
@@ -467,8 +476,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#url",
+        "localName" : "url",
         "preferredName" : [ {
           "language" : "en",
           "text" : "URL"
@@ -512,8 +522,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#deliveryDate",
+        "localName" : "deliveryDate",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Delivery Date"
@@ -557,8 +568,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ean",
+        "localName" : "ean",
         "preferredName" : [ {
           "language" : "en",
           "text" : "EAN"
@@ -602,8 +614,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#manufactureDate",
+        "localName" : "manufactureDate",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Production Date"
@@ -678,9 +691,10 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#maintenanceActivity",
-        "resourceType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#MaintenanceActivity",
+        "localName" : "maintenanceActivity",
+        "rdfType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#MaintenanceActivity",
         "preferredName" : [ {
           "language" : "en",
           "text" : "maintenanceActivity"

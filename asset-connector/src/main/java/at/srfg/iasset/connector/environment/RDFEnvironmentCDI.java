@@ -2,11 +2,16 @@ package at.srfg.iasset.connector.environment;
 
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.List;
+import java.util.Collections;
+import java.util.function.Function;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContent;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContentRDF;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationRDF;
 import org.eclipse.digitaltwin.aas4j.v3.model.EmbeddedDataSpecification;
+import org.eclipse.digitaltwin.aas4j.v3.model.HasDataSpecification;
 import org.eclipse.digitaltwin.aas4j.v3.model.HasSemantics;
 import org.eclipse.digitaltwin.aas4j.v3.model.Referable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
@@ -45,8 +50,75 @@ public class RDFEnvironmentCDI implements RDFEnvironment {
 	public Optional<IRI> getSemanticIdentifier(HasSemantics element) {
 		return getSemanticIdentifier(element.getSemanticId());
 	}
+	@Override
+	public List<IRI> getPredicate(HasDataSpecification element) {
+		List<DataSpecificationRDF> specs = searchSemantics(element, DataSpecificationRDF.class);
+		if (!specs.isEmpty()) {
+			return specs.stream().map((DataSpecificationRDF s) -> {
+				return SimpleValueFactory.getInstance().createIRI(s.getIri());
+			}).toList();
 
+		}
+		return Collections.emptyList();
+	}
+	@Override
+	public List<IRI> getRdfType(HasDataSpecification element) {
+		List<DataSpecificationRDF> specs = searchSemantics(element, DataSpecificationRDF.class);
+		if (!specs.isEmpty()) {
+			return specs.stream().filter((DataSpecificationRDF s) -> 
+					s.getRdfType() != null && !s.getRdfType().isBlank()
+				)
+				.map((DataSpecificationRDF s) -> {
+					return SimpleValueFactory.getInstance().createIRI(s.getRdfType());
+				}).toList();
 
+		}
+		return Collections.emptyList();
+	}
+	private <T extends DataSpecificationRDF> List<T> searchSemantics(HasDataSpecification element, Class<T> contentType) {
+
+		List<T> specs = getDataSpecification(element, contentType);
+		if ( specs.isEmpty()) {
+			Optional<HasDataSpecification> semanticsOpt = resolveSemantics(element);
+			if ( semanticsOpt.isPresent()) {
+				return searchSemantics(semanticsOpt.get(), contentType);
+			}
+
+		}
+		return specs;
+	}
+	private <T extends DataSpecificationRDF> List<T> getDataSpecification(HasDataSpecification element, Class<T> contentType) {
+
+		return element.getEmbeddedDataSpecifications().stream().filter( (e) -> {
+			if (contentType.isInstance(e.getDataSpecificationContent())) {
+				return true;
+			}
+			return false;
+		})
+		.map((EmbeddedDataSpecification e) -> contentType.cast(e.getDataSpecificationContent()))
+		.toList();
+		
+	}
+	private Optional<HasDataSpecification> resolveSemantics(Reference semanticId) {
+		if (semanticId.getReferredSemanticId() != null) {
+			return resolveSemantics(semanticId.getReferredSemanticId());
+		}
+		Optional<Referable> semanticElementTypeOpt = serviceEnvironment.resolve(semanticId);
+		if ( semanticElementTypeOpt.isPresent()) {
+			Referable semanticElementType = semanticElementTypeOpt.get();
+			if ( HasDataSpecification.class.isInstance(semanticElementType)) {
+				return Optional.of(HasDataSpecification.class.cast(semanticElementType));
+			}
+		}
+		return Optional.empty();
+	}
+	private Optional<HasDataSpecification> resolveSemantics(HasDataSpecification element) {
+		if ( HasSemantics.class.isInstance(element)) {
+			HasSemantics hasSemantics = HasSemantics.class.cast(element);
+			return resolveSemantics(hasSemantics.getSemanticId());
+		}
+		return Optional.empty();
+	}
 
 	@Override
 	public Optional<IRI> getSemanticIdentifier(Reference semanticId) {

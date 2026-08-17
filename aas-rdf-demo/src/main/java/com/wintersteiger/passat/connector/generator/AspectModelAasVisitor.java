@@ -1,18 +1,5 @@
 package com.wintersteiger.passat.connector.generator;
 
-/*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
- *
- * See the AUTHORS file(s) distributed with this work for additional
- * information regarding authorship.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * SPDX-License-Identifier: MPL-2.0
- */
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,8 +22,8 @@ import org.apache.jena.vocabulary.XSD;
 import org.eclipse.digitaltwin.aas4j.v3.model.AasSubmodelElements;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
-import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContentRDF;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationRDF;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeIec61360;
 import org.eclipse.digitaltwin.aas4j.v3.model.EmbeddedDataSpecification;
 import org.eclipse.digitaltwin.aas4j.v3.model.Environment;
@@ -62,8 +49,8 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShe
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetInformation;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultBlob;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultConceptDescription;
-import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationContentRDF;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationIec61360;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultDataSpecificationRDF;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEmbeddedDataSpecification;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEnvironment;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultKey;
@@ -564,13 +551,13 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
    private EmbeddedDataSpecification extractEmbeddedDataSpecificationRDF( final Property property ) {
 	      return new DefaultEmbeddedDataSpecification.Builder()
 	            .dataSpecification( buildReferenceForSeeElement( CONCEPT_DESCRIPTION_DATA_SPECIFICATION_RDF_URL ) )
-	            .dataSpecificationContent( extractDataSpecificationContentRDF( property ) )
+	            .dataSpecificationContent( extractDataSpecificationRDF( property ) )
 	            .build();
 	   }
    private EmbeddedDataSpecification extractEmbeddedDataSpecificationRDF( final Aspect aspect ) {
 	      return new DefaultEmbeddedDataSpecification.Builder()
 	            .dataSpecification( buildReferenceForSeeElement( CONCEPT_DESCRIPTION_DATA_SPECIFICATION_RDF_URL ) )
-	            .dataSpecificationContent( extractDataSpecificationContentRDF( aspect ) )
+	            .dataSpecificationContent( extractDataSpecificationRDF( aspect ) )
 	            .build();
 	   }
 
@@ -587,7 +574,7 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
             .dataSpecificationContent( extractDataSpecificationContent( aspect ) )
             .build();
    }
-   private DataSpecificationContentRDF extractDataSpecificationContentRDF( final Property property ) {
+   private DataSpecificationRDF extractDataSpecificationRDF( final Property property ) {
 	      final List<LangStringTextType> definitionsProperty = property.getDescriptions().stream()
 	            .map( LangStringMapper.TEXT::map ).toList();
 
@@ -595,16 +582,16 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
 	            ? Collections.singletonList( LangStringMapper.NAME.createLangString( property.getName(), DEFAULT_LOCALE ) )
 	            : property.getPreferredNames().stream().map( LangStringMapper.NAME::map ).collect( Collectors.toList() );
 
-	      return new DefaultDataSpecificationContentRDF.Builder()
+	      return new DefaultDataSpecificationRDF.Builder()
 	    		.iri(DEFAULT_MAPPER.determineIdentifierFor( property ))
-	            .description( definitionsProperty )
+	            .definition( definitionsProperty )
 	            .preferredName( preferredNames )
-	            .sameAs(property.getSee())
-	            .resourceType(extractResourceType( property.getCharacteristic() ) )
+               .localName(property.getPayloadName())
+	            .rdfType(extractResourceType( property.getCharacteristic() ) )
 //	            .shortName( LangStringMapper.SHORT_NAME.createLangString( property.getName(), DEFAULT_LOCALE ) )
 	            .build();
 	   }
-   private DataSpecificationContentRDF extractDataSpecificationContentRDF( final Aspect aspect ) {
+   private DataSpecificationRDF extractDataSpecificationRDF( final Aspect aspect ) {
 	      final List<LangStringTextType> definitionsProperty = aspect.getDescriptions().stream()
 	            .map( LangStringMapper.TEXT::map ).toList();
 
@@ -612,12 +599,12 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
 	            ? Collections.singletonList( LangStringMapper.NAME.createLangString( aspect.getName(), DEFAULT_LOCALE ) )
 	            : aspect.getPreferredNames().stream().map( LangStringMapper.NAME::map ).collect( Collectors.toList() );
 
-	      return new DefaultDataSpecificationContentRDF.Builder()
+	      return new DefaultDataSpecificationRDF.Builder()
 	    		.iri(DEFAULT_MAPPER.determineIdentifierFor( aspect ))
-	            .description( definitionsProperty )
+	            .definition( definitionsProperty )
 	            .preferredName( preferredNames )
-	            .sameAs(aspect.getSee())
-	            .resourceType(DEFAULT_MAPPER.determineIdentifierFor( aspect ))
+	            .rdfType(DEFAULT_MAPPER.determineIdentifierFor( aspect ))
+               .dataType(DEFAULT_MAPPER.determineIdentifierFor( aspect ))
 //	            .shortName( LangStringMapper.SHORT_NAME.createLangString( property.getName(), DEFAULT_LOCALE ) )
 	            .build();
 	   }
@@ -635,8 +622,6 @@ public class AspectModelAasVisitor implements AspectVisitor<Environment, Context
 		}
 		return null;
 	}
-
-
    private DataSpecificationIec61360 extractDataSpecificationContent( final Property property ) {
       final List<LangStringDefinitionTypeIec61360> definitionsProperty = property.getDescriptions().stream()
             .map( LangStringMapper.DEFINITION::map ).toList();

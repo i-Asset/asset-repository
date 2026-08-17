@@ -49,9 +49,10 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#Nameplate",
-        "resourceType" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#Nameplate",
+        "rdfType" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#Nameplate",
+        "dataType" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#Nameplate",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Nameplate"
@@ -82,11 +83,11 @@
           "text" : "Unique global identification of the product using an universal resource identifier (URI)."
         } ],
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "URI des Produkts"
-        }, {
           "language" : "en",
           "text" : "URI of the product"
+        }, {
+          "language" : "de",
+          "text" : "URI des Produkts"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -102,32 +103,32 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#uriOfTheProduct",
+        "localName" : "URIOfTheProduct",
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "URI des Produkts"
-        }, {
           "language" : "en",
           "text" : "URI of the product"
+        }, {
+          "language" : "de",
+          "text" : "URI des Produkts"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "de",
           "text" : "Global eindeutige Identifikation des Produkts."
         }, {
           "language" : "en",
           "text" : "Unique global identification of the product using an universal resource identifier (URI)."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABN590%23002", "urn:irdi:0173-1%2302-ABH173%23003" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#uriOfTheProduct",
     "displayName" : [ {
-      "language" : "de",
-      "text" : "URI des Produkts"
-    }, {
       "language" : "en",
       "text" : "URI of the product"
+    }, {
+      "language" : "de",
+      "text" : "URI des Produkts"
     } ],
     "idShort" : "uriOfTheProduct"
   }, {
@@ -151,11 +152,11 @@
           "text" : "Legally valid designation of the natural or judicial person which is directly responsible for the design, production, packaging and labeling of a product in respect to its being brought into circulation."
         } ],
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "manufacturer name"
-        }, {
           "language" : "de",
           "text" : "Herstellername"
+        }, {
+          "language" : "en",
+          "text" : "manufacturer name"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -171,32 +172,32 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerName",
+        "localName" : "ManufacturerName",
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "manufacturer name"
-        }, {
           "language" : "de",
           "text" : "Herstellername"
+        }, {
+          "language" : "en",
+          "text" : "manufacturer name"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "de",
           "text" : "Name des Herstellers."
         }, {
           "language" : "en",
           "text" : "Legally valid designation of the natural or judicial person which is directly responsible for the design, production, packaging and labeling of a product in respect to its being brought into circulation."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABA565%23009", "urn:irdi:0173-1%2302-AAO677%23004" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerName",
     "displayName" : [ {
-      "language" : "en",
-      "text" : "manufacturer name"
-    }, {
       "language" : "de",
       "text" : "Herstellername"
+    }, {
+      "language" : "en",
+      "text" : "manufacturer name"
     } ],
     "idShort" : "manufacturerName"
   }, {
@@ -240,8 +241,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerProductDesignation",
+        "localName" : "ManufacturerProductDesignation",
         "preferredName" : [ {
           "language" : "de",
           "text" : "Herstellerproduktbezeichnung"
@@ -249,14 +251,13 @@
           "language" : "en",
           "text" : "manufacturer product designation"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "en",
           "text" : "Short description of the product (short text), third or lowest level of a 3 level manufacturer specific product hierarchy."
         }, {
           "language" : "de",
           "text" : "Kurze Beschreibung des Produktes (Kurztext)."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABA567%23009", "urn:irdi:0173-1%2302-AAW338%23003" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerProductDesignation",
@@ -303,17 +304,17 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerProductRoot",
+        "localName" : "ManufacturerProductRoot",
         "preferredName" : [ {
           "language" : "en",
           "text" : "manufacturer Product Root"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "en",
           "text" : "Top level of a 3 level manufacturer specific product hierarchy."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61360_7%23AAS011%23001", "urn:irdi:0173-1%2302-AAU732%23003" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerProductRoot",
@@ -363,8 +364,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerProductFamily",
+        "localName" : "ManufacturerProductFamily",
         "preferredName" : [ {
           "language" : "en",
           "text" : "manufacturer product family"
@@ -372,14 +374,13 @@
           "language" : "de",
           "text" : "Produktfamilie"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "en",
           "text" : "2nd level of a 3 level manufacturer specific product hierarchy."
         }, {
           "language" : "de",
           "text" : "Produktfamilie des Produkts."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABP464%23002", "urn:irdi:0173-1%2302-AAU731%23003" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerProductFamily",
@@ -405,18 +406,18 @@
         "modelType" : "DataSpecificationIec61360",
         "dataType" : "STRING",
         "definition" : [ {
-          "language" : "de",
-          "text" : "Ausprägung für das Produkt, um unterschiedliche Einzelprodukte einer Produktfamilie zu unterscheiden."
-        }, {
           "language" : "en",
           "text" : "Characteristic to differentiate between different products of a product family or special variants."
+        }, {
+          "language" : "de",
+          "text" : "Ausprägung für das Produkt, um unterschiedliche Einzelprodukte einer Produktfamilie zu unterscheiden."
         } ],
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Produktausprägungen"
-        }, {
           "language" : "en",
           "text" : "manufacturer product type"
+        }, {
+          "language" : "de",
+          "text" : "Produktausprägungen"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -432,32 +433,32 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerProductType",
+        "localName" : "ManufacturerProductType",
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Produktausprägungen"
-        }, {
           "language" : "en",
           "text" : "manufacturer product type"
-        } ],
-        "description" : [ {
-          "language" : "de",
-          "text" : "Ausprägung für das Produkt, um unterschiedliche Einzelprodukte einer Produktfamilie zu unterscheiden."
         }, {
+          "language" : "de",
+          "text" : "Produktausprägungen"
+        } ],
+        "definition" : [ {
           "language" : "en",
           "text" : "Characteristic to differentiate between different products of a product family or special variants."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABA300%23008", "urn:irdi:0173-1%2302-AAO057%23004" ]
+        }, {
+          "language" : "de",
+          "text" : "Ausprägung für das Produkt, um unterschiedliche Einzelprodukte einer Produktfamilie zu unterscheiden."
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#manufacturerProductType",
     "displayName" : [ {
-      "language" : "de",
-      "text" : "Produktausprägungen"
-    }, {
       "language" : "en",
       "text" : "manufacturer product type"
+    }, {
+      "language" : "de",
+      "text" : "Produktausprägungen"
     } ],
     "idShort" : "manufacturerProductType"
   }, {
@@ -474,11 +475,11 @@
         "modelType" : "DataSpecificationIec61360",
         "dataType" : "STRING",
         "definition" : [ {
-          "language" : "en",
-          "text" : "Unique combination of numbers and letters used to identify the device for ordering."
-        }, {
           "language" : "de",
           "text" : "Eindeutige Zahlen- und Buchstabenkombination um das Produkt eindeutig für die Bestellung zu identifizieren."
+        }, {
+          "language" : "en",
+          "text" : "Unique combination of numbers and letters used to identify the device for ordering."
         } ],
         "preferredName" : [ {
           "language" : "en",
@@ -501,8 +502,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#orderCodeOfManufacturer",
+        "localName" : "OrderCodeOfManufacturer",
         "preferredName" : [ {
           "language" : "en",
           "text" : "order code for the product"
@@ -510,14 +512,13 @@
           "language" : "de",
           "text" : "Bestellcode des Produkts"
         } ],
-        "description" : [ {
-          "language" : "en",
-          "text" : "Unique combination of numbers and letters used to identify the device for ordering."
-        }, {
+        "definition" : [ {
           "language" : "de",
           "text" : "Eindeutige Zahlen- und Buchstabenkombination um das Produkt eindeutig für die Bestellung zu identifizieren."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABA950%23008", "urn:irdi:0173-1%2302-AAO227%23004" ]
+        }, {
+          "language" : "en",
+          "text" : "Unique combination of numbers and letters used to identify the device for ordering."
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#orderCodeOfManufacturer",
@@ -543,18 +544,18 @@
         "modelType" : "DataSpecificationIec61360",
         "dataType" : "STRING",
         "definition" : [ {
-          "language" : "de",
-          "text" : "Eindeutige Artikelnummer des Herstellers."
-        }, {
           "language" : "en",
           "text" : "Unique product identifier of the manufacturer."
+        }, {
+          "language" : "de",
+          "text" : "Eindeutige Artikelnummer des Herstellers."
         } ],
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Artikelnummer des Produkts"
-        }, {
           "language" : "en",
           "text" : "product article number"
+        }, {
+          "language" : "de",
+          "text" : "Artikelnummer des Produkts"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -570,32 +571,32 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#productArticleNumberOfManufacturer",
+        "localName" : "ProductArticleNumberOfManufacturer",
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Artikelnummer des Produkts"
-        }, {
           "language" : "en",
           "text" : "product article number"
-        } ],
-        "description" : [ {
-          "language" : "de",
-          "text" : "Eindeutige Artikelnummer des Herstellers."
         }, {
+          "language" : "de",
+          "text" : "Artikelnummer des Produkts"
+        } ],
+        "definition" : [ {
           "language" : "en",
           "text" : "Unique product identifier of the manufacturer."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABA581%23007", "urn:irdi:0173-1%2302-AAO676%23005" ]
+        }, {
+          "language" : "de",
+          "text" : "Eindeutige Artikelnummer des Herstellers."
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#productArticleNumberOfManufacturer",
     "displayName" : [ {
-      "language" : "de",
-      "text" : "Artikelnummer des Produkts"
-    }, {
       "language" : "en",
       "text" : "product article number"
+    }, {
+      "language" : "de",
+      "text" : "Artikelnummer des Produkts"
     } ],
     "idShort" : "productArticleNumberOfManufacturer"
   }, {
@@ -612,18 +613,18 @@
         "modelType" : "DataSpecificationIec61360",
         "dataType" : "STRING",
         "definition" : [ {
-          "language" : "de",
-          "text" : "Die Seriennummer des Produkts."
-        }, {
           "language" : "en",
           "text" : "Unique combination of numbers and letters used to identify the device once it has been manufactured."
-        } ],
-        "preferredName" : [ {
-          "language" : "en",
-          "text" : "serial number"
         }, {
           "language" : "de",
+          "text" : "Die Seriennummer des Produkts."
+        } ],
+        "preferredName" : [ {
+          "language" : "de",
           "text" : "Seriennummer"
+        }, {
+          "language" : "en",
+          "text" : "serial number"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -639,32 +640,32 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#serialNumber",
+        "localName" : "SerialNumber",
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "serial number"
-        }, {
           "language" : "de",
           "text" : "Seriennummer"
-        } ],
-        "description" : [ {
-          "language" : "de",
-          "text" : "Die Seriennummer des Produkts."
         }, {
           "language" : "en",
-          "text" : "Unique combination of numbers and letters used to identify the device once it has been manufactured."
+          "text" : "serial number"
         } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABA951%23009", "urn:irdi:0173-1%2302-AAM556%23004" ]
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Unique combination of numbers and letters used to identify the device once it has been manufactured."
+        }, {
+          "language" : "de",
+          "text" : "Die Seriennummer des Produkts."
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#serialNumber",
     "displayName" : [ {
-      "language" : "en",
-      "text" : "serial number"
-    }, {
       "language" : "de",
       "text" : "Seriennummer"
+    }, {
+      "language" : "en",
+      "text" : "serial number"
     } ],
     "idShort" : "serialNumber"
   }, {
@@ -688,11 +689,11 @@
           "text" : "Das Jahr, in dem das Produkt fertig gestellt wurde."
         } ],
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Konstruktionsjahr"
-        }, {
           "language" : "en",
           "text" : "year of construction"
+        }, {
+          "language" : "de",
+          "text" : "Konstruktionsjahr"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -708,32 +709,32 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#yearOfConstruction",
+        "localName" : "YearOfConstruction",
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Konstruktionsjahr"
-        }, {
           "language" : "en",
           "text" : "year of construction"
+        }, {
+          "language" : "de",
+          "text" : "Konstruktionsjahr"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "en",
           "text" : "Year in which the manufacturing process is completed."
         }, {
           "language" : "de",
           "text" : "Das Jahr, in dem das Produkt fertig gestellt wurde."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABP000%23002", "urn:irdi:0173-1%2302-AAP906%23003" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#yearOfConstruction",
     "displayName" : [ {
-      "language" : "de",
-      "text" : "Konstruktionsjahr"
-    }, {
       "language" : "en",
       "text" : "year of construction"
+    }, {
+      "language" : "de",
+      "text" : "Konstruktionsjahr"
     } ],
     "idShort" : "yearOfConstruction"
   }, {
@@ -757,11 +758,11 @@
           "text" : "Datum, zu dem das Produkt hergestellt wurde."
         } ],
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "date of manufacture"
-        }, {
           "language" : "de",
           "text" : "Herstelldatum"
+        }, {
+          "language" : "en",
+          "text" : "date of manufacture"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -777,32 +778,32 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#dateOfManufacture",
+        "localName" : "DateOfManufacture",
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "date of manufacture"
-        }, {
           "language" : "de",
           "text" : "Herstelldatum"
+        }, {
+          "language" : "en",
+          "text" : "date of manufacture"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "en",
           "text" : "Date when an item was manufactured."
         }, {
           "language" : "de",
           "text" : "Datum, zu dem das Produkt hergestellt wurde."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABB757%23007", "urn:irdi:0173-1%2302-AAR972%23004" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#dateOfManufacture",
     "displayName" : [ {
-      "language" : "en",
-      "text" : "date of manufacture"
-    }, {
       "language" : "de",
       "text" : "Herstelldatum"
+    }, {
+      "language" : "en",
+      "text" : "date of manufacture"
     } ],
     "idShort" : "dateOfManufacture"
   }, {
@@ -819,11 +820,11 @@
         "modelType" : "DataSpecificationIec61360",
         "dataType" : "STRING",
         "definition" : [ {
-          "language" : "en",
-          "text" : "Version of the hardware supplied with the device."
-        }, {
           "language" : "de",
           "text" : "Version der Hardware."
+        }, {
+          "language" : "en",
+          "text" : "Version of the hardware supplied with the device."
         } ],
         "preferredName" : [ {
           "language" : "de",
@@ -846,8 +847,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#hardwareVersion",
+        "localName" : "HardwareVersion",
         "preferredName" : [ {
           "language" : "de",
           "text" : "Hardwareversion"
@@ -855,14 +857,13 @@
           "language" : "en",
           "text" : "hardware version"
         } ],
-        "description" : [ {
-          "language" : "en",
-          "text" : "Version of the hardware supplied with the device."
-        }, {
+        "definition" : [ {
           "language" : "de",
           "text" : "Version der Hardware."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABA926%23008", "urn:irdi:0173-1%2302-AAN270%23004" ]
+        }, {
+          "language" : "en",
+          "text" : "Version of the hardware supplied with the device."
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#hardwareVersion",
@@ -895,11 +896,11 @@
           "text" : "Version of the firmware supplied with the device."
         } ],
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Firmwareversion"
-        }, {
           "language" : "en",
           "text" : "firmware version"
+        }, {
+          "language" : "de",
+          "text" : "Firmwareversion"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -915,32 +916,32 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#firmwareVersion",
+        "localName" : "FirmwareVersion",
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Firmwareversion"
-        }, {
           "language" : "en",
           "text" : "firmware version"
+        }, {
+          "language" : "de",
+          "text" : "Firmwareversion"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "de",
           "text" : "Version der Firmware."
         }, {
           "language" : "en",
           "text" : "Version of the firmware supplied with the device."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABA302%23006", "urn:irdi:0173-1%2302-AAM985%23004" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#firmwareVersion",
     "displayName" : [ {
-      "language" : "de",
-      "text" : "Firmwareversion"
-    }, {
       "language" : "en",
       "text" : "firmware version"
+    }, {
+      "language" : "de",
+      "text" : "Firmwareversion"
     } ],
     "idShort" : "firmwareVersion"
   }, {
@@ -964,11 +965,11 @@
           "text" : "Version of the software used by the device."
         } ],
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "software version"
-        }, {
           "language" : "de",
           "text" : "Softwareversion"
+        }, {
+          "language" : "en",
+          "text" : "software version"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -984,32 +985,32 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#softwareVersion",
+        "localName" : "SoftwareVersion",
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "software version"
-        }, {
           "language" : "de",
           "text" : "Softwareversion"
+        }, {
+          "language" : "en",
+          "text" : "software version"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "de",
           "text" : "Version der Software."
         }, {
           "language" : "en",
           "text" : "Version of the software used by the device."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABA601%23008", "urn:irdi:0173-1%2302-AAM737%23004" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#softwareVersion",
     "displayName" : [ {
-      "language" : "en",
-      "text" : "software version"
-    }, {
       "language" : "de",
       "text" : "Softwareversion"
+    }, {
+      "language" : "en",
+      "text" : "software version"
     } ],
     "idShort" : "softwareVersion"
   }, {
@@ -1047,17 +1048,17 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#countryOfOrigin",
+        "localName" : "CountryOfOrigin",
         "preferredName" : [ {
           "language" : "en",
           "text" : "country of Origin"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "en",
           "text" : "Country where the product was manufactured. Note: Country codes defined accord. to DIN EN ISO 3166-1 alpha-2 codes."
-        } ],
-        "sameAs" : [ "urn:irdi:0112/2///61987%23ABP462%23001", "urn:irdi:0173-1%2302-AAO259%23007" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#countryOfOrigin",
@@ -1101,17 +1102,17 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#uniqueFacilityIdentifier",
+        "localName" : "UniqueFacilityIdentifier",
         "preferredName" : [ {
           "language" : "en",
           "text" : "unique Identifier of a facility"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "en",
           "text" : "Unique string of characters for the identification of locations or buildings involved in a product’s value chain or used by actors involved in a product’s value chain."
-        } ],
-        "sameAs" : [ "https://adminshell.io/idta/nameplate/3/0/UniqueFacilityIdentifier" ]
+        } ]
       }
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#uniqueFacilityIdentifier",
@@ -1141,11 +1142,11 @@
           "text" : "A graphic mark used to represent a company, an organisation or a product."
         } ],
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Firmenlogo"
-        }, {
           "language" : "en",
           "text" : "company logo"
+        }, {
+          "language" : "de",
+          "text" : "Firmenlogo"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -1161,16 +1162,17 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#logoCompany",
+        "localName" : "CompanyLogo",
         "preferredName" : [ {
-          "language" : "de",
-          "text" : "Firmenlogo"
-        }, {
           "language" : "en",
           "text" : "company logo"
+        }, {
+          "language" : "de",
+          "text" : "Firmenlogo"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "de",
           "text" : "Das Firmenlogo des Produkts."
         }, {
@@ -1181,11 +1183,11 @@
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#logoCompany",
     "displayName" : [ {
-      "language" : "de",
-      "text" : "Firmenlogo"
-    }, {
       "language" : "en",
       "text" : "company logo"
+    }, {
+      "language" : "de",
+      "text" : "Firmenlogo"
     } ],
     "idShort" : "logoCompany"
   }, {
@@ -1209,11 +1211,11 @@
           "text" : "Markings of the product. Note: CE marking is declared as mandatory according to EU Blue Guide."
         } ],
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "markings"
-        }, {
           "language" : "de",
           "text" : "Kennzeichnungen"
+        }, {
+          "language" : "en",
+          "text" : "markings"
         } ],
         "shortName" : [ {
           "language" : "en",
@@ -1229,16 +1231,17 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#markings",
+        "localName" : "Markings",
         "preferredName" : [ {
-          "language" : "en",
-          "text" : "markings"
-        }, {
           "language" : "de",
           "text" : "Kennzeichnungen"
+        }, {
+          "language" : "en",
+          "text" : "markings"
         } ],
-        "description" : [ {
+        "definition" : [ {
           "language" : "de",
           "text" : "Produktkennzeichnungen"
         }, {
@@ -1249,11 +1252,11 @@
     } ],
     "id" : "urn:samm:io.admin-shell.idta.digital_nameplate:3.0.0#markings",
     "displayName" : [ {
-      "language" : "en",
-      "text" : "markings"
-    }, {
       "language" : "de",
       "text" : "Kennzeichnungen"
+    }, {
+      "language" : "en",
+      "text" : "markings"
     } ],
     "idShort" : "markings"
   } ],
@@ -1294,11 +1297,11 @@
       } ],
       "valueType" : "xs:anyURI",
       "displayName" : [ {
-        "language" : "de",
-        "text" : "URI des Produkts"
-      }, {
         "language" : "en",
         "text" : "URI of the product"
+      }, {
+        "language" : "de",
+        "text" : "URI des Produkts"
       } ],
       "idShort" : "URIOfTheProduct"
     }, {
@@ -1313,13 +1316,13 @@
       "supplementalSemanticIds" : [ {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0112/2///61987%23ABA565%23009"
+          "value" : "urn:irdi:0173-1%2302-AAO677%23004"
         } ],
         "type" : "ExternalReference"
       }, {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0173-1%2302-AAO677%23004"
+          "value" : "urn:irdi:0112/2///61987%23ABA565%23009"
         } ],
         "type" : "ExternalReference"
       } ],
@@ -1331,11 +1334,11 @@
         "text" : "Legally valid designation of the natural or judicial person which is directly responsible for the design, production, packaging and labeling of a product in respect to its being brought into circulation."
       } ],
       "displayName" : [ {
-        "language" : "en",
-        "text" : "manufacturer name"
-      }, {
         "language" : "de",
         "text" : "Herstellername"
+      }, {
+        "language" : "en",
+        "text" : "manufacturer name"
       } ],
       "idShort" : "ManufacturerName"
     }, {
@@ -1455,23 +1458,23 @@
       "supplementalSemanticIds" : [ {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0173-1%2302-AAO057%23004"
+          "value" : "urn:irdi:0112/2///61987%23ABA300%23008"
         } ],
         "type" : "ExternalReference"
       }, {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0112/2///61987%23ABA300%23008"
+          "value" : "urn:irdi:0173-1%2302-AAO057%23004"
         } ],
         "type" : "ExternalReference"
       } ],
       "valueType" : "xs:string",
       "displayName" : [ {
-        "language" : "de",
-        "text" : "Produktausprägungen"
-      }, {
         "language" : "en",
         "text" : "manufacturer product type"
+      }, {
+        "language" : "de",
+        "text" : "Produktausprägungen"
       } ],
       "idShort" : "ManufacturerProductType"
     }, {
@@ -1517,23 +1520,23 @@
       "supplementalSemanticIds" : [ {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0173-1%2302-AAO676%23005"
+          "value" : "urn:irdi:0112/2///61987%23ABA581%23007"
         } ],
         "type" : "ExternalReference"
       }, {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0112/2///61987%23ABA581%23007"
+          "value" : "urn:irdi:0173-1%2302-AAO676%23005"
         } ],
         "type" : "ExternalReference"
       } ],
       "valueType" : "xs:string",
       "displayName" : [ {
-        "language" : "de",
-        "text" : "Artikelnummer des Produkts"
-      }, {
         "language" : "en",
         "text" : "product article number"
+      }, {
+        "language" : "de",
+        "text" : "Artikelnummer des Produkts"
       } ],
       "idShort" : "ProductArticleNumberOfManufacturer"
     }, {
@@ -1560,11 +1563,11 @@
       } ],
       "valueType" : "xs:string",
       "displayName" : [ {
-        "language" : "en",
-        "text" : "serial number"
-      }, {
         "language" : "de",
         "text" : "Seriennummer"
+      }, {
+        "language" : "en",
+        "text" : "serial number"
       } ],
       "idShort" : "SerialNumber"
     }, {
@@ -1591,11 +1594,11 @@
       } ],
       "valueType" : "xs:string",
       "displayName" : [ {
-        "language" : "de",
-        "text" : "Konstruktionsjahr"
-      }, {
         "language" : "en",
         "text" : "year of construction"
+      }, {
+        "language" : "de",
+        "text" : "Konstruktionsjahr"
       } ],
       "idShort" : "YearOfConstruction"
     }, {
@@ -1622,11 +1625,11 @@
       } ],
       "valueType" : "xs:date",
       "displayName" : [ {
-        "language" : "en",
-        "text" : "date of manufacture"
-      }, {
         "language" : "de",
         "text" : "Herstelldatum"
+      }, {
+        "language" : "en",
+        "text" : "date of manufacture"
       } ],
       "idShort" : "DateOfManufacture"
     }, {
@@ -1641,13 +1644,13 @@
       "supplementalSemanticIds" : [ {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0112/2///61987%23ABA926%23008"
+          "value" : "urn:irdi:0173-1%2302-AAN270%23004"
         } ],
         "type" : "ExternalReference"
       }, {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0173-1%2302-AAN270%23004"
+          "value" : "urn:irdi:0112/2///61987%23ABA926%23008"
         } ],
         "type" : "ExternalReference"
       } ],
@@ -1684,11 +1687,11 @@
       } ],
       "valueType" : "xs:string",
       "displayName" : [ {
-        "language" : "de",
-        "text" : "Firmwareversion"
-      }, {
         "language" : "en",
         "text" : "firmware version"
+      }, {
+        "language" : "de",
+        "text" : "Firmwareversion"
       } ],
       "idShort" : "FirmwareVersion"
     }, {
@@ -1703,23 +1706,23 @@
       "supplementalSemanticIds" : [ {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0173-1%2302-AAM737%23004"
+          "value" : "urn:irdi:0112/2///61987%23ABA601%23008"
         } ],
         "type" : "ExternalReference"
       }, {
         "keys" : [ {
           "type" : "GlobalReference",
-          "value" : "urn:irdi:0112/2///61987%23ABA601%23008"
+          "value" : "urn:irdi:0173-1%2302-AAM737%23004"
         } ],
         "type" : "ExternalReference"
       } ],
       "valueType" : "xs:string",
       "displayName" : [ {
-        "language" : "en",
-        "text" : "software version"
-      }, {
         "language" : "de",
         "text" : "Softwareversion"
+      }, {
+        "language" : "en",
+        "text" : "software version"
       } ],
       "idShort" : "SoftwareVersion"
     }, {
@@ -1783,11 +1786,11 @@
       },
       "valueType" : "xs:anyURI",
       "displayName" : [ {
-        "language" : "de",
-        "text" : "Firmenlogo"
-      }, {
         "language" : "en",
         "text" : "company logo"
+      }, {
+        "language" : "de",
+        "text" : "Firmenlogo"
       } ],
       "idShort" : "CompanyLogo"
     }, {
@@ -1801,11 +1804,11 @@
       },
       "valueType" : "xs:string",
       "displayName" : [ {
-        "language" : "en",
-        "text" : "markings"
-      }, {
         "language" : "de",
         "text" : "Kennzeichnungen"
+      }, {
+        "language" : "en",
+        "text" : "markings"
       } ],
       "idShort" : "Markings"
     } ]

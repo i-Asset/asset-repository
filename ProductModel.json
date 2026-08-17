@@ -49,9 +49,10 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ProductModel",
-        "resourceType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ProductModel",
+        "rdfType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ProductModel",
+        "dataType" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#ProductModel",
         "preferredName" : [ {
           "language" : "en",
           "text" : "ProductModel"
@@ -93,8 +94,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#sideCutTail",
+        "localName" : "sideCutTail",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Side Cut Tail"
@@ -139,8 +141,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#sideCutWaist",
+        "localName" : "sideCutWaist",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Side Cut Waist"
@@ -185,8 +188,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#sideCutTip",
+        "localName" : "sideCutTip",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Side Cut Tip"
@@ -230,8 +234,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#steelEdgeSidewallAngle",
+        "localName" : "steelEdgeSidewallAngle",
         "preferredName" : [ {
           "language" : "en",
           "text" : "steelEdgeSidewallAngle"
@@ -271,8 +276,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#baseEdgeAngle",
+        "localName" : "baseEdgeAngle",
         "preferredName" : [ {
           "language" : "en",
           "text" : "baseEdgeAngle"
@@ -312,8 +318,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#season",
+        "localName" : "season",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Season"
@@ -357,8 +364,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#brand",
+        "localName" : "brand",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Brand"
@@ -402,8 +410,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#productName",
+        "localName" : "productName",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Product Name"
@@ -447,8 +456,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#articleNumber",
+        "localName" : "articleNumber",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Article Number"
@@ -492,8 +502,9 @@
         "type" : "ExternalReference"
       },
       "dataSpecificationContent" : {
-        "modelType" : "DataSpecificationContentRDF",
+        "modelType" : "DataSpecificationRDF",
         "iri" : "urn:samm:com.copadata.dpp.AtomicSki:2.0.0#set",
+        "localName" : "set",
         "preferredName" : [ {
           "language" : "en",
           "text" : "Commercial Set"
