@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.List;
 import java.util.Collections;
-import java.util.function.Function;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataSpecificationContent;
