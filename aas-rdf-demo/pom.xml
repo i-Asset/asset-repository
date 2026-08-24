@@ -10,8 +10,8 @@
 	<name>Wintersteiger Connector</name>
 
 	<properties>
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.source>25</maven.compiler.source>
+		<maven.compiler.target>25</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<aas4j-model.version>2.0.1</aas4j-model.version>
 	</properties>

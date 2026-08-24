@@ -8,7 +8,7 @@
 	<artifactId>asset-repository-api</artifactId>
 	<name>Asset Repository API Definition</name>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>25</java.version>
 		<rdf4j.version>5.2.2</rdf4j.version>
 	</properties>
 

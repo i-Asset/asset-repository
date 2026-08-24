@@ -12,7 +12,7 @@
 	<name>IAsset Network</name>
 	<description>Core Network Component managing companies and networks</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>25</java.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 	</properties>
 		<dependencyManagement>
