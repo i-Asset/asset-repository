@@ -20,7 +20,7 @@ public class Generator {
 	public static void main(String [] args) {
 		try {
 			Generator g = new Generator();
-			g.doTheStuff("DppMetadata.ttl", "Nameplate.ttl", "ProductModel.ttl", "ItemData.ttl");
+			g.doTheStuff("DppMetadata.ttl", "Nameplate.ttl", "ProductModel.ttl", "ItemData.ttl", "DPPRepair.ttl");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

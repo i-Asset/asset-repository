@@ -1,0 +1,4070 @@
+{
+  "assetAdministrationShells" : [ {
+    "modelType" : "AssetAdministrationShell",
+    "assetInformation" : {
+      "assetKind" : "Type"
+    },
+    "submodels" : [ {
+      "keys" : [ {
+        "type" : "Submodel",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#DPPRepair/submodel"
+      } ],
+      "type" : "ModelReference"
+    } ],
+    "administration" : { },
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#DPPRepair",
+    "description" : [ {
+      "language" : "en",
+      "text" : "defaultAdminShell"
+    } ],
+    "idShort" : "defaultAdminShell"
+  } ],
+  "conceptDescriptions" : [ {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "DPPRepair"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "DPPRepair"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#DPPRepair",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#DPPRepair",
+        "dataType" : "urn:samm:com.copadata.dpp:1.0.0#DPPRepair",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "DPPRepair"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#DPPRepair",
+    "category" : "APPLICATION_CLASS",
+    "idShort" : "DPPRepair"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Performance Class"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Class "
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "performanceClass"
+        } ],
+        "valueList" : {
+          "valueReferencePairs" : [ {
+            "value" : "R",
+            "valueId" : {
+              "keys" : [ {
+                "type" : "DataElement",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#PerformanceClassEnum:_R8c257489"
+              } ],
+              "type" : "ModelReference"
+            }
+          }, {
+            "value" : "S",
+            "valueId" : {
+              "keys" : [ {
+                "type" : "DataElement",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#PerformanceClassEnum:_S8de0b3c4"
+              } ],
+              "type" : "ModelReference"
+            }
+          }, {
+            "value" : "C",
+            "valueId" : {
+              "keys" : [ {
+                "type" : "DataElement",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#PerformanceClassEnum:_C6b23c0d5"
+              } ],
+              "type" : "ModelReference"
+            }
+          } ]
+        }
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#performanceClass",
+        "localName" : "performanceClass",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Class "
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Performance Class"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#performanceClass",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Class "
+    } ],
+    "idShort" : "performanceClass"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "BOOLEAN",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Variant Performance Processing"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "vEdge"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "vEdge"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#vEdge",
+        "localName" : "vEdge",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "vEdge"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Variant Performance Processing"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#vEdge",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "vEdge"
+    } ],
+    "idShort" : "vEdge"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#PerformanceData"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Edge Performance data controls the ski service process. The kind of grinding, performance class and other attributes which may control the visual appearance of the service settings at the machine's display"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Edge Performance"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "edgePerformance"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#edgePerformance",
+        "localName" : "edgePerformance",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#PerformanceData",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Edge Performance"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Edge Performance data controls the ski service process. The kind of grinding, performance class and other attributes which may control the visual appearance of the service settings at the machine's display"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#edgePerformance",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Edge Performance"
+    } ],
+    "idShort" : "edgePerformance"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle at the end of the ski (tail)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle Tail"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "angleTail"
+        } ],
+        "unit" : "degreeUnitOfAngle"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#angleTail",
+        "localName" : "angleTail",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle Tail"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle at the end of the ski (tail)"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#angleTail",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Grinding Angle Tail"
+    } ],
+    "idShort" : "angleTail"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle at the middle of the ski (waist)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle Waist"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "angleWaist"
+        } ],
+        "unit" : "degreeUnitOfAngle"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist",
+        "localName" : "angleWaist",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle Waist"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle at the middle of the ski (waist)"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Grinding Angle Waist"
+    } ],
+    "idShort" : "angleWaist"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle at the front of the ski (tip)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle Tip"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "angleTip"
+        } ],
+        "unit" : "degreeUnitOfAngle"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#angleTip",
+        "localName" : "angleTip",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle Tip"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Grinding Angle at the front of the ski (tip)"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#angleTip",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Grinding Angle Tip"
+    } ],
+    "idShort" : "angleTip"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#EdgeParameter"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Base Edge Parameter"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "baseEdgeParameter"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#baseEdgeParameter",
+        "localName" : "baseEdgeParameter",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#EdgeParameter",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Base Edge Parameter"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#baseEdgeParameter",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Base Edge Parameter"
+    } ],
+    "idShort" : "baseEdgeParameter"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#EdgeParameter"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Side Edge parameter"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "sideEdgeParameter"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#sideEdgeParameter",
+        "localName" : "sideEdgeParameter",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#EdgeParameter",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Side Edge parameter"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#sideEdgeParameter",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Side Edge parameter"
+    } ],
+    "idShort" : "sideEdgeParameter"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Width of the Ski (Tail)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Width (Tail)"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiWidthTail"
+        } ],
+        "unit" : "millimetre"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthTail",
+        "localName" : "skiWidthTail",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Width (Tail)"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Width of the Ski (Tail)"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthTail",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Width (Tail)"
+    } ],
+    "idShort" : "skiWidthTail"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Width of the Ski (Waist)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Width (Waist)"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiWidthWaist"
+        } ],
+        "unit" : "millimetre"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthWaist",
+        "localName" : "skiWidthWaist",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Width (Waist)"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Width of the Ski (Waist)"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthWaist",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Width (Waist)"
+    } ],
+    "idShort" : "skiWidthWaist"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "REAL_MEASURE",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Width of the Ski (Tip)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Width (Tip)"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiWidthTip"
+        } ],
+        "unit" : "millimetre"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthTip",
+        "localName" : "skiWidthTip",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Width (Tip)"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Width of the Ski (Tip)"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthTip",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Width (Tip)"
+    } ],
+    "idShort" : "skiWidthTip"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "INTEGER_COUNT",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Length of the Ski in Centimeter"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Length"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiLength"
+        } ],
+        "unit" : "centimetre"
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#skiLength",
+        "localName" : "skiLength",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Length"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Length of the Ski in Centimeter"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#skiLength",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Length"
+    } ],
+    "idShort" : "skiLength"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Name of the Ski Product"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Product Name"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiProductName"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#skiProductName",
+        "localName" : "skiProductName",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Product Name"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Name of the Ski Product"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#skiProductName",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Product Name"
+    } ],
+    "idShort" : "skiProductName"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Brand"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Brand"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiBrand"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#skiBrand",
+        "localName" : "skiBrand",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Brand"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Brand"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#skiBrand",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Brand"
+    } ],
+    "idShort" : "skiBrand"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Manufacturer of the product"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Manufacturer"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "skiManufacturer"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#skiManufacturer",
+        "localName" : "skiManufacturer",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Manufacturer"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Manufacturer of the product"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#skiManufacturer",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Manufacturer"
+    } ],
+    "idShort" : "skiManufacturer"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#ProductData"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Product Data including dimensions, manufacturer"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Product Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "productData"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#productData",
+        "localName" : "productData",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#ProductData",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Product Data"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Product Data including dimensions, manufacturer"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#productData",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Product Data"
+    } ],
+    "idShort" : "productData"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "INTEGER_COUNT",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Number of the recorded maintenance services for the product (optional, omit when no maintenance recorded)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Service Count"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "serviceCount"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#serviceCount",
+        "localName" : "serviceCount",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Service Count"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Number of the recorded maintenance services for the product (optional, omit when no maintenance recorded)"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#serviceCount",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Service Count"
+    } ],
+    "idShort" : "serviceCount"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Code describing the Article in the manufacturers Database"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Article Component Code"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "componentCode"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#componentCode",
+        "localName" : "componentCode",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Article Component Code"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Code describing the Article in the manufacturers Database"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#componentCode",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Article Component Code"
+    } ],
+    "idShort" : "componentCode"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Model General Set"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Set Code"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "setCode"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#setCode",
+        "localName" : "setCode",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Set Code"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Model General Set"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#setCode",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Ski Set Code"
+    } ],
+    "idShort" : "setCode"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Serial Number of the requested ski"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Serial Number"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "serialNumber"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#serialNumber",
+        "localName" : "serialNumber",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Serial Number"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Serial Number of the requested ski"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#serialNumber",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Serial Number"
+    } ],
+    "idShort" : "serialNumber"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#IdentificationData"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Ski Identification Data"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Data Identification"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "identification"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#identification",
+        "localName" : "identification",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#IdentificationData",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ski Data Identification"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Ski Identification Data"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#identification",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Ski Data Identification"
+    } ],
+    "idShort" : "identification"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Security Token"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Authentication Token"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "authenticationToken"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#authenticationToken",
+        "localName" : "authenticationToken",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Authentication Token"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Security Token"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#authenticationToken",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Authentication Token"
+    } ],
+    "idShort" : "authenticationToken"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Identifying number of the requesting machine"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Machine Number"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "machineNumber"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#machineNumber",
+        "localName" : "machineNumber",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Machine Number"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Identifying number of the requesting machine"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#machineNumber",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Machine Number"
+    } ],
+    "idShort" : "machineNumber"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Type of the requesting machine"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Machine Type"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "machineType"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#machineType",
+        "localName" : "machineType",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Machine Type"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Type of the requesting machine"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#machineType",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Machine Type"
+    } ],
+    "idShort" : "machineType"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Information extracted from the DPP-Identifier Carrier (QR-Code, NFC)"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "DPP Identifier Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "carrierData"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#carrierData",
+        "localName" : "carrierData",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "DPP Identifier Data"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Information extracted from the DPP-Identifier Carrier (QR-Code, NFC)"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#carrierData",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "DPP Identifier Data"
+    } ],
+    "idShort" : "carrierData"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#RepairRequest"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Service Request Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "repairInstructionRequest"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#repairInstructionRequest",
+        "localName" : "repairInstructionRequest",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#RepairRequest",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Service Request Data"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#repairInstructionRequest",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Service Request Data"
+    } ],
+    "idShort" : "repairInstructionRequest"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#RepairInstruction"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Response Data covering the Instructions for Repair"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Repair Instruction Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "repairInstruction"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#repairInstruction",
+        "localName" : "repairInstruction",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#RepairInstruction",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Repair Instruction Data"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Response Data covering the Instructions for Repair"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#repairInstruction",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Repair Instruction Data"
+    } ],
+    "idShort" : "repairInstruction"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Timestamp of the Ski Maintenance"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Maintenance Date & Time"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "resultDateTime"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#resultDateTime",
+        "localName" : "resultDateTime",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Maintenance Date & Time"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Timestamp of the Ski Maintenance"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#resultDateTime",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Maintenance Date & Time"
+    } ],
+    "idShort" : "resultDateTime"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "BOOLEAN",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "The original request has been modified"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Result with deviations"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "resultHasDeviations"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#resultHasDeviations",
+        "localName" : "resultHasDeviations",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Result with deviations"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "The original request has been modified"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#resultHasDeviations",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Result with deviations"
+    } ],
+    "idShort" : "resultHasDeviations"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Textual explanation why the original data was modified"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Deviation Description"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "resultDeviationDescription"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#resultDeviationDescription",
+        "localName" : "resultDeviationDescription",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Deviation Description"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Textual explanation why the original data was modified"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#resultDeviationDescription",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Deviation Description"
+    } ],
+    "idShort" : "resultDeviationDescription"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#RepairReport"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Data provided after the executed maintenance back to the manufacturer of the ski in service."
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Repair Result"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "repairResult"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#repairResult",
+        "localName" : "repairResult",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#RepairReport",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Repair Result"
+        } ],
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Data provided after the executed maintenance back to the manufacturer of the ski in service."
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#repairResult",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Repair Result"
+    } ],
+    "idShort" : "repairResult"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Code"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "errorCode"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#errorCode",
+        "localName" : "errorCode",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Code"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#errorCode",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Error Code"
+    } ],
+    "idShort" : "errorCode"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Message"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "errorMessage"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#errorMessage",
+        "localName" : "errorMessage",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Message"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#errorMessage",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Error Message"
+    } ],
+    "idShort" : "errorMessage"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#ErrorMessage"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Object"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "error"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#error",
+        "localName" : "error",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#ErrorMessage",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Object"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#error",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Error Object"
+    } ],
+    "idShort" : "error"
+  }, {
+    "modelType" : "ConceptDescription",
+    "isCaseOf" : [ {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#Error"
+      } ],
+      "type" : "ExternalReference"
+    } ],
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "dataType" : "STRING",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Handling"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "serviceError"
+        } ]
+      }
+    }, {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationRDF",
+        "iri" : "urn:samm:com.copadata.dpp:1.0.0#serviceError",
+        "localName" : "serviceError",
+        "rdfType" : "urn:samm:com.copadata.dpp:1.0.0#Error",
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Error Handling"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#serviceError",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Error Handling"
+    } ],
+    "idShort" : "serviceError"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Operation to obtain repair instruction data from the manufacturer's DPP-services. The main information for identifying a product is the carrier's data. Additional Information (requesting device) may be provided optionally.\n\nThe response contains the entire product information including edge grinding parameters."
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Ask REO for repair instructions"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "getRepairInstructions"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#getRepairInstructions",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Ask REO for repair instructions"
+    } ],
+    "idShort" : "getRepairInstructions"
+  }, {
+    "modelType" : "ConceptDescription",
+    "embeddedDataSpecifications" : [ {
+      "dataSpecification" : {
+        "keys" : [ {
+          "type" : "GlobalReference",
+          "value" : "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+        } ],
+        "type" : "ExternalReference"
+      },
+      "dataSpecificationContent" : {
+        "modelType" : "DataSpecificationIec61360",
+        "definition" : [ {
+          "language" : "en",
+          "text" : "Contains the repair information"
+        } ],
+        "preferredName" : [ {
+          "language" : "en",
+          "text" : "Result Data"
+        } ],
+        "shortName" : [ {
+          "language" : "en",
+          "text" : "reportRepairResult"
+        } ]
+      }
+    } ],
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#reportRepairResult",
+    "displayName" : [ {
+      "language" : "en",
+      "text" : "Result Data"
+    } ],
+    "idShort" : "reportRepairResult"
+  } ],
+  "submodels" : [ {
+    "modelType" : "Submodel",
+    "kind" : "Template",
+    "semanticId" : {
+      "keys" : [ {
+        "type" : "GlobalReference",
+        "value" : "urn:samm:com.copadata.dpp:1.0.0#DPPRepair"
+      } ],
+      "type" : "ExternalReference"
+    },
+    "administration" : { },
+    "id" : "urn:samm:com.copadata.dpp:1.0.0#DPPRepair/submodel",
+    "idShort" : "DPPRepair",
+    "submodelElements" : [ {
+      "modelType" : "SubmodelElementCollection",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "ConceptDescription",
+          "value" : "urn:samm:com.copadata.dpp:1.0.0#repairInstruction"
+        } ],
+        "type" : "ModelReference"
+      },
+      "description" : [ {
+        "language" : "en",
+        "text" : "Response Data covering the Instructions for Repair"
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Repair Instruction Data"
+      } ],
+      "idShort" : "repairInstruction",
+      "value" : [ {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#edgePerformance"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Edge Performance data controls the ski service process. The kind of grinding, performance class and other attributes which may control the visual appearance of the service settings at the machine's display"
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Edge Performance"
+        } ],
+        "idShort" : "edgePerformance",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#performanceClass"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Class "
+          } ],
+          "idShort" : "performanceClass"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#vEdge"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:boolean",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "vEdge"
+          } ],
+          "idShort" : "vEdge"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#baseEdgeParameter"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Base Edge Parameter"
+        } ],
+        "idShort" : "baseEdgeParameter",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tail"
+          } ],
+          "idShort" : "angleTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Waist"
+          } ],
+          "idShort" : "angleWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tip"
+          } ],
+          "idShort" : "angleTip"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#sideEdgeParameter"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Side Edge parameter"
+        } ],
+        "idShort" : "sideEdgeParameter",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tail"
+          } ],
+          "idShort" : "angleTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Waist"
+          } ],
+          "idShort" : "angleWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tip"
+          } ],
+          "idShort" : "angleTip"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#productData"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Product Data including dimensions, manufacturer"
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Product Data"
+        } ],
+        "idShort" : "productData",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Width (Tail)"
+          } ],
+          "idShort" : "skiWidthTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Width (Waist)"
+          } ],
+          "idShort" : "skiWidthWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Width (Tip)"
+          } ],
+          "idShort" : "skiWidthTip"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#skiLength"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:positiveInteger",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Length"
+          } ],
+          "idShort" : "skiLength"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#skiProductName"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Product Name"
+          } ],
+          "idShort" : "skiProductName"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#skiBrand"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Brand"
+          } ],
+          "idShort" : "skiBrand"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#skiManufacturer"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Manufacturer"
+          } ],
+          "idShort" : "skiManufacturer"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#identification"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Ski Identification Data"
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Ski Data Identification"
+        } ],
+        "idShort" : "identification",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#serviceCount"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:positiveInteger",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Service Count"
+          } ],
+          "idShort" : "serviceCount"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#componentCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Article Component Code"
+          } ],
+          "idShort" : "componentCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#setCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Ski Set Code"
+          } ],
+          "idShort" : "setCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#serialNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Serial Number"
+          } ],
+          "idShort" : "serialNumber"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#repairInstructionRequest"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Service Request Data"
+        } ],
+        "idShort" : "repairInstructionRequest",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#authenticationToken"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Authentication Token"
+          } ],
+          "idShort" : "authenticationToken"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#machineNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Number"
+          } ],
+          "idShort" : "machineNumber"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#machineType"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Type"
+          } ],
+          "idShort" : "machineType"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#carrierData"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:anyURI",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "DPP Identifier Data"
+          } ],
+          "idShort" : "carrierData"
+        } ]
+      } ]
+    }, {
+      "modelType" : "SubmodelElementCollection",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "ConceptDescription",
+          "value" : "urn:samm:com.copadata.dpp:1.0.0#repairInstructionRequest"
+        } ],
+        "type" : "ModelReference"
+      },
+      "description" : [ {
+        "language" : "en",
+        "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Service Request Data"
+      } ],
+      "idShort" : "repairInstructionRequest",
+      "value" : [ {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#authenticationToken"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:string",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Authentication Token"
+        } ],
+        "idShort" : "authenticationToken"
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#machineNumber"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:string",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Machine Number"
+        } ],
+        "idShort" : "machineNumber"
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#machineType"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:string",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Machine Type"
+        } ],
+        "idShort" : "machineType"
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#carrierData"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:anyURI",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "DPP Identifier Data"
+        } ],
+        "idShort" : "carrierData"
+      } ]
+    }, {
+      "modelType" : "SubmodelElementCollection",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "ConceptDescription",
+          "value" : "urn:samm:com.copadata.dpp:1.0.0#repairResult"
+        } ],
+        "type" : "ModelReference"
+      },
+      "description" : [ {
+        "language" : "en",
+        "text" : "Data provided after the executed maintenance back to the manufacturer of the ski in service."
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Repair Result"
+      } ],
+      "idShort" : "repairResult",
+      "value" : [ {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#resultDateTime"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:dateTime",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Maintenance Date & Time"
+        } ],
+        "idShort" : "resultDateTime"
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#repairInstructionRequest"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Service Request Data"
+        } ],
+        "idShort" : "repairInstructionRequest",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#authenticationToken"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Authentication Token"
+          } ],
+          "idShort" : "authenticationToken"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#machineNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Number"
+          } ],
+          "idShort" : "machineNumber"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#machineType"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Type"
+          } ],
+          "idShort" : "machineType"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#carrierData"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:anyURI",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "DPP Identifier Data"
+          } ],
+          "idShort" : "carrierData"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#baseEdgeParameter"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Base Edge Parameter"
+        } ],
+        "idShort" : "baseEdgeParameter",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tail"
+          } ],
+          "idShort" : "angleTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Waist"
+          } ],
+          "idShort" : "angleWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tip"
+          } ],
+          "idShort" : "angleTip"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#sideEdgeParameter"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Side Edge parameter"
+        } ],
+        "idShort" : "sideEdgeParameter",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTail"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tail"
+          } ],
+          "idShort" : "angleTail"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Waist"
+          } ],
+          "idShort" : "angleWaist"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTip"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:double",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Grinding Angle Tip"
+          } ],
+          "idShort" : "angleTip"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#identification"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Ski Identification Data"
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Ski Data Identification"
+        } ],
+        "idShort" : "identification",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#serviceCount"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:positiveInteger",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Service Count"
+          } ],
+          "idShort" : "serviceCount"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#componentCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Article Component Code"
+          } ],
+          "idShort" : "componentCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#setCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Ski Set Code"
+          } ],
+          "idShort" : "setCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#serialNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Serial Number"
+          } ],
+          "idShort" : "serialNumber"
+        } ]
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#resultHasDeviations"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:boolean",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Result with deviations"
+        } ],
+        "idShort" : "resultHasDeviations"
+      }, {
+        "modelType" : "Property",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "GlobalReference",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#resultDeviationDescription"
+          } ],
+          "type" : "ExternalReference"
+        },
+        "valueType" : "xs:string",
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Deviation Description"
+        } ],
+        "idShort" : "resultDeviationDescription"
+      } ]
+    }, {
+      "modelType" : "SubmodelElementCollection",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "ConceptDescription",
+          "value" : "urn:samm:com.copadata.dpp:1.0.0#serviceError"
+        } ],
+        "type" : "ModelReference"
+      },
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Error Handling"
+      } ],
+      "idShort" : "serviceError",
+      "value" : [ {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#repairInstructionRequest"
+          } ],
+          "type" : "ModelReference"
+        },
+        "description" : [ {
+          "language" : "en",
+          "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+        } ],
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Service Request Data"
+        } ],
+        "idShort" : "repairInstructionRequest",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#authenticationToken"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Authentication Token"
+          } ],
+          "idShort" : "authenticationToken"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#machineNumber"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Number"
+          } ],
+          "idShort" : "machineNumber"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#machineType"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Machine Type"
+          } ],
+          "idShort" : "machineType"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#carrierData"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:anyURI",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "DPP Identifier Data"
+          } ],
+          "idShort" : "carrierData"
+        } ]
+      }, {
+        "modelType" : "SubmodelElementCollection",
+        "semanticId" : {
+          "keys" : [ {
+            "type" : "ConceptDescription",
+            "value" : "urn:samm:com.copadata.dpp:1.0.0#error"
+          } ],
+          "type" : "ModelReference"
+        },
+        "displayName" : [ {
+          "language" : "en",
+          "text" : "Error Object"
+        } ],
+        "idShort" : "error",
+        "value" : [ {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#errorCode"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Error Code"
+          } ],
+          "idShort" : "errorCode"
+        }, {
+          "modelType" : "Property",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "GlobalReference",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#errorMessage"
+            } ],
+            "type" : "ExternalReference"
+          },
+          "valueType" : "xs:string",
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Error Message"
+          } ],
+          "idShort" : "errorMessage"
+        } ]
+      } ]
+    }, {
+      "modelType" : "Operation",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "Operation",
+          "value" : "urn:samm:com.copadata.dpp:1.0.0#getRepairInstructions"
+        } ],
+        "type" : "ModelReference"
+      },
+      "inputVariables" : [ {
+        "value" : {
+          "modelType" : "SubmodelElementCollection",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "ConceptDescription",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#repairInstructionRequest"
+            } ],
+            "type" : "ModelReference"
+          },
+          "description" : [ {
+            "language" : "en",
+            "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+          } ],
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Service Request Data"
+          } ],
+          "idShort" : "repairInstructionRequest",
+          "value" : [ {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#authenticationToken"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Authentication Token"
+            } ],
+            "idShort" : "authenticationToken"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#machineNumber"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Machine Number"
+            } ],
+            "idShort" : "machineNumber"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#machineType"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Machine Type"
+            } ],
+            "idShort" : "machineType"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#carrierData"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:anyURI",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "DPP Identifier Data"
+            } ],
+            "idShort" : "carrierData"
+          } ]
+        }
+      } ],
+      "outputVariables" : [ {
+        "value" : {
+          "modelType" : "SubmodelElementCollection",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "ConceptDescription",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#repairInstruction"
+            } ],
+            "type" : "ModelReference"
+          },
+          "description" : [ {
+            "language" : "en",
+            "text" : "Response Data covering the Instructions for Repair"
+          } ],
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Repair Instruction Data"
+          } ],
+          "idShort" : "repairInstruction",
+          "value" : [ {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#edgePerformance"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Edge Performance data controls the ski service process. The kind of grinding, performance class and other attributes which may control the visual appearance of the service settings at the machine's display"
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Edge Performance"
+            } ],
+            "idShort" : "edgePerformance",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#performanceClass"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Class "
+              } ],
+              "idShort" : "performanceClass"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#vEdge"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:boolean",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "vEdge"
+              } ],
+              "idShort" : "vEdge"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#baseEdgeParameter"
+              } ],
+              "type" : "ModelReference"
+            },
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Base Edge Parameter"
+            } ],
+            "idShort" : "baseEdgeParameter",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tail"
+              } ],
+              "idShort" : "angleTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Waist"
+              } ],
+              "idShort" : "angleWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tip"
+              } ],
+              "idShort" : "angleTip"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#sideEdgeParameter"
+              } ],
+              "type" : "ModelReference"
+            },
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Side Edge parameter"
+            } ],
+            "idShort" : "sideEdgeParameter",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tail"
+              } ],
+              "idShort" : "angleTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Waist"
+              } ],
+              "idShort" : "angleWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tip"
+              } ],
+              "idShort" : "angleTip"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#productData"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Product Data including dimensions, manufacturer"
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Product Data"
+            } ],
+            "idShort" : "productData",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Width (Tail)"
+              } ],
+              "idShort" : "skiWidthTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Width (Waist)"
+              } ],
+              "idShort" : "skiWidthWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#skiWidthTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Width (Tip)"
+              } ],
+              "idShort" : "skiWidthTip"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#skiLength"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:positiveInteger",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Length"
+              } ],
+              "idShort" : "skiLength"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#skiProductName"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Product Name"
+              } ],
+              "idShort" : "skiProductName"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#skiBrand"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Brand"
+              } ],
+              "idShort" : "skiBrand"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#skiManufacturer"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Manufacturer"
+              } ],
+              "idShort" : "skiManufacturer"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#identification"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Ski Identification Data"
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Ski Data Identification"
+            } ],
+            "idShort" : "identification",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#serviceCount"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:positiveInteger",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Service Count"
+              } ],
+              "idShort" : "serviceCount"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#componentCode"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Article Component Code"
+              } ],
+              "idShort" : "componentCode"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#setCode"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Ski Set Code"
+              } ],
+              "idShort" : "setCode"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#serialNumber"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Serial Number"
+              } ],
+              "idShort" : "serialNumber"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#repairInstructionRequest"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Service Request Data"
+            } ],
+            "idShort" : "repairInstructionRequest",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#authenticationToken"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Authentication Token"
+              } ],
+              "idShort" : "authenticationToken"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#machineNumber"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Machine Number"
+              } ],
+              "idShort" : "machineNumber"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#machineType"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Machine Type"
+              } ],
+              "idShort" : "machineType"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#carrierData"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:anyURI",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "DPP Identifier Data"
+              } ],
+              "idShort" : "carrierData"
+            } ]
+          } ]
+        }
+      } ],
+      "description" : [ {
+        "language" : "en",
+        "text" : "Operation to obtain repair instruction data from the manufacturer's DPP-services. The main information for identifying a product is the carrier's data. Additional Information (requesting device) may be provided optionally.\n\nThe response contains the entire product information including edge grinding parameters."
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Ask REO for repair instructions"
+      } ],
+      "idShort" : "getRepairInstructions"
+    }, {
+      "modelType" : "Operation",
+      "semanticId" : {
+        "keys" : [ {
+          "type" : "Operation",
+          "value" : "urn:samm:com.copadata.dpp:1.0.0#reportRepairResult"
+        } ],
+        "type" : "ModelReference"
+      },
+      "inputVariables" : [ {
+        "value" : {
+          "modelType" : "SubmodelElementCollection",
+          "semanticId" : {
+            "keys" : [ {
+              "type" : "ConceptDescription",
+              "value" : "urn:samm:com.copadata.dpp:1.0.0#repairResult"
+            } ],
+            "type" : "ModelReference"
+          },
+          "description" : [ {
+            "language" : "en",
+            "text" : "Data provided after the executed maintenance back to the manufacturer of the ski in service."
+          } ],
+          "displayName" : [ {
+            "language" : "en",
+            "text" : "Repair Result"
+          } ],
+          "idShort" : "repairResult",
+          "value" : [ {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#resultDateTime"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:dateTime",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Maintenance Date & Time"
+            } ],
+            "idShort" : "resultDateTime"
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#repairInstructionRequest"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Service Request Data"
+            } ],
+            "idShort" : "repairInstructionRequest",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#authenticationToken"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Authentication Token"
+              } ],
+              "idShort" : "authenticationToken"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#machineNumber"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Machine Number"
+              } ],
+              "idShort" : "machineNumber"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#machineType"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Machine Type"
+              } ],
+              "idShort" : "machineType"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#carrierData"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:anyURI",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "DPP Identifier Data"
+              } ],
+              "idShort" : "carrierData"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#baseEdgeParameter"
+              } ],
+              "type" : "ModelReference"
+            },
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Base Edge Parameter"
+            } ],
+            "idShort" : "baseEdgeParameter",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tail"
+              } ],
+              "idShort" : "angleTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Waist"
+              } ],
+              "idShort" : "angleWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tip"
+              } ],
+              "idShort" : "angleTip"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#sideEdgeParameter"
+              } ],
+              "type" : "ModelReference"
+            },
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Side Edge parameter"
+            } ],
+            "idShort" : "sideEdgeParameter",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTail"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tail"
+              } ],
+              "idShort" : "angleTail"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleWaist"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Waist"
+              } ],
+              "idShort" : "angleWaist"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#angleTip"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:double",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Grinding Angle Tip"
+              } ],
+              "idShort" : "angleTip"
+            } ]
+          }, {
+            "modelType" : "SubmodelElementCollection",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "ConceptDescription",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#identification"
+              } ],
+              "type" : "ModelReference"
+            },
+            "description" : [ {
+              "language" : "en",
+              "text" : "Ski Identification Data"
+            } ],
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Ski Data Identification"
+            } ],
+            "idShort" : "identification",
+            "value" : [ {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#serviceCount"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:positiveInteger",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Service Count"
+              } ],
+              "idShort" : "serviceCount"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#componentCode"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Article Component Code"
+              } ],
+              "idShort" : "componentCode"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#setCode"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Ski Set Code"
+              } ],
+              "idShort" : "setCode"
+            }, {
+              "modelType" : "Property",
+              "semanticId" : {
+                "keys" : [ {
+                  "type" : "GlobalReference",
+                  "value" : "urn:samm:com.copadata.dpp:1.0.0#serialNumber"
+                } ],
+                "type" : "ExternalReference"
+              },
+              "valueType" : "xs:string",
+              "displayName" : [ {
+                "language" : "en",
+                "text" : "Serial Number"
+              } ],
+              "idShort" : "serialNumber"
+            } ]
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#resultHasDeviations"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:boolean",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Result with deviations"
+            } ],
+            "idShort" : "resultHasDeviations"
+          }, {
+            "modelType" : "Property",
+            "semanticId" : {
+              "keys" : [ {
+                "type" : "GlobalReference",
+                "value" : "urn:samm:com.copadata.dpp:1.0.0#resultDeviationDescription"
+              } ],
+              "type" : "ExternalReference"
+            },
+            "valueType" : "xs:string",
+            "displayName" : [ {
+              "language" : "en",
+              "text" : "Deviation Description"
+            } ],
+            "idShort" : "resultDeviationDescription"
+          } ]
+        }
+      } ],
+      "description" : [ {
+        "language" : "en",
+        "text" : "Contains the repair information"
+      } ],
+      "displayName" : [ {
+        "language" : "en",
+        "text" : "Result Data"
+      } ],
+      "idShort" : "reportRepairResult"
+    } ]
+  } ]
+}

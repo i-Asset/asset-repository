@@ -1,0 +1,74 @@
+{
+  "modelType": "ConceptDescription",
+  "isCaseOf": [
+    {
+      "keys": [
+        {
+          "type": "GlobalReference",
+          "value": "urn:samm:com.copadata.dpp:1.0.0#EdgeParameter"
+        }
+      ],
+      "type": "ExternalReference"
+    }
+  ],
+  "embeddedDataSpecifications": [
+    {
+      "dataSpecification": {
+        "keys": [
+          {
+            "type": "GlobalReference",
+            "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+          }
+        ],
+        "type": "ExternalReference"
+      },
+      "dataSpecificationContent": {
+        "modelType": "DataSpecificationIec61360",
+        "dataType": "STRING",
+        "preferredName": [
+          {
+            "language": "en",
+            "text": "Base Edge Parameter"
+          }
+        ],
+        "shortName": [
+          {
+            "language": "en",
+            "text": "baseEdgeParameter"
+          }
+        ]
+      }
+    },
+    {
+      "dataSpecification": {
+        "keys": [
+          {
+            "type": "GlobalReference",
+            "value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationRDF/1/0"
+          }
+        ],
+        "type": "ExternalReference"
+      },
+      "dataSpecificationContent": {
+        "modelType": "DataSpecificationRDF",
+        "iri": "urn:samm:com.copadata.dpp:1.0.0#baseEdgeParameter",
+        "localName": "baseEdgeParameter",
+        "rdfType": "urn:samm:com.copadata.dpp:1.0.0#EdgeParameter",
+        "preferredName": [
+          {
+            "language": "en",
+            "text": "Base Edge Parameter"
+          }
+        ]
+      }
+    }
+  ],
+  "id": "urn:samm:com.copadata.dpp:1.0.0#baseEdgeParameter",
+  "displayName": [
+    {
+      "language": "en",
+      "text": "Base Edge Parameter"
+    }
+  ],
+  "idShort": "baseEdgeParameter"
+}

@@ -29,7 +29,7 @@ import at.srfg.iasset.connector.environment.AASEnvironment;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-@ApplicationScoped
+//@ApplicationScoped
 public class AAS2RDFData implements AASEnvironment {
 
 	@Inject

@@ -9,7 +9,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEnvironment;
 import at.srfg.iasset.connector.environment.AASEnvironment;
 import jakarta.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
+//@ApplicationScoped
 public class DPPMetaData implements AASEnvironment {
 
 //	@Resource(lookup = "/samm/meta-model/2.2.0/aspect-meta-model-definitions.ttl")

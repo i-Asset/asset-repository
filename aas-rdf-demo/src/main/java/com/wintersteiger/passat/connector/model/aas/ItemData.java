@@ -8,7 +8,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEnvironment;
 import at.srfg.iasset.connector.environment.AASEnvironment;
 import jakarta.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
+//@ApplicationScoped
 public class ItemData implements AASEnvironment {
 
 

@@ -19,7 +19,7 @@ import at.srfg.iasset.connector.environment.AASEnvironment;
 import jakarta.annotation.Resource;
 import jakarta.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
+//@ApplicationScoped
 public class AAS2RDFTemplate implements AASEnvironment {
 
 //	@Resource(lookup = "/samm/meta-model/2.2.0/aspect-meta-model-definitions.ttl")
