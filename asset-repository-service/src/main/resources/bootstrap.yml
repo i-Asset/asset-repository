@@ -18,6 +18,7 @@ spring:
       # failFast should be enabled in production environments.
       # it can be set via an environment variable or the config server
       failFast: ${vcap.services.config-service.failFast:${CONFIG_SERVER_FAILFAST:false}}
+      enabled: ${config.enabled:${CONFIG_SEVER_ENABLED:true}}
     service-registry:
       auto-registration:
         enabled: ${DISCOVERY_ENABLED:false}
