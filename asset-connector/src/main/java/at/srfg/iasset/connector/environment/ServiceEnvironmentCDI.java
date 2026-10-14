@@ -30,6 +30,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
 import org.eclipse.digitaltwin.aas4j.v3.model.*;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultMessage;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperation;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationResultValue;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
@@ -65,6 +66,17 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 	private void init() {
 
 	}
+
+    private Operation copyOperation(Operation source) {
+       try {
+          return objectMapper.convertValue(
+                source,
+                DefaultOperation.class);
+       } catch (IllegalArgumentException e) {
+          throw new IllegalStateException(
+                "Could not create thread-safe copy of operation " + source.getIdShort(), e);
+       }
+    }
 	/**
 	 * Add a {@link ModelListener} to the local environment
 	 * @param listener
@@ -549,21 +561,24 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			if ( operation.isPresent() ) {
 				if (InstanceOperation.class.isInstance(operation.get())) {
 					InstanceOperation instanceOperation = InstanceOperation.class.cast(operation.get());
-					// create the operation invocation
-					OperationInvocationHandler invocation = new OperationInvocationHandler(instanceOperation, this, this.objectMapper);
+					// deep copy of the operation
+            	    Operation invocationOperation = copyOperation(instanceOperation);
+					// create the operation invocation on the thread-safe copy
+                	OperationInvocationHandler oih = new OperationInvocationHandler(
+							invocationOperation, this, this.objectMapper);
 					// apply the incoming parameters
-					invocation.applyOperationRequest(parameterMap);
+					oih.applyOperationRequest(parameterMap);
 					// invoke the operation
 					try {
-						if ( instanceOperation.callback().execute(invocation) ) {
+						if ( instanceOperation.callback().execute(oih) ) {
 							// create the OperationResultValue object
-							return invocation.getOperationResult(true);
+							return oih.getOperationResult(true);
 						}
 						else {
-							return invocation.getOperationResult(false);
+							return oih.getOperationResult(false);
 						}
 					} catch (OperationInvocationException e) {
-						OperationResult res = invocation.getOperationResult(false);
+						OperationResult res = oih.getOperationResult(false);
 						res.setExecutionState(ExecutionState.FAILED);
 						res.setSuccess(false);
 						// TODO ADD MESSAGE TO RESULT
@@ -589,9 +604,11 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 			if (InstanceOperation.class.isInstance(op)) {
 				try {
 					InstanceOperation instanceOperation = InstanceOperation.class.cast(op);
-					// create the operation invocation
+					// deep copy of the operation
+					Operation invocationOperation = copyOperation(instanceOperation);
+					// create the operation invocation on the thread-safe copy
 					log.debug("casting operation {} to instance.", op);
-					OperationInvocationHandler oih = new OperationInvocationHandler(instanceOperation, this, this.objectMapper);
+					OperationInvocationHandler oih = new OperationInvocationHandler(invocationOperation, this, this.objectMapper);
 					log.debug("invocation handler {} created. Applying parameters: {}", oih, parameterMap);
 					// apply the incoming parameters
 					oih.applyOperationRequestValue(parameterMap);
