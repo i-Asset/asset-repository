@@ -44,6 +44,13 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 	}
 
 	public OperationInvocationHandler(
+          Operation operation,
+          ServiceEnvironment environment,
+          ObjectMapper mapper) {
+       this(null, null, null, operation, environment, mapper);
+    }
+
+    public OperationInvocationHandler(
 			ConnectionProvider shellConnection,
 			String submodelIdentifier, 
 			String pathToOperation,
@@ -88,8 +95,24 @@ public class OperationInvocationHandler implements OperationInvocation, Operatio
 		}
 	}
 	public void applyOperationRequest(OperationRequest request) {
-		operation.setInputVariables(request.getInputArguments());
-		operation.setInoutputVariables(request.getInoutputArguments());
+       if (request == null) {
+          throw new IllegalArgumentException("OperationRequest must not be null");
+       }
+
+       if (request.getInputArguments() != null) {
+          for (OperationVariable variable : request.getInputArguments()) {
+             if (!hasIdShort(variable)) {
+                throw new IllegalArgumentException("Invalid input operation variable: " + variable);
+             }
+          }
+       }
+
+       operation.setInputVariables(request.getInputArguments() == null
+             ? new ArrayList<>()
+             : new ArrayList<>(request.getInputArguments()));
+       operation.setInoutputVariables(request.getInoutputArguments() == null
+             ? new ArrayList<>()
+             : new ArrayList<>(request.getInoutputArguments()));
 	}
 
 	private void applyOperationResultValue(OperationResultValue result) {
