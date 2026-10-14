@@ -3,17 +3,21 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>at.srfg.iasset</groupId>
+		<artifactId>asset-repository</artifactId>
+		<version>0.4.0-SNAPSHOT</version>
+	</parent>
 
 	<groupId>at.copa.passat</groupId>
 	<artifactId>aas-rdf-demo</artifactId>
 	<version>0.1.3-SNAPSHOT</version>
-	<name>Wintersteiger Connector</name>
+	<name>AAS RDF Demo</name>
 
 	<properties>
 		<maven.compiler.source>25</maven.compiler.source>
 		<maven.compiler.target>25</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<aas4j-model.version>2.0.1</aas4j-model.version>
 	</properties>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -29,6 +33,7 @@
 				<version>3.6.1</version>
 				<executions>
 					<execution>
+						<id>shade-passat-connector</id>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
@@ -65,7 +70,7 @@
 		<dependency>
 			<groupId>at.srfg.iasset</groupId>
 			<artifactId>asset-connector</artifactId>
-			<version>0.3.0-SNAPSHOT</version>
+			<version>0.4.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.esmf</groupId>

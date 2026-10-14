@@ -19,6 +19,7 @@
         <weld.version>5.1.7.Final</weld.version>
 		<jersey.version>3.1.12</jersey.version> <!-- Spring Boot explicitly supports overriding managed dependency versions by redefining their version property. -->
 		<springdoc.version>2.8.17</springdoc.version>
+		<aas4j-model.version>2.0.2</aas4j-model.version>
 	</properties>
 	<modules>
 		<module>semantic-lookup-api</module>

@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>org.eclipse.digitaltwin.aas4j</groupId>
 			<artifactId>aas4j-model</artifactId>
-			<version>2.0.2</version>
+			<version>${aas4j-model.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>at.srfg.iasset</groupId>
