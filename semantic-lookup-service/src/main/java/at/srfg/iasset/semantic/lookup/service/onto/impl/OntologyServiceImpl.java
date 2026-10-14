@@ -1,40 +1,5 @@
 package at.srfg.iasset.semantic.lookup.service.onto.impl;
 
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import org.apache.jena.ontology.OntClass;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.ontology.OntProperty;
-import org.apache.jena.ontology.OntResource;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.NodeIterator;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFParser;
-import org.apache.jena.riot.system.ErrorHandlerFactory;
-import org.apache.jena.util.iterator.ExtendedIterator;
-import org.apache.jena.vocabulary.DC;
-import org.apache.jena.vocabulary.RDFS;
-import org.apache.jena.vocabulary.SKOS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import at.srfg.iasset.semantic.lookup.service.ConceptClassService;
 import at.srfg.iasset.semantic.lookup.service.PropertyService;
 import at.srfg.iasset.semantic.lookup.service.onto.OntologyService;
@@ -42,6 +7,30 @@ import at.srfg.iasset.semantic.model.ConceptBase;
 import at.srfg.iasset.semantic.model.ConceptClass;
 import at.srfg.iasset.semantic.model.ConceptProperty;
 import at.srfg.iasset.semantic.model.DataTypeEnum;
+import org.apache.jena.ontapi.OntModelFactory;
+import org.apache.jena.ontapi.OntSpecification;
+import org.apache.jena.ontapi.model.OntClass;
+import org.apache.jena.ontapi.model.OntModel;
+import org.apache.jena.ontapi.model.OntProperty;
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFParser;
+import org.apache.jena.riot.system.ErrorHandlerFactory;
+import org.apache.jena.vocabulary.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.StringReader;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 
 @Service
@@ -100,7 +89,7 @@ public class OntologyServiceImpl implements OntologyService {
 		/*
 		 * Create a Model with RDFS inferencing
 		 */
-		OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF);
+		OntModel ontModel = OntModelFactory.createModel(OntSpecification.OWL1_FULL_MEM_RDFS_INF);
 		try {
 			//
 			StringReader reader = new StringReader(onto);
@@ -124,32 +113,36 @@ public class OntologyServiceImpl implements OntologyService {
 			 * Process all ontology properties, index them and fill
 			 * the list of indexedProp
 			 */
-			Iterator<OntProperty> properties = ontModel.listAllOntProperties();
-			while ( properties.hasNext()) {
-				OntProperty p = properties.next();
-				// restrict import to namespace list provided
-				if (nameSpaces.isEmpty() || nameSpaces.contains(p.getNameSpace())) {
-					if ( !p.isOntLanguageTerm()) {
-						//
-						ConceptProperty prop = processProperty(ontModel, p);
-						if ( prop != null) {
-							// store the property
-							indexedProp.add(prop);
+			try (Stream<OntProperty> propertyStream = ontModel.properties()) {
+				Iterator<OntProperty> properties = propertyStream.iterator();
+				while ( properties.hasNext()) {
+					OntProperty p = properties.next();
+					// restrict import to namespace list provided
+					if (p.isURIResource() && (nameSpaces.isEmpty() || nameSpaces.contains(p.getNameSpace()))) {
+						if ( !isOntLanguageTerm(p)) {
+							//
+							ConceptProperty prop = processProperty(ontModel, p);
+							if ( prop != null) {
+								// store the property
+								indexedProp.add(prop);
+							}
 						}
 					}
 				}
 			}
-			Iterator<OntClass> rootIterator = ontModel.listHierarchyRootClasses();
-			while (rootIterator.hasNext()) {
-				OntClass c = rootIterator.next();
-				
-				if ( nameSpaces.isEmpty() || nameSpaces.contains(c.getNameSpace())) {
-					
-					if ( !c.isOntLanguageTerm()) {
-						Optional<ConceptClass> cc = processClass(null, c);
-						if (cc.isPresent()) {
-							processProperties(cc.get(), c, indexedProp);
-							processSubClasses(cc.get(), c, indexedProp);
+			try (Stream<OntClass> rootStream = ontModel.hierarchyRoots()) {
+				Iterator<OntClass> rootIterator = rootStream.iterator();
+				while (rootIterator.hasNext()) {
+					OntClass c = rootIterator.next();
+
+					if ( c.isURIResource() && (nameSpaces.isEmpty() || nameSpaces.contains(c.getNameSpace()))) {
+
+						if ( !isOntLanguageTerm(c)) {
+							Optional<ConceptClass> cc = processClass(null, c);
+							if (cc.isPresent()) {
+								processProperties(cc.get(), c, indexedProp);
+								processSubClasses(cc.get(), c, indexedProp);
+							}
 						}
 					}
 				}
@@ -161,6 +154,16 @@ public class OntologyServiceImpl implements OntologyService {
 		}
 
 	}
+	private boolean isOntLanguageTerm(Resource resource) {
+		if (!resource.isURIResource()) {
+			return false;
+		}
+		String namespace = resource.getNameSpace();
+		return RDF.getURI().equals(namespace)
+				|| RDFS.getURI().equals(namespace)
+				|| OWL.getURI().equals(namespace);
+	}
+
 	private Optional<ConceptClass> processClass(final ConceptClass parent, final OntClass ontClass) {
 		System.out.println("Processing " + ontClass.getURI() + " - " + ontClass.getLocalName());
 		String localName = replaceNamespace ? localNameFromPrefLabel(ontClass) : ontClass.getLocalName();
@@ -177,20 +180,24 @@ public class OntologyServiceImpl implements OntologyService {
 					}
 				});
 		subCC.setShortName(localName);
-		subCC.setCategory(ontClass.getRDFType().getLocalName());
+		try (Stream<Resource> types = ontClass.types()) {
+			subCC.setCategory(types.findFirst().map(Resource::getLocalName).orElse(null));
+		}
 		processLabels(subCC, ontClass);
 		return conceptClassService.setConcept(subCC);
 		
 	}
 	private void processSubClasses(final ConceptClass parentClass, final OntClass root, List<ConceptProperty> availableProps) {
-		Iterator<OntClass> subIter = root.listSubClasses(true);
-		while ( subIter.hasNext() ) {
-			OntClass sub = subIter.next();
-			Optional<ConceptClass> cc =  processClass(parentClass, sub);
-			if ( cc.isPresent()) {
-				processProperties(cc.get(), sub, availableProps);
-				//
-				processSubClasses(cc.get(), sub, availableProps);
+		try (Stream<OntClass> subStream = root.subClasses(true)) {
+			Iterator<OntClass> subIter = subStream.iterator();
+			while ( subIter.hasNext() ) {
+				OntClass sub = subIter.next();
+				Optional<ConceptClass> cc =  processClass(parentClass, sub);
+				if ( cc.isPresent()) {
+					processProperties(cc.get(), sub, availableProps);
+					//
+					processSubClasses(cc.get(), sub, availableProps);
+				}
 			}
 		}
 	}
@@ -198,28 +205,30 @@ public class OntologyServiceImpl implements OntologyService {
 	private void processProperties(ConceptClass cc, OntClass ontClass, List<ConceptProperty> availableProperties) {
 		List<ConceptProperty> assignedProps = new ArrayList<ConceptProperty>();
 		// detect only directly assigned properties
-		ExtendedIterator<OntProperty> prop = ontClass.listDeclaredProperties(true);
-		while (prop.hasNext()) {
-			OntProperty assignedProp = prop.next();
-			Optional<ConceptProperty> propFound = availableProperties.stream().filter(new Predicate<ConceptProperty>() {
-						@Override
-						public boolean test(ConceptProperty t) {
-							// TODO Auto-generated method stub
-							return t.getConceptId().equals(assignedProp.getURI());
-						}
-					})
-					.findFirst();
-			if ( propFound.isPresent()) {
-				assignedProps.add(propFound.get());
+		try (Stream<OntProperty> propStream = ontClass.declaredProperties(true)) {
+			Iterator<OntProperty> prop = propStream.iterator();
+			while (prop.hasNext()) {
+				OntProperty assignedProp = prop.next();
+				Optional<ConceptProperty> propFound = availableProperties.stream().filter(new Predicate<ConceptProperty>() {
+							@Override
+							public boolean test(ConceptProperty t) {
+								// TODO Auto-generated method stub
+								return t.getConceptId().equals(assignedProp.getURI());
+							}
+						})
+						.findFirst();
+				if ( propFound.isPresent()) {
+					assignedProps.add(propFound.get());
+				}
 			}
 		}
 		conceptClassService.setProperties(cc.getConceptId(), assignedProps);
 		
 	}
-	private DataTypeEnum fromRange(OntResource range) {
+	private DataTypeEnum fromRange(Resource range) {
 		return DataTypeEnum.STRING;
 	}
-	private String localNameFromPrefLabel(OntResource resource) {
+	private String localNameFromPrefLabel(Resource resource) {
     	// 
     	String localName = resource.getLocalName();
     	Map<Locale, String> pref = obtainMultilingualValues(resource, RDFS.label, DC.title, SKOS.prefLabel);
@@ -242,7 +251,9 @@ public class OntologyServiceImpl implements OntologyService {
         processLabels(index, prop);
         //
         
-        index.setDataType(fromRange(prop.getRange()));
+		try (Stream<? extends Resource> ranges = prop.ranges()) {
+			index.setDataType(fromRange(ranges.findFirst().orElse(null)));
+		}
         index.setShortName(localName);
         
         // deal with declaring classes
@@ -254,7 +265,7 @@ public class OntologyServiceImpl implements OntologyService {
      * @param concept
      * @param resource
      */
-    private void processLabels(ConceptBase concept, OntResource resource) {
+    private void processLabels(ConceptBase concept, Resource resource) {
     	concept.setPreferredLabel(obtainMultilingualValues(resource, RDFS.label, DC.title, SKOS.prefLabel));
     	concept.setAlternateLabel(obtainMultilingualLabels(resource, SKOS.altLabel));
     	concept.setHiddenLabel(obtainMultilingualLabels(resource, SKOS.hiddenLabel));
@@ -267,10 +278,10 @@ public class OntologyServiceImpl implements OntologyService {
 	 * @param properties
 	 * @return
 	 */
-	private Map<Locale, String> obtainMultilingualValues(OntResource prop, Property ... properties ) {
+	private Map<Locale, String> obtainMultilingualValues(Resource prop, Property ... properties ) {
 		Map<Locale,String> languageMap = new HashMap<>();
 		for (Property property : properties) {
-			NodeIterator nIter = prop.listPropertyValues(property);
+			NodeIterator nIter = prop.getModel().listObjectsOfProperty(prop, property);
 			while ( nIter.hasNext()) {
 				RDFNode node = nIter.next();
 				if ( node.isLiteral()) {
@@ -297,11 +308,11 @@ public class OntologyServiceImpl implements OntologyService {
 	 * @param properties
 	 * @return
 	 */
-	private Map<Locale, Set<String>> obtainMultilingualLabels(OntResource prop, org.apache.jena.rdf.model.Property... properties) {
+	private Map<Locale, Set<String>> obtainMultilingualLabels(Resource prop, org.apache.jena.rdf.model.Property... properties) {
 
 		Map<Locale, Set<String>> languageMap = new HashMap<Locale, Set<String>>();
 		for (Property property : properties) {
-			NodeIterator nIter = prop.listPropertyValues(property);
+			NodeIterator nIter = prop.getModel().listObjectsOfProperty(prop, property);
 			while (nIter.hasNext()) {
 				RDFNode node = nIter.next();
 				if (node.isLiteral()) {

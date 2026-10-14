@@ -11,6 +11,7 @@
 		<java.version>25</java.version>
 	</properties>
 	
+
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>asset-messaging</artifactId>
 	<name>Messaging Environment for iAsset Connector</name>
@@ -20,7 +21,7 @@
 		<dependency>
 			<groupId>org.eclipse.digitaltwin.aas4j</groupId>
 			<artifactId>aas4j-model</artifactId>
-			<version>2.0.1</version>
+			<version>2.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>at.srfg.iasset</groupId>
@@ -47,15 +48,18 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
+			<version>3.1.12</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>3.1.12</version>
 		</dependency>
 		<!-- broker clients -->
 		<dependency>
 		    <groupId>org.apache.kafka</groupId>
 		    <artifactId>kafka-clients</artifactId>
+			<version>4.1.2</version>
 		</dependency>
 	    <dependency>
 	        <groupId>org.eclipse.paho</groupId>
