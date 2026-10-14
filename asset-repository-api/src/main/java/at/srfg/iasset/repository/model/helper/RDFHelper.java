@@ -5,11 +5,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.TreeModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.reflect.TypeToken;
 
 import at.srfg.iasset.repository.component.RDFEnvironment;
-import at.srfg.iasset.repository.component.ServiceEnvironment;
 import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue;
 import at.srfg.iasset.repository.model.helper.rdf.mapper.RDFMapper;
@@ -57,20 +59,30 @@ public class RDFHelper {
 			}
 		}
 	}
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> Model toRDF(RDFEnvironment environment, M submodelElement) throws ValueMappingException {
+	@SuppressWarnings("unchecked")
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> Optional<V> toValue(M submodelElement) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
-			return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToRDF(environment, null, submodelElement);
+			return (Optional<V>) ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToValue(submodelElement);
 		}
-		return new TreeModel();
-	}
-	public static <M extends SubmodelElement, V extends SubmodelElementValue> Model toRDF(RDFEnvironment environment, Resource parent, M submodelElement) throws ValueMappingException {
+		return null;
+		
+	}	
+	@SuppressWarnings("unchecked")
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> Optional<V> toValue(M submodelElement, RDFEnvironment environment) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
 		if ( mapper.containsKey(propertyInterface)) {
-			return ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToRDF(environment, parent, submodelElement);
-			
+			return (Optional<V>) ((RDFMapper<M,V>)mapper.get(propertyInterface)).mapToValue(submodelElement, environment);
 		}
-		return new TreeModel();
+		return null;
+		
+	}		
+	public static <M extends SubmodelElement, V extends SubmodelElementValue> RDFMapper<M,V> getMapper(M submodelElement) throws ValueMappingException {
+		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());
+		if ( mapper.containsKey(propertyInterface)) {
+			return ((RDFMapper<M,V>)mapper.get(propertyInterface));
+		}
+		throw new ValueMappingException(String.format("Mapper for interface (%s) not found!", propertyInterface.getName()));
 	}
 	public static <M extends SubmodelElement, V extends SubmodelElementValue> M fromRDF(RDFEnvironment environment, Model model, M submodelElement) throws ValueMappingException {
 		Class<?> propertyInterface = AASModelHelper.getAasInterface(submodelElement.getClass());

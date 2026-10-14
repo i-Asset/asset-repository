@@ -1,8 +1,10 @@
 package at.srfg.iasset.repository.component;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.ConceptDescription;
+import org.eclipse.digitaltwin.aas4j.v3.model.HasDataSpecification;
 import org.eclipse.digitaltwin.aas4j.v3.model.HasSemantics;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.ReferenceTypes;
@@ -22,6 +24,8 @@ public interface RDFEnvironment {
 	 */
 	public Optional<IRI> getSemanticIdentifier(Reference element);
 	public Optional<IRI> getSemanticIdentifier(HasSemantics element);
+	public List<IRI> getPredicate(HasDataSpecification element);
+	public List<IRI> getRdfType(HasDataSpecification element);
 	/**
 	 * Retrieve the type IRI for the given element. 
 	 * <p>The type IRI is resolved by looking for a linked {@link ConceptDescription}

@@ -4,6 +4,7 @@ import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.api.IAssetAdministrationShellRepositoryInterface;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
 import jakarta.inject.Inject;
+import jakarta.json.JsonStructure;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -23,6 +24,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.List;
+import no.hasmac.jsonld.JsonLd;
+import no.hasmac.jsonld.JsonLdError;
+import no.hasmac.jsonld.document.Document;
+import no.hasmac.jsonld.document.JsonDocument;
+import no.hasmac.rdf.spi.RdfProvider;
 
 @Path("")
 public class AssetAdministrationRepositoryController implements IAssetAdministrationShellRepositoryInterface {
@@ -215,16 +221,12 @@ public class AssetAdministrationRepositoryController implements IAssetAdministra
         StringWriter sw = new StringWriter();
         RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, sw);
         
-//        writer.handleNamespace("schema", "http://schema.org/");
-//        writer.handleNamespace("ex", ex);
-        // JSON-LD Modus: COMPACT
+        // default JSON-LD Modus: COMPACT
         writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
 
         // Optional: hübsche Ausgabe und kompakte Arrays
         writer.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
         writer.getWriterConfig().set(JSONLDSettings.COMPACT_ARRAYS, true);
-    
-        
         Rio.write(model, writer);
         return sw.toString();
 

@@ -11,7 +11,7 @@ import at.srfg.iasset.repository.model.helper.value.type.Value;
 public class RangeValueMapper implements ValueMapper<Range, RangeValue<?>> {
 
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public RangeValue<?> mapToValue(Range modelElement) throws ValueMappingException {
 		return  new RangeValue(

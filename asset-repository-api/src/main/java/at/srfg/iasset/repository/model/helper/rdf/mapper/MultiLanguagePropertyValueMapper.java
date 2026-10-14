@@ -11,8 +11,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.impl.TreeModel;
 import org.eclipse.rdf4j.model.util.Models;
@@ -25,28 +23,13 @@ import at.srfg.iasset.repository.model.helper.value.exception.ValueMappingExcept
 public class MultiLanguagePropertyValueMapper implements RDFMapper<MultiLanguageProperty, MultiLanguagePropertyValue> {
 
 	@Override
-	public Model mapToRDF(RDFEnvironment rdfMetaModel, Resource parent, MultiLanguageProperty modelElement)
+	public Optional<MultiLanguagePropertyValue> mapToValue(MultiLanguageProperty modelElement, RDFEnvironment rdfMetaModel)
 			throws ValueMappingException {
-		Model model = new TreeModel();
-		if (parent == null ) {
-			parent = SimpleValueFactory.getInstance().createBNode();
-			model.setNamespace("xs", XSD.NAMESPACE);
-		}
-		final Resource resource = parent;
 		Optional<IRI> property = rdfMetaModel.getSemanticIdentifier(modelElement);
 		if ( property.isPresent()) {
-			modelElement.getValue().forEach(new Consumer<LangStringTextType>() {
-
-				@Override
-				public void accept(LangStringTextType t) {
-					Literal langText = SimpleValueFactory.getInstance().createLiteral(t.getText(), t.getLanguage());
-					model.add(resource, property.get(), langText);
-					
-				}});
-
+			return Optional.of(new MultiLanguagePropertyValue(property.get(), modelElement.getValue()));
 		}
-		
-		return model;
+		return Optional.empty();
 	}
 	@Override
 	public MultiLanguageProperty mapToElement(RDFEnvironment rdfMetaModel, Resource parent, Model model, final MultiLanguageProperty modelElement) {

@@ -10,7 +10,7 @@
 	<name>Asset Repository Service</name>
 	<description>iAsset Repository Service</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>25</java.version>
 
 	</properties>
 

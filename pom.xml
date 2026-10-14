@@ -11,7 +11,7 @@
 	<version>0.4.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>25</java.version>
 		<revision>${project.version}</revision>
 		<undertow.version>2.3.7.Final</undertow.version>
         <weld.version>5.1.1.Final</weld.version>
@@ -25,6 +25,7 @@
 		<module>asset-repository-api</module>
 		<module>asset-repository-mongo</module>
 		<module>asset-repository-service</module>
+		<module>aas-rdf-demo</module>
 	</modules>
     <dependencies>
         <dependency>

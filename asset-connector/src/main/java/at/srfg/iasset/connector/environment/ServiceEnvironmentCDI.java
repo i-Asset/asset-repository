@@ -22,12 +22,15 @@ import at.srfg.iasset.repository.model.operation.OperationInvocation;
 import at.srfg.iasset.repository.model.operation.exception.OperationInvocationException;
 import at.srfg.iasset.repository.utils.ReferenceUtils;
 import at.srfg.iasset.repository.utils.SubmodelUtils;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.*;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultMessage;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperation;
@@ -44,6 +47,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import org.eclipse.rdf4j.model.impl.TreeModel;
 
 @ApplicationScoped
 public class ServiceEnvironmentCDI implements ServiceEnvironment {
@@ -209,8 +214,14 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 					if ( keySub.isPresent()) {
 						if ( keyIterator.hasNext()) {
 							Optional<SubmodelElement> elem = SubmodelUtils.resolveKeyPath(keySub.get(), keyIterator);
-							if ( elem.isPresent() )
+							if ( elem.isPresent() ) {
 								return Optional.of(elem.get());
+								
+							}
+							else {
+								return Optional.empty();
+							}
+							
 						}
 						return Optional.of(keySub.get());
 					}
@@ -407,9 +418,12 @@ public class ServiceEnvironmentCDI implements ServiceEnvironment {
 		Optional<SubmodelElement> element = getSubmodelElement(submodelIdentifier, path);
 		if ( element.isPresent()) {
 			try {
-				return  RDFHelper.toRDF(rdfEnvironment, element.get());
-
-
+				Model model = new TreeModel();
+				Optional<at.srfg.iasset.repository.model.helper.rdf.SubmodelElementValue> value = RDFHelper.toValue(element.get(), rdfEnvironment);
+				if ( value.isPresent()) {
+					value.get().asRDF(null, model);
+				}
+                return model;
 			} catch (ValueMappingException e) {
 				throw new InternalServerErrorException(e);
 			}

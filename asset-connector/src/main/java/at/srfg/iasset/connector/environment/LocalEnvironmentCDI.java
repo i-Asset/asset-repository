@@ -11,6 +11,7 @@ import at.srfg.iasset.repository.api.ApiUtils;
 import at.srfg.iasset.repository.component.ModelListener;
 import at.srfg.iasset.repository.component.RDFEnvironment;
 import at.srfg.iasset.repository.component.ServiceEnvironment;
+import at.srfg.iasset.repository.config.AASModelHelper;
 import at.srfg.iasset.repository.exception.ShellNotFoundException;
 import at.srfg.iasset.repository.model.custom.InstanceOperation;
 import at.srfg.iasset.repository.model.custom.InstanceProperty;
@@ -74,14 +75,12 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		for (AASEnvironment data : aasData) {
 			log.info("creating environment for data {}", data.getClass().getName());
 			Environment env = data.getAASData();
-			if ( data != null) {
-				log.info("adding Shells");
-				coll.getAssetAdministrationShells().addAll(env.getAssetAdministrationShells());
-				log.info("adding Submodels");
-				coll.getSubmodels().addAll(env.getSubmodels());
-				log.info("adding Concept Descriptions");
-				coll.getConceptDescriptions().addAll(env.getConceptDescriptions());
-			}
+            log.info("adding Shells");
+            coll.getAssetAdministrationShells().addAll(env.getAssetAdministrationShells());
+            log.info("adding Submodels");
+            coll.getSubmodels().addAll(env.getSubmodels());
+            log.info("adding Concept Descriptions");
+            coll.getConceptDescriptions().addAll(env.getConceptDescriptions());
 			log.info("adding model to RDF Model");
 			rdfModel.addModel(data.getRDFData());
 		}
@@ -142,6 +141,15 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	@Override
 	public Optional<Submodel> getSubmodel(String submodelIdentifier) {
 		return serviceEnvironment.getSubmodel(submodelIdentifier);
+	}
+	@Override
+	public Optional<ConceptDescription> getConceptDescription(String identifier) {
+		return serviceEnvironment.getConceptDescription(identifier);
+	}
+	@Override
+	public void setConceptDescription(ConceptDescription conceptDescription) {
+		serviceEnvironment.setConceptDescription(conceptDescription.getId(), conceptDescription);
+
 	}
 
 	@Override
@@ -317,8 +325,18 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 				if ( InstanceProperty.class.isInstance(theProp)) {
 					InstanceProperty iProp = InstanceProperty.class.cast(theProp);
 					//
-					ParameterizedType t = (ParameterizedType) supplier.getClass().getGenericInterfaces()[0];
-					final Type p = t.getActualTypeArguments()[0];
+//					Type type = supplier.getClass().getGenericInterfaces()[0];
+//					if ( type instanceof Class<?>) {
+//						Class<?> classType = (Class<?>) type;
+//
+//					}
+//					else if ( type instanceof ParameterizedType) {
+//
+//					}
+//
+//
+//					ParameterizedType t = (ParameterizedType) supplier.getClass().getGenericInterfaces()[0];
+//					final Type p = t.getActualTypeArguments()[0];
 					
 
 					iProp.supplier(new Supplier<String>() {
@@ -368,8 +386,7 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 			Input parameter) {
 		// TODO Auto-generated method stub
 		try {
-			
-			ParameterizedType t = (ParameterizedType) parameter.getClass().getGenericSuperclass();
+
 			
 			Method method = getClass().getMethod("executeMethod", String.class, String.class, String.class, Object.class);
 			for (Type type : method.getGenericParameterTypes() ) {
@@ -458,7 +475,74 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 		return serviceEnvironment.getElementValue(aasIdentifier, submodelIdentifier, path, value);
 		
 	}
-	
+
+	@Override
+	public <T extends SubmodelElement> Optional<T> createInstance(Submodel template, String pathToElement) {
+		try {
+			final Reference refToPassportId = SubmodelUtils.getReference(template, pathToElement);
+			Optional<SubmodelElement> elementOpt = serviceEnvironment.resolve(refToPassportId, SubmodelElement.class);
+			if ( elementOpt.isPresent() ){
+				SubmodelElement element = elementOpt.get();
+				// retain the semantic id of the template element
+				refToPassportId.setReferredSemanticId(element.getSemanticId());
+				SubmodelElement instance = AASModelHelper.newElementInstance(element.getClass());
+				// add referred semantic
+				instance.setIdShort(element.getIdShort());
+				instance.setDisplayName(element.getDisplayName());
+				// in case it is a propery, be sure to use the value type of the template property
+				if ( element instanceof Property prop ) {
+					Property instanceProp = (Property)instance;
+					instanceProp.setValueType(prop.getValueType());
+				}
+				if ( element instanceof SubmodelElementList list ) {
+					SubmodelElementList instanceList = (SubmodelElementList)instance;
+					instanceList.setOrderRelevant(list.getOrderRelevant());
+					instanceList.setValueTypeListElement(list.getValueTypeListElement());
+				}
+
+				instance.setSemanticId(refToPassportId);
+				return Optional.of((T)instance);
+			}
+
+		} catch (Exception e) {
+		}
+		return Optional.empty();
+	}
+		@Override
+	public <T extends SubmodelElement> Optional<T> createInstance(Submodel template, String pathToElement, Class<T> clazz) {
+		try {
+			final Reference refToPassportId = SubmodelUtils.getReference(template, pathToElement);
+			Optional<Referable> elementOpt = serviceEnvironment.resolve(refToPassportId);
+			if ( elementOpt.isPresent() ){
+				Referable sourceReferable = elementOpt.get();
+				HasSemantics sourceSemantics = HasSemantics.class.cast(elementOpt.get());
+				// retain the semantic id of the template element
+				refToPassportId.setReferredSemanticId(sourceSemantics.getSemanticId());
+				T instance = AASModelHelper.newElementInstance(clazz);
+				// add referred semantic
+				instance.setIdShort(sourceReferable.getIdShort());
+				instance.setDisplayName(sourceReferable.getDisplayName());
+				// in case it is a propery, be sure to use the value type of the template property
+				if ( sourceReferable instanceof Property prop ) {
+					Property instanceProp = (Property)instance;
+					instanceProp.setValueType(prop.getValueType());
+				}
+				if ( sourceReferable instanceof SubmodelElementList list ) {
+					SubmodelElementList instanceList = (SubmodelElementList)instance;
+					instanceList.setOrderRelevant(list.getOrderRelevant());
+					instanceList.setValueTypeListElement(list.getValueTypeListElement());
+				}
+
+				instance.setSemanticId(refToPassportId);
+				return Optional.of(instance);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Optional.empty();
+	}
+
 	@Override
 	public <T extends SubmodelElement> T getSubmodelElement(String aasIdentifier, String submodelIdentifier, String path,
 			Class<T> clazz) {
@@ -549,7 +633,7 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 				} catch (NullPointerException | IllegalStateException e) {
 					log.warn("no endpoint for submodel with id {}", sub.get().getId());
 				}
-				
+
 				descriptor.add(subDescriptor);
 			}
 		}
@@ -558,6 +642,12 @@ public class LocalEnvironmentCDI implements LocalEnvironment {
 	}
 	private List<Reference> supplementalSemantics(Submodel submodel) {
 		return new SemanticIdCollector(submodel).findSemanticIdentifier(EventElement.class, Operation.class);
+	}
+
+	@Override
+	public void setConceptDescription(String identifier, ConceptDescription conceptDescription) {
+		serviceEnvironment.setConceptDescription(identifier, conceptDescription);
+
 	}
 
 }

@@ -190,8 +190,22 @@ public interface ServiceEnvironment {
 	 * @return
 	 */
 	SubmodelElementValue getElementValue(String aasIdentifier, String submodelIdentifier, String path);
-	Model getElementRDFValue(String aasIdentivier, String submodelIdentifier, String path);
-	void setElementRDFValue(String aasIdentivier, String submodelIdentifier, String path, Model model);
+	/**
+	 * Obtain the JSON-LD representation of a {@link SubmodelElement}
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @param path
+	 * @return
+	 */
+	Model getElementRDFValue(String aasIdentifier, String submodelIdentifier, String path);
+	/**
+	 * Consume values from a RDF model
+	 * @param aasIdentifier
+	 * @param submodelIdentifier
+	 * @param path
+	 * @param model
+	 */
+	void setElementRDFValue(String aasIdentifier, String submodelIdentifier, String path, Model model);
 	/**
 	 * Obtain the ValueOnly representation of a SubmodelElement
 	 * @param aasIdentifier

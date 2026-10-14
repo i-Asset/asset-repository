@@ -1,0 +1,11 @@
+services:
+  wintersteiger-connector:
+    image: container.salzburgresearch.at/passat/wp8/wintersteiger-sample:latest
+    ports:
+      - 8080:8085
+    env_file:
+      - path: ./default.env
+        required: true # default for testing
+      - path: ./wintersteiger.env
+        required: false # override defaults in deployment
+#    restart: always

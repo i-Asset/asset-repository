@@ -1,0 +1,323 @@
+
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:at.srfg.passat.ski:1.0.0#> .
+@prefix samm-u: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+
+:SkiMaintenance a samm:Aspect ;
+   samm:preferredName "Ski Maintenance"@en ;
+   samm:description "Aspect model for a ski maintenance process (aka \"ski service\").\nThis Aspect Model was developed by Salzburg Research (SRFG, https://www.salzburgresearch.at) in the project PASSAT (Digital Product Passport Austria & Beyond, https://digialer-produkt-pass.at)"@en ;
+   samm:properties ( :serviceData :serviceRequest :serviceResult :serviceError ) ;
+   samm:operations ( :getSkiServiceData :setSkiServiceResult ) ;
+   samm:events ( :serviceResultNotification ) .
+
+:serviceData a samm:Property ;
+   samm:preferredName "Ski Service Data"@en ;
+   samm:description "Response Data covering the Ski Service Request"@en ;
+   samm:characteristic :ResponseDataForSkiCharacteristic .
+
+:serviceRequest a samm:Property ;
+   samm:preferredName "Service Request Data"@en ;
+   samm:description "Input data to request the information required for a ski maintenance. Includes the code from the data carrier and the requesting machine."@en ;
+   samm:characteristic :RequestDataForSkiCharacteristic .
+
+:serviceResult a samm:Property ;
+   samm:preferredName "Ski Service Result"@en ;
+   samm:description "Data provided after the executed ski maintenance back to the manufacturer of the ski in service."@en ;
+   samm:characteristic :SkiDataResultCharacteristic .
+
+:serviceError a samm:Property ;
+   samm:preferredName "Error Handling"@en ;
+   samm:characteristic :ServiceErrorCharacteristic .
+
+:getSkiServiceData a samm:Operation ;
+   samm:preferredName "Get Ski Service Data"@en ;
+   samm:description "Operation to obtain the ski service data from the manufacturer's DPP-services. The main information for identifying a product is the carrier's data. Additional Information (requesting device) may be provided optionally.\n\nThe response contains the entire product information including edge grinding parameters."@en ;
+   samm:input ( :serviceRequest ) ;
+   samm:output :serviceData .
+
+:setSkiServiceResult a samm:Operation ;
+   samm:preferredName "Ski Service Result"@en ;
+   samm:input ( :serviceResult ) .
+
+:serviceResultNotification a samm:Event ;
+   samm:preferredName "Ski Data Result Message"@en ;
+   samm:description "Result Data of the Ski Service Process"@en ;
+   samm:parameters ( :serviceResult ) .
+
+:ResponseDataForSkiCharacteristic a samm:Characteristic ;
+   samm:preferredName "Service Data"@en ;
+   samm:dataType :SkiDataResponse .
+
+:RequestDataForSkiCharacteristic a samm:Characteristic ;
+   samm:dataType :SkiDataRequest .
+
+:SkiDataResultCharacteristic a samm:Characteristic ;
+   samm:preferredName "Result Data"@en ;
+   samm:dataType :SkiDataResult .
+
+:ServiceErrorCharacteristic a samm:Characteristic ;
+   samm:dataType :SkiDataError .
+
+:SkiDataResponse a samm:Entity ;
+   samm:preferredName "Ski Data Response"@en ;
+   samm:description "Response from the manufacturer"@en ;
+   samm:properties ( :edgePerformance :baseEdgeParameter :sideEdgeParameter :productData :identification :serviceRequest ) .
+
+:SkiDataRequest a samm:Entity ;
+   samm:preferredName "Ski Data Request"@en ;
+   samm:properties ( :authenticationToken :machineNumber :machineType :carrierData ) .
+
+:SkiDataResult a samm:Entity ;
+   samm:preferredName "Result Entity"@en ;
+   samm:properties ( :resultDateTime :serviceRequest :baseEdgeParameter :sideEdgeParameter :identification :resultHasDeviations :resultDeviationDescription ) .
+
+:SkiDataError a samm:Entity ;
+   samm:preferredName "Error Message"@en ;
+   samm:description "Error Message"@en ;
+   samm:properties ( :serviceRequest :error ) .
+
+:edgePerformance a samm:Property ;
+   samm:preferredName "Edge Performance"@en ;
+   samm:description "Edge Performance data controls the ski service process. The kind of grinding, performance class and other attributes which may control the visual appearance of the service settings at the machine's display"@en ;
+   samm:characteristic :PerformanceDataCharacteristic .
+
+:baseEdgeParameter a samm:Property ;
+   samm:preferredName "Base Edge Parameter"@en ;
+   samm:characteristic :EdgeParameterCharacteristic .
+
+:sideEdgeParameter a samm:Property ;
+   samm:preferredName "Side Edge parameter"@en ;
+   samm:characteristic :EdgeParameterCharacteristic .
+
+:productData a samm:Property ;
+   samm:preferredName "Product Data"@en ;
+   samm:description "Product Data including dimensions, manufacturer"@en ;
+   samm:characteristic :ProductDataCharacteristic .
+
+:identification a samm:Property ;
+   samm:preferredName "Ski Data Identification"@en ;
+   samm:description "Ski Identification Data"@en ;
+   samm:characteristic :SkiIdentificationCharacteristic .
+
+:authenticationToken a samm:Property ;
+   samm:preferredName "Authentication Token"@en ;
+   samm:description "Security Token"@en ;
+   samm:characteristic samm-c:Text .
+
+:machineNumber a samm:Property ;
+   samm:preferredName "Machine Number"@en ;
+   samm:description "Identifying number of the requesting machine"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "8585-0989" .
+
+:machineType a samm:Property ;
+   samm:preferredName "Machine Type"@en ;
+   samm:description "Type of the requesting machine"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "Jupiter X" .
+
+:carrierData a samm:Property ;
+   samm:preferredName "DPP Identifier Data"@en ;
+   samm:description "Information extracted from the DPP-Identifier Carrier (QR-Code, NFC)"@en ;
+   samm:characteristic samm-c:ResourcePath ;
+   samm:exampleValue "http://wseqr.amersports.com/?sn=23584809"^^xsd:anyURI .
+
+:resultDateTime a samm:Property ;
+   samm:preferredName "Maintenance Date & Time"@en ;
+   samm:description "Timestamp of the Ski Maintenance"@en ;
+   samm:characteristic samm-c:Timestamp .
+
+:resultHasDeviations a samm:Property ;
+   samm:preferredName "Result with deviations"@en ;
+   samm:description "The original request has been modified"@en ;
+   samm:characteristic samm-c:Boolean .
+
+:resultDeviationDescription a samm:Property ;
+   samm:preferredName "Deviation Description"@en ;
+   samm:description "Textual explanation why the original data was modified"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "Customer Request" .
+
+:error a samm:Property ;
+   samm:preferredName "Error Object"@en ;
+   samm:characteristic :ErrorCharacteristic .
+
+:PerformanceDataCharacteristic a samm:Characteristic ;
+   samm:dataType :PerformanceData .
+
+:EdgeParameterCharacteristic a samm:Characteristic ;
+   samm:dataType :EdgeParameter .
+
+:ProductDataCharacteristic a samm:Characteristic ;
+   samm:preferredName "Product Data"@en ;
+   samm:dataType :ProductData .
+
+:SkiIdentificationCharacteristic a samm:Characteristic ;
+   samm:preferredName "Ski Identification"@en ;
+   samm:description "Identification Codes and data for the requested Ski"@en ;
+   samm:dataType :IdentificationData .
+
+:ErrorCharacteristic a samm:Characteristic ;
+   samm:dataType :ErrorMessage .
+
+:PerformanceData a samm:Entity ;
+   samm:preferredName "Performance Data"@en ;
+   samm:description "Data controlling the processing performance"@en ;
+   samm:properties ( :performanceClass :vEdge ) .
+
+:EdgeParameter a samm:Entity ;
+   samm:preferredName "Edge grinding parameter"@en ;
+   samm:description "Angles for the grinding process (tip, tail, front)"@en ;
+   samm:properties ( :angleTail :angleWaist :angleTip ) .
+
+:ProductData a samm:Entity ;
+   samm:preferredName "Product Data"@en ;
+   samm:description "Entity containing product information (ski set level)"@en ;
+   samm:properties ( :skiWidthTail :skiWidthWaist :skiWidthTip :skiLength :skiProductName :skiBrand :skiManufacturer ) .
+
+:IdentificationData a samm:Entity ;
+   samm:preferredName "Identification Data"@en ;
+   samm:description "Entity containing ski-identification data (item level)"@en ;
+   samm:properties ( :serviceCount :componentCode :setCode :serialNumber ) .
+
+:ErrorMessage a samm:Entity ;
+   samm:preferredName "Error Message"@en ;
+   samm:properties ( :errorCode :errorMessage ) .
+
+:performanceClass a samm:Property ;
+   samm:preferredName "Class "@en ;
+   samm:description "Performance Class"@en ;
+   samm:characteristic :PerformanceClassEnum ;
+   samm:exampleValue "C" .
+
+:vEdge a samm:Property ;
+   samm:preferredName "vEdge"@en ;
+   samm:description "Variant Performance Processing"@en ;
+   samm:characteristic samm-c:Boolean ;
+   samm:exampleValue true .
+
+:angleTail a samm:Property ;
+   samm:preferredName "Grinding Angle Tail"@en ;
+   samm:description "Grinding Angle at the end of the ski (tail)"@en ;
+   samm:characteristic :GrindingAngleCharacteristic ;
+   samm:exampleValue "0.7"^^xsd:double .
+
+:angleWaist a samm:Property ;
+   samm:preferredName "Grinding Angle Waist"@en ;
+   samm:description "Grinding Angle at the middle of the ski (waist)"@en ;
+   samm:characteristic :GrindingAngleCharacteristic ;
+   samm:exampleValue "0.6"^^xsd:double .
+
+:angleTip a samm:Property ;
+   samm:preferredName "Grinding Angle Tip"@en ;
+   samm:description "Grinding Angle at the front of the ski (tip)"@en ;
+   samm:characteristic :GrindingAngleCharacteristic ;
+   samm:exampleValue "0.8"^^xsd:double .
+
+:skiWidthTail a samm:Property ;
+   samm:preferredName "Width (Tail)"@en ;
+   samm:description "Width of the Ski (Tail)"@en ;
+   samm:characteristic :WidthCharacteristic ;
+   samm:exampleValue "97.5"^^xsd:double .
+
+:skiWidthWaist a samm:Property ;
+   samm:preferredName "Width (Waist)"@en ;
+   samm:description "Width of the Ski (Waist)"@en ;
+   samm:characteristic :WidthCharacteristic ;
+   samm:exampleValue "68.0"^^xsd:double .
+
+:skiWidthTip a samm:Property ;
+   samm:preferredName "Width (Tip)"@en ;
+   samm:description "Width of the Ski (Tip)"@en ;
+   samm:characteristic :WidthCharacteristic ;
+   samm:exampleValue "108.0"^^xsd:double .
+
+:skiLength a samm:Property ;
+   samm:preferredName "Length"@en ;
+   samm:description "Length of the Ski in Centimeter"@en ;
+   samm:characteristic :LengthCharacteristic ;
+   samm:exampleValue "175"^^xsd:positiveInteger .
+
+:skiProductName a samm:Property ;
+   samm:preferredName "Product Name"@en ;
+   samm:description "Name of the Ski Product"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "REDSTER X9S RVSK S + X 14 GW" .
+
+:skiBrand a samm:Property ;
+   samm:preferredName "Brand"@en ;
+   samm:description "Brand"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "ATOMIC" .
+
+:skiManufacturer a samm:Property ;
+   samm:preferredName "Manufacturer"@en ;
+   samm:description "Manufacturer of the product"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "Amer Sports" .
+
+:serviceCount a samm:Property ;
+   samm:preferredName "Service Count"@en ;
+   samm:description "Number of the recorded maintenance services for the product (optional, omit when no maintenance recorded)"@en ;
+   samm:characteristic :ServiceCount ;
+   samm:exampleValue "1"^^xsd:positiveInteger .
+
+:componentCode a samm:Property ;
+   samm:preferredName "Article Component Code"@en ;
+   samm:description "Code describing the Article in the manufacturers Database"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "AA0027688+" .
+
+:setCode a samm:Property ;
+   samm:preferredName "Ski Set Code"@en ;
+   samm:description "Model General Set"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "Commercial Set - SYS" .
+
+:serialNumber a samm:Property ;
+   samm:preferredName "Serial Number"@en ;
+   samm:description "Serial Number of the requested ski"@en ;
+   samm:characteristic samm-c:Text ;
+   samm:exampleValue "23584809" .
+
+:errorCode a samm:Property ;
+   samm:preferredName "Error Code"@en ;
+   samm:characteristic samm-c:Text .
+
+:errorMessage a samm:Property ;
+   samm:preferredName "Error Message"@en ;
+   samm:characteristic samm-c:Text .
+
+:PerformanceClassEnum a samm-c:Enumeration ;
+   samm:preferredName "Performance Class"@en ;
+   samm:dataType xsd:string ;
+   samm-c:values ( "R" "S" "C" ) .
+
+:GrindingAngleCharacteristic a samm-c:Quantifiable ;
+   samm:preferredName "Grinding Angle of a Ski Edge"@en ;
+   samm:dataType xsd:double ;
+   samm-c:unit samm-u:degreeUnitOfAngle .
+
+:WidthCharacteristic a samm-c:Quantifiable ;
+   samm:preferredName "Width of a product"@en ;
+   samm:dataType xsd:double ;
+   samm-c:unit samm-u:millimetre .
+
+:LengthCharacteristic a samm-c:Quantifiable ;
+   samm:preferredName "Length in Centimeters"@en ;
+   samm:description "Length of a Product"@en ;
+   samm:dataType xsd:positiveInteger ;
+   samm-c:unit samm-u:centimetre .
+
+:ServiceCount a samm:Characteristic ;
+   samm:preferredName "Service Count"@en ;
+   samm:description "Number of the performed services"@en ;
+   samm:dataType xsd:positiveInteger .
+
